@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   BarChart3, User, Compass, ShoppingCart, Send, RefreshCw,
   Link as LinkIcon, Download, Globe, MoreVertical, Plus,
+  LayoutGrid, User, Compass, ShoppingCart, Send, ArrowLeftRight,
+  Link as LinkIcon, Download, MoreVertical, Plus,
   Search, Lock, Shield, Settings, HelpCircle,
   Copy, CheckCircle, ChevronDown,
   X, Monitor, Sparkles, Filter, ListFilter, MoreHorizontal, Eye
@@ -73,7 +75,7 @@ function CoinAvatar({ color, letter, size = 36 }: { color: string; letter: strin
 
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 export default function Dashboard({ onOpenBrowser }: DashboardProps) {
-  const { addresses, lock, clearWallet } = useWalletStore();
+  const { addresses, lock } = useWalletStore();
   const [section, setSection] = useState<Section>('portfolio');
   const [tab, setTab] = useState<PortfolioTab>('assets');
   const [menuOpen, setMenuOpen] = useState(false);
@@ -188,7 +190,7 @@ export default function Dashboard({ onOpenBrowser }: DashboardProps) {
       </aside>
 
       {/* ── Main content ──────────────────────────────────────────────────── */}
-      <main style={{ flex: 1, overflowY: 'auto', padding: '24px 28px 24px', position: 'relative' }}>
+      <main style={{ flex: 1, overflowY: 'auto', padding: '24px 32px 24px 160px', position: 'relative' }}>
 
         {/* Three-dot menu */}
         <div ref={menuRef} style={{ position: 'absolute', top: 20, right: 24, zIndex: 50 }}>

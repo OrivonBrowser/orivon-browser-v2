@@ -168,7 +168,7 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
           <div className={`relative flex items-center h-8 rounded-2xl transition-all ${addrBg}`}>
             <div className="absolute left-3 pointer-events-none">
               {!activeTab || activeTab.url === NEW_TAB
-                ? <Search size={12} className={isDark ? 'text-white/25' : 'text-black/25'} />
+                ? <Shield size={13} color="#FB5B22" />
                 : isSecureURL(activeTab.url)
                   ? <Lock size={11} className="text-[#00FF87]/70" />
                   : <Globe size={12} className={isDark ? 'text-white/25' : 'text-black/25'} />
@@ -203,19 +203,13 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
             <button
               onClick={() => setWalletOpen(p => !p)}
               title="Orivon Wallet"
-              className={`no-drag flex items-center gap-1.5 h-8 px-2.5 rounded-lg text-[12px] font-medium transition-all ${
-                walletStatus === 'unlocked'
-                  ? 'text-[#00FF87] bg-[#00FF87]/10 hover:bg-[#00FF87]/18'
+              className={`no-drag flex items-center justify-center h-8 w-9 rounded-lg transition-all ${
+                walletOpen
+                  ? isDark ? 'bg-white/12 text-white/90' : 'bg-black/8 text-black/80'
                   : btn
               }`}
             >
               <Wallet size={15} />
-              {walletStatus === 'unlocked' && addresses
-                ? <span className="text-[11px] font-mono">{addresses.eth.slice(0, 5)}…</span>
-                : walletStatus === 'locked'
-                  ? <Lock size={11} />
-                  : <span className="text-[11px]">Connect</span>
-              }
             </button>
             <AnimatePresence>
               {walletOpen && (

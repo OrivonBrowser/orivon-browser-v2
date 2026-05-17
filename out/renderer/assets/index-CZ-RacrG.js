@@ -20634,7 +20634,7 @@ const __iconNode$F = [
   ["path", { d: "M5 12h14", key: "1ays0h" }],
   ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
 ];
-const ArrowRight = createLucideIcon("arrow-right", __iconNode$F);
+const ArrowRight$1 = createLucideIcon("arrow-right", __iconNode$F);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -41425,6 +41425,7 @@ function pickVerifyIndices() {
 function Onboarding({ onDone }) {
   const { generateMnemonic, createWallet, importWallet } = useWalletStore();
   const [step, setStep] = reactExports.useState("welcome");
+  const [mode, setMode] = reactExports.useState("create");
   const [mnemonic] = reactExports.useState(() => generateMnemonic());
   const [importPhrase, setImport] = reactExports.useState("");
   const [password, setPassword] = reactExports.useState("");
@@ -41435,6 +41436,8 @@ function Onboarding({ onDone }) {
   const [copied, setCopied] = reactExports.useState(false);
   const [progress2, setProgress] = reactExports.useState(0);
   const [error, setError] = reactExports.useState("");
+  const [checked1, setChecked1] = reactExports.useState(false);
+  const [checked2, setChecked2] = reactExports.useState(false);
   const [verifyIndices] = reactExports.useState(() => pickVerifyIndices());
   const [verifyStep, setVerifyStep] = reactExports.useState(0);
   const [verifyInput, setVerifyInput] = reactExports.useState("");
@@ -41502,54 +41505,196 @@ function Onboarding({ onDone }) {
     }
   };
   const isGradientStep = step === "welcome" || step === "choose";
+  const bothChecked = checked1 && checked2;
   if (!isGradientStep) {
     return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { minHeight: "100vh", background: "#F5F6FA", overflowY: "auto" }, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { padding: "24px 48px 8px", display: "flex", alignItems: "center", gap: 8 }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 28, height: 28, borderRadius: 8, background: "#00FF87", display: "flex", alignItems: "center", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 15, color: "#000", strokeWidth: 2.5 }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { padding: "18px 40px 12px", display: "flex", alignItems: "center", gap: 8 }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: "/logo.jpg", alt: "Orivon", style: { width: 28, height: 28, borderRadius: 8, objectFit: "contain" }, onError: (e) => {
+          e.target.style.display = "none";
+        } }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 15, fontWeight: 600, color: "#1A1A2E" }, children: "Orivon Wallet" })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(AnimatePresence, { mode: "wait", children: [
-        step === "create-password" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(BackCircle, { onClick: () => setStep("choose") }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(LightCard, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: titleStyle, children: "Create a new password" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: subStyle, children: "You will use this password each time you access your wallet." }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(FieldLabel, { children: [
-              "Enter new password ",
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Required, {})
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", marginBottom: 8 }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: showPw ? "text" : "password", value: password, onChange: (e) => setPassword(e.target.value), placeholder: "Enter new password", autoFocus: true, style: inputSt }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(EyeBtn, { show: showPw, toggle: () => setShowPw((p) => !p) })
-            ] }),
-            password.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { flex: 1, display: "flex", gap: 4 }, children: [1, 2, 3].map((i) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { flex: 1, height: 3, borderRadius: 2, background: strength.score >= i ? strength.color : "#E5E7EB", transition: "background 0.2s" } }, i)) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, color: strength.color, fontWeight: 500 }, children: strength.label })
-            ] }),
-            !password && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { marginBottom: 20 } }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(FieldLabel, { children: [
-              "Re-enter password ",
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Required, {})
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", marginBottom: confirmPw && confirmPw !== password ? 6 : 28 }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: showConfirm ? "text" : "password", value: confirmPw, onChange: (e) => setConfirmPw(e.target.value), placeholder: "Re-enter password", onKeyDown: (e) => e.key === "Enter" && canContinue && handleCreate(), style: { ...inputSt, borderColor: confirmPw && confirmPw !== password ? "#EF4444" : "#E5E7EB" } }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(EyeBtn, { show: showConfirm, toggle: () => setShowConfirm((p) => !p) })
-            ] }),
-            confirmPw && confirmPw !== password && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 12, color: "#EF4444", marginBottom: 20 }, children: "Passwords do not match" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 10, padding: "12px 16px", background: "#EEF2FF", borderRadius: 12, marginBottom: 32 }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 30, height: 30, borderRadius: 8, background: "#E0E7FF", display: "flex", alignItems: "center", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 15, color: "#4F46E5" }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 14, color: "#374151", flex: 1 }, children: "Orivon will auto-lock after" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("select", { style: { padding: "6px 10px", borderRadius: 8, border: "1px solid #D1D5DB", background: "#fff", fontSize: 13, color: "#374151", cursor: "pointer" }, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { children: "5 Minutes" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { children: "15 Minutes" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { children: "1 Hour" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { children: "Never" })
-              ] })
-            ] }),
-            error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 13, color: "#EF4444", textAlign: "center", marginBottom: 14 }, children: error }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(CenterBtn, { onClick: handleCreate, disabled: !canContinue, children: "Continue" })
-          ] })
-        ] }, "create-pw"),
+        step === "before-we-begin" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(LightCard, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => setStep("choose"),
+              style: backBtnInCard,
+              onMouseEnter: (e) => {
+                e.currentTarget.style.background = "#EEF2FF";
+              },
+              onMouseLeave: (e) => {
+                e.currentTarget.style.background = "transparent";
+              },
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 18 })
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { ...titleStyle, textAlign: "center" }, children: "Before we begin" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { ...subStyle, textAlign: "center", marginBottom: 32 }, children: "We require that you acknowledge the items below" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { style: { display: "flex", gap: 14, alignItems: "flex-start", cursor: "pointer", marginBottom: 24 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "input",
+              {
+                type: "checkbox",
+                checked: checked1,
+                onChange: (e) => setChecked1(e.target.checked),
+                style: { width: 18, height: 18, marginTop: 2, cursor: "pointer", accentColor: "#4F46E5", flexShrink: 0 }
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 14, color: "#374151", lineHeight: 1.65 }, children: "I understand that this is a self-custody wallet, and that I am solely responsible for any associated funds, assets, or accounts, and for taking any appropriate action to secure, protect, and back up my wallet. I understand that Orivon cannot access my wallet or reverse transactions on my behalf, and that my recovery phrase is the ONLY way to regain access in the event of a lost password, stolen device, or similar circumstance." })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { style: { display: "flex", gap: 14, alignItems: "center", cursor: "pointer", marginBottom: 40 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "input",
+              {
+                type: "checkbox",
+                checked: checked2,
+                onChange: (e) => setChecked2(e.target.checked),
+                style: { width: 18, height: 18, cursor: "pointer", accentColor: "#4F46E5", flexShrink: 0 }
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { style: { fontSize: 14, color: "#374151" }, children: [
+              "I have read and agree to the",
+              " ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "#", onClick: (e) => e.preventDefault(), style: { color: "#4F46E5", textDecoration: "none" }, children: "Terms of use" }),
+              "."
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            CenterBtn,
+            {
+              onClick: () => {
+                setChecked1(false);
+                setChecked2(false);
+                setStep(mode === "create" ? "create-password" : "import-type");
+              },
+              disabled: !bothChecked,
+              children: "Continue"
+            }
+          )
+        ] }) }, "before-we-begin"),
+        step === "import-type" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(LightCard, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => setStep("before-we-begin"),
+              style: backBtnInCard,
+              onMouseEnter: (e) => {
+                e.currentTarget.style.background = "#EEF2FF";
+              },
+              onMouseLeave: (e) => {
+                e.currentTarget.style.background = "transparent";
+              },
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 18 })
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { fontSize: 22, fontWeight: 700, color: "#111827", margin: "0 0 36px", lineHeight: 1.3 }, children: "Which type of wallet would you like to import?" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "div",
+            {
+              onClick: () => setStep("import"),
+              style: importOptionRow,
+              onMouseEnter: (e) => {
+                e.currentTarget.style.background = "#FAFAFA";
+              },
+              onMouseLeave: (e) => {
+                e.currentTarget.style.background = "transparent";
+              },
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1 }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 16, fontWeight: 700, color: "#111827", margin: "0 0 4px" }, children: "Ethereum/Solana/Filecoin wallet" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 13, color: "#6B7280", margin: "0 0 12px" }, children: "Import your seed phrase from an existing wallet" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", gap: 8, alignItems: "center" }, children: ["🦁", "🟣", "🦊", "🔵"].map((icon, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 20, lineHeight: 1 }, children: icon }, i)) })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 20, color: "#4F46E5", style: { flexShrink: 0 } })
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: 1, background: "#F3F4F6" } }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "div",
+            {
+              style: { ...importOptionRow, cursor: "default", opacity: 0.55 },
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1 }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 16, fontWeight: 700, color: "#111827", margin: "0 0 4px" }, children: "Hardware wallet" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 13, color: "#6B7280", margin: "0 0 12px" }, children: "Connect your hardware wallet with Orivon" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 8, alignItems: "center" }, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 20 }, children: "🔒" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 20 }, children: "🔳" })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 20, color: "#4F46E5", style: { flexShrink: 0 } })
+              ]
+            }
+          )
+        ] }) }, "import-type"),
+        step === "create-password" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(LightCard, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => setStep("choose"),
+              style: {
+                width: 40,
+                height: 40,
+                borderRadius: "50%",
+                border: "1.5px solid #C7D2FE",
+                background: "transparent",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                color: "#4F46E5",
+                marginBottom: 20,
+                transition: "background 0.12s"
+              },
+              onMouseEnter: (e) => {
+                e.currentTarget.style.background = "#EEF2FF";
+              },
+              onMouseLeave: (e) => {
+                e.currentTarget.style.background = "transparent";
+              },
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 18 })
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { ...titleStyle, textAlign: "center" }, children: "Create a new password" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { ...subStyle, textAlign: "center" }, children: "You will use this password each time you access your wallet." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(FieldLabel, { children: [
+            "Enter new password ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Required, {})
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", marginBottom: 8 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: showPw ? "text" : "password", value: password, onChange: (e) => setPassword(e.target.value), placeholder: "Enter new password", autoFocus: true, style: inputSt }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(EyeBtn, { show: showPw, toggle: () => setShowPw((p) => !p) })
+          ] }),
+          password.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { flex: 1, display: "flex", gap: 4 }, children: [1, 2, 3].map((i) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { flex: 1, height: 3, borderRadius: 2, background: strength.score >= i ? strength.color : "#E5E7EB", transition: "background 0.2s" } }, i)) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, color: strength.color, fontWeight: 500 }, children: strength.label })
+          ] }),
+          !password && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { marginBottom: 20 } }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(FieldLabel, { children: [
+            "Re-enter password ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Required, {})
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", marginBottom: confirmPw && confirmPw !== password ? 6 : 28 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: showConfirm ? "text" : "password", value: confirmPw, onChange: (e) => setConfirmPw(e.target.value), placeholder: "Re-enter password", onKeyDown: (e) => e.key === "Enter" && canContinue && handleCreate(), style: { ...inputSt, borderColor: confirmPw && confirmPw !== password ? "#EF4444" : "#E5E7EB" } }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(EyeBtn, { show: showConfirm, toggle: () => setShowConfirm((p) => !p) })
+          ] }),
+          confirmPw && confirmPw !== password && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 12, color: "#EF4444", marginBottom: 20 }, children: "Passwords do not match" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 10, padding: "12px 16px", background: "#EEF2FF", borderRadius: 12, marginBottom: 32 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 30, height: 30, borderRadius: 8, background: "#E0E7FF", display: "flex", alignItems: "center", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 15, color: "#4F46E5" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 14, color: "#374151", flex: 1 }, children: "Orivon will auto-lock after" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("select", { style: { padding: "6px 10px", borderRadius: 8, border: "1px solid #D1D5DB", background: "#fff", fontSize: 13, color: "#374151", cursor: "pointer" }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("option", { children: "5 Minutes" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("option", { children: "15 Minutes" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("option", { children: "1 Hour" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("option", { children: "Never" })
+            ] })
+          ] }),
+          error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 13, color: "#EF4444", textAlign: "center", marginBottom: 14 }, children: error }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CenterBtn, { onClick: handleCreate, disabled: !canContinue, children: "Continue" })
+        ] }) }, "create-pw"),
         step === "encrypting" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(LightCard, { style: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 520 }, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 52, height: 52, marginBottom: 22 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "52", height: "52", viewBox: "0 0 52 52", style: { animation: "spin 1s linear infinite" }, children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("style", { children: `@keyframes spin { to { transform: rotate(360deg); } }` }),
@@ -41793,28 +41938,39 @@ function Onboarding({ onDone }) {
           ) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { textAlign: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onDone(true), style: skipBtnStyle, onMouseEnter: (e) => e.currentTarget.style.color = "#374151", onMouseLeave: (e) => e.currentTarget.style.color = "#9CA3AF", children: "Skip" }) })
         ] }) }, `verify-${verifyStep}`),
-        step === "import" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(BackCircle, { onClick: () => setStep("choose") }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(LightCard, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: titleStyle, children: "Restore your wallet" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { ...subStyle, marginBottom: 32 }, children: "Enter your 12 or 24-word recovery phrase to restore access." }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(FieldLabel, { children: [
-              "Recovery phrase ",
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Required, {})
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("textarea", { value: importPhrase, onChange: (e) => setImport(e.target.value), placeholder: "word1 word2 word3...", rows: 4, style: { ...inputSt, resize: "none", fontFamily: "monospace", paddingTop: 14, height: "auto", marginBottom: 20 } }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(FieldLabel, { children: [
-              "New password ",
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Required, {})
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", marginBottom: 32 }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: showPw ? "text" : "password", value: password, onChange: (e) => setPassword(e.target.value), placeholder: "Set a new password", onKeyDown: (e) => e.key === "Enter" && handleImport(), style: inputSt }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(EyeBtn, { show: showPw, toggle: () => setShowPw((p) => !p) })
-            ] }),
-            error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 13, color: "#EF4444", textAlign: "center", marginBottom: 14 }, children: error }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(CenterBtn, { onClick: handleImport, disabled: importPhrase.trim().split(/\s+/).length < 12 || password.length < 6, children: "Import Wallet" })
-          ] })
-        ] }, "import"),
+        step === "import" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(LightCard, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => setStep("import-type"),
+              style: backBtnInCard,
+              onMouseEnter: (e) => {
+                e.currentTarget.style.background = "#EEF2FF";
+              },
+              onMouseLeave: (e) => {
+                e.currentTarget.style.background = "transparent";
+              },
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 18 })
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: titleStyle, children: "Restore your wallet" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { ...subStyle, marginBottom: 32 }, children: "Enter your 12 or 24-word recovery phrase to restore access." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(FieldLabel, { children: [
+            "Recovery phrase ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Required, {})
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("textarea", { value: importPhrase, onChange: (e) => setImport(e.target.value), placeholder: "word1 word2 word3...", rows: 4, style: { ...inputSt, resize: "none", fontFamily: "monospace", paddingTop: 14, height: "auto", marginBottom: 20 } }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(FieldLabel, { children: [
+            "New password ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Required, {})
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", marginBottom: 32 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: showPw ? "text" : "password", value: password, onChange: (e) => setPassword(e.target.value), placeholder: "Set a new password", onKeyDown: (e) => e.key === "Enter" && handleImport(), style: inputSt }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(EyeBtn, { show: showPw, toggle: () => setShowPw((p) => !p) })
+          ] }),
+          error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 13, color: "#EF4444", textAlign: "center", marginBottom: 14 }, children: error }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CenterBtn, { onClick: handleImport, disabled: importPhrase.trim().split(/\s+/).length < 12 || password.length < 6, children: "Import Wallet" })
+        ] }) }, "import"),
         step === "success" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(LightCard, { style: { textAlign: "center" }, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", width: 180, height: 160, margin: "0 auto 28px" }, children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: {
@@ -41866,7 +42022,7 @@ function Onboarding({ onDone }) {
           ) })
         ] }) }, "success")
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: 60 } })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: 40 } })
     ] });
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", width: "100vw", height: "100vh", overflow: "hidden", background: "#0a0a0a", display: "flex", alignItems: "center", justifyContent: "center" }, children: [
@@ -41877,7 +42033,21 @@ function Onboarding({ onDone }) {
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 10, width: "100%", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 24px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(AnimatePresence, { mode: "wait", children: [
       step === "welcome" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, style: { display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 2, marginBottom: -58 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 116, height: 116, borderRadius: 28, background: "linear-gradient(145deg,#00FF87,#00E87A)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 12px 40px rgba(0,255,135,0.40),0 4px 12px rgba(0,0,0,0.5)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 56, color: "#000", strokeWidth: 1.8 }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 2, marginBottom: -58 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "img",
+          {
+            src: "/logo.jpg",
+            alt: "Orivon",
+            style: { width: 116, height: 116, borderRadius: 28, objectFit: "contain", boxShadow: "0 12px 40px rgba(0,255,135,0.30),0 4px 12px rgba(0,0,0,0.5)" },
+            onError: (e) => {
+              const el = e.target;
+              el.style.display = "none";
+              const fb = document.createElement("div");
+              fb.style.cssText = "width:116px;height:116px;border-radius:28px;background:linear-gradient(145deg,#00FF87,#00E87A);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 40px rgba(0,255,135,0.40)";
+              el.parentNode?.appendChild(fb);
+            }
+          }
+        ) }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(GradCard, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { fontSize: 42, fontWeight: 800, color: "#fff", margin: "0 0 16px", letterSpacing: "-0.8px", lineHeight: 1.15 }, children: "Web3. By Default." }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { fontSize: 18, color: "rgba(255,255,255,0.65)", lineHeight: 1.65, margin: "0 0 44px" }, children: [
@@ -41892,17 +42062,21 @@ function Onboarding({ onDone }) {
         ] })
       ] }, "welcome"),
       step === "choose" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, style: { display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: "100%", maxWidth: 680, marginBottom: 12, paddingLeft: 4 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "button",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 2, marginBottom: -58 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "img",
           {
-            onClick: () => setStep("welcome"),
-            style: { width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.25)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#fff", backdropFilter: "blur(8px)", transition: "background 0.15s" },
-            onMouseEnter: (e) => e.currentTarget.style.background = "rgba(255,255,255,0.25)",
-            onMouseLeave: (e) => e.currentTarget.style.background = "rgba(255,255,255,0.15)",
-            children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 18 })
+            src: "/logo.jpg",
+            alt: "Orivon",
+            style: { width: 116, height: 116, borderRadius: 28, objectFit: "contain", boxShadow: "0 12px 40px rgba(0,255,135,0.30),0 4px 12px rgba(0,0,0,0.5)" },
+            onError: (e) => {
+              const el = e.target;
+              el.style.display = "none";
+              const fb = document.createElement("div");
+              fb.style.cssText = "width:116px;height:116px;border-radius:28px;background:linear-gradient(145deg,#00FF87,#00E87A);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 40px rgba(0,255,135,0.40)";
+              el.parentNode?.appendChild(fb);
+            }
           }
         ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 2, marginBottom: -58 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 116, height: 116, borderRadius: 28, background: "linear-gradient(145deg,#00FF87,#00E87A)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 12px 40px rgba(0,255,135,0.40),0 4px 12px rgba(0,0,0,0.5)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 56, color: "#000", strokeWidth: 1.8 }) }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(GradCard, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { style: { fontSize: 40, fontWeight: 800, color: "#fff", margin: "0 0 18px", letterSpacing: "-0.7px", lineHeight: 1.18 }, children: [
             "Create or restore",
@@ -41912,8 +42086,14 @@ function Onboarding({ onDone }) {
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 18, fontWeight: 600, color: "rgba(255,255,255,0.85)", margin: "0 0 14px", lineHeight: 1.5 }, children: "Your keys. Your crypto. Your browser." }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 14, color: "rgba(255,255,255,0.50)", lineHeight: 1.65, margin: "0 0 40px" }, children: "Generate a new 12-word seed phrase or restore an existing wallet. Your keys are encrypted and stored only on this device." }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(GradBtn, { onClick: () => setStep("create-password"), children: "Create Wallet" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(PlainBtn, { onClick: () => setStep("import"), children: "Import Wallet" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(GradBtn, { onClick: () => {
+              setMode("create");
+              setStep("before-we-begin");
+            }, children: "Create Wallet" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(PlainBtn, { onClick: () => {
+              setMode("import");
+              setStep("before-we-begin");
+            }, children: "Import Wallet" })
           ] })
         ] })
       ] }, "choose")
@@ -41921,7 +42101,42 @@ function Onboarding({ onDone }) {
   ] });
 }
 function LightCard({ children, style }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { maxWidth: 720, margin: "0 auto", padding: "0 40px 0" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { background: "#fff", borderRadius: 20, padding: "44px 52px 48px", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", ...style }, children }) });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { maxWidth: 740, margin: "0 auto", padding: "0 28px 24px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: {
+    background: "#fff",
+    borderRadius: 20,
+    padding: "36px 56px 48px",
+    boxShadow: "0 2px 20px rgba(0,0,0,0.08)",
+    ...style
+  }, children }) });
+}
+const backBtnInCard = {
+  width: 40,
+  height: 40,
+  borderRadius: "50%",
+  border: "1.5px solid #C7D2FE",
+  background: "transparent",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  cursor: "pointer",
+  color: "#4F46E5",
+  marginBottom: 20,
+  transition: "background 0.12s"
+};
+const importOptionRow = {
+  display: "flex",
+  alignItems: "center",
+  gap: 16,
+  padding: "20px 0",
+  cursor: "pointer",
+  transition: "background 0.1s",
+  borderRadius: 8,
+  margin: "0 -8px",
+  paddingLeft: 8,
+  paddingRight: 8
+};
+function ArrowRight({ size = 20, color: color2 = "#4F46E5", style }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: color2, strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", style, children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M9 18l6-6-6-6" }) });
 }
 function GradCard({ children }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: "100%", maxWidth: 680, borderRadius: 24, padding: "94px 64px 52px", background: "rgba(255,255,255,0.16)", backdropFilter: "blur(28px)", WebkitBackdropFilter: "blur(28px)", textAlign: "center", position: "relative", zIndex: 1, boxShadow: "0 20px 60px rgba(0,0,0,0.30)" }, children });
@@ -42066,7 +42281,9 @@ function Dashboard({ onOpenBrowser }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", height: "100vh", background: "#F5F6FA", overflow: "hidden", fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif", fontSize: 14 }, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("aside", { style: { width: 240, background: "#fff", borderRight: "1px solid #E5E7EB", display: "flex", flexDirection: "column", flexShrink: 0 }, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { padding: "20px 20px 16px", display: "flex", alignItems: "center", gap: 10, borderBottom: "1px solid #F3F4F6" }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 30, height: 30, borderRadius: 8, background: "#00FF87", display: "flex", alignItems: "center", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 16, color: "#000", strokeWidth: 2.5 }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: "/logo.png", alt: "Orivon", style: { width: 30, height: 30, borderRadius: 8, objectFit: "contain" }, onError: (e) => {
+          e.target.style.display = "none";
+        } }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 16, fontWeight: 700, color: "#111827" }, children: "dashboard" })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("nav", { style: { flex: 1, overflowY: "auto", padding: "8px 0" }, children: NAV.map(({ id: id2, label, Icon: Icon2 }) => {
@@ -43416,7 +43633,10 @@ function NewTab({ onNavigate }) {
         padding: "12px 20px",
         boxShadow: "0 8px 32px rgba(0,0,0,0.4)"
       }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 26, height: 26, borderRadius: 8, background: "#00FF87", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 14, color: "#000", strokeWidth: 2.5 }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: "/logo.png", alt: "Orivon", style: { width: 26, height: 26, borderRadius: 8, objectFit: "contain", flexShrink: 0 }, onError: (e) => {
+          const el = e.target;
+          el.style.display = "none";
+        } }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           "input",
           {
@@ -43931,7 +44151,7 @@ function Browser({ onOpenDashboard } = {}) {
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `h-10 flex items-center gap-1 px-2 border-b ${toolbarBg} shrink-0`, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(NavBtn, { onClick: handleBack, disabled: !canBack, isDark, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 14 }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(NavBtn, { onClick: handleForward, disabled: !canForward, isDark, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 14 }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(NavBtn, { onClick: handleForward, disabled: !canForward, isDark, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight$1, { size: 14 }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(NavBtn, { onClick: activeTab?.isLoading ? () => webviewRefs.current[activeTabId]?.stop() : handleReload, isDark, children: /* @__PURE__ */ jsxRuntimeExports.jsx(RotateCcw, { size: 13, className: activeTab?.isLoading ? "animate-spin" : "" }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("form", { onSubmit: handleAddrSubmit, className: "flex-1 mx-2 no-drag", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `relative flex items-center h-8 rounded-2xl transition-all ${addrBg}`, children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute left-3 pointer-events-none", children: !activeTab || activeTab.url === NEW_TAB ? /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 12, className: isDark ? "text-white/25" : "text-black/25" }) : isSecureURL(activeTab.url) ? /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 11, className: "text-[#00FF87]/70" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 12, className: isDark ? "text-white/25" : "text-black/25" }) }),

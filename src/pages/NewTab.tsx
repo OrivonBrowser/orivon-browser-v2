@@ -60,7 +60,7 @@ export default function NewTab({ onNavigate }: NewTabProps) {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
 
-      {/* Background image */}
+      {/* Background image — edge to edge */}
       <img
         src={bgUrl}
         alt=""
@@ -72,23 +72,25 @@ export default function NewTab({ onNavigate }: NewTabProps) {
         onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
       />
 
-      {/* Dark overlay for readability */}
-      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.28)', zIndex: 1 }} />
+      {/* Bottom gradient — darkens only the lower portion for bottom bar readability */}
+      <div style={{
+        position: 'absolute', inset: 0, zIndex: 1,
+        background: 'linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.70) 100%)',
+      }} />
 
-      {/* Settings gear - top right */}
+      {/* Settings gear — top right, minimal */}
       <button
         style={{
-          position: 'absolute', top: 16, right: 16, zIndex: 10,
-          width: 36, height: 36, borderRadius: '50%',
-          background: 'rgba(0,0,0,0.35)', border: 'none',
+          position: 'absolute', top: 18, right: 20, zIndex: 10,
+          background: 'none', border: 'none',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          cursor: 'pointer', color: 'rgba(255,255,255,0.7)',
-          backdropFilter: 'blur(4px)', transition: 'background 0.15s',
+          cursor: 'pointer', color: 'rgba(255,255,255,0.80)',
+          transition: 'color 0.15s',
         }}
-        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.55)'; }}
-        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.35)'; }}
+        onMouseEnter={e => { e.currentTarget.style.color = '#fff'; }}
+        onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.80)'; }}
       >
-        <Settings size={16} />
+        <Settings size={18} />
       </button>
 
       {/* Centered content */}
@@ -99,27 +101,25 @@ export default function NewTab({ onNavigate }: NewTabProps) {
         gap: 0,
       }}>
 
-        {/* Search bar — Brave style, dark pill */}
-        <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: 520, marginBottom: 40 }}>
+        {/* Search bar — white pill, Brave style */}
+        <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: 580, marginBottom: 40 }}>
           <div style={{
-            display: 'flex', alignItems: 'center', gap: 12,
-            background: 'rgba(20,20,30,0.85)',
+            display: 'flex', alignItems: 'center', gap: 10,
+            background: 'rgba(255,255,255,0.93)',
             backdropFilter: 'blur(20px)',
-            borderRadius: 9999, padding: '12px 20px',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+            borderRadius: 9999, padding: '12px 22px',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.20)',
           }}>
-            <div style={{ width: 26, height: 26, borderRadius: 8, background: '#00FF87', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <Globe size={14} color="#000" strokeWidth={2.5} />
-            </div>
+            <Shield size={20} color="#FB5B22" style={{ flexShrink: 0 }} />
             <input
               ref={inputRef}
               type="text"
               value={query}
               onChange={e => setQuery(e.target.value)}
-              placeholder="Search or enter address · .eth · ipfs://"
+              placeholder="Ask anything, find anything..."
               style={{
                 flex: 1, background: 'transparent', border: 'none', outline: 'none',
-                fontSize: 15, color: 'rgba(255,255,255,0.85)',
+                fontSize: 15, color: '#1a1a2e',
                 fontFamily: 'inherit',
               }}
               // @ts-ignore — placeholder color via CSS
@@ -151,48 +151,138 @@ export default function NewTab({ onNavigate }: NewTabProps) {
         </div>
       </div>
 
-      {/* Bottom stats — Brave-style */}
+      {/* Bottom bar — three panels flush to bottom edge */}
       <div style={{
-        position: 'absolute', bottom: 0, left: 0, zIndex: 5,
-        display: 'flex', gap: 0, padding: 0,
+        position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 10,
+        display: 'flex', alignItems: 'stretch',
       }}>
-        <StatPanel
-          label="STATS"
-          items={[
-            { value: '12', unit: '', desc: 'Trackers & ads blocked', color: '#fff' },
-            { value: `${trackerNodes.length}`, unit: ' KB', desc: 'ENS resolutions', color: '#00D1FF' },
-            { value: '0', unit: ' Seconds', desc: 'Time saved', color: '#fff' },
-          ]}
-        />
+
+        {/* STATS panel */}
+        <div style={{
+          background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(18px)',
+          padding: '14px 28px 18px',
+          flex: '0 0 auto',
+        }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.42)', letterSpacing: '0.12em', textTransform: 'uppercase', margin: '0 0 10px' }}>STATS</p>
+          <div style={{ display: 'flex', gap: 36 }}>
+            <StatCol value="12" unit="" desc="Trackers & ads blocked" />
+            <StatCol value={`${trackerNodes.length}`} unit=" KB" desc="Bandwidth saved" />
+            <StatCol value="0" unit=" Seconds" desc="Time saved" />
+          </div>
+        </div>
+
+        {/* NEWS panel */}
+        <div style={{
+          background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(18px)',
+          padding: '14px 24px 18px',
+          flex: 1,
+          borderLeft: '1px solid rgba(255,255,255,0.06)',
+        }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.42)', letterSpacing: '0.12em', textTransform: 'uppercase', margin: '0 0 10px' }}>NEWS</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            {/* Thumbnail */}
+            <div style={{
+              width: 44, height: 44, borderRadius: 10, flexShrink: 0,
+              background: 'rgba(255,255,255,0.10)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <span style={{ fontSize: 20 }}>📰</span>
+            </div>
+            {/* Headline */}
+            <p style={{ flex: 1, fontSize: 13, fontWeight: 600, color: '#fff', margin: 0, lineHeight: 1.45 }}>
+              Turn on Brave News, and<br />never miss a story
+            </p>
+            {/* CTA */}
+            <button style={{
+              padding: '8px 18px', borderRadius: 9999, flexShrink: 0,
+              background: 'rgba(255,255,255,0.14)', border: 'none',
+              color: '#fff', fontSize: 13, fontWeight: 600,
+              cursor: 'pointer', whiteSpace: 'nowrap',
+              transition: 'background 0.15s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.22)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.14)'; }}
+            >
+              Turn on Brave News
+            </button>
+          </div>
+        </div>
+
+        {/* BRAVE VPN panel */}
+        <div style={{
+          background: 'rgba(18,18,18,0.60)', backdropFilter: 'blur(18px)',
+          padding: '14px 24px 18px',
+          minWidth: 370,
+          borderLeft: '1px solid rgba(255,255,255,0.06)',
+        }}>
+          {/* Header row */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+            <Shield size={15} color="#FB5B22" />
+            <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', letterSpacing: '0.04em' }}>BRAVE VPN</span>
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', marginLeft: 4 }}>Powered by Guardian</span>
+          </div>
+          {/* Body row */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            <div style={{ flex: 1 }}>
+              {[
+                'Extra privacy & security online',
+                'Hide your IP & change your location',
+                'Protect every app on your device',
+              ].map((item, i) => (
+                <p key={i} style={{ fontSize: 11, color: 'rgba(255,255,255,0.52)', margin: '3px 0', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{
+                    width: 13, height: 13, borderRadius: '50%',
+                    border: '1px solid rgba(255,255,255,0.28)',
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 8, flexShrink: 0,
+                  }}>✓</span>
+                  {item}
+                </p>
+              ))}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
+              <button style={{
+                padding: '8px 18px', borderRadius: 9999,
+                background: '#fff', border: 'none',
+                color: '#111', fontSize: 13, fontWeight: 700,
+                cursor: 'pointer', whiteSpace: 'nowrap',
+                transition: 'opacity 0.15s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.opacity = '0.88'; }}
+              onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
+              >
+                Start free trial
+              </button>
+              <button style={{
+                background: 'none', border: 'none', padding: 0,
+                fontSize: 11, color: 'rgba(255,255,255,0.38)',
+                cursor: 'pointer',
+                transition: 'color 0.15s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.70)'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.38)'; }}
+              >
+                Already purchased?
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
 
-      {/* Placeholder CSS for input placeholder color */}
-      <style>{`.newtab-input::placeholder { color: rgba(255,255,255,0.35); }`}</style>
+      {/* Placeholder color for white search bar */}
+      <style>{`.newtab-input::placeholder { color: rgba(0,0,0,0.38); }`}</style>
     </div>
   );
 }
 
-function StatPanel({ label, items }: {
-  label: string;
-  items: { value: string; unit: string; desc: string; color: string }[];
-}) {
+function StatCol({ value, unit, desc }: { value: string; unit: string; desc: string }) {
   return (
-    <div style={{
-      background: 'rgba(20,20,30,0.75)', backdropFilter: 'blur(20px)',
-      borderTopRightRadius: 16, padding: '16px 24px',
-      minWidth: 380,
-    }}>
-      <p style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 10px' }}>{label}</p>
-      <div style={{ display: 'flex', gap: 32 }}>
-        {items.map((item, i) => (
-          <div key={i}>
-            <p style={{ margin: 0, fontSize: 22, fontWeight: 700, color: item.color, letterSpacing: '-0.5px' }}>
-              {item.value}<span style={{ fontSize: 14, fontWeight: 400, color: item.color }}>{item.unit}</span>
-            </p>
-            <p style={{ margin: '2px 0 0', fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>{item.desc}</p>
-          </div>
-        ))}
-      </div>
+    <div>
+      <p style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#6366F1', letterSpacing: '-0.5px' }}>
+        {value}<span style={{ fontSize: 13, fontWeight: 500, color: '#6366F1' }}>{unit}</span>
+      </p>
+      <p style={{ margin: '2px 0 0', fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>{desc}</p>
     </div>
   );
 }
