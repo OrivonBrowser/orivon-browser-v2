@@ -153,8 +153,13 @@ export const useWalletStore = create<WalletState>()(
 
       lock: () => set({ status: 'locked', _wallet: null }),
 
-      clearWallet: () =>
-        set({ status: 'none', encryptedJson: null, addresses: null, mnemonic: null, _wallet: null }),
+      clearWallet: () => {
+        // Wipe all persisted Zustand stores so the next launch starts fresh
+        ['orivon-wallet', 'orivon-tabs', 'orivon-runtime'].forEach(k =>
+          localStorage.removeItem(k)
+        );
+        set({ status: 'none', encryptedJson: null, addresses: null, mnemonic: null, _wallet: null });
+      },
 
       sign: async (message) => {
         const { _wallet } = get();

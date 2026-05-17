@@ -1,54 +1,48 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  ArrowRight, ArrowLeft, Eye, EyeOff,
-  Copy, CircleCheck, Shield, Key, Globe,
-  CircleHelp, Settings
+  ArrowLeft, Eye, EyeOff, Copy, CheckCircle,
+  Globe, CircleHelp, Settings, Lock, EyeOff as EyeOffIcon
 } from 'lucide-react';
 import { useWalletStore } from '../store/wallet';
 
+// ─── Types ────────────────────────────────────────────────────────────────────
 type Step =
-  | 'welcome'
-  | 'choose'
-  | 'create-phrase'
-  | 'create-password'
-  | 'import'
-  | 'encrypting'
-  | 'success';
+  | 'welcome' | 'choose'
+  | 'create-password' | 'encrypting'
+  | 'create-phrase' | 'verify-phrase'
+  | 'import' | 'success';
 
-interface OnboardingProps {
-  onDone: (hasWallet: boolean) => void;
-}
+interface OnboardingProps { onDone: (hasWallet: boolean) => void; }
 
 const SLIDE = {
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } },
-  exit:    { opacity: 0, y: -6, transition: { duration: 0.18, ease: 'easeIn' } },
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] } },
+  exit:    { opacity: 0, y: -6, transition: { duration: 0.16, ease: 'easeIn' } },
 };
 
-// ── Frosted card used by every step except welcome ────────────────────────────
-function InnerCard({ children }: { children: React.ReactNode }) {
-  return (
-    <div
-      style={{
-        width: '100%',
-        maxWidth: 480,
-        borderRadius: 20,
-        padding: '36px 40px 36px',
-        background: 'rgba(255,255,255,0.13)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-        boxShadow: '0 16px 48px rgba(0,0,0,0.35)',
-        textAlign: 'left',
-      }}
-    >
-      {children}
-    </div>
-  );
+function pwStrength(pw: string) {
+  if (!pw) return { score: 0, label: '', color: '#E5E7EB' };
+  let s = 0;
+  if (pw.length >= 8) s++; if (pw.length >= 12) s++;
+  if (/[A-Z]/.test(pw)) s++; if (/[0-9]/.test(pw)) s++;
+  if (/[^A-Za-z0-9]/.test(pw)) s++;
+  if (s <= 1) return { score: 1, label: 'Weak',   color: '#EF4444' };
+  if (s <= 3) return { score: 2, label: 'Medium', color: '#F59E0B' };
+  return             { score: 3, label: 'Strong', color: '#10B981' };
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// Pick 3 unique random indices from 0-11
+function pickVerifyIndices(): number[] {
+  const all = Array.from({ length: 12 }, (_, i) => i);
+  for (let i = all.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [all[i], all[j]] = [all[j], all[i]];
+  }
+  return all.slice(0, 3).sort((a, b) => a - b);
+}
 
+// ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Onboarding({ onDone }: OnboardingProps) {
   const { generateMnemonic, createWallet, importWallet } = useWalletStore();
 
@@ -58,16 +52,26 @@ export default function Onboarding({ onDone }: OnboardingProps) {
   const [password, setPassword]   = useState('');
   const [confirmPw, setConfirmPw] = useState('');
   const [showPw, setShowPw]       = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [phraseShown, setPhraseShown] = useState(false);   // true after "Show" is clicked
   const [copied, setCopied]       = useState(false);
   const [progress, setProgress]   = useState(0);
   const [error, setError]         = useState('');
 
-  const words = mnemonic.split(' ');
+  // Verify step
+  const [verifyIndices]           = useState(() => pickVerifyIndices());
+  const [verifyStep, setVerifyStep] = useState(0);  // 0,1,2
+  const [verifyInput, setVerifyInput] = useState('');
+  const [verifyError, setVerifyError] = useState('');
 
-  const copyPhrase = () => {
+  const words   = mnemonic.split(' ');
+  const strength = pwStrength(password);
+  const canContinue = password.length >= 6 && password === confirmPw;
+
+  const copyAll = () => {
     navigator.clipboard.writeText(mnemonic);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 2500);
   };
 
   const handleCreate = useCallback(async () => {
@@ -76,11 +80,8 @@ export default function Onboarding({ onDone }: OnboardingProps) {
     setError(''); setStep('encrypting');
     try {
       await createWallet(mnemonic, password, setProgress);
-      setStep('success');
-    } catch (e) {
-      setStep('create-password');
-      setError(String(e));
-    }
+      setStep('create-phrase');
+    } catch (e) { setStep('create-password'); setError(String(e)); }
   }, [password, confirmPw, mnemonic, createWallet]);
 
   const handleImport = useCallback(async () => {
@@ -92,320 +93,452 @@ export default function Onboarding({ onDone }: OnboardingProps) {
     try {
       await importWallet(phrase, password, setProgress);
       setStep('success');
-    } catch (e) {
-      setStep('import');
-      setError(String(e));
-    }
+    } catch (e) { setStep('import'); setError(String(e)); }
   }, [importPhrase, password, importWallet]);
 
-  return (
-    <div
-      style={{
-        position: 'relative',
-        width: '100vw',
-        height: '100vh',
-        overflow: 'hidden',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: '#0a0a0a',
-      }}
-    >
-      {/* Background image */}
-      <img
-        src="/background.jpg"
-        alt=""
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          opacity: 0.5,
-          zIndex: 0,
-        }}
-      />
+  const handleVerify = () => {
+    const expected = words[verifyIndices[verifyStep]].toLowerCase().trim();
+    if (verifyInput.toLowerCase().trim() !== expected) {
+      setVerifyError(`Incorrect. Check your phrase and try again.`);
+      return;
+    }
+    setVerifyError(''); setVerifyInput('');
+    if (verifyStep < 2) { setVerifyStep(v => v + 1); }
+    else { setStep('success'); }
+  };
 
-      {/* Top-right icons */}
-      <div style={{ position: 'absolute', top: 24, right: 32, zIndex: 20, display: 'flex', gap: 20 }}>
-        <button style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>
-          <CircleHelp size={20} />
-        </button>
-        <button style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>
-          <Settings size={20} />
-        </button>
-      </div>
+  const isGradientStep = step === 'welcome' || step === 'choose';
 
-      {/* Content */}
-      <div style={{ position: 'relative', zIndex: 10, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 24px' }}>
+  // ── LIGHT THEME (inner steps) ─────────────────────────────────────────────
+  if (!isGradientStep) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#F5F6FA', overflowY: 'auto' }}>
+        {/* Wallet header — scrolls away */}
+        <div style={{ padding: '24px 48px 8px', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 28, height: 28, borderRadius: 8, background: '#00FF87', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Globe size={15} color="#000" strokeWidth={2.5} />
+          </div>
+          <span style={{ fontSize: 15, fontWeight: 600, color: '#1A1A2E' }}>Orivon Wallet</span>
+        </div>
+
         <AnimatePresence mode="wait">
 
-          {/* ── WELCOME ──────────────────────────────────────────────────── */}
-          {step === 'welcome' && (
-            <motion.div
-              key="welcome"
-              {...SLIDE}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}
-            >
-              {/* Logo — floats above, overlaps card top by ~58px */}
-              <div style={{ position: 'relative', zIndex: 2, marginBottom: -58 }}>
-                <div style={{
-                  width: 116, height: 116,
-                  borderRadius: 28,
-                  background: 'linear-gradient(145deg, #00FF87, #00E87A)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  boxShadow: '0 12px 40px rgba(0,255,135,0.40), 0 4px 12px rgba(0,0,0,0.5)',
-                }}>
-                  <Globe size={56} color="#000" strokeWidth={1.8} />
+          {/* ── Create password ──────────────────────────────────────── */}
+          {step === 'create-password' && (
+            <motion.div key="create-pw" {...SLIDE}>
+              <BackCircle onClick={() => setStep('choose')} />
+              <LightCard>
+                <h1 style={titleStyle}>Create a new password</h1>
+                <p style={subStyle}>You will use this password each time you access your wallet.</p>
+
+                <FieldLabel>Enter new password <Required /></FieldLabel>
+                <div style={{ position: 'relative', marginBottom: 8 }}>
+                  <input type={showPw ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter new password" autoFocus style={inputSt} />
+                  <EyeBtn show={showPw} toggle={() => setShowPw(p => !p)} />
                 </div>
-              </div>
+                {password.length > 0 && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+                    <div style={{ flex: 1, display: 'flex', gap: 4 }}>
+                      {[1,2,3].map(i => <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: strength.score >= i ? strength.color : '#E5E7EB', transition: 'background 0.2s' }} />)}
+                    </div>
+                    <span style={{ fontSize: 12, color: strength.color, fontWeight: 500 }}>{strength.label}</span>
+                  </div>
+                )}
+                {!password && <div style={{ marginBottom: 20 }} />}
 
-              {/* Card */}
-              <div style={{
-                width: '100%', maxWidth: 680, borderRadius: 24,
-                /* paddingTop covers the logo overlap (58px) + breathing room (36px) */
-                padding: '94px 64px 52px',
-                background: 'rgba(255,255,255,0.16)',
-                backdropFilter: 'blur(28px)',
-                WebkitBackdropFilter: 'blur(28px)',
-                textAlign: 'center',
-                position: 'relative', zIndex: 1,
-                boxShadow: '0 20px 60px rgba(0,0,0,0.30)',
-              }}>
-                {/* Headline */}
-                <h1 style={{
-                  fontSize: 42,
-                  fontWeight: 800,
-                  color: '#ffffff',
-                  margin: '0 0 16px',
-                  letterSpacing: '-0.8px',
-                  lineHeight: 1.15,
-                }}>
-                  Web3. By Default.
-                </h1>
+                <FieldLabel>Re-enter password <Required /></FieldLabel>
+                <div style={{ position: 'relative', marginBottom: confirmPw && confirmPw !== password ? 6 : 28 }}>
+                  <input type={showConfirm ? 'text' : 'password'} value={confirmPw} onChange={e => setConfirmPw(e.target.value)} placeholder="Re-enter password" onKeyDown={e => e.key === 'Enter' && canContinue && handleCreate()} style={{ ...inputSt, borderColor: confirmPw && confirmPw !== password ? '#EF4444' : '#E5E7EB' }} />
+                  <EyeBtn show={showConfirm} toggle={() => setShowConfirm(p => !p)} />
+                </div>
+                {confirmPw && confirmPw !== password && <p style={{ fontSize: 12, color: '#EF4444', marginBottom: 20 }}>Passwords do not match</p>}
 
-                {/* Two-line subtitle */}
-                <p style={{
-                  fontSize: 18,
-                  color: 'rgba(255,255,255,0.65)',
-                  lineHeight: 1.65,
-                  margin: '0 0 44px',
-                }}>
-                  Browse ENS domains and decentralized apps natively.
-                  <br />
-                  Your wallet lives inside the browser, not an extension.
+                {/* Auto-lock */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', background: '#EEF2FF', borderRadius: 12, marginBottom: 32 }}>
+                  <div style={{ width: 30, height: 30, borderRadius: 8, background: '#E0E7FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Lock size={15} color="#4F46E5" />
+                  </div>
+                  <span style={{ fontSize: 14, color: '#374151', flex: 1 }}>Orivon will auto-lock after</span>
+                  <select style={{ padding: '6px 10px', borderRadius: 8, border: '1px solid #D1D5DB', background: '#fff', fontSize: 13, color: '#374151', cursor: 'pointer' }}>
+                    <option>5 Minutes</option><option>15 Minutes</option><option>1 Hour</option><option>Never</option>
+                  </select>
+                </div>
+
+                {error && <p style={{ fontSize: 13, color: '#EF4444', textAlign: 'center', marginBottom: 14 }}>{error}</p>}
+                <CenterBtn onClick={handleCreate} disabled={!canContinue}>Continue</CenterBtn>
+              </LightCard>
+            </motion.div>
+          )}
+
+          {/* ── Encrypting ───────────────────────────────────────────── */}
+          {step === 'encrypting' && (
+            <motion.div key="encrypting" {...SLIDE}>
+              <LightCard style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 520 }}>
+                <div style={{ width: 52, height: 52, marginBottom: 22 }}>
+                  <svg width="52" height="52" viewBox="0 0 52 52" style={{ animation: 'spin 1s linear infinite' }}>
+                    <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+                    <circle cx="26" cy="26" r="22" stroke="#E0E7FF" strokeWidth="3" fill="none" />
+                    <circle cx="26" cy="26" r="22" stroke="#4F46E5" strokeWidth="3" fill="none" strokeDasharray="110" strokeDashoffset="80" strokeLinecap="round" />
+                  </svg>
+                </div>
+                <p style={{ fontSize: 18, fontWeight: 600, color: '#111827', margin: 0 }}>Creating Wallet…</p>
+              </LightCard>
+            </motion.div>
+          )}
+
+          {/* ── Recovery phrase ──────────────────────────────────────── */}
+          {step === 'create-phrase' && (
+            <motion.div key="phrase" {...SLIDE}>
+              <BackCircle onClick={() => setStep('create-password')} />
+              <LightCard>
+                <h1 style={{ ...titleStyle, textAlign: 'center' }}>Save your recovery phrase</h1>
+                <p style={{ fontSize: 15, color: '#6B7280', lineHeight: 1.65, marginBottom: 16 }}>
+                  The 12-word recovery phrase is a private key you can use to regain access to your wallet in case you lose a connected device. Store it someplace safe, and in the exact order it appears below.
+                </p>
+                <p style={{ fontSize: 15, fontWeight: 700, color: '#111827', lineHeight: 1.5, marginBottom: 28 }}>
+                  Keep it in a secure place that is not accessible to others and avoid sharing it with anyone.
                 </p>
 
-                {/* Button — NOT full width, centered like Brave */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }}>
-                  <button
-                    onClick={() => setStep('choose')}
-                    style={{
-                      width: '68%', height: 56,
-                      borderRadius: 9999,
-                      background: '#4F46E5',
-                      color: '#ffffff', fontSize: 17, fontWeight: 600,
-                      border: 'none', cursor: 'pointer',
-                      letterSpacing: '-0.1px',
-                      boxShadow: '0 4px 20px rgba(79,70,229,0.45)',
-                      transition: 'filter 0.15s, transform 0.1s',
-                    }}
-                    onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.14)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; }}
-                    onMouseDown={e =>  { e.currentTarget.style.transform = 'scale(0.97)'; }}
-                    onMouseUp={e =>    { e.currentTarget.style.transform = 'scale(1)'; }}
-                  >
-                    Create / Import Wallet
-                  </button>
+                {/* Phrase grid */}
+                <div
+                  style={{
+                    border: '1px solid #E5E7EB', borderRadius: 12,
+                    padding: '20px 20px',
+                    display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10,
+                    marginBottom: 14, position: 'relative', cursor: 'default',
+                  }}
+                  onMouseEnter={() => phraseShown && undefined}
+                >
+                  {/* Blur overlay when not shown */}
+                  {!phraseShown && (
+                    <div style={{
+                      position: 'absolute', inset: 0, zIndex: 5,
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                      borderRadius: 11, background: 'rgba(249,250,251,0.05)',
+                      pointerEvents: 'none',
+                    }}>
+                      <EyeOff size={22} color="#9CA3AF" />
+                    </div>
+                  )}
 
-                  <button
-                    onClick={() => onDone(false)}
-                    style={{
-                      background: 'none', border: 'none',
-                      color: 'rgba(255,255,255,0.52)', fontSize: 16,
-                      cursor: 'pointer', padding: '4px 0',
-                      transition: 'color 0.15s',
-                    }}
-                    onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.85)')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.52)')}
-                  >
-                    Skip
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {/* ── Choose ────────────────────────────────────────────────────── */}
-          {step === 'choose' && (
-            <motion.div key="choose" {...SLIDE} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-              <InnerCard>
-                <BackBtn onClick={() => setStep('welcome')} />
-                <Title>Set up your wallet</Title>
-                <Sub>How would you like to get started?</Sub>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
-                  <OptionBtn
-                    icon={<Shield size={18} color="#00FF87" />}
-                    iconBg="rgba(0,255,135,0.15)"
-                    label="Create new wallet"
-                    sub="Generate a fresh 12-word seed phrase"
-                    onClick={() => setStep('create-phrase')}
-                    accent
-                  />
-                  <OptionBtn
-                    icon={<Key size={18} color="rgba(255,255,255,0.55)" />}
-                    iconBg="rgba(255,255,255,0.08)"
-                    label="Import existing wallet"
-                    sub="Restore from your 12 or 24-word phrase"
-                    onClick={() => setStep('import')}
-                  />
-                </div>
-              </InnerCard>
-            </motion.div>
-          )}
-
-          {/* ── Seed phrase ───────────────────────────────────────────────── */}
-          {step === 'create-phrase' && (
-            <motion.div key="phrase" {...SLIDE} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-              <InnerCard>
-                <BackBtn onClick={() => setStep('choose')} />
-                <Title>Your recovery phrase</Title>
-                <Sub>Write down these 12 words and store them somewhere safe. This is the only way to recover your wallet.</Sub>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6, margin: '16px 0' }}>
                   {words.map((word, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '8px 10px' }}>
-                      <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.22)', width: 14, flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
-                      <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.82)' }}>{word}</span>
+                    <div key={i} style={{
+                      display: 'flex', alignItems: 'center', gap: 8,
+                      padding: '10px 12px', borderRadius: 8,
+                      background: '#F9FAFB', border: '1px solid #F3F4F6',
+                      filter: phraseShown ? 'blur(0)' : 'blur(6px)',
+                      transition: 'filter 0.3s ease',
+                      userSelect: phraseShown ? 'text' : 'none',
+                    }}>
+                      <span style={{ fontSize: 12, color: '#9CA3AF', fontWeight: 500 }}>#{i + 1}.</span>
+                      <span style={{ fontSize: 14, fontWeight: 600, color: '#1F2937' }}>{word}</span>
                     </div>
                   ))}
                 </div>
 
-                <button
-                  onClick={copyPhrase}
+                {/* Show / Copy / Continue */}
+                {!phraseShown ? (
+                  <>
+                    {/* "Show my recovery phrase" */}
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+                      <button
+                        onClick={() => setPhraseShown(true)}
+                        style={{
+                          width: '62%', height: 50, borderRadius: 9999,
+                          background: '#4F46E5', color: '#fff', fontSize: 15, fontWeight: 600,
+                          border: 'none', cursor: 'pointer',
+                          boxShadow: '0 2px 14px rgba(79,70,229,0.35)',
+                          transition: 'filter 0.15s',
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.1)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; }}
+                      >
+                        Show my recovery phrase
+                      </button>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                      <button onClick={() => onDone(true)} style={skipBtnStyle} onMouseEnter={e => (e.currentTarget.style.color = '#374151')} onMouseLeave={e => (e.currentTarget.style.color = '#9CA3AF')}>Skip</button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Click to copy — outlined pill */}
+                    <button
+                      onClick={copyAll}
+                      style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                        width: '100%', height: 46, borderRadius: 9999, marginBottom: 14,
+                        background: 'transparent',
+                        border: `1.5px solid ${copied ? '#4F46E5' : '#D1D5DB'}`,
+                        color: copied ? '#4F46E5' : '#6B7280',
+                        fontSize: 14, fontWeight: 500, cursor: 'pointer',
+                        transition: 'border-color 0.15s, color 0.15s',
+                      }}
+                    >
+                      {copied ? <CheckCircle size={14} /> : <Copy size={14} />}
+                      {copied ? 'Copied!' : 'Click to copy'}
+                    </button>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 14 }}>
+                      <button
+                        onClick={() => setStep('verify-phrase')}
+                        style={{
+                          width: '55%', height: 50, borderRadius: 9999,
+                          background: '#4F46E5', color: '#fff', fontSize: 15, fontWeight: 600,
+                          border: 'none', cursor: 'pointer',
+                          boxShadow: '0 2px 14px rgba(79,70,229,0.3)',
+                          transition: 'filter 0.15s',
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.1)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; }}
+                      >
+                        Continue
+                      </button>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                      <button onClick={() => onDone(true)} style={skipBtnStyle} onMouseEnter={e => (e.currentTarget.style.color = '#374151')} onMouseLeave={e => (e.currentTarget.style.color = '#9CA3AF')}>Skip</button>
+                    </div>
+                  </>
+                )}
+              </LightCard>
+            </motion.div>
+          )}
+
+          {/* ── Verify phrase (3 checks) ─────────────────────────────── */}
+          {step === 'verify-phrase' && (
+            <motion.div key={`verify-${verifyStep}`} {...SLIDE}>
+              {/* No back button on verify — going back would require re-showing phrase */}
+              <LightCard style={{ minHeight: 560 }}>
+                {/* Title + progress dots */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginBottom: 60 }}>
+                  <h1 style={{ fontSize: 28, fontWeight: 700, color: '#111827', margin: 0 }}>Let's check</h1>
+                  <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                    {[0,1,2].map(i => (
+                      <div key={i} style={{
+                        height: 8,
+                        width: i === verifyStep ? 22 : 8,
+                        borderRadius: 4,
+                        background: i < verifyStep ? '#4F46E5' : i === verifyStep ? '#4F46E5' : '#D1D5DB',
+                        opacity: i < verifyStep ? 0.4 : 1,
+                        transition: 'all 0.3s ease',
+                      }} />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Question */}
+                <p style={{ fontSize: 15, color: '#374151', textAlign: 'center', marginBottom: 20 }}>
+                  Enter the word in position <strong>{verifyIndices[verifyStep] + 1}</strong> from your recovery phrase.
+                </p>
+
+                {/* Input */}
+                <input
+                  key={verifyStep}
+                  type="text"
+                  value={verifyInput}
+                  onChange={e => { setVerifyInput(e.target.value); setVerifyError(''); }}
+                  onKeyDown={e => e.key === 'Enter' && verifyInput && handleVerify()}
+                  autoFocus
+                  placeholder=""
                   style={{
-                    width: '100%', height: 38, borderRadius: 10, fontSize: 12, fontWeight: 500,
-                    background: copied ? 'rgba(0,255,135,0.12)' : 'rgba(255,255,255,0.05)',
-                    border: `1px solid ${copied ? 'rgba(0,255,135,0.3)' : 'rgba(255,255,255,0.1)'}`,
-                    color: copied ? '#00FF87' : 'rgba(255,255,255,0.45)',
-                    cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginBottom: 14,
+                    width: '100%', height: 52, borderRadius: 12,
+                    padding: '0 18px', fontSize: 16,
+                    background: '#F3F4F6',
+                    border: verifyError ? '1.5px solid #EF4444' : verifyInput ? '1.5px solid #4F46E5' : '1.5px solid transparent',
+                    outline: 'none', fontFamily: 'inherit',
+                    color: '#111827', boxSizing: 'border-box',
+                    transition: 'border-color 0.15s',
+                    marginBottom: verifyError ? 8 : 32,
                   }}
-                >
-                  {copied ? <CircleCheck size={13} /> : <Copy size={13} />}
-                  {copied ? 'Copied!' : 'Copy to clipboard'}
-                </button>
+                />
+                {verifyError && <p style={{ fontSize: 13, color: '#EF4444', textAlign: 'center', marginBottom: 24 }}>{verifyError}</p>}
 
-                <PrimaryBtn onClick={() => setStep('create-password')}>
-                  I have saved my phrase &nbsp;<ArrowRight size={14} />
-                </PrimaryBtn>
-              </InnerCard>
-            </motion.div>
-          )}
-
-          {/* ── Password ──────────────────────────────────────────────────── */}
-          {step === 'create-password' && (
-            <motion.div key="create-pw" {...SLIDE} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-              <InnerCard>
-                <BackBtn onClick={() => setStep('create-phrase')} />
-                <Title>Protect your wallet</Title>
-                <Sub>This password encrypts your wallet on your device. You will need it every time you unlock.</Sub>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, margin: '16px 0' }}>
-                  <PwInput value={password} onChange={setPassword} placeholder="Password (min 6 characters)" show={showPw} toggle={() => setShowPw(p => !p)} autoFocus onEnter={() => {}} />
-                  <input
-                    type="password"
-                    value={confirmPw}
-                    onChange={e => setConfirmPw(e.target.value)}
-                    placeholder="Confirm password"
-                    onKeyDown={e => e.key === 'Enter' && handleCreate()}
-                    style={inputStyle}
-                  />
+                {/* Forgot to save */}
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
+                  <button
+                    onClick={() => { setStep('create-phrase'); setPhraseShown(true); setVerifyError(''); setVerifyInput(''); }}
+                    style={{
+                      width: '75%', height: 46, borderRadius: 9999,
+                      background: '#F3F4F6', border: 'none',
+                      color: '#4F46E5', fontSize: 14, fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Forgot to save? Go back
+                  </button>
                 </div>
-                {error && <ErrMsg text={error} />}
-                <PrimaryBtn onClick={handleCreate} disabled={password.length < 6 || password !== confirmPw}>
-                  Create wallet
-                </PrimaryBtn>
-              </InnerCard>
+
+                {/* Continue */}
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+                  <button
+                    onClick={handleVerify}
+                    disabled={!verifyInput.trim()}
+                    style={{
+                      width: '55%', height: 50, borderRadius: 9999,
+                      background: verifyInput.trim() ? '#4F46E5' : '#E5E7EB',
+                      color: verifyInput.trim() ? '#fff' : '#9CA3AF',
+                      fontSize: 15, fontWeight: 600, border: 'none',
+                      cursor: verifyInput.trim() ? 'pointer' : 'not-allowed',
+                      transition: 'background 0.2s',
+                    }}
+                  >
+                    Continue
+                  </button>
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                  <button onClick={() => onDone(true)} style={skipBtnStyle} onMouseEnter={e => (e.currentTarget.style.color = '#374151')} onMouseLeave={e => (e.currentTarget.style.color = '#9CA3AF')}>Skip</button>
+                </div>
+              </LightCard>
             </motion.div>
           )}
 
-          {/* ── Import ────────────────────────────────────────────────────── */}
+          {/* ── Import ───────────────────────────────────────────────── */}
           {step === 'import' && (
-            <motion.div key="import" {...SLIDE} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-              <InnerCard>
-                <BackBtn onClick={() => setStep('choose')} />
-                <Title>Import your wallet</Title>
-                <Sub>Enter your 12 or 24-word recovery phrase to restore access to your wallet.</Sub>
+            <motion.div key="import" {...SLIDE}>
+              <BackCircle onClick={() => setStep('choose')} />
+              <LightCard>
+                <h1 style={titleStyle}>Restore your wallet</h1>
+                <p style={{ ...subStyle, marginBottom: 32 }}>Enter your 12 or 24-word recovery phrase to restore access.</p>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, margin: '16px 0' }}>
-                  <textarea
-                    value={importPhrase}
-                    onChange={e => setImport(e.target.value)}
-                    placeholder="word1 word2 word3..."
-                    rows={3}
-                    style={{ ...inputStyle, resize: 'none', fontFamily: 'monospace', paddingTop: 12 }}
-                  />
-                  <PwInput value={password} onChange={setPassword} placeholder="Set a new password" show={showPw} toggle={() => setShowPw(p => !p)} autoFocus onEnter={handleImport} />
+                <FieldLabel>Recovery phrase <Required /></FieldLabel>
+                <textarea value={importPhrase} onChange={e => setImport(e.target.value)} placeholder="word1 word2 word3..." rows={4} style={{ ...inputSt, resize: 'none', fontFamily: 'monospace', paddingTop: 14, height: 'auto', marginBottom: 20 }} />
+
+                <FieldLabel>New password <Required /></FieldLabel>
+                <div style={{ position: 'relative', marginBottom: 32 }}>
+                  <input type={showPw ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="Set a new password" onKeyDown={e => e.key === 'Enter' && handleImport()} style={inputSt} />
+                  <EyeBtn show={showPw} toggle={() => setShowPw(p => !p)} />
                 </div>
-                {error && <ErrMsg text={error} />}
-                <PrimaryBtn onClick={handleImport} disabled={importPhrase.trim().split(/\s+/).length < 12 || password.length < 6}>
-                  Import wallet
-                </PrimaryBtn>
-              </InnerCard>
+
+                {error && <p style={{ fontSize: 13, color: '#EF4444', textAlign: 'center', marginBottom: 14 }}>{error}</p>}
+                <CenterBtn onClick={handleImport} disabled={importPhrase.trim().split(/\s+/).length < 12 || password.length < 6}>Import Wallet</CenterBtn>
+              </LightCard>
             </motion.div>
           )}
 
-          {/* ── Encrypting ────────────────────────────────────────────────── */}
-          {step === 'encrypting' && (
-            <motion.div key="encrypting" {...SLIDE} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-              <InnerCard>
-                <div style={{ textAlign: 'center', padding: '16px 0' }}>
-                  <div style={{ position: 'relative', width: 64, height: 64, margin: '0 auto 20px' }}>
-                    <svg width="64" height="64" viewBox="0 0 64 64" style={{ transform: 'rotate(-90deg)' }}>
-                      <circle cx="32" cy="32" r="28" stroke="rgba(255,255,255,0.08)" strokeWidth="3" fill="none" />
-                      <circle
-                        cx="32" cy="32" r="28"
-                        stroke="#00FF87" strokeWidth="3" fill="none"
-                        strokeDasharray={`${2 * Math.PI * 28}`}
-                        strokeDashoffset={`${2 * Math.PI * 28 * (1 - progress / 100)}`}
-                        strokeLinecap="round"
-                        style={{ transition: 'stroke-dashoffset 0.3s ease' }}
-                      />
-                    </svg>
-                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <span style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>{Math.round(progress)}%</span>
+          {/* ── You're all set ───────────────────────────────────────── */}
+          {step === 'success' && (
+            <motion.div key="success" {...SLIDE}>
+              <LightCard style={{ textAlign: 'center' }}>
+                {/* Wallet illustration */}
+                <div style={{ position: 'relative', width: 180, height: 160, margin: '0 auto 28px' }}>
+                  {/* Main wallet card */}
+                  <div style={{
+                    position: 'absolute', left: '50%', top: '50%',
+                    transform: 'translate(-50%, -30%)',
+                    width: 120, height: 80, borderRadius: 16,
+                    background: 'linear-gradient(135deg, #4F46E5, #7C3AED)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: '0 8px 24px rgba(79,70,229,0.35)',
+                  }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Globe size={20} color="#fff" strokeWidth={2} />
                     </div>
                   </div>
-                  <p style={{ fontSize: 16, fontWeight: 600, color: 'rgba(255,255,255,0.85)', margin: '0 0 6px' }}>Encrypting your wallet</p>
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', margin: 0 }}>Just a moment while we secure your keys</p>
+                  {/* Floating coins */}
+                  <div style={{ position: 'absolute', top: 8, right: 16, width: 36, height: 36, borderRadius: '50%', background: '#627EEA', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(98,126,234,0.4)' }}>
+                    <span style={{ fontSize: 16 }}>Ξ</span>
+                  </div>
+                  <div style={{ position: 'absolute', top: 22, left: 12, width: 30, height: 30, borderRadius: '50%', background: '#1A1A1A', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.3)' }}>
+                    <span style={{ fontSize: 13, color: '#F7931A' }}>₿</span>
+                  </div>
+                  <div style={{ position: 'absolute', top: 70, right: 8, width: 24, height: 24, borderRadius: '50%', background: '#9945FF', boxShadow: '0 3px 8px rgba(153,69,255,0.4)' }} />
+                  {/* Stars */}
+                  {[{ t: 100, l: 30, s: 10 }, { t: 40, l: 78, s: 7 }, { t: 115, r: 30, s: 8 }].map((p, i) => (
+                    <div key={i} style={{ position: 'absolute', top: p.t, left: p.l, right: (p as any).r, width: p.s, height: p.s, borderRadius: '50%', background: i === 0 ? '#F59E0B' : '#EC4899', opacity: 0.7 }} />
+                  ))}
                 </div>
-              </InnerCard>
+
+                <h1 style={{ fontSize: 26, fontWeight: 700, color: '#111827', margin: '0 0 10px' }}>You're all set!</h1>
+                <p style={{ fontSize: 15, color: '#6B7280', margin: '0 0 36px' }}>
+                  Your Orivon Wallet is now set up and ready for Web3.
+                </p>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <button
+                    onClick={() => onDone(true)}
+                    style={{
+                      width: '62%', height: 50, borderRadius: 9999,
+                      background: '#4F46E5', color: '#fff',
+                      fontSize: 15, fontWeight: 600, border: 'none', cursor: 'pointer',
+                      boxShadow: '0 4px 16px rgba(79,70,229,0.35)',
+                      transition: 'filter 0.15s',
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.1)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; }}
+                  >
+                    Enter the world of Orivon
+                  </button>
+                </div>
+              </LightCard>
             </motion.div>
           )}
 
-          {/* ── Success ───────────────────────────────────────────────────── */}
-          {step === 'success' && (
-            <motion.div key="success" {...SLIDE} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-              <InnerCard>
-                <div style={{ textAlign: 'center', padding: '8px 0' }}>
-                  <div style={{
-                    width: 56, height: 56, borderRadius: '50%',
-                    background: 'rgba(0,255,135,0.12)', border: '1px solid rgba(0,255,135,0.25)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    margin: '0 auto 20px',
-                  }}>
-                    <CircleCheck size={26} color="#00FF87" />
-                  </div>
-                  <p style={{ fontSize: 20, fontWeight: 700, color: '#fff', margin: '0 0 8px' }}>Wallet ready</p>
-                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.42)', margin: '0 0 28px' }}>
-                    Encrypted and stored locally on your device. Only you have access.
-                  </p>
-                  <PrimaryBtn onClick={() => onDone(true)}>
-                    Open Orivon &nbsp;<ArrowRight size={14} />
-                  </PrimaryBtn>
+        </AnimatePresence>
+        <div style={{ height: 60 }} />
+      </div>
+    );
+  }
+
+  // ── GRADIENT LAYOUT (welcome + choose) ───────────────────────────────────────
+  return (
+    <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden', background: '#0a0a0a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <img src="/background.jpg" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.5, zIndex: 0 }} />
+      <div style={{ position: 'absolute', top: 24, right: 32, zIndex: 20, display: 'flex', gap: 20 }}>
+        <button style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}><CircleHelp size={20} /></button>
+        <button style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}><Settings size={20} /></button>
+      </div>
+
+      <div style={{ position: 'relative', zIndex: 10, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 24px' }}>
+        <AnimatePresence mode="wait">
+
+          {step === 'welcome' && (
+            <motion.div key="welcome" {...SLIDE} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+              <div style={{ position: 'relative', zIndex: 2, marginBottom: -58 }}>
+                <div style={{ width: 116, height: 116, borderRadius: 28, background: 'linear-gradient(145deg,#00FF87,#00E87A)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 40px rgba(0,255,135,0.40),0 4px 12px rgba(0,0,0,0.5)' }}>
+                  <Globe size={56} color="#000" strokeWidth={1.8} />
                 </div>
-              </InnerCard>
+              </div>
+              <GradCard>
+                <h1 style={{ fontSize: 42, fontWeight: 800, color: '#fff', margin: '0 0 16px', letterSpacing: '-0.8px', lineHeight: 1.15 }}>Web3. By Default.</h1>
+                <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.65)', lineHeight: 1.65, margin: '0 0 44px' }}>
+                  Browse ENS domains and decentralized apps natively.<br />
+                  Your wallet lives inside the browser, not an extension.
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }}>
+                  <GradBtn onClick={() => setStep('choose')}>Create / Import Wallet</GradBtn>
+                  <PlainBtn onClick={() => onDone(false)}>Skip</PlainBtn>
+                </div>
+              </GradCard>
+            </motion.div>
+          )}
+
+          {step === 'choose' && (
+            <motion.div key="choose" {...SLIDE} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+              {/* Back button above logo */}
+              <div style={{ width: '100%', maxWidth: 680, marginBottom: 12, paddingLeft: 4 }}>
+                <button
+                  onClick={() => setStep('welcome')}
+                  style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#fff', backdropFilter: 'blur(8px)', transition: 'background 0.15s' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.25)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.15)')}
+                >
+                  <ArrowLeft size={18} />
+                </button>
+              </div>
+              <div style={{ position: 'relative', zIndex: 2, marginBottom: -58 }}>
+                <div style={{ width: 116, height: 116, borderRadius: 28, background: 'linear-gradient(145deg,#00FF87,#00E87A)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 40px rgba(0,255,135,0.40),0 4px 12px rgba(0,0,0,0.5)' }}>
+                  <Globe size={56} color="#000" strokeWidth={1.8} />
+                </div>
+              </div>
+              <GradCard>
+                <h1 style={{ fontSize: 40, fontWeight: 800, color: '#fff', margin: '0 0 18px', letterSpacing: '-0.7px', lineHeight: 1.18 }}>Create or restore<br />your wallet.</h1>
+                <p style={{ fontSize: 18, fontWeight: 600, color: 'rgba(255,255,255,0.85)', margin: '0 0 14px', lineHeight: 1.5 }}>Your keys. Your crypto. Your browser.</p>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.50)', lineHeight: 1.65, margin: '0 0 40px' }}>
+                  Generate a new 12-word seed phrase or restore an existing wallet. Your keys are encrypted and stored only on this device.
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+                  <GradBtn onClick={() => setStep('create-password')}>Create Wallet</GradBtn>
+                  <PlainBtn onClick={() => setStep('import')}>Import Wallet</PlainBtn>
+                </div>
+              </GradCard>
             </motion.div>
           )}
 
@@ -415,118 +548,73 @@ export default function Onboarding({ onDone }: OnboardingProps) {
   );
 }
 
-// ─── Shared sub-components ────────────────────────────────────────────────────
+// ─── Shared components & styles ───────────────────────────────────────────────
 
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  height: 44,
-  borderRadius: 12,
-  padding: '0 16px',
-  fontSize: 13,
-  color: 'rgba(255,255,255,0.8)',
-  background: 'rgba(255,255,255,0.05)',
-  border: '1px solid rgba(255,255,255,0.09)',
-  outline: 'none',
-  fontFamily: 'inherit',
-};
-
-function PwInput({ value, onChange, placeholder, show, toggle, autoFocus, onEnter }: {
-  value: string; onChange: (v: string) => void; placeholder: string;
-  show: boolean; toggle: () => void; autoFocus?: boolean; onEnter: () => void;
-}) {
+function LightCard({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return (
-    <div style={{ position: 'relative' }}>
-      <input
-        type={show ? 'text' : 'password'}
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        placeholder={placeholder}
-        autoFocus={autoFocus}
-        onKeyDown={e => e.key === 'Enter' && onEnter()}
-        style={{ ...inputStyle, paddingRight: 40 }}
-      />
+    <div style={{ maxWidth: 720, margin: '0 auto', padding: '0 40px 0' }}>
+      <div style={{ background: '#fff', borderRadius: 20, padding: '44px 52px 48px', boxShadow: '0 2px 20px rgba(0,0,0,0.07)', ...style }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function GradCard({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{ width: '100%', maxWidth: 680, borderRadius: 24, padding: '94px 64px 52px', background: 'rgba(255,255,255,0.16)', backdropFilter: 'blur(28px)', WebkitBackdropFilter: 'blur(28px)', textAlign: 'center', position: 'relative', zIndex: 1, boxShadow: '0 20px 60px rgba(0,0,0,0.30)' }}>
+      {children}
+    </div>
+  );
+}
+
+function BackCircle({ onClick }: { onClick: () => void }) {
+  return (
+    <div style={{ maxWidth: 720, margin: '0 auto', padding: '8px 40px 16px' }}>
       <button
-        onClick={toggle}
-        style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'rgba(255,255,255,0.28)', cursor: 'pointer', padding: 0 }}
+        onClick={onClick}
+        style={{ width: 40, height: 40, borderRadius: '50%', border: '1.5px solid #C7D2FE', background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4F46E5' }}
+        onMouseEnter={e => { e.currentTarget.style.background = '#EEF2FF'; }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
       >
-        {show ? <EyeOff size={14} /> : <Eye size={14} />}
+        <ArrowLeft size={18} />
       </button>
     </div>
   );
 }
 
-function PrimaryBtn({ children, onClick, disabled }: {
-  children: React.ReactNode; onClick: () => void; disabled?: boolean;
-}) {
+function GradBtn({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
   return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-        width: '100%', height: 48, borderRadius: 9999,
-        background: disabled ? 'rgba(79,70,229,0.35)' : '#4F46E5',
-        color: '#ffffff', fontSize: 15, fontWeight: 600,
-        border: 'none', cursor: disabled ? 'not-allowed' : 'pointer',
-        transition: 'filter 0.15s',
-      }}
-      onMouseEnter={e => { if (!disabled) e.currentTarget.style.filter = 'brightness(1.12)'; }}
-      onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; }}
-    >
+    <button onClick={onClick} style={{ width: '68%', height: 56, borderRadius: 9999, background: '#4F46E5', color: '#fff', fontSize: 17, fontWeight: 600, border: 'none', cursor: 'pointer', boxShadow: '0 4px 20px rgba(79,70,229,0.45)', transition: 'filter 0.15s' }} onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.14)'; }} onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; }}>
       {children}
     </button>
   );
 }
-
-function OptionBtn({ icon, iconBg, label, sub, onClick, accent }: {
-  icon: React.ReactNode; iconBg: string; label: string; sub: string;
-  onClick: () => void; accent?: boolean;
-}) {
+function PlainBtn({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
   return (
-    <button
-      onClick={onClick}
-      style={{
-        display: 'flex', alignItems: 'center', gap: 14,
-        padding: '14px 16px', borderRadius: 14,
-        background: accent ? 'rgba(0,255,135,0.08)' : 'rgba(255,255,255,0.04)',
-        border: `1px solid ${accent ? 'rgba(0,255,135,0.2)' : 'rgba(255,255,255,0.08)'}`,
-        cursor: 'pointer', textAlign: 'left', width: '100%',
-      }}
-    >
-      <div style={{ width: 36, height: 36, borderRadius: 10, background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-        {icon}
-      </div>
-      <div>
-        <p style={{ fontSize: 13, fontWeight: 600, color: accent ? '#fff' : 'rgba(255,255,255,0.82)', margin: '0 0 3px' }}>{label}</p>
-        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', margin: 0 }}>{sub}</p>
-      </div>
+    <button onClick={onClick} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.60)', fontSize: 16, cursor: 'pointer', padding: '4px 0', transition: 'color 0.15s' }} onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.90)')} onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.60)')}>
+      {children}
     </button>
   );
 }
-
-function BackBtn({ onClick }: { onClick: () => void }) {
+function CenterBtn({ children, onClick, disabled }: { children: React.ReactNode; onClick: () => void; disabled?: boolean }) {
   return (
-    <button
-      onClick={onClick}
-      style={{
-        background: 'none', border: 'none', color: 'rgba(255,255,255,0.32)',
-        cursor: 'pointer', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4,
-        padding: 0, marginBottom: 16,
-      }}
-    >
-      <ArrowLeft size={12} /> Back
-    </button>
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <button onClick={onClick} disabled={disabled} style={{ width: '55%', height: 50, borderRadius: 9999, background: disabled ? '#E5E7EB' : '#4F46E5', color: disabled ? '#9CA3AF' : '#fff', fontSize: 15, fontWeight: 600, border: 'none', cursor: disabled ? 'not-allowed' : 'pointer', transition: 'background 0.2s, filter 0.15s' }} onMouseEnter={e => { if (!disabled) e.currentTarget.style.filter = 'brightness(1.1)'; }} onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; }}>
+        {children}
+      </button>
+    </div>
   );
 }
-
-function Title({ children }: { children: React.ReactNode }) {
-  return <p style={{ fontSize: 20, fontWeight: 700, color: '#fff', margin: '0 0 6px' }}>{children}</p>;
+function EyeBtn({ show, toggle }: { show: boolean; toggle: () => void }) {
+  return <button onClick={toggle} style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#9CA3AF', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}>{show ? <EyeOff size={18} /> : <Eye size={18} />}</button>;
 }
-
-function Sub({ children }: { children: React.ReactNode }) {
-  return <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.42)', margin: '0 0 4px', lineHeight: 1.5 }}>{children}</p>;
+function FieldLabel({ children }: { children: React.ReactNode }) {
+  return <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 8 }}>{children}</label>;
 }
+function Required() { return <span style={{ color: '#EF4444' }}> *</span>; }
 
-function ErrMsg({ text }: { text: string }) {
-  return <p style={{ fontSize: 12, color: '#f87171', textAlign: 'center', margin: '0 0 12px' }}>{text}</p>;
-}
+const titleStyle: React.CSSProperties = { fontSize: 26, fontWeight: 700, color: '#111827', margin: '0 0 12px' };
+const subStyle:   React.CSSProperties = { fontSize: 15, color: '#6B7280', lineHeight: 1.6, margin: '0 0 28px' };
+const inputSt:    React.CSSProperties = { width: '100%', height: 52, borderRadius: 12, padding: '0 48px 0 18px', fontSize: 15, color: '#111827', background: '#F9FAFB', border: '1px solid #E5E7EB', outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box', display: 'block', marginBottom: 8 };
+const skipBtnStyle: React.CSSProperties = { background: 'none', border: 'none', color: '#9CA3AF', fontSize: 15, cursor: 'pointer', padding: '4px 0', transition: 'color 0.15s' };

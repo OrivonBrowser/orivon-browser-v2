@@ -1,239 +1,699 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
-  Globe, Copy, CheckCircle, Lock, ArrowRight, Wallet,
-  Shield, Cpu, Network, TrendingUp, RefreshCcw, ExternalLink
+  LayoutGrid, User, Compass, ShoppingCart, Send, ArrowLeftRight,
+  Link as LinkIcon, Download, Globe, MoreVertical, Plus,
+  Search, Lock, Shield, Settings, HelpCircle,
+  Copy, CheckCircle, ChevronDown,
+  X, Monitor
 } from 'lucide-react';
 import { useWalletStore } from '../store/wallet';
-import { useSettings } from '../store/settings';
-import { useRuntimeStore } from '../store/runtime';
 
-interface DashboardProps {
-  onOpenBrowser: () => void;
+type Section = 'portfolio' | 'accounts' | 'explore' | 'buy' | 'send' | 'swap' | 'bridge' | 'deposit';
+type PortfolioTab = 'assets' | 'nfts' | 'activity';
+
+interface DashboardProps { onOpenBrowser: () => void; }
+
+// ─── Static market data ────────────────────────────────────────────────────────
+const MARKET = [
+  { name: 'Bitcoin',    sym: 'BTC',  price: '$43,250.00', change:  2.1, cap: '$848.3B', vol: '$28.4B',  color: '#F7931A', l: '₿' },
+  { name: 'Ethereum',   sym: 'ETH',  price: '$2,345.80',  change:  1.8, cap: '$282.1B', vol: '$12.1B',  color: '#627EEA', l: 'Ξ' },
+  { name: 'Tether',     sym: 'USDT', price: '$0.9998',    change:  0.0, cap: '$95.2B',  vol: '$45.1B',  color: '#26A17B', l: '₮' },
+  { name: 'BNB',        sym: 'BNB',  price: '$323.40',    change:  0.8, cap: '$47.0B',  vol: '$1.2B',   color: '#F3BA2F', l: 'B' },
+  { name: 'Solana',     sym: 'SOL',  price: '$98.20',     change: -1.2, cap: '$43.0B',  vol: '$2.8B',   color: '#9945FF', l: '◎' },
+  { name: 'XRP',        sym: 'XRP',  price: '$0.5840',    change:  0.3, cap: '$32.1B',  vol: '$1.5B',   color: '#00AAE4', l: 'X' },
+  { name: 'USDC',       sym: 'USDC', price: '$1.0001',    change:  0.0, cap: '$25.4B',  vol: '$8.2B',   color: '#2775CA', l: '$' },
+  { name: 'Avalanche',  sym: 'AVAX', price: '$34.10',     change: -0.5, cap: '$14.0B',  vol: '$0.9B',   color: '#E84142', l: 'A' },
+  { name: 'Dogecoin',   sym: 'DOGE', price: '$0.1234',    change:  3.4, cap: '$17.2B',  vol: '$1.8B',   color: '#C2A633', l: 'D' },
+  { name: 'Cardano',    sym: 'ADA',  price: '$0.4521',    change: -0.8, cap: '$16.0B',  vol: '$0.7B',   color: '#0033AD', l: 'A' },
+];
+
+const DEPOSIT_ASSETS = [
+  { name: 'Ethereum', sub: 'ETH on Ethereum Mainnet', color: '#627EEA', l: 'Ξ' },
+  { name: 'Ether',    sub: 'ETH on Base',             color: '#0052FF', l: 'Ξ' },
+  { name: 'MATIC',    sub: 'MATIC on Polygon Mainnet',color: '#8247E5', l: 'M' },
+  { name: 'BNB',      sub: 'BNB on BNB Smart Chain',  color: '#F3BA2F', l: 'B' },
+  { name: 'Solana',   sub: 'SOL on Solana Mainnet',   color: '#9945FF', l: '◎' },
+  { name: 'Bitcoin',  sub: 'BTC on Bitcoin Mainnet',  color: '#F7931A', l: '₿' },
+];
+
+// ─── Simple QR Code SVG (visual placeholder) ──────────────────────────────────
+function QRCodeSVG({ value }: { value: string }) {
+  // Deterministic pattern from value hash
+  const cells = 21;
+  const pattern: boolean[][] = Array.from({ length: cells }, (_, r) =>
+    Array.from({ length: cells }, (_, c) => {
+      const h = (value.charCodeAt((r * cells + c) % value.length) + r * 7 + c * 13) % 3 === 0;
+      // Finder patterns (corners)
+      if ((r < 7 && c < 7) || (r < 7 && c > cells - 8) || (r > cells - 8 && c < 7)) return true;
+      return h;
+    })
+  );
+  const sz = 180;
+  const cell = sz / cells;
+  return (
+    <svg width={sz} height={sz} viewBox={`0 0 ${sz} ${sz}`} style={{ display: 'block' }}>
+      <rect width={sz} height={sz} fill="white" />
+      {pattern.map((row, r) =>
+        row.map((on, c) => on ? (
+          <rect key={`${r}-${c}`} x={c * cell} y={r * cell} width={cell} height={cell} fill="black" />
+        ) : null)
+      )}
+    </svg>
+  );
 }
 
-const STAGGER = (i: number) => ({
-  initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.35, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] } },
-});
+// ─── Coin avatar ──────────────────────────────────────────────────────────────
+function CoinAvatar({ color, letter, size = 36 }: { color: string; letter: string; size?: number }) {
+  return (
+    <div style={{ width: size, height: size, borderRadius: '50%', background: color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: size * 0.44, fontWeight: 700, flexShrink: 0 }}>
+      {letter}
+    </div>
+  );
+}
 
+// ─── Main Dashboard ───────────────────────────────────────────────────────────
 export default function Dashboard({ onOpenBrowser }: DashboardProps) {
-  const { addresses, lock, getBalance } = useWalletStore();
-  const { theme, setTheme } = useSettings();
-  const { nodes } = useRuntimeStore();
-
-  const [copied, setCopied]       = useState<string | null>(null);
-  const [balance, setBalance]     = useState<string | null>(null);
-  const [loadingBal, setLoadingBal] = useState(true);
-  const isDark = theme === 'dark';
+  const { addresses, lock, clearWallet } = useWalletStore();
+  const [section, setSection] = useState<Section>('portfolio');
+  const [tab, setTab] = useState<PortfolioTab>('assets');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [showBalances, setShowBalances] = useState(true);
+  const [showNFTs, setShowNFTs] = useState(true);
+  const [depositAsset, setDepositAsset] = useState<typeof DEPOSIT_ASSETS[0] | null>(null);
+  const [copied, setCopied] = useState<string | null>(null);
+  const [searchExplore, setSearchExplore] = useState('');
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setLoadingBal(true);
-    getBalance()
-      .then(b => { const n = parseFloat(b); setBalance(!isNaN(n) ? n.toFixed(6) : '0.000000'); })
-      .catch(() => setBalance('0.000000'))
-      .finally(() => setLoadingBal(false));
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const copyAddr = (addr: string, key: string) => {
-    navigator.clipboard.writeText(addr);
-    setCopied(key);
-    setTimeout(() => setCopied(null), 2000);
+  const copy = (text: string, key: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(key); setTimeout(() => setCopied(null), 2000);
   };
 
-  const chains = addresses ? [
-    {
-      key: 'eth', label: 'Ethereum', symbol: 'ETH', addr: addresses.eth,
-      color: '#00D1FF', bgColor: 'rgba(0,209,255,0.08)',
-      bal: loadingBal ? null : balance ? `${balance} ETH` : '0.000000 ETH',
-    },
-    {
-      key: 'btc', label: 'Bitcoin', symbol: 'BTC', addr: addresses.btc,
-      color: '#00FF87', bgColor: 'rgba(0,255,135,0.08)',
-      bal: null,
-    },
-    {
-      key: 'sol', label: 'Solana', symbol: 'SOL', addr: addresses.sol,
-      color: '#a78bfa', bgColor: 'rgba(167,139,250,0.08)',
-      bal: null,
-    },
-  ] : [];
+  const eth = addresses?.eth ?? '0x0000000000000000000000000000000000000000';
+  const btc = addresses?.btc ?? 'bc1q0000000000000000000000000000000000000';
+  const sol = addresses?.sol ?? 'SOL000000000000000000000000000000000';
 
-  const activeNodes = nodes.filter(n => n.enabled && n.status === 'active');
+  const assets = [
+    { name: 'Ethereum', sym: 'ETH',   sub: 'ETH on Ethereum Mainnet', color: '#627EEA', l: 'Ξ',  bal: '0 ETH',  usd: '$0.00', addr: eth },
+    { name: 'Bitcoin',  sym: 'BTC',   sub: 'BTC on Bitcoin Mainnet',  color: '#F7931A', l: '₿',  bal: '0 BTC',  usd: '$0.00', addr: btc },
+    { name: 'Solana',   sym: 'SOL',   sub: 'SOL on Solana Mainnet',   color: '#9945FF', l: '◎',  bal: '0 SOL',  usd: '$0.00', addr: sol },
+  ];
 
-  const bg      = isDark ? 'bg-[#0a0a0a] text-white' : 'bg-[#f4f4f4] text-black';
-  const card    = isDark ? 'bg-[#121212] border-white/[0.08]' : 'bg-white border-black/[0.07]';
-  const cardHov = isDark ? 'hover:border-white/15 hover:bg-[#161616]' : 'hover:border-black/12 hover:bg-white';
-  const muted   = isDark ? 'text-white/35' : 'text-black/35';
-  const subtle  = isDark ? 'text-white/55' : 'text-black/55';
+  const accounts = [
+    { name: 'Account 1',          sub: 'Ethereum + EVM Chains', sym: 'ETH', color: '#627EEA', l: 'Ξ', addr: eth, bal: '$0.00' },
+    { name: 'Bitcoin Account 1',  sub: 'Bitcoin Mainnet',       sym: 'BTC', color: '#F7931A', l: '₿', addr: btc, bal: '$0.00' },
+    { name: 'Solana Account 1',   sub: 'Solana + SVM Chains',   sym: 'SOL', color: '#9945FF', l: '◎', addr: sol, bal: '$0.00' },
+  ];
+
+  const filteredMarket = MARKET.filter(
+    c => c.name.toLowerCase().includes(searchExplore.toLowerCase()) ||
+         c.sym.toLowerCase().includes(searchExplore.toLowerCase())
+  );
+
+  const NAV: { id: Section; label: string; Icon: React.ElementType }[] = [
+    { id: 'portfolio', label: 'Portfolio',  Icon: LayoutGrid   },
+    { id: 'accounts',  label: 'Accounts',   Icon: User         },
+    { id: 'explore',   label: 'Explore',    Icon: Compass      },
+    { id: 'buy',       label: 'Buy',        Icon: ShoppingCart },
+    { id: 'send',      label: 'Send',       Icon: Send         },
+    { id: 'swap',      label: 'Swap',       Icon: ArrowLeftRight },
+    { id: 'bridge',    label: 'Bridge',     Icon: LinkIcon     },
+    { id: 'deposit',   label: 'Deposit',    Icon: Download     },
+  ];
 
   return (
-    <div className={`h-screen w-screen ${bg} overflow-y-auto`}>
-      {/* Background glow */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-[#00FF87]/[0.025] blur-[120px] rounded-full" />
-      </div>
+    <div style={{ display: 'flex', height: '100vh', background: '#F5F6FA', overflow: 'hidden', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', fontSize: 14 }}>
 
-      <div className="relative z-10 max-w-xl mx-auto px-6 py-10 space-y-6">
-
-        {/* ── Header ──────────────────────────────────────────────────────── */}
-        <motion.div {...STAGGER(0)} className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-[10px] bg-[#00FF87] flex items-center justify-center shadow-lg shadow-[#00FF87]/20">
-              <Globe size={18} className="text-black" strokeWidth={2.5} />
-            </div>
-            <div>
-              <p className={`text-[15px] font-semibold leading-none ${isDark ? 'text-white' : 'text-black'}`}>Orivon</p>
-              <p className={`text-[11px] mt-0.5 ${muted}`}>Web3 Browser</p>
-            </div>
+      {/* ── Left Sidebar ───────────────────────────────────────────────────── */}
+      <aside style={{ width: 240, background: '#fff', borderRight: '1px solid #E5E7EB', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
+        {/* Brand */}
+        <div style={{ padding: '20px 20px 16px', display: 'flex', alignItems: 'center', gap: 10, borderBottom: '1px solid #F3F4F6' }}>
+          <div style={{ width: 30, height: 30, borderRadius: 8, background: '#00FF87', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Globe size={16} color="#000" strokeWidth={2.5} />
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setTheme(isDark ? 'light' : 'dark')}
-              className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all text-[13px] ${muted} ${isDark ? 'hover:bg-white/8 hover:text-white/70' : 'hover:bg-black/6 hover:text-black/70'}`}
-              title="Toggle theme"
-            >
-              {isDark ? '☀️' : '🌙'}
-            </button>
-            <button
-              onClick={() => lock()}
-              className={`flex items-center gap-1.5 h-8 px-3 rounded-lg text-[12px] font-medium border transition-all ${
-                isDark ? 'border-white/10 text-white/40 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/8' : 'border-black/10 text-black/40 hover:text-red-500 hover:border-red-500/20'
-              }`}
-            >
-              <Lock size={12} /> Lock
-            </button>
-          </div>
-        </motion.div>
+          <span style={{ fontSize: 16, fontWeight: 700, color: '#111827' }}>dashboard</span>
+        </div>
 
-        {/* ── Wallet summary card ──────────────────────────────────────────── */}
-        <motion.div {...STAGGER(1)} className={`rounded-2xl border p-5 ${card}`}>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <Wallet size={14} className="text-[#00FF87]" />
-              <span className={`text-[12px] font-semibold uppercase tracking-widest ${muted}`}>Wallet</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#00FF87] animate-pulse" />
-              <span className={`text-[10px] font-medium ${muted}`}>Active</span>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            {chains.map(chain => (
+        {/* Nav */}
+        <nav style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
+          {NAV.map(({ id, label, Icon }) => {
+            const active = section === id;
+            return (
               <div
-                key={chain.key}
-                className={`flex items-center justify-between p-3.5 rounded-xl border transition-all ${isDark ? 'border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10' : 'border-black/[0.05] bg-black/[0.02] hover:bg-black/[0.04]'}`}
+                key={id}
+                onClick={() => { setSection(id); setDepositAsset(null); }}
+                style={{
+                  position: 'relative', display: 'flex', alignItems: 'center', gap: 12,
+                  padding: '11px 20px', cursor: 'pointer',
+                  color: active ? '#4F46E5' : '#6B7280',
+                  fontWeight: active ? 600 : 400,
+                  background: active ? 'rgba(79,70,229,0.04)' : 'transparent',
+                  transition: 'color 0.12s, background 0.12s',
+                }}
+                onMouseEnter={e => { if (!active) (e.currentTarget as HTMLDivElement).style.background = '#F9FAFB'; }}
+                onMouseLeave={e => { if (!active) (e.currentTarget as HTMLDivElement).style.background = 'transparent'; }}
               >
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: chain.bgColor }}
-                  >
-                    <span className="text-[11px] font-bold" style={{ color: chain.color }}>{chain.symbol}</span>
-                  </div>
-                  <div>
-                    <p className={`text-[13px] font-semibold ${isDark ? 'text-white/85' : 'text-black/85'}`}>{chain.label}</p>
-                    <p className={`text-[10px] font-mono mt-0.5 ${muted}`}>
-                      {chain.addr.slice(0, 10)}…{chain.addr.slice(-8)}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  {chain.bal && (
-                    <span className="text-[11px] font-mono font-semibold" style={{ color: chain.color }}>{chain.bal}</span>
-                  )}
+                {/* Active indicator bar */}
+                {active && <div style={{ position: 'absolute', left: 0, top: 6, bottom: 6, width: 3, background: '#4F46E5', borderRadius: '0 3px 3px 0' }} />}
+                <Icon size={18} strokeWidth={active ? 2.2 : 1.8} />
+                <span style={{ fontSize: 14 }}>{label}</span>
+              </div>
+            );
+          })}
+        </nav>
+
+        {/* Open browser */}
+        <div style={{ padding: '12px 12px 16px', borderTop: '1px solid #F3F4F6' }}>
+          <button
+            onClick={onOpenBrowser}
+            style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '10px 12px', borderRadius: 10, background: '#4F46E5', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, justifyContent: 'center', transition: 'filter 0.12s' }}
+            onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.1)'; }}
+            onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; }}
+          >
+            <Monitor size={15} /> Open Browser
+          </button>
+        </div>
+      </aside>
+
+      {/* ── Main content ──────────────────────────────────────────────────── */}
+      <main style={{ flex: 1, overflowY: 'auto', padding: '24px 28px 24px', position: 'relative' }}>
+
+        {/* Three-dot menu */}
+        <div ref={menuRef} style={{ position: 'absolute', top: 16, right: 20, zIndex: 50 }}>
+          <button
+            onClick={() => setMenuOpen(p => !p)}
+            style={{ width: 36, height: 36, borderRadius: '50%', border: '1px solid #E5E7EB', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#374151', transition: 'background 0.12s' }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#F9FAFB'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#fff'; }}
+          >
+            <MoreVertical size={16} />
+          </button>
+
+          {menuOpen && (
+            <div style={{
+              position: 'absolute', top: 44, right: 0, width: 240,
+              background: '#fff', borderRadius: 14, boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+              border: '1px solid #E5E7EB', overflow: 'hidden', zIndex: 100,
+            }}>
+              {[
+                { icon: Lock,   label: 'Lock dashboard',  action: () => { lock(); setMenuOpen(false); } },
+                { icon: Shield, label: 'Backup phrase',    action: () => setMenuOpen(false) },
+                { icon: Settings,label: 'Settings',        action: () => setMenuOpen(false) },
+              ].map(item => (
+                <button key={item.label} onClick={item.action} style={menuItemStyle}>
+                  <item.icon size={16} style={{ color: '#374151' }} /> {item.label}
+                </button>
+              ))}
+
+              <div style={{ borderTop: '1px solid #F3F4F6', padding: '8px 16px 4px' }}>
+                <p style={{ fontSize: 11, fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 4px' }}>Dashboard Settings</p>
+              </div>
+              <ToggleRow label="Balances" value={showBalances} onChange={setShowBalances} />
+              <ToggleRow label="NFTs tab" value={showNFTs} onChange={setShowNFTs} />
+
+              <div style={{ borderTop: '1px solid #F3F4F6', marginTop: 4 }}>
+                <button style={menuItemStyle} onClick={() => setMenuOpen(false)}>
+                  <HelpCircle size={16} style={{ color: '#374151' }} /> Help & support
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* ── Card ──────────────────────────────────────────────────────────── */}
+        <div style={{ background: '#fff', borderRadius: 20, padding: '28px 32px', minHeight: 'calc(100vh - 64px)', boxShadow: '0 1px 8px rgba(0,0,0,0.05)' }}>
+
+          {/* ── PORTFOLIO ─────────────────────────────────────────────────── */}
+          {section === 'portfolio' && (
+            <>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: '#111827', margin: 0 }}>Portfolio</h2>
+                <div style={{ display: 'flex', gap: 8 }}>
                   <button
-                    onClick={() => copyAddr(chain.addr, chain.key)}
-                    className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all shrink-0 ${muted} ${isDark ? 'hover:bg-white/8 hover:text-white/70' : 'hover:bg-black/6 hover:text-black/70'}`}
+                    onClick={onOpenBrowser}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 7,
+                      padding: '9px 18px', borderRadius: 9999,
+                      background: '#4F46E5', color: '#fff',
+                      border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600,
+                      boxShadow: '0 2px 10px rgba(79,70,229,0.30)',
+                      transition: 'filter 0.12s',
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.12)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; }}
                   >
-                    {copied === chain.key
-                      ? <CheckCircle size={13} className="text-[#00FF87]" />
-                      : <Copy size={13} />
-                    }
+                    <Monitor size={15} /> Go to Browser Mode
+                  </button>
+                  <button style={{ width: 32, height: 32, borderRadius: '50%', border: '1.5px solid #E5E7EB', background: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#6B7280' }}>
+                    <Plus size={16} />
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
-        </motion.div>
 
-        {/* ── Runtime status row ───────────────────────────────────────────── */}
-        <motion.div {...STAGGER(2)} className="grid grid-cols-3 gap-3">
-          {[
-            { icon: Shield,  label: 'Security',  value: 'Active',   color: '#00FF87', dot: true  },
-            { icon: Network, label: 'ENS/IPFS',  value: `${activeNodes.length} nodes`, color: '#00D1FF', dot: true  },
-            { icon: Cpu,     label: 'Runtime',   value: 'v0.94.1',  color: '#a78bfa', dot: false },
-          ].map((item, i) => (
-            <div key={i} className={`rounded-xl border p-3.5 flex flex-col gap-2 ${card} transition-all ${cardHov}`}>
-              <div className="flex items-center justify-between">
-                <item.icon size={14} style={{ color: item.color }} />
-                {item.dot && <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: item.color }} />}
+              {/* Balance + actions */}
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', margin: '24px 0 32px' }}>
+                <div>
+                  {showBalances
+                    ? <p style={{ fontSize: 32, fontWeight: 700, color: '#111827', margin: 0, letterSpacing: '-0.5px' }}>$0.00</p>
+                    : <p style={{ fontSize: 32, fontWeight: 700, color: '#111827', margin: 0 }}>••••••</p>
+                  }
+                </div>
+                <div style={{ display: 'flex', gap: 20 }}>
+                  {[
+                    { icon: ShoppingCart, label: 'Buy',  action: () => setSection('buy') },
+                    { icon: Send,         label: 'Send', action: () => setSection('send') },
+                    { icon: ArrowLeftRight, label: 'Swap', action: () => setSection('swap') },
+                    { icon: MoreVertical, label: 'More', action: () => {} },
+                  ].map(btn => (
+                    <button key={btn.label} onClick={btn.action} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer' }}>
+                      <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#4F46E5', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'filter 0.12s' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.filter = 'brightness(1.15)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.filter = 'brightness(1)'; }}
+                      >
+                        <btn.icon size={20} color="#fff" strokeWidth={1.8} />
+                      </div>
+                      <span style={{ fontSize: 12, color: '#374151', fontWeight: 500 }}>{btn.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div>
-                <p className={`text-[13px] font-semibold ${isDark ? 'text-white/80' : 'text-black/80'}`}>{item.value}</p>
-                <p className={`text-[10px] mt-0.5 ${muted}`}>{item.label}</p>
+
+              {/* Tabs */}
+              <div style={{ display: 'flex', gap: 2, background: '#F3F4F6', borderRadius: 9999, padding: 3, width: 'fit-content', marginBottom: 24 }}>
+                {(['assets', showNFTs ? 'nfts' : null, 'activity'] as (PortfolioTab | null)[]).filter(Boolean).map(t => (
+                  <button
+                    key={t!}
+                    onClick={() => setTab(t!)}
+                    style={{
+                      padding: '7px 20px', borderRadius: 9999, border: tab === t ? '1.5px solid #4F46E5' : '1.5px solid transparent',
+                      background: tab === t ? '#fff' : 'transparent',
+                      color: tab === t ? '#4F46E5' : '#6B7280',
+                      fontWeight: tab === t ? 600 : 400, fontSize: 14, cursor: 'pointer',
+                      transition: 'all 0.12s',
+                    }}
+                  >
+                    {t!.charAt(0).toUpperCase() + t!.slice(1)}
+                  </button>
+                ))}
               </div>
-            </div>
-          ))}
-        </motion.div>
 
-        {/* ── Quick actions ────────────────────────────────────────────────── */}
-        <motion.div {...STAGGER(3)} className="grid grid-cols-2 gap-3">
-          <QuickLink
-            icon={<Globe size={14} />}
-            label="Uniswap"
-            sub="uniswap.eth"
-            isDark={isDark}
-            card={card}
-            cardHov={cardHov}
-            muted={muted}
-          />
-          <QuickLink
-            icon={<Globe size={14} />}
-            label="ENS Domains"
-            sub="app.ens.domains"
-            isDark={isDark}
-            card={card}
-            cardHov={cardHov}
-            muted={muted}
-          />
-        </motion.div>
+              {/* Assets list */}
+              {tab === 'assets' && (
+                <>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                    <span style={{ fontWeight: 600, color: '#111827' }}>Assets</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, border: '1px solid #E5E7EB', borderRadius: 9999, padding: '7px 14px', background: '#fff' }}>
+                        <Search size={14} color="#9CA3AF" />
+                        <input placeholder="Search" style={{ border: 'none', outline: 'none', fontSize: 13, color: '#374151', background: 'transparent', width: 120 }} />
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    {assets.map(a => (
+                      <div key={a.sym} style={{ display: 'flex', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid #F9FAFB', gap: 12 }}>
+                        <CoinAvatar color={a.color} letter={a.l} size={38} />
+                        <div style={{ flex: 1 }}>
+                          <p style={{ margin: 0, fontWeight: 600, color: '#111827', fontSize: 14 }}>{a.name}</p>
+                          <p style={{ margin: 0, fontSize: 12, color: '#9CA3AF' }}>{a.sub}</p>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <p style={{ margin: 0, fontWeight: 600, color: '#111827', fontSize: 14 }}>{showBalances ? a.bal : '•••'}</p>
+                          <p style={{ margin: 0, fontSize: 12, color: '#9CA3AF' }}>{showBalances ? a.usd : '•••'}</p>
+                        </div>
+                        <button style={{ width: 28, height: 28, borderRadius: '50%', border: 'none', background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9CA3AF' }}>
+                          <MoreVertical size={14} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+              {tab === 'nfts' && (
+                <div style={{ textAlign: 'center', padding: '48px 0', color: '#9CA3AF' }}>
+                  <p style={{ fontSize: 15 }}>No NFTs found</p>
+                </div>
+              )}
+              {tab === 'activity' && (
+                <div style={{ textAlign: 'center', padding: '48px 0', color: '#9CA3AF' }}>
+                  <p style={{ fontSize: 15 }}>No recent activity</p>
+                </div>
+              )}
+            </>
+          )}
 
-        {/* ── Open browser CTA ─────────────────────────────────────────────── */}
-        <motion.div {...STAGGER(4)}>
-          <button
-            onClick={onOpenBrowser}
-            className="w-full h-12 flex items-center justify-center gap-2.5 rounded-2xl bg-white text-black text-[14px] font-semibold hover:bg-[#00FF87] active:scale-[0.98] transition-all shadow-lg shadow-black/10"
-          >
-            <Globe size={16} strokeWidth={2.5} />
-            Open Browser
-            <ArrowRight size={15} strokeWidth={2.5} />
-          </button>
-        </motion.div>
+          {/* ── ACCOUNTS ──────────────────────────────────────────────────── */}
+          {section === 'accounts' && (
+            <>
+              <CardHeader title="Accounts" />
+              <div style={{ marginTop: 24 }}>
+                <p style={{ fontWeight: 600, color: '#111827', marginBottom: 12 }}>Accounts</p>
+                <div style={{ border: '1px solid #E5E7EB', borderRadius: 14, overflow: 'hidden' }}>
+                  {accounts.map((acc, i) => (
+                    <div key={acc.sym} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '16px 20px', background: '#fff', borderBottom: i < accounts.length - 1 ? '1px solid #F3F4F6' : 'none' }}>
+                      <CoinAvatar color={acc.color} letter={acc.l} size={40} />
+                      <div style={{ flex: 1 }}>
+                        <p style={{ margin: 0, fontWeight: 600, color: '#111827', fontSize: 14 }}>{acc.name}</p>
+                        <p style={{ margin: 0, fontSize: 12, color: '#9CA3AF', fontFamily: 'monospace' }}>{acc.addr.slice(0, 12)}***{acc.addr.slice(-4)}</p>
+                        <p style={{ margin: 0, fontSize: 11, color: '#D1D5DB', marginTop: 1 }}>{acc.sub}</p>
+                      </div>
+                      <span style={{ fontSize: 14, fontWeight: 600, color: '#111827' }}>{acc.bal}</span>
+                      <button style={iconBtnStyle}><MoreVertical size={14} /></button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
 
-        <motion.p {...STAGGER(5)} className={`text-center text-[11px] ${muted}`}>
-          Your keys are encrypted and never leave this device
-        </motion.p>
+          {/* ── EXPLORE ───────────────────────────────────────────────────── */}
+          {section === 'explore' && (
+            <>
+              <CardHeader title="Explore" />
+              <div style={{ display: 'flex', gap: 12, margin: '20px 0 16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, border: '1px solid #E5E7EB', borderRadius: 9999, padding: '8px 14px', background: '#fff', flex: 1 }}>
+                  <Search size={14} color="#9CA3AF" />
+                  <input value={searchExplore} onChange={e => setSearchExplore(e.target.value)} placeholder="Search" style={{ border: 'none', outline: 'none', fontSize: 13, color: '#374151', background: 'transparent', flex: 1 }} />
+                </div>
+                <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', border: '1px solid #E5E7EB', borderRadius: 9999, background: '#fff', fontSize: 13, color: '#374151', cursor: 'pointer' }}>
+                  All Assets <ChevronDown size={14} />
+                </button>
+              </div>
 
-      </div>
+              {/* Table */}
+              <div style={{ border: '1px solid #F3F4F6', borderRadius: 14, overflow: 'hidden' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                  <thead>
+                    <tr style={{ background: '#F9FAFB' }}>
+                      {['Assets', 'Price', '24hr', 'Cap', 'Volume', 'Buy/Deposit'].map(h => (
+                        <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 12, fontWeight: 600, color: '#6B7280', border: 'none' }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredMarket.map((c, i) => (
+                      <tr key={c.sym} style={{ borderTop: '1px solid #F3F4F6', background: i % 2 === 0 ? '#fff' : '#FAFAFA' }}>
+                        <td style={{ padding: '12px 16px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <CoinAvatar color={c.color} letter={c.l} size={32} />
+                            <div>
+                              <p style={{ margin: 0, fontWeight: 600, color: '#111827', fontSize: 13 }}>{c.name}</p>
+                              <p style={{ margin: 0, fontSize: 11, color: '#9CA3AF' }}>{c.sym}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td style={{ padding: '12px 16px', fontSize: 13, color: '#111827', fontWeight: 500 }}>{c.price}</td>
+                        <td style={{ padding: '12px 16px', fontSize: 13, color: c.change >= 0 ? '#10B981' : '#EF4444', fontWeight: 500 }}>
+                          {c.change >= 0 ? '▲' : '▼'} {Math.abs(c.change).toFixed(2)}%
+                        </td>
+                        <td style={{ padding: '12px 16px', fontSize: 13, color: '#374151' }}>{c.cap}</td>
+                        <td style={{ padding: '12px 16px', fontSize: 13, color: '#374151' }}>{c.vol}</td>
+                        <td style={{ padding: '12px 16px' }}>
+                          <div style={{ display: 'flex', gap: 6 }}>
+                            <button onClick={() => setSection('buy')} style={pillBtnStyle}>Buy</button>
+                            <button onClick={() => setSection('deposit')} style={pillBtnStyle}>Deposit</button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+
+          {/* ── BUY ───────────────────────────────────────────────────────── */}
+          {section === 'buy' && (
+            <>
+              <CardHeader title="Buy ETH" />
+              <div style={{ maxWidth: 680, marginTop: 24 }}>
+                <div style={{ display: 'flex', gap: 20, marginBottom: 20 }}>
+                  <div style={{ flex: 1 }}>
+                    <label style={formLabelStyle}>Asset</label>
+                    <button style={selectBtnStyle}><CoinAvatar color="#627EEA" letter="Ξ" size={22} /> ETH <ChevronDown size={14} /></button>
+                  </div>
+                  <div style={{ flex: 2 }}>
+                    <label style={formLabelStyle}>Account</label>
+                    <button style={selectBtnStyle}>
+                      <CoinAvatar color="#627EEA" letter="Ξ" size={22} /> Account 1 <ChevronDown size={14} />
+                    </button>
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <label style={formLabelStyle}>Amount</label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <span style={{ fontSize: 24, fontWeight: 700, color: '#111827' }}>100</span>
+                      <button style={{ ...selectBtnStyle, padding: '4px 10px' }}>USD <ChevronDown size={14} /></button>
+                    </div>
+                  </div>
+                </div>
+                <p style={{ fontSize: 12, color: '#9CA3AF', fontFamily: 'monospace', marginBottom: 24 }}>{eth}</p>
+                <div style={{ height: 1, background: '#F3F4F6', marginBottom: 24 }} />
+                <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
+                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8, border: '1px solid #E5E7EB', borderRadius: 9999, padding: '8px 14px' }}>
+                    <Search size={14} color="#9CA3AF" /><span style={{ color: '#9CA3AF', fontSize: 13 }}>Search</span>
+                  </div>
+                  <button style={{ ...selectBtnStyle, flex: 1 }}>United States <ChevronDown size={14} /></button>
+                  <button style={{ ...selectBtnStyle, flex: 1 }}>Credit & Debit Card <ChevronDown size={14} /></button>
+                </div>
+                <div style={{ textAlign: 'center', padding: '32px 0' }}>
+                  <div style={{ width: 36, height: 36, margin: '0 auto 12px' }}>
+                    <svg width="36" height="36" viewBox="0 0 36 36" style={{ animation: 'spin 1s linear infinite' }}>
+                      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+                      <circle cx="18" cy="18" r="14" stroke="#E0E7FF" strokeWidth="2.5" fill="none" />
+                      <circle cx="18" cy="18" r="14" stroke="#4F46E5" strokeWidth="2.5" fill="none" strokeDasharray="70" strokeDashoffset="50" strokeLinecap="round" />
+                    </svg>
+                  </div>
+                  <p style={{ color: '#6B7280', fontSize: 14 }}>Getting best prices…</p>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── SEND ──────────────────────────────────────────────────────── */}
+          {section === 'send' && (
+            <AssetActionPage
+              title="Send"
+              fromLabel="From"
+              fromBtn="Choose Asset"
+              toLabel="To"
+              toBtn="Choose recipient"
+              actionBtn="Review send"
+            />
+          )}
+
+          {/* ── SWAP ──────────────────────────────────────────────────────── */}
+          {section === 'swap' && (
+            <AssetActionPage
+              title="Swap"
+              fromLabel="From"
+              fromBtn="Choose Asset"
+              toLabel="Receive (est.)"
+              toBtn="Choose Asset"
+              actionBtn="Review swap"
+              showSwapIcon
+            />
+          )}
+
+          {/* ── BRIDGE ────────────────────────────────────────────────────── */}
+          {section === 'bridge' && (
+            <AssetActionPage
+              title="Bridge"
+              fromLabel="From"
+              fromBtn="Choose Asset"
+              toLabel="Receive (est.)"
+              toBtn="Choose Asset"
+              actionBtn="Review bridge"
+              showSwapIcon
+            />
+          )}
+
+          {/* ── DEPOSIT ───────────────────────────────────────────────────── */}
+          {section === 'deposit' && !depositAsset && (
+            <>
+              <CardHeader title="Deposit" />
+              <div style={{ maxWidth: 680, marginTop: 20 }}>
+                <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
+                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8, border: '1px solid #E5E7EB', borderRadius: 9999, padding: '8px 14px' }}>
+                    <Search size={14} color="#9CA3AF" /><input placeholder="Search" style={{ border: 'none', outline: 'none', fontSize: 13, color: '#374151', background: 'transparent', flex: 1 }} />
+                  </div>
+                  <button style={{ ...selectBtnStyle }}>All Networks <ChevronDown size={14} /></button>
+                </div>
+                <div style={{ border: '1px solid #E5E7EB', borderRadius: 14, overflow: 'hidden' }}>
+                  {DEPOSIT_ASSETS.map((a, i) => (
+                    <div
+                      key={a.name + a.sub}
+                      onClick={() => setDepositAsset(a)}
+                      style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '16px 20px', borderBottom: i < DEPOSIT_ASSETS.length - 1 ? '1px solid #F3F4F6' : 'none', cursor: 'pointer', background: '#fff', transition: 'background 0.1s' }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = '#F9FAFB'; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = '#fff'; }}
+                    >
+                      <CoinAvatar color={a.color} letter={a.l} size={38} />
+                      <div>
+                        <p style={{ margin: 0, fontWeight: 600, color: '#111827', fontSize: 14 }}>{a.name}</p>
+                        <p style={{ margin: 0, fontSize: 12, color: '#9CA3AF' }}>{a.sub}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
+                  <button style={{ padding: '12px 40px', borderRadius: 9999, background: '#E5E7EB', color: '#9CA3AF', fontWeight: 600, fontSize: 14, border: 'none', cursor: 'not-allowed' }}>
+                    Select an asset
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Deposit → Address + QR */}
+          {section === 'deposit' && depositAsset && (
+            <>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
+                <button onClick={() => setDepositAsset(null)} style={{ width: 36, height: 36, borderRadius: '50%', border: '1.5px solid #C7D2FE', background: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4F46E5' }}>
+                  ←
+                </button>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: '#111827', margin: 0 }}>Deposit</h2>
+              </div>
+
+              <div style={{ maxWidth: 560, textAlign: 'center' }}>
+                <h3 style={{ fontSize: 18, fontWeight: 700, color: '#111827', marginBottom: 8 }}>
+                  Deposit {depositAsset.name}
+                </h3>
+                <p style={{ fontSize: 14, color: '#6B7280', marginBottom: 24 }}>
+                  Only send tokens to this address on {depositAsset.sub.split(' on ')[1] ?? 'this network'}
+                </p>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center', marginBottom: 16 }}>
+                  <CoinAvatar color={depositAsset.color} letter={depositAsset.l} size={28} />
+                  <span style={{ fontWeight: 600, color: '#111827' }}>Account 1</span>
+                </div>
+
+                <p style={{ fontWeight: 700, color: '#111827', marginBottom: 8 }}>Address:</p>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 24 }}>
+                  <span style={{ fontFamily: 'monospace', fontSize: 12, color: '#374151', wordBreak: 'break-all' }}>
+                    {depositAsset.l === 'Ξ' ? eth : depositAsset.l === '₿' ? btc : sol}
+                  </span>
+                  <button
+                    onClick={() => copy(depositAsset.l === 'Ξ' ? eth : depositAsset.l === '₿' ? btc : sol, 'dep')}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: copied === 'dep' ? '#10B981' : '#6B7280' }}
+                  >
+                    {copied === 'dep' ? <CheckCircle size={14} /> : <Copy size={14} />}
+                  </button>
+                </div>
+
+                <div style={{ display: 'inline-block', border: '1px solid #E5E7EB', borderRadius: 12, padding: 12, background: '#fff' }}>
+                  <QRCodeSVG value={depositAsset.l === 'Ξ' ? eth : depositAsset.l === '₿' ? btc : sol} />
+                </div>
+              </div>
+            </>
+          )}
+
+        </div>
+      </main>
     </div>
   );
 }
 
-function QuickLink({ icon, label, sub, isDark, card, cardHov, muted }: {
-  icon: React.ReactNode; label: string; sub: string;
-  isDark: boolean; card: string; cardHov: string; muted: string;
+// ─── Reused layout pieces ─────────────────────────────────────────────────────
+
+function CardHeader({ title }: { title: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <h2 style={{ fontSize: 22, fontWeight: 700, color: '#111827', margin: 0 }}>{title}</h2>
+      <button style={{ width: 32, height: 32, borderRadius: '50%', border: '1.5px solid #E5E7EB', background: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#6B7280' }}>
+        <Plus size={16} />
+      </button>
+    </div>
+  );
+}
+
+function AssetActionPage({ title, fromLabel, fromBtn, toLabel, toBtn, actionBtn, showSwapIcon }: {
+  title: string; fromLabel: string; fromBtn: string;
+  toLabel: string; toBtn: string; actionBtn: string; showSwapIcon?: boolean;
 }) {
   return (
-    <div className={`rounded-xl border p-3.5 flex items-center gap-3 ${card} transition-all ${cardHov} cursor-default`}>
-      <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isDark ? 'bg-white/[0.05]' : 'bg-black/[0.04]'}`}>
-        <span className={muted}>{icon}</span>
+    <>
+      <h2 style={{ fontSize: 22, fontWeight: 700, color: '#111827', margin: '0 0 20px' }}>{title}</h2>
+      <div style={{ maxWidth: 680 }}>
+        {/* From */}
+        <div style={{ border: '1px solid #E5E7EB', borderRadius: 14, padding: '16px 20px', marginBottom: 2, background: '#fff' }}>
+          <p style={{ fontSize: 12, color: '#9CA3AF', margin: '0 0 8px' }}>{fromLabel}</p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <button style={{ background: 'none', border: 'none', color: '#4F46E5', fontSize: 16, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+              {fromBtn} <span style={{ fontSize: 14, color: '#4F46E5' }}>›</span>
+            </button>
+            <span style={{ fontSize: 22, color: '#D1D5DB', fontWeight: 300 }}>0.0</span>
+          </div>
+        </div>
+
+        {/* Swap icon row */}
+        {showSwapIcon && (
+          <div style={{ display: 'flex', alignItems: 'center', padding: '4px 0', gap: 8 }}>
+            <button style={{ width: 34, height: 34, borderRadius: 9, border: '1px solid #E5E7EB', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#6B7280' }}>
+              <ArrowLeftRight size={14} />
+            </button>
+          </div>
+        )}
+
+        {/* To */}
+        <div style={{ border: '1px solid #E5E7EB', borderRadius: 14, padding: '16px 20px', background: '#EEF2FF', marginBottom: 2 }}>
+          <p style={{ fontSize: 12, color: '#9CA3AF', margin: '0 0 8px' }}>{toLabel}</p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <button style={{ background: 'none', border: 'none', color: '#374151', fontSize: 16, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+              {toBtn} <span style={{ fontSize: 14 }}>›</span>
+            </button>
+            <span style={{ fontSize: 22, color: '#D1D5DB', fontWeight: 300 }}>0.0</span>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
+          <button style={{ padding: '13px 48px', borderRadius: 9999, background: '#E5E7EB', color: '#9CA3AF', fontWeight: 600, fontSize: 14, border: 'none', cursor: 'not-allowed' }}>
+            {actionBtn}
+          </button>
+        </div>
       </div>
-      <div className="min-w-0">
-        <p className={`text-[12px] font-semibold truncate ${isDark ? 'text-white/75' : 'text-black/75'}`}>{label}</p>
-        <p className={`text-[10px] font-mono truncate ${muted}`}>{sub}</p>
-      </div>
+    </>
+  );
+}
+
+function ToggleRow({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px' }}>
+      <span style={{ fontSize: 13, color: '#374151' }}>{label}</span>
+      <button onClick={() => onChange(!value)} style={{ width: 38, height: 22, borderRadius: 11, border: 'none', background: value ? '#4F46E5' : '#D1D5DB', cursor: 'pointer', position: 'relative', transition: 'background 0.15s' }}>
+        <div style={{ position: 'absolute', top: 3, left: value ? 19 : 3, width: 16, height: 16, borderRadius: '50%', background: '#fff', transition: 'left 0.15s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
+      </button>
     </div>
   );
 }
+
+// ─── Style constants ──────────────────────────────────────────────────────────
+const menuItemStyle: React.CSSProperties = {
+  display: 'flex', alignItems: 'center', gap: 10, width: '100%',
+  padding: '10px 16px', background: 'none', border: 'none', cursor: 'pointer',
+  fontSize: 13, color: '#374151', textAlign: 'left', transition: 'background 0.1s',
+};
+const iconBtnStyle: React.CSSProperties = {
+  width: 28, height: 28, borderRadius: '50%', border: 'none', background: 'none',
+  cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9CA3AF',
+};
+const pillBtnStyle: React.CSSProperties = {
+  padding: '4px 14px', borderRadius: 9999, border: '1px solid #E5E7EB',
+  background: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', color: '#374151',
+  transition: 'border-color 0.1s',
+};
+const selectBtnStyle: React.CSSProperties = {
+  display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px',
+  border: '1px solid #E5E7EB', borderRadius: 10, background: '#fff',
+  fontSize: 13, color: '#374151', cursor: 'pointer',
+};
+const formLabelStyle: React.CSSProperties = {
+  fontSize: 12, fontWeight: 500, color: '#9CA3AF', display: 'block', marginBottom: 6,
+};

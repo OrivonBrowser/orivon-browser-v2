@@ -1,17 +1,36 @@
+/**
+ * NewTab — full-page new tab with rotating background images.
+ * Images cycle through /tap1.jpg … /tap10.jpg, never repeating the same
+ * image twice in a row. The image is picked once per component mount.
+ */
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Globe } from 'lucide-react';
+import { Search, Shield, Globe, Settings, Cpu } from 'lucide-react';
 import { useSettings } from '../store/settings';
 import { useTabsStore } from '../store/tabs';
+import { useRuntimeStore } from '../store/runtime';
 
+// ─── Image rotation ────────────────────────────────────────────────────────────
+const TOTAL_IMAGES = 10;
+let _lastImageIndex = -1;
+
+function pickNextImage(): number {
+  const choices = Array.from({ length: TOTAL_IMAGES }, (_, i) => i)
+    .filter(i => i !== _lastImageIndex);
+  const picked = choices[Math.floor(Math.random() * choices.length)];
+  _lastImageIndex = picked;
+  return picked;
+}
+
+// ─── dApp shortcuts ────────────────────────────────────────────────────────────
 const DAPPS = [
-  { name: 'Uniswap',   url: 'https://app.uniswap.org',   icon: '🦄', label: 'DEX' },
-  { name: 'OpenSea',   url: 'https://opensea.io',         icon: '🌊', label: 'NFT' },
-  { name: 'Aave',      url: 'https://app.aave.com',       icon: '👻', label: 'DeFi' },
-  { name: 'ENS App',   url: 'https://app.ens.domains',    icon: '🔷', label: 'ENS' },
-  { name: 'Etherscan', url: 'https://etherscan.io',       icon: '🔍', label: 'Explorer' },
-  { name: 'Mirror',    url: 'https://mirror.xyz',         icon: '🪞', label: 'Publish' },
-  { name: 'Radicle',   url: 'https://app.radicle.xyz',    icon: '🌱', label: 'Git' },
-  { name: 'IPFS',      url: 'https://ipfs.io',            icon: '📦', label: 'Storage' },
+  { name: 'Uniswap',   url: 'https://app.uniswap.org',   icon: '🦄' },
+  { name: 'OpenSea',   url: 'https://opensea.io',         icon: '🌊' },
+  { name: 'Aave',      url: 'https://app.aave.com',       icon: '👻' },
+  { name: 'ENS App',   url: 'https://app.ens.domains',    icon: '🔷' },
+  { name: 'Etherscan', url: 'https://etherscan.io',       icon: '🔍' },
+  { name: 'Mirror',    url: 'https://mirror.xyz',         icon: '🪞' },
+  { name: 'Radicle',   url: 'https://app.radicle.xyz',    icon: '🌱' },
+  { name: 'IPFS',      url: 'https://ipfs.io',            icon: '📦' },
 ];
 
 interface NewTabProps {
@@ -19,11 +38,14 @@ interface NewTabProps {
 }
 
 export default function NewTab({ onNavigate }: NewTabProps) {
-  const { theme } = useSettings();
   const { tabs } = useTabsStore();
+  const { nodes } = useRuntimeStore();
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const isDark = theme === 'dark';
+
+  // Pick background image once on mount — never same as previous tab
+  const [bgIndex] = useState(() => pickNextImage());
+  const bgUrl = `/tap${bgIndex + 1}.jpg`;
 
   useEffect(() => { inputRef.current?.focus(); }, []);
 
@@ -33,92 +55,144 @@ export default function NewTab({ onNavigate }: NewTabProps) {
     if (q) onNavigate(q);
   };
 
-  // Recent browsed sites (last 4, unique, excluding new tab)
-  const recent = [...new Map(
-    tabs
-      .filter(t => t.url !== 'orivon://newtab' && t.url !== 'orivon://settings')
-      .map(t => [t.url, t])
-  ).values()].slice(-4).reverse();
-
-  const bg = isDark ? 'bg-[#0f0f0f]' : 'bg-[#f0f0f0]';
-  const inputBg = isDark ? 'bg-[#1a1a1a] border-white/[0.08] text-white/80 placeholder:text-white/25 focus:border-white/20' : 'bg-white border-black/[0.08] text-black/80 placeholder:text-black/25 focus:border-black/20';
-  const cardBg  = isDark ? 'bg-[#141414] border-white/[0.06] hover:border-white/12 hover:bg-[#1a1a1a]' : 'bg-white border-black/[0.06] hover:border-black/12';
-  const muted   = isDark ? 'text-white/30' : 'text-black/30';
+  const trackerNodes = nodes.filter(n => n.enabled);
 
   return (
-    <div className={`h-full ${bg} flex flex-col items-center justify-center gap-10 p-8 overflow-auto`}>
-      {/* Logo */}
-      <div className="flex flex-col items-center gap-2 -mt-8">
-        <div className="w-10 h-10 rounded-[10px] bg-[#00FF87] flex items-center justify-center mb-1">
-          <Globe size={20} className="text-black" strokeWidth={2.5} />
-        </div>
-        <h1 className={`text-xl font-semibold tracking-tight ${isDark ? 'text-white/70' : 'text-black/70'}`}>Orivon</h1>
-      </div>
+    <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
 
-      {/* Search bar */}
-      <form onSubmit={handleSubmit} className="w-full max-w-[560px]">
-        <div className={`relative flex items-center rounded-2xl border ${inputBg} transition-all shadow-sm`}>
-          <Search size={16} className={`absolute left-4 ${muted} pointer-events-none`} />
-          <input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            placeholder="Search or enter address · try app.eth · ipfs://"
-            className="w-full h-12 bg-transparent pl-11 pr-4 text-[14px] focus:outline-none"
-          />
-        </div>
-      </form>
+      {/* Background image */}
+      <img
+        src={bgUrl}
+        alt=""
+        style={{
+          position: 'absolute', inset: 0, width: '100%', height: '100%',
+          objectFit: 'cover', zIndex: 0,
+          transition: 'opacity 0.4s ease',
+        }}
+        onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
+      />
 
-      {/* dApp shortcuts grid */}
-      <div className="w-full max-w-[560px] space-y-3">
-        <p className={`text-[11px] font-semibold uppercase tracking-widest ${muted}`}>Web3 Apps</p>
-        <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">
-          {DAPPS.map(dapp => (
+      {/* Dark overlay for readability */}
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.28)', zIndex: 1 }} />
+
+      {/* Settings gear - top right */}
+      <button
+        style={{
+          position: 'absolute', top: 16, right: 16, zIndex: 10,
+          width: 36, height: 36, borderRadius: '50%',
+          background: 'rgba(0,0,0,0.35)', border: 'none',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: 'pointer', color: 'rgba(255,255,255,0.7)',
+          backdropFilter: 'blur(4px)', transition: 'background 0.15s',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.55)'; }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.35)'; }}
+      >
+        <Settings size={16} />
+      </button>
+
+      {/* Centered content */}
+      <div style={{
+        position: 'absolute', inset: 0, zIndex: 5,
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        gap: 0,
+      }}>
+
+        {/* Search bar — Brave style, dark pill */}
+        <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: 520, marginBottom: 40 }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 12,
+            background: 'rgba(20,20,30,0.85)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: 9999, padding: '12px 20px',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+          }}>
+            <div style={{ width: 26, height: 26, borderRadius: 8, background: '#00FF87', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Globe size={14} color="#000" strokeWidth={2.5} />
+            </div>
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="Search or enter address · .eth · ipfs://"
+              style={{
+                flex: 1, background: 'transparent', border: 'none', outline: 'none',
+                fontSize: 15, color: 'rgba(255,255,255,0.85)',
+                fontFamily: 'inherit',
+              }}
+              // @ts-ignore — placeholder color via CSS
+              className="newtab-input"
+            />
+          </div>
+        </form>
+
+        {/* dApp grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 64px)', gap: 12, marginBottom: 48 }}>
+          {DAPPS.map(app => (
             <button
-              key={dapp.name}
-              onClick={() => onNavigate(dapp.url)}
-              className={`flex flex-col items-center gap-2 p-3 rounded-2xl border transition-all group ${cardBg}`}
+              key={app.name}
+              onClick={() => onNavigate(app.url)}
+              style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+                background: 'rgba(20,20,30,0.6)', backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: 16, padding: '10px 4px',
+                cursor: 'pointer', transition: 'background 0.15s, transform 0.1s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(40,40,60,0.8)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(20,20,30,0.6)'; e.currentTarget.style.transform = 'scale(1)'; }}
             >
-              <span className="text-2xl leading-none">{dapp.icon}</span>
-              <span className={`text-[10px] font-medium leading-none text-center ${isDark ? 'text-white/45 group-hover:text-white/70' : 'text-black/45 group-hover:text-black/70'}`}>
-                {dapp.name}
-              </span>
+              <span style={{ fontSize: 22, lineHeight: 1 }}>{app.icon}</span>
+              <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.65)', fontWeight: 500, textAlign: 'center', lineHeight: 1.2 }}>{app.name}</span>
             </button>
           ))}
         </div>
       </div>
 
-      {/* Recent tabs */}
-      {recent.length > 0 && (
-        <div className="w-full max-w-[560px] space-y-3">
-          <p className={`text-[11px] font-semibold uppercase tracking-widest ${muted}`}>Recent</p>
-          <div className="grid grid-cols-2 gap-2">
-            {recent.map(tab => (
-              <button
-                key={tab.id + tab.url}
-                onClick={() => onNavigate(tab.url)}
-                className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${cardBg}`}
-              >
-                <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
-                  tab.type === 'ens'  ? 'bg-[#00FF87]/12' :
-                  tab.type === 'ipfs' ? 'bg-[#00D1FF]/12' :
-                  isDark ? 'bg-white/[0.05]' : 'bg-black/[0.04]'
-                }`}>
-                  <Globe size={12} className={
-                    tab.type === 'ens'  ? 'text-[#00FF87]' :
-                    tab.type === 'ipfs' ? 'text-[#00D1FF]' : muted
-                  } />
-                </div>
-                <div className="min-w-0">
-                  <p className={`text-[12px] font-medium truncate ${isDark ? 'text-white/75' : 'text-black/75'}`}>{tab.title}</p>
-                  <p className={`text-[10px] font-mono truncate ${muted}`}>{tab.displayUrl || tab.url}</p>
-                </div>
-              </button>
-            ))}
+      {/* Bottom stats — Brave-style */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, zIndex: 5,
+        display: 'flex', gap: 0, padding: 0,
+      }}>
+        <StatPanel
+          label="STATS"
+          items={[
+            { value: '12', unit: '', desc: 'Trackers & ads blocked', color: '#fff' },
+            { value: `${trackerNodes.length}`, unit: ' KB', desc: 'ENS resolutions', color: '#00D1FF' },
+            { value: '0', unit: ' Seconds', desc: 'Time saved', color: '#fff' },
+          ]}
+        />
+      </div>
+
+      {/* Placeholder CSS for input placeholder color */}
+      <style>{`.newtab-input::placeholder { color: rgba(255,255,255,0.35); }`}</style>
+    </div>
+  );
+}
+
+function StatPanel({ label, items }: {
+  label: string;
+  items: { value: string; unit: string; desc: string; color: string }[];
+}) {
+  return (
+    <div style={{
+      background: 'rgba(20,20,30,0.75)', backdropFilter: 'blur(20px)',
+      borderTopRightRadius: 16, padding: '16px 24px',
+      minWidth: 380,
+    }}>
+      <p style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.1em', textTransform: 'uppercase', margin: '0 0 10px' }}>{label}</p>
+      <div style={{ display: 'flex', gap: 32 }}>
+        {items.map((item, i) => (
+          <div key={i}>
+            <p style={{ margin: 0, fontSize: 22, fontWeight: 700, color: item.color, letterSpacing: '-0.5px' }}>
+              {item.value}<span style={{ fontSize: 14, fontWeight: 400, color: item.color }}>{item.unit}</span>
+            </p>
+            <p style={{ margin: '2px 0 0', fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>{item.desc}</p>
           </div>
-        </div>
-      )}
+        ))}
+      </div>
     </div>
   );
 }

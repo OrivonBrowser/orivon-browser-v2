@@ -57,9 +57,18 @@ function createWindow(): BrowserWindow {
     height: 900,
     minWidth: 900,
     minHeight: 600,
-    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
-    frame: process.platform !== 'darwin',
-    backgroundColor: '#0f0f0f',
+    // macOS: hiddenInset keeps native traffic lights, we position them
+    // Windows/Linux: frame:false so we render our own controls
+    ...(process.platform === 'darwin'
+      ? {
+          titleBarStyle: 'hiddenInset' as const,
+          trafficLightPosition: { x: 14, y: 12 },
+        }
+      : {
+          frame: false,
+          titleBarStyle: 'hidden' as const,
+        }),
+    backgroundColor: '#1a1a1a',
     show: false,
     icon: path.join(__dirname, '../../build/icon.png'),
     webPreferences: {

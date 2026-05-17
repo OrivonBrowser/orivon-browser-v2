@@ -20606,109 +20606,143 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$o = [
+const __iconNode$H = [
+  ["path", { d: "M8 3 4 7l4 4", key: "9rb6wj" }],
+  ["path", { d: "M4 7h16", key: "6tx8e3" }],
+  ["path", { d: "m16 21 4-4-4-4", key: "siv7j2" }],
+  ["path", { d: "M20 17H4", key: "h6l3hr" }]
+];
+const ArrowLeftRight = createLucideIcon("arrow-left-right", __iconNode$H);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$G = [
   ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
   ["path", { d: "M19 12H5", key: "x3x0zl" }]
 ];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$o);
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$G);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$n = [
+const __iconNode$F = [
   ["path", { d: "M5 12h14", key: "1ays0h" }],
   ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
 ];
-const ArrowRight = createLucideIcon("arrow-right", __iconNode$n);
+const ArrowRight = createLucideIcon("arrow-right", __iconNode$F);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$m = [
+const __iconNode$E = [
+  ["path", { d: "m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z", key: "1fy3hk" }]
+];
+const Bookmark = createLucideIcon("bookmark", __iconNode$E);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$D = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$D);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$C = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$C);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$B = [
   ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
   ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
 ];
-const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$m);
+const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$B);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$l = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
-];
-const CircleCheck = createLucideIcon("circle-check", __iconNode$l);
-/**
- * @license lucide-react v0.546.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$k = [
+const __iconNode$A = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3", key: "1u773s" }],
   ["path", { d: "M12 17h.01", key: "p32p05" }]
 ];
-const CircleQuestionMark = createLucideIcon("circle-question-mark", __iconNode$k);
+const CircleQuestionMark = createLucideIcon("circle-question-mark", __iconNode$A);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$j = [
+const __iconNode$z = [
+  [
+    "path",
+    {
+      d: "m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z",
+      key: "9ktpf1"
+    }
+  ],
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]
+];
+const Compass = createLucideIcon("compass", __iconNode$z);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$y = [
   ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
   ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
 ];
-const Copy = createLucideIcon("copy", __iconNode$j);
+const Copy = createLucideIcon("copy", __iconNode$y);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$i = [
-  ["path", { d: "M12 20v2", key: "1lh1kg" }],
-  ["path", { d: "M12 2v2", key: "tus03m" }],
-  ["path", { d: "M17 20v2", key: "1rnc9c" }],
-  ["path", { d: "M17 2v2", key: "11trls" }],
-  ["path", { d: "M2 12h2", key: "1t8f8n" }],
-  ["path", { d: "M2 17h2", key: "7oei6x" }],
-  ["path", { d: "M2 7h2", key: "asdhe0" }],
-  ["path", { d: "M20 12h2", key: "1q8mjw" }],
-  ["path", { d: "M20 17h2", key: "1fpfkl" }],
-  ["path", { d: "M20 7h2", key: "1o8tra" }],
-  ["path", { d: "M7 20v2", key: "4gnj0m" }],
-  ["path", { d: "M7 2v2", key: "1i4yhu" }],
-  ["rect", { x: "4", y: "4", width: "16", height: "16", rx: "2", key: "1vbyd7" }],
-  ["rect", { x: "8", y: "8", width: "8", height: "8", rx: "1", key: "z9xiuo" }]
+const __iconNode$x = [
+  ["path", { d: "M12 15V3", key: "m9g1x1" }],
+  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
+  ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
 ];
-const Cpu = createLucideIcon("cpu", __iconNode$i);
+const Download = createLucideIcon("download", __iconNode$x);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$h = [
+const __iconNode$w = [
   ["circle", { cx: "12", cy: "12", r: "1", key: "41hilf" }],
-  ["circle", { cx: "19", cy: "12", r: "1", key: "1wjl8i" }],
-  ["circle", { cx: "5", cy: "12", r: "1", key: "1pcz8c" }]
+  ["circle", { cx: "12", cy: "5", r: "1", key: "gxeob9" }],
+  ["circle", { cx: "12", cy: "19", r: "1", key: "lyex9k" }]
 ];
-const Ellipsis = createLucideIcon("ellipsis", __iconNode$h);
+const EllipsisVertical = createLucideIcon("ellipsis-vertical", __iconNode$w);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$g = [
+const __iconNode$v = [
   [
     "path",
     {
@@ -20726,14 +20760,14 @@ const __iconNode$g = [
   ],
   ["path", { d: "m2 2 20 20", key: "1ooewy" }]
 ];
-const EyeOff = createLucideIcon("eye-off", __iconNode$g);
+const EyeOff = createLucideIcon("eye-off", __iconNode$v);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$f = [
+const __iconNode$u = [
   [
     "path",
     {
@@ -20743,49 +20777,126 @@ const __iconNode$f = [
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const Eye = createLucideIcon("eye", __iconNode$f);
+const Eye = createLucideIcon("eye", __iconNode$u);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$e = [
+const __iconNode$t = [
+  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
+  [
+    "path",
+    { d: "M4.268 21a2 2 0 0 0 1.727 1H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3", key: "ms7g94" }
+  ],
+  ["path", { d: "m9 18-1.5-1.5", key: "1j6qii" }],
+  ["circle", { cx: "5", cy: "14", r: "3", key: "ufru5t" }]
+];
+const FileSearch = createLucideIcon("file-search", __iconNode$t);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$s = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
   ["path", { d: "M2 12h20", key: "9i4pu4" }]
 ];
-const Globe = createLucideIcon("globe", __iconNode$e);
+const Globe = createLucideIcon("globe", __iconNode$s);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$d = [
+const __iconNode$r = [
+  ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
+  ["path", { d: "M3 3v5h5", key: "1xhq8a" }],
+  ["path", { d: "M12 7v5l4 2", key: "1fdv2h" }]
+];
+const History = createLucideIcon("history", __iconNode$r);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$q = [
   ["path", { d: "m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4", key: "g0fldk" }],
   ["path", { d: "m21 2-9.6 9.6", key: "1j0ho8" }],
   ["circle", { cx: "7.5", cy: "15.5", r: "5.5", key: "yqb3hr" }]
 ];
-const Key = createLucideIcon("key", __iconNode$d);
+const Key = createLucideIcon("key", __iconNode$q);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$c = [
+const __iconNode$p = [
+  ["rect", { width: "7", height: "7", x: "3", y: "3", rx: "1", key: "1g98yp" }],
+  ["rect", { width: "7", height: "7", x: "14", y: "3", rx: "1", key: "6d4xhi" }],
+  ["rect", { width: "7", height: "7", x: "14", y: "14", rx: "1", key: "nxv5o0" }],
+  ["rect", { width: "7", height: "7", x: "3", y: "14", rx: "1", key: "1bb6yr" }]
+];
+const LayoutGrid = createLucideIcon("layout-grid", __iconNode$p);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$o = [
+  ["path", { d: "M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71", key: "1cjeqo" }],
+  ["path", { d: "M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71", key: "19qd67" }]
+];
+const Link = createLucideIcon("link", __iconNode$o);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$n = [
   ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
   ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
 ];
-const Lock = createLucideIcon("lock", __iconNode$c);
+const Lock = createLucideIcon("lock", __iconNode$n);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$b = [
+const __iconNode$m = [
+  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
+  ["path", { d: "m21 3-7 7", key: "1l2asr" }],
+  ["path", { d: "m3 21 7-7", key: "tjx5ai" }],
+  ["path", { d: "M9 21H3v-6", key: "wtvkvv" }]
+];
+const Maximize2 = createLucideIcon("maximize-2", __iconNode$m);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$l = [
+  ["rect", { width: "20", height: "14", x: "2", y: "3", rx: "2", key: "48i651" }],
+  ["line", { x1: "8", x2: "16", y1: "21", y2: "21", key: "1svkeh" }],
+  ["line", { x1: "12", x2: "12", y1: "17", y2: "21", key: "vw1qmm" }]
+];
+const Monitor = createLucideIcon("monitor", __iconNode$l);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$k = [
   [
     "path",
     {
@@ -20794,74 +20905,95 @@ const __iconNode$b = [
     }
   ]
 ];
-const Moon = createLucideIcon("moon", __iconNode$b);
+const Moon = createLucideIcon("moon", __iconNode$k);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$a = [
-  ["rect", { x: "16", y: "16", width: "6", height: "6", rx: "1", key: "4q2zg0" }],
-  ["rect", { x: "2", y: "16", width: "6", height: "6", rx: "1", key: "8cvhb9" }],
-  ["rect", { x: "9", y: "2", width: "6", height: "6", rx: "1", key: "1egb70" }],
-  ["path", { d: "M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3", key: "1jsf9p" }],
-  ["path", { d: "M12 12V8", key: "2874zd" }]
-];
-const Network$1 = createLucideIcon("network", __iconNode$a);
-/**
- * @license lucide-react v0.546.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$9 = [
+const __iconNode$j = [
   ["path", { d: "M5 12h14", key: "1ays0h" }],
   ["path", { d: "M12 5v14", key: "s699le" }]
 ];
-const Plus = createLucideIcon("plus", __iconNode$9);
+const Plus = createLucideIcon("plus", __iconNode$j);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$8 = [
+const __iconNode$i = [
+  [
+    "path",
+    {
+      d: "M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2",
+      key: "143wyd"
+    }
+  ],
+  ["path", { d: "M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6", key: "1itne7" }],
+  ["rect", { x: "6", y: "14", width: "12", height: "8", rx: "1", key: "1ue0tg" }]
+];
+const Printer = createLucideIcon("printer", __iconNode$i);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$h = [
   ["path", { d: "M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "14sxne" }],
   ["path", { d: "M3 3v5h5", key: "1xhq8a" }],
   ["path", { d: "M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16", key: "1hlbsb" }],
   ["path", { d: "M16 16h5v5", key: "ccwih5" }]
 ];
-const RefreshCcw = createLucideIcon("refresh-ccw", __iconNode$8);
+const RefreshCcw = createLucideIcon("refresh-ccw", __iconNode$h);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$7 = [
+const __iconNode$g = [
   ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
   ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
 ];
-const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$7);
+const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$g);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$6 = [
+const __iconNode$f = [
   ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
   ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
 ];
-const Search = createLucideIcon("search", __iconNode$6);
+const Search = createLucideIcon("search", __iconNode$f);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$5 = [
+const __iconNode$e = [
+  [
+    "path",
+    {
+      d: "M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z",
+      key: "1ffxy3"
+    }
+  ],
+  ["path", { d: "m21.854 2.147-10.94 10.939", key: "12cjpa" }]
+];
+const Send = createLucideIcon("send", __iconNode$e);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$d = [
   [
     "path",
     {
@@ -20871,14 +21003,14 @@ const __iconNode$5 = [
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const Settings = createLucideIcon("settings", __iconNode$5);
+const Settings = createLucideIcon("settings", __iconNode$d);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$4 = [
+const __iconNode$c = [
   [
     "path",
     {
@@ -20887,14 +21019,58 @@ const __iconNode$4 = [
     }
   ]
 ];
-const Shield = createLucideIcon("shield", __iconNode$4);
+const Shield = createLucideIcon("shield", __iconNode$c);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$3 = [
+const __iconNode$b = [
+  ["circle", { cx: "8", cy: "21", r: "1", key: "jimo8o" }],
+  ["circle", { cx: "19", cy: "21", r: "1", key: "13723u" }],
+  [
+    "path",
+    {
+      d: "M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12",
+      key: "9zh506"
+    }
+  ]
+];
+const ShoppingCart = createLucideIcon("shopping-cart", __iconNode$b);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$a = [
+  ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", key: "afitv7" }]
+];
+const Square = createLucideIcon("square", __iconNode$a);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$9 = [
+  [
+    "path",
+    {
+      d: "M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z",
+      key: "r04s7s"
+    }
+  ]
+];
+const Star = createLucideIcon("star", __iconNode$9);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$8 = [
   ["circle", { cx: "12", cy: "12", r: "4", key: "4exip2" }],
   ["path", { d: "M12 2v2", key: "tus03m" }],
   ["path", { d: "M12 20v2", key: "1lh1kg" }],
@@ -20905,14 +21081,40 @@ const __iconNode$3 = [
   ["path", { d: "m6.34 17.66-1.41 1.41", key: "1m8zz5" }],
   ["path", { d: "m19.07 4.93-1.41 1.41", key: "1shlcs" }]
 ];
-const Sun = createLucideIcon("sun", __iconNode$3);
+const Sun = createLucideIcon("sun", __iconNode$8);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$2 = [
+const __iconNode$7 = [
+  ["path", { d: "M3 5h18", key: "1u36vt" }],
+  ["path", { d: "M3 12h18", key: "1i2n21" }],
+  ["path", { d: "M3 19h18", key: "awlh7x" }]
+];
+const TextAlignJustify = createLucideIcon("text-align-justify", __iconNode$7);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$6 = [
+  ["path", { d: "M10 11v6", key: "nco0om" }],
+  ["path", { d: "M14 11v6", key: "outv1u" }],
+  ["path", { d: "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6", key: "miytrc" }],
+  ["path", { d: "M3 6h18", key: "d0wm0j" }],
+  ["path", { d: "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2", key: "e791ji" }]
+];
+const Trash2 = createLucideIcon("trash-2", __iconNode$6);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$5 = [
   [
     "path",
     {
@@ -20923,14 +21125,25 @@ const __iconNode$2 = [
   ["path", { d: "M12 9v4", key: "juzpu7" }],
   ["path", { d: "M12 17h.01", key: "p32p05" }]
 ];
-const TriangleAlert = createLucideIcon("triangle-alert", __iconNode$2);
+const TriangleAlert = createLucideIcon("triangle-alert", __iconNode$5);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1 = [
+const __iconNode$4 = [
+  ["path", { d: "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2", key: "975kel" }],
+  ["circle", { cx: "12", cy: "7", r: "4", key: "17ys0d" }]
+];
+const User = createLucideIcon("user", __iconNode$4);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$3 = [
   [
     "path",
     {
@@ -20940,7 +21153,31 @@ const __iconNode$1 = [
   ],
   ["path", { d: "M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4", key: "xoc0q4" }]
 ];
-const Wallet$1 = createLucideIcon("wallet", __iconNode$1);
+const Wallet$1 = createLucideIcon("wallet", __iconNode$3);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$2 = [
+  ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
+  ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
+];
+const X = createLucideIcon("x", __iconNode$2);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$1 = [
+  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }],
+  ["line", { x1: "21", x2: "16.65", y1: "21", y2: "16.65", key: "13gj7c" }],
+  ["line", { x1: "11", x2: "11", y1: "8", y2: "14", key: "1vmskp" }],
+  ["line", { x1: "8", x2: "14", y1: "11", y2: "11", key: "durymu" }]
+];
+const ZoomIn = createLucideIcon("zoom-in", __iconNode$1);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20948,10 +21185,11 @@ const Wallet$1 = createLucideIcon("wallet", __iconNode$1);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode = [
-  ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
-  ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
+  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }],
+  ["line", { x1: "21", x2: "16.65", y1: "21", y2: "16.65", key: "13gj7c" }],
+  ["line", { x1: "8", x2: "14", y1: "11", y2: "11", key: "durymu" }]
 ];
-const X = createLucideIcon("x", __iconNode);
+const ZoomOut = createLucideIcon("zoom-out", __iconNode);
 const createStoreImpl = (createState2) => {
   let state;
   const listeners = /* @__PURE__ */ new Set();
@@ -41108,7 +41346,12 @@ const useWalletStore = create()(
         }
       },
       lock: () => set({ status: "locked", _wallet: null }),
-      clearWallet: () => set({ status: "none", encryptedJson: null, addresses: null, mnemonic: null, _wallet: null }),
+      clearWallet: () => {
+        ["orivon-wallet", "orivon-tabs", "orivon-runtime"].forEach(
+          (k) => localStorage.removeItem(k)
+        );
+        set({ status: "none", encryptedJson: null, addresses: null, mnemonic: null, _wallet: null });
+      },
       sign: async (message) => {
         const { _wallet } = get();
         if (!_wallet) return null;
@@ -41155,28 +41398,29 @@ const useWalletStore = create()(
   )
 );
 const SLIDE = {
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } },
-  exit: { opacity: 0, y: -6, transition: { duration: 0.18, ease: "easeIn" } }
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] } },
+  exit: { opacity: 0, y: -6, transition: { duration: 0.16, ease: "easeIn" } }
 };
-function InnerCard({ children }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "div",
-    {
-      style: {
-        width: "100%",
-        maxWidth: 480,
-        borderRadius: 20,
-        padding: "36px 40px 36px",
-        background: "rgba(255,255,255,0.13)",
-        backdropFilter: "blur(24px)",
-        WebkitBackdropFilter: "blur(24px)",
-        boxShadow: "0 16px 48px rgba(0,0,0,0.35)",
-        textAlign: "left"
-      },
-      children
-    }
-  );
+function pwStrength(pw) {
+  if (!pw) return { score: 0, label: "", color: "#E5E7EB" };
+  let s = 0;
+  if (pw.length >= 8) s++;
+  if (pw.length >= 12) s++;
+  if (/[A-Z]/.test(pw)) s++;
+  if (/[0-9]/.test(pw)) s++;
+  if (/[^A-Za-z0-9]/.test(pw)) s++;
+  if (s <= 1) return { score: 1, label: "Weak", color: "#EF4444" };
+  if (s <= 3) return { score: 2, label: "Medium", color: "#F59E0B" };
+  return { score: 3, label: "Strong", color: "#10B981" };
+}
+function pickVerifyIndices() {
+  const all = Array.from({ length: 12 }, (_, i) => i);
+  for (let i = all.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [all[i], all[j]] = [all[j], all[i]];
+  }
+  return all.slice(0, 3).sort((a, b2) => a - b2);
 }
 function Onboarding({ onDone }) {
   const { generateMnemonic, createWallet, importWallet } = useWalletStore();
@@ -41186,14 +41430,22 @@ function Onboarding({ onDone }) {
   const [password, setPassword] = reactExports.useState("");
   const [confirmPw, setConfirmPw] = reactExports.useState("");
   const [showPw, setShowPw] = reactExports.useState(false);
+  const [showConfirm, setShowConfirm] = reactExports.useState(false);
+  const [phraseShown, setPhraseShown] = reactExports.useState(false);
   const [copied, setCopied] = reactExports.useState(false);
   const [progress2, setProgress] = reactExports.useState(0);
   const [error, setError] = reactExports.useState("");
+  const [verifyIndices] = reactExports.useState(() => pickVerifyIndices());
+  const [verifyStep, setVerifyStep] = reactExports.useState(0);
+  const [verifyInput, setVerifyInput] = reactExports.useState("");
+  const [verifyError, setVerifyError] = reactExports.useState("");
   const words2 = mnemonic.split(" ");
-  const copyPhrase = () => {
+  const strength = pwStrength(password);
+  const canContinue = password.length >= 6 && password === confirmPw;
+  const copyAll = () => {
     navigator.clipboard.writeText(mnemonic);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2e3);
+    setTimeout(() => setCopied(false), 2500);
   };
   const handleCreate = reactExports.useCallback(async () => {
     if (password.length < 6) {
@@ -41208,7 +41460,7 @@ function Onboarding({ onDone }) {
     setStep("encrypting");
     try {
       await createWallet(mnemonic, password, setProgress);
-      setStep("success");
+      setStep("create-phrase");
     } catch (e) {
       setStep("create-password");
       setError(String(e));
@@ -41235,435 +41487,1367 @@ function Onboarding({ onDone }) {
       setError(String(e));
     }
   }, [importPhrase, password, importWallet]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    "div",
-    {
-      style: {
-        position: "relative",
-        width: "100vw",
-        height: "100vh",
-        overflow: "hidden",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "#0a0a0a"
-      },
-      children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "img",
-          {
-            src: "/background.jpg",
-            alt: "",
-            style: {
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              opacity: 0.5,
-              zIndex: 0
-            }
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "absolute", top: 24, right: 32, zIndex: 20, display: "flex", gap: 20 }, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleQuestionMark, { size: 20 }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { size: 20 }) })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 10, width: "100%", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 24px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(AnimatePresence, { mode: "wait", children: [
-          step === "welcome" && /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            motion.div,
-            {
-              ...SLIDE,
-              style: { display: "flex", flexDirection: "column", alignItems: "center", width: "100%" },
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 2, marginBottom: -58 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: {
-                  width: 116,
-                  height: 116,
-                  borderRadius: 28,
-                  background: "linear-gradient(145deg, #00FF87, #00E87A)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: "0 12px 40px rgba(0,255,135,0.40), 0 4px 12px rgba(0,0,0,0.5)"
-                }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 56, color: "#000", strokeWidth: 1.8 }) }) }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: {
-                  width: "100%",
-                  maxWidth: 680,
-                  borderRadius: 24,
-                  /* paddingTop covers the logo overlap (58px) + breathing room (36px) */
-                  padding: "94px 64px 52px",
-                  background: "rgba(255,255,255,0.16)",
-                  backdropFilter: "blur(28px)",
-                  WebkitBackdropFilter: "blur(28px)",
-                  textAlign: "center",
-                  position: "relative",
-                  zIndex: 1,
-                  boxShadow: "0 20px 60px rgba(0,0,0,0.30)"
-                }, children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: {
-                    fontSize: 42,
-                    fontWeight: 800,
-                    color: "#ffffff",
-                    margin: "0 0 16px",
-                    letterSpacing: "-0.8px",
-                    lineHeight: 1.15
-                  }, children: "Web3. By Default." }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: {
-                    fontSize: 18,
-                    color: "rgba(255,255,255,0.65)",
-                    lineHeight: 1.65,
-                    margin: "0 0 44px"
-                  }, children: [
-                    "Browse ENS domains and decentralized apps natively.",
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
-                    "Your wallet lives inside the browser, not an extension."
-                  ] }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 18 }, children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(
-                      "button",
-                      {
-                        onClick: () => setStep("choose"),
-                        style: {
-                          width: "68%",
-                          height: 56,
-                          borderRadius: 9999,
-                          background: "#4F46E5",
-                          color: "#ffffff",
-                          fontSize: 17,
-                          fontWeight: 600,
-                          border: "none",
-                          cursor: "pointer",
-                          letterSpacing: "-0.1px",
-                          boxShadow: "0 4px 20px rgba(79,70,229,0.45)",
-                          transition: "filter 0.15s, transform 0.1s"
-                        },
-                        onMouseEnter: (e) => {
-                          e.currentTarget.style.filter = "brightness(1.14)";
-                        },
-                        onMouseLeave: (e) => {
-                          e.currentTarget.style.filter = "brightness(1)";
-                        },
-                        onMouseDown: (e) => {
-                          e.currentTarget.style.transform = "scale(0.97)";
-                        },
-                        onMouseUp: (e) => {
-                          e.currentTarget.style.transform = "scale(1)";
-                        },
-                        children: "Create / Import Wallet"
-                      }
-                    ),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(
-                      "button",
-                      {
-                        onClick: () => onDone(false),
-                        style: {
-                          background: "none",
-                          border: "none",
-                          color: "rgba(255,255,255,0.52)",
-                          fontSize: 16,
-                          cursor: "pointer",
-                          padding: "4px 0",
-                          transition: "color 0.15s"
-                        },
-                        onMouseEnter: (e) => e.currentTarget.style.color = "rgba(255,255,255,0.85)",
-                        onMouseLeave: (e) => e.currentTarget.style.color = "rgba(255,255,255,0.52)",
-                        children: "Skip"
-                      }
-                    )
-                  ] })
-                ] })
-              ]
-            },
-            "welcome"
-          ),
-          step === "choose" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, style: { width: "100%", display: "flex", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(InnerCard, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(BackBtn, { onClick: () => setStep("welcome") }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Title, { children: "Set up your wallet" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Sub, { children: "How would you like to get started?" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", flexDirection: "column", gap: 10, marginBottom: 24 }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                OptionBtn,
-                {
-                  icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 18, color: "#00FF87" }),
-                  iconBg: "rgba(0,255,135,0.15)",
-                  label: "Create new wallet",
-                  sub: "Generate a fresh 12-word seed phrase",
-                  onClick: () => setStep("create-phrase"),
-                  accent: true
-                }
-              ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                OptionBtn,
-                {
-                  icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Key, { size: 18, color: "rgba(255,255,255,0.55)" }),
-                  iconBg: "rgba(255,255,255,0.08)",
-                  label: "Import existing wallet",
-                  sub: "Restore from your 12 or 24-word phrase",
-                  onClick: () => setStep("import")
-                }
-              )
-            ] })
-          ] }) }, "choose"),
-          step === "create-phrase" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, style: { width: "100%", display: "flex", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(InnerCard, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(BackBtn, { onClick: () => setStep("choose") }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Title, { children: "Your recovery phrase" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Sub, { children: "Write down these 12 words and store them somewhere safe. This is the only way to recover your wallet." }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6, margin: "16px 0" }, children: words2.map((word, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: "8px 10px" }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 10, color: "rgba(255,255,255,0.22)", width: 14, flexShrink: 0, fontVariantNumeric: "tabular-nums" }, children: i + 1 }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, fontWeight: 500, color: "rgba(255,255,255,0.82)" }, children: word })
-            ] }, i)) }),
+  const handleVerify = () => {
+    const expected = words2[verifyIndices[verifyStep]].toLowerCase().trim();
+    if (verifyInput.toLowerCase().trim() !== expected) {
+      setVerifyError(`Incorrect. Check your phrase and try again.`);
+      return;
+    }
+    setVerifyError("");
+    setVerifyInput("");
+    if (verifyStep < 2) {
+      setVerifyStep((v) => v + 1);
+    } else {
+      setStep("success");
+    }
+  };
+  const isGradientStep = step === "welcome" || step === "choose";
+  if (!isGradientStep) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { minHeight: "100vh", background: "#F5F6FA", overflowY: "auto" }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { padding: "24px 48px 8px", display: "flex", alignItems: "center", gap: 8 }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 28, height: 28, borderRadius: 8, background: "#00FF87", display: "flex", alignItems: "center", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 15, color: "#000", strokeWidth: 2.5 }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 15, fontWeight: 600, color: "#1A1A2E" }, children: "Orivon Wallet" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(AnimatePresence, { mode: "wait", children: [
+        step === "create-password" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(BackCircle, { onClick: () => setStep("choose") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(LightCard, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: titleStyle, children: "Create a new password" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: subStyle, children: "You will use this password each time you access your wallet." }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(FieldLabel, { children: [
+              "Enter new password ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Required, {})
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", marginBottom: 8 }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: showPw ? "text" : "password", value: password, onChange: (e) => setPassword(e.target.value), placeholder: "Enter new password", autoFocus: true, style: inputSt }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(EyeBtn, { show: showPw, toggle: () => setShowPw((p) => !p) })
+            ] }),
+            password.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { flex: 1, display: "flex", gap: 4 }, children: [1, 2, 3].map((i) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { flex: 1, height: 3, borderRadius: 2, background: strength.score >= i ? strength.color : "#E5E7EB", transition: "background 0.2s" } }, i)) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, color: strength.color, fontWeight: 500 }, children: strength.label })
+            ] }),
+            !password && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { marginBottom: 20 } }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(FieldLabel, { children: [
+              "Re-enter password ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Required, {})
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", marginBottom: confirmPw && confirmPw !== password ? 6 : 28 }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: showConfirm ? "text" : "password", value: confirmPw, onChange: (e) => setConfirmPw(e.target.value), placeholder: "Re-enter password", onKeyDown: (e) => e.key === "Enter" && canContinue && handleCreate(), style: { ...inputSt, borderColor: confirmPw && confirmPw !== password ? "#EF4444" : "#E5E7EB" } }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(EyeBtn, { show: showConfirm, toggle: () => setShowConfirm((p) => !p) })
+            ] }),
+            confirmPw && confirmPw !== password && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 12, color: "#EF4444", marginBottom: 20 }, children: "Passwords do not match" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 10, padding: "12px 16px", background: "#EEF2FF", borderRadius: 12, marginBottom: 32 }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 30, height: 30, borderRadius: 8, background: "#E0E7FF", display: "flex", alignItems: "center", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 15, color: "#4F46E5" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 14, color: "#374151", flex: 1 }, children: "Orivon will auto-lock after" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("select", { style: { padding: "6px 10px", borderRadius: 8, border: "1px solid #D1D5DB", background: "#fff", fontSize: 13, color: "#374151", cursor: "pointer" }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { children: "5 Minutes" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { children: "15 Minutes" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { children: "1 Hour" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("option", { children: "Never" })
+              ] })
+            ] }),
+            error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 13, color: "#EF4444", textAlign: "center", marginBottom: 14 }, children: error }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(CenterBtn, { onClick: handleCreate, disabled: !canContinue, children: "Continue" })
+          ] })
+        ] }, "create-pw"),
+        step === "encrypting" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(LightCard, { style: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 520 }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 52, height: 52, marginBottom: 22 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "52", height: "52", viewBox: "0 0 52 52", style: { animation: "spin 1s linear infinite" }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("style", { children: `@keyframes spin { to { transform: rotate(360deg); } }` }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "26", cy: "26", r: "22", stroke: "#E0E7FF", strokeWidth: "3", fill: "none" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "26", cy: "26", r: "22", stroke: "#4F46E5", strokeWidth: "3", fill: "none", strokeDasharray: "110", strokeDashoffset: "80", strokeLinecap: "round" })
+          ] }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 18, fontWeight: 600, color: "#111827", margin: 0 }, children: "Creating Wallet…" })
+        ] }) }, "encrypting"),
+        step === "create-phrase" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(BackCircle, { onClick: () => setStep("create-password") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(LightCard, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { ...titleStyle, textAlign: "center" }, children: "Save your recovery phrase" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 15, color: "#6B7280", lineHeight: 1.65, marginBottom: 16 }, children: "The 12-word recovery phrase is a private key you can use to regain access to your wallet in case you lose a connected device. Store it someplace safe, and in the exact order it appears below." }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 15, fontWeight: 700, color: "#111827", lineHeight: 1.5, marginBottom: 28 }, children: "Keep it in a secure place that is not accessible to others and avoid sharing it with anyone." }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              "button",
+              "div",
               {
-                onClick: copyPhrase,
                 style: {
-                  width: "100%",
-                  height: 38,
-                  borderRadius: 10,
-                  fontSize: 12,
-                  fontWeight: 500,
-                  background: copied ? "rgba(0,255,135,0.12)" : "rgba(255,255,255,0.05)",
-                  border: `1px solid ${copied ? "rgba(0,255,135,0.3)" : "rgba(255,255,255,0.1)"}`,
-                  color: copied ? "#00FF87" : "rgba(255,255,255,0.45)",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 6,
-                  marginBottom: 14
+                  border: "1px solid #E5E7EB",
+                  borderRadius: 12,
+                  padding: "20px 20px",
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: 10,
+                  marginBottom: 14,
+                  position: "relative",
+                  cursor: "default"
                 },
+                onMouseEnter: () => phraseShown && void 0,
                 children: [
-                  copied ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { size: 13 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Copy, { size: 13 }),
-                  copied ? "Copied!" : "Copy to clipboard"
+                  !phraseShown && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: {
+                    position: "absolute",
+                    inset: 0,
+                    zIndex: 5,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 11,
+                    background: "rgba(249,250,251,0.05)",
+                    pointerEvents: "none"
+                  }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(EyeOff, { size: 22, color: "#9CA3AF" }) }),
+                  words2.map((word, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: {
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "10px 12px",
+                    borderRadius: 8,
+                    background: "#F9FAFB",
+                    border: "1px solid #F3F4F6",
+                    filter: phraseShown ? "blur(0)" : "blur(6px)",
+                    transition: "filter 0.3s ease",
+                    userSelect: phraseShown ? "text" : "none"
+                  }, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { style: { fontSize: 12, color: "#9CA3AF", fontWeight: 500 }, children: [
+                      "#",
+                      i + 1,
+                      "."
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 14, fontWeight: 600, color: "#1F2937" }, children: word })
+                  ] }, i))
                 ]
               }
             ),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(PrimaryBtn, { onClick: () => setStep("create-password"), children: [
-              "I have saved my phrase  ",
-              /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 14 })
-            ] })
-          ] }) }, "phrase"),
-          step === "create-password" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, style: { width: "100%", display: "flex", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(InnerCard, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(BackBtn, { onClick: () => setStep("create-phrase") }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Title, { children: "Protect your wallet" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Sub, { children: "This password encrypts your wallet on your device. You will need it every time you unlock." }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", flexDirection: "column", gap: 10, margin: "16px 0" }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(PwInput, { value: password, onChange: setPassword, placeholder: "Password (min 6 characters)", show: showPw, toggle: () => setShowPw((p) => !p), autoFocus: true, onEnter: () => {
-              } }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                "input",
+            !phraseShown ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "center", marginBottom: 16 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
                 {
-                  type: "password",
-                  value: confirmPw,
-                  onChange: (e) => setConfirmPw(e.target.value),
-                  placeholder: "Confirm password",
-                  onKeyDown: (e) => e.key === "Enter" && handleCreate(),
-                  style: inputStyle
+                  onClick: () => setPhraseShown(true),
+                  style: {
+                    width: "62%",
+                    height: 50,
+                    borderRadius: 9999,
+                    background: "#4F46E5",
+                    color: "#fff",
+                    fontSize: 15,
+                    fontWeight: 600,
+                    border: "none",
+                    cursor: "pointer",
+                    boxShadow: "0 2px 14px rgba(79,70,229,0.35)",
+                    transition: "filter 0.15s"
+                  },
+                  onMouseEnter: (e) => {
+                    e.currentTarget.style.filter = "brightness(1.1)";
+                  },
+                  onMouseLeave: (e) => {
+                    e.currentTarget.style.filter = "brightness(1)";
+                  },
+                  children: "Show my recovery phrase"
                 }
-              )
-            ] }),
-            error && /* @__PURE__ */ jsxRuntimeExports.jsx(ErrMsg, { text: error }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(PrimaryBtn, { onClick: handleCreate, disabled: password.length < 6 || password !== confirmPw, children: "Create wallet" })
-          ] }) }, "create-pw"),
-          step === "import" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, style: { width: "100%", display: "flex", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(InnerCard, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(BackBtn, { onClick: () => setStep("choose") }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Title, { children: "Import your wallet" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Sub, { children: "Enter your 12 or 24-word recovery phrase to restore access to your wallet." }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", flexDirection: "column", gap: 10, margin: "16px 0" }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                "textarea",
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { textAlign: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onDone(true), style: skipBtnStyle, onMouseEnter: (e) => e.currentTarget.style.color = "#374151", onMouseLeave: (e) => e.currentTarget.style.color = "#9CA3AF", children: "Skip" }) })
+            ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "button",
                 {
-                  value: importPhrase,
-                  onChange: (e) => setImport(e.target.value),
-                  placeholder: "word1 word2 word3...",
-                  rows: 3,
-                  style: { ...inputStyle, resize: "none", fontFamily: "monospace", paddingTop: 12 }
+                  onClick: copyAll,
+                  style: {
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 6,
+                    width: "100%",
+                    height: 46,
+                    borderRadius: 9999,
+                    marginBottom: 14,
+                    background: "transparent",
+                    border: `1.5px solid ${copied ? "#4F46E5" : "#D1D5DB"}`,
+                    color: copied ? "#4F46E5" : "#6B7280",
+                    fontSize: 14,
+                    fontWeight: 500,
+                    cursor: "pointer",
+                    transition: "border-color 0.15s, color 0.15s"
+                  },
+                  children: [
+                    copied ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 14 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Copy, { size: 14 }),
+                    copied ? "Copied!" : "Click to copy"
+                  ]
                 }
               ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(PwInput, { value: password, onChange: setPassword, placeholder: "Set a new password", show: showPw, toggle: () => setShowPw((p) => !p), autoFocus: true, onEnter: handleImport })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "center", marginBottom: 14 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
+                {
+                  onClick: () => setStep("verify-phrase"),
+                  style: {
+                    width: "55%",
+                    height: 50,
+                    borderRadius: 9999,
+                    background: "#4F46E5",
+                    color: "#fff",
+                    fontSize: 15,
+                    fontWeight: 600,
+                    border: "none",
+                    cursor: "pointer",
+                    boxShadow: "0 2px 14px rgba(79,70,229,0.3)",
+                    transition: "filter 0.15s"
+                  },
+                  onMouseEnter: (e) => {
+                    e.currentTarget.style.filter = "brightness(1.1)";
+                  },
+                  onMouseLeave: (e) => {
+                    e.currentTarget.style.filter = "brightness(1)";
+                  },
+                  children: "Continue"
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { textAlign: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onDone(true), style: skipBtnStyle, onMouseEnter: (e) => e.currentTarget.style.color = "#374151", onMouseLeave: (e) => e.currentTarget.style.color = "#9CA3AF", children: "Skip" }) })
+            ] })
+          ] })
+        ] }, "phrase"),
+        step === "verify-phrase" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(LightCard, { style: { minHeight: 560 }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginBottom: 60 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { fontSize: 28, fontWeight: 700, color: "#111827", margin: 0 }, children: "Let's check" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", gap: 6, alignItems: "center" }, children: [0, 1, 2].map((i) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: {
+              height: 8,
+              width: i === verifyStep ? 22 : 8,
+              borderRadius: 4,
+              background: i < verifyStep ? "#4F46E5" : i === verifyStep ? "#4F46E5" : "#D1D5DB",
+              opacity: i < verifyStep ? 0.4 : 1,
+              transition: "all 0.3s ease"
+            } }, i)) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { fontSize: 15, color: "#374151", textAlign: "center", marginBottom: 20 }, children: [
+            "Enter the word in position ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: verifyIndices[verifyStep] + 1 }),
+            " from your recovery phrase."
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "input",
+            {
+              type: "text",
+              value: verifyInput,
+              onChange: (e) => {
+                setVerifyInput(e.target.value);
+                setVerifyError("");
+              },
+              onKeyDown: (e) => e.key === "Enter" && verifyInput && handleVerify(),
+              autoFocus: true,
+              placeholder: "",
+              style: {
+                width: "100%",
+                height: 52,
+                borderRadius: 12,
+                padding: "0 18px",
+                fontSize: 16,
+                background: "#F3F4F6",
+                border: verifyError ? "1.5px solid #EF4444" : verifyInput ? "1.5px solid #4F46E5" : "1.5px solid transparent",
+                outline: "none",
+                fontFamily: "inherit",
+                color: "#111827",
+                boxSizing: "border-box",
+                transition: "border-color 0.15s",
+                marginBottom: verifyError ? 8 : 32
+              }
+            },
+            verifyStep
+          ),
+          verifyError && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 13, color: "#EF4444", textAlign: "center", marginBottom: 24 }, children: verifyError }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "center", marginBottom: 32 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => {
+                setStep("create-phrase");
+                setPhraseShown(true);
+                setVerifyError("");
+                setVerifyInput("");
+              },
+              style: {
+                width: "75%",
+                height: 46,
+                borderRadius: 9999,
+                background: "#F3F4F6",
+                border: "none",
+                color: "#4F46E5",
+                fontSize: 14,
+                fontWeight: 600,
+                cursor: "pointer"
+              },
+              children: "Forgot to save? Go back"
+            }
+          ) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "center", marginBottom: 16 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: handleVerify,
+              disabled: !verifyInput.trim(),
+              style: {
+                width: "55%",
+                height: 50,
+                borderRadius: 9999,
+                background: verifyInput.trim() ? "#4F46E5" : "#E5E7EB",
+                color: verifyInput.trim() ? "#fff" : "#9CA3AF",
+                fontSize: 15,
+                fontWeight: 600,
+                border: "none",
+                cursor: verifyInput.trim() ? "pointer" : "not-allowed",
+                transition: "background 0.2s"
+              },
+              children: "Continue"
+            }
+          ) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { textAlign: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onDone(true), style: skipBtnStyle, onMouseEnter: (e) => e.currentTarget.style.color = "#374151", onMouseLeave: (e) => e.currentTarget.style.color = "#9CA3AF", children: "Skip" }) })
+        ] }) }, `verify-${verifyStep}`),
+        step === "import" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(BackCircle, { onClick: () => setStep("choose") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(LightCard, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: titleStyle, children: "Restore your wallet" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { ...subStyle, marginBottom: 32 }, children: "Enter your 12 or 24-word recovery phrase to restore access." }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(FieldLabel, { children: [
+              "Recovery phrase ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Required, {})
             ] }),
-            error && /* @__PURE__ */ jsxRuntimeExports.jsx(ErrMsg, { text: error }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(PrimaryBtn, { onClick: handleImport, disabled: importPhrase.trim().split(/\s+/).length < 12 || password.length < 6, children: "Import wallet" })
-          ] }) }, "import"),
-          step === "encrypting" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, style: { width: "100%", display: "flex", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(InnerCard, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { textAlign: "center", padding: "16px 0" }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", width: 64, height: 64, margin: "0 auto 20px" }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "64", height: "64", viewBox: "0 0 64 64", style: { transform: "rotate(-90deg)" }, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "32", cy: "32", r: "28", stroke: "rgba(255,255,255,0.08)", strokeWidth: "3", fill: "none" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "circle",
-                  {
-                    cx: "32",
-                    cy: "32",
-                    r: "28",
-                    stroke: "#00FF87",
-                    strokeWidth: "3",
-                    fill: "none",
-                    strokeDasharray: `${2 * Math.PI * 28}`,
-                    strokeDashoffset: `${2 * Math.PI * 28 * (1 - progress2 / 100)}`,
-                    strokeLinecap: "round",
-                    style: { transition: "stroke-dashoffset 0.3s ease" }
-                  }
-                )
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { style: { fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.7)" }, children: [
-                Math.round(progress2),
-                "%"
-              ] }) })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("textarea", { value: importPhrase, onChange: (e) => setImport(e.target.value), placeholder: "word1 word2 word3...", rows: 4, style: { ...inputSt, resize: "none", fontFamily: "monospace", paddingTop: 14, height: "auto", marginBottom: 20 } }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(FieldLabel, { children: [
+              "New password ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Required, {})
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 16, fontWeight: 600, color: "rgba(255,255,255,0.85)", margin: "0 0 6px" }, children: "Encrypting your wallet" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 13, color: "rgba(255,255,255,0.35)", margin: 0 }, children: "Just a moment while we secure your keys" })
-          ] }) }) }, "encrypting"),
-          step === "success" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, style: { width: "100%", display: "flex", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(InnerCard, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { textAlign: "center", padding: "8px 0" }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", marginBottom: 32 }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: showPw ? "text" : "password", value: password, onChange: (e) => setPassword(e.target.value), placeholder: "Set a new password", onKeyDown: (e) => e.key === "Enter" && handleImport(), style: inputSt }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(EyeBtn, { show: showPw, toggle: () => setShowPw((p) => !p) })
+            ] }),
+            error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 13, color: "#EF4444", textAlign: "center", marginBottom: 14 }, children: error }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(CenterBtn, { onClick: handleImport, disabled: importPhrase.trim().split(/\s+/).length < 12 || password.length < 6, children: "Import Wallet" })
+          ] })
+        ] }, "import"),
+        step === "success" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(LightCard, { style: { textAlign: "center" }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", width: 180, height: 160, margin: "0 auto 28px" }, children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: {
-              width: 56,
-              height: 56,
-              borderRadius: "50%",
-              background: "rgba(0,255,135,0.12)",
-              border: "1px solid rgba(0,255,135,0.25)",
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -30%)",
+              width: 120,
+              height: 80,
+              borderRadius: 16,
+              background: "linear-gradient(135deg, #4F46E5, #7C3AED)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              margin: "0 auto 20px"
-            }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { size: 26, color: "#00FF87" }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 20, fontWeight: 700, color: "#fff", margin: "0 0 8px" }, children: "Wallet ready" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 14, color: "rgba(255,255,255,0.42)", margin: "0 0 28px" }, children: "Encrypted and stored locally on your device. Only you have access." }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(PrimaryBtn, { onClick: () => onDone(true), children: [
-              "Open Orivon  ",
-              /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 14 })
-            ] })
-          ] }) }) }, "success")
-        ] }) })
-      ]
-    }
-  );
+              boxShadow: "0 8px 24px rgba(79,70,229,0.35)"
+            }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 20, color: "#fff", strokeWidth: 2 }) }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", top: 8, right: 16, width: 36, height: 36, borderRadius: "50%", background: "#627EEA", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(98,126,234,0.4)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 16 }, children: "Ξ" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", top: 22, left: 12, width: 30, height: 30, borderRadius: "50%", background: "#1A1A1A", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 10px rgba(0,0,0,0.3)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 13, color: "#F7931A" }, children: "₿" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", top: 70, right: 8, width: 24, height: 24, borderRadius: "50%", background: "#9945FF", boxShadow: "0 3px 8px rgba(153,69,255,0.4)" } }),
+            [{ t: 100, l: 30, s: 10 }, { t: 40, l: 78, s: 7 }, { t: 115, r: 30, s: 8 }].map((p, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", top: p.t, left: p.l, right: p.r, width: p.s, height: p.s, borderRadius: "50%", background: i === 0 ? "#F59E0B" : "#EC4899", opacity: 0.7 } }, i))
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { fontSize: 26, fontWeight: 700, color: "#111827", margin: "0 0 10px" }, children: "You're all set!" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 15, color: "#6B7280", margin: "0 0 36px" }, children: "Your Orivon Wallet is now set up and ready for Web3." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => onDone(true),
+              style: {
+                width: "62%",
+                height: 50,
+                borderRadius: 9999,
+                background: "#4F46E5",
+                color: "#fff",
+                fontSize: 15,
+                fontWeight: 600,
+                border: "none",
+                cursor: "pointer",
+                boxShadow: "0 4px 16px rgba(79,70,229,0.35)",
+                transition: "filter 0.15s"
+              },
+              onMouseEnter: (e) => {
+                e.currentTarget.style.filter = "brightness(1.1)";
+              },
+              onMouseLeave: (e) => {
+                e.currentTarget.style.filter = "brightness(1)";
+              },
+              children: "Enter the world of Orivon"
+            }
+          ) })
+        ] }) }, "success")
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: 60 } })
+    ] });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", width: "100vw", height: "100vh", overflow: "hidden", background: "#0a0a0a", display: "flex", alignItems: "center", justifyContent: "center" }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: "/background.jpg", alt: "", style: { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.5, zIndex: 0 } }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "absolute", top: 24, right: 32, zIndex: 20, display: "flex", gap: 20 }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleQuestionMark, { size: 20 }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { size: 20 }) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 10, width: "100%", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 24px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(AnimatePresence, { mode: "wait", children: [
+      step === "welcome" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, style: { display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 2, marginBottom: -58 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 116, height: 116, borderRadius: 28, background: "linear-gradient(145deg,#00FF87,#00E87A)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 12px 40px rgba(0,255,135,0.40),0 4px 12px rgba(0,0,0,0.5)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 56, color: "#000", strokeWidth: 1.8 }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(GradCard, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { fontSize: 42, fontWeight: 800, color: "#fff", margin: "0 0 16px", letterSpacing: "-0.8px", lineHeight: 1.15 }, children: "Web3. By Default." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { fontSize: 18, color: "rgba(255,255,255,0.65)", lineHeight: 1.65, margin: "0 0 44px" }, children: [
+            "Browse ENS domains and decentralized apps natively.",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+            "Your wallet lives inside the browser, not an extension."
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 18 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(GradBtn, { onClick: () => setStep("choose"), children: "Create / Import Wallet" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(PlainBtn, { onClick: () => onDone(false), children: "Skip" })
+          ] })
+        ] })
+      ] }, "welcome"),
+      step === "choose" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, style: { display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: "100%", maxWidth: 680, marginBottom: 12, paddingLeft: 4 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            onClick: () => setStep("welcome"),
+            style: { width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.25)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#fff", backdropFilter: "blur(8px)", transition: "background 0.15s" },
+            onMouseEnter: (e) => e.currentTarget.style.background = "rgba(255,255,255,0.25)",
+            onMouseLeave: (e) => e.currentTarget.style.background = "rgba(255,255,255,0.15)",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 18 })
+          }
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 2, marginBottom: -58 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 116, height: 116, borderRadius: 28, background: "linear-gradient(145deg,#00FF87,#00E87A)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 12px 40px rgba(0,255,135,0.40),0 4px 12px rgba(0,0,0,0.5)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 56, color: "#000", strokeWidth: 1.8 }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(GradCard, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { style: { fontSize: 40, fontWeight: 800, color: "#fff", margin: "0 0 18px", letterSpacing: "-0.7px", lineHeight: 1.18 }, children: [
+            "Create or restore",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+            "your wallet."
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 18, fontWeight: 600, color: "rgba(255,255,255,0.85)", margin: "0 0 14px", lineHeight: 1.5 }, children: "Your keys. Your crypto. Your browser." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 14, color: "rgba(255,255,255,0.50)", lineHeight: 1.65, margin: "0 0 40px" }, children: "Generate a new 12-word seed phrase or restore an existing wallet. Your keys are encrypted and stored only on this device." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(GradBtn, { onClick: () => setStep("create-password"), children: "Create Wallet" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(PlainBtn, { onClick: () => setStep("import"), children: "Import Wallet" })
+          ] })
+        ] })
+      ] }, "choose")
+    ] }) })
+  ] });
 }
-const inputStyle = {
-  width: "100%",
-  height: 44,
-  borderRadius: 12,
-  padding: "0 16px",
-  fontSize: 13,
-  color: "rgba(255,255,255,0.8)",
-  background: "rgba(255,255,255,0.05)",
-  border: "1px solid rgba(255,255,255,0.09)",
-  outline: "none",
-  fontFamily: "inherit"
-};
-function PwInput({ value, onChange, placeholder, show, toggle, autoFocus, onEnter }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative" }, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "input",
-      {
-        type: show ? "text" : "password",
-        value,
-        onChange: (e) => onChange(e.target.value),
-        placeholder,
-        autoFocus,
-        onKeyDown: (e) => e.key === "Enter" && onEnter(),
-        style: { ...inputStyle, paddingRight: 40 }
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "button",
-      {
-        onClick: toggle,
-        style: { position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "rgba(255,255,255,0.28)", cursor: "pointer", padding: 0 },
-        children: show ? /* @__PURE__ */ jsxRuntimeExports.jsx(EyeOff, { size: 14 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Eye, { size: 14 })
-      }
+function LightCard({ children, style }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { maxWidth: 720, margin: "0 auto", padding: "0 40px 0" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { background: "#fff", borderRadius: 20, padding: "44px 52px 48px", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", ...style }, children }) });
+}
+function GradCard({ children }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: "100%", maxWidth: 680, borderRadius: 24, padding: "94px 64px 52px", background: "rgba(255,255,255,0.16)", backdropFilter: "blur(28px)", WebkitBackdropFilter: "blur(28px)", textAlign: "center", position: "relative", zIndex: 1, boxShadow: "0 20px 60px rgba(0,0,0,0.30)" }, children });
+}
+function BackCircle({ onClick }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { maxWidth: 720, margin: "0 auto", padding: "8px 40px 16px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "button",
+    {
+      onClick,
+      style: { width: 40, height: 40, borderRadius: "50%", border: "1.5px solid #C7D2FE", background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#4F46E5" },
+      onMouseEnter: (e) => {
+        e.currentTarget.style.background = "#EEF2FF";
+      },
+      onMouseLeave: (e) => {
+        e.currentTarget.style.background = "transparent";
+      },
+      children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 18 })
+    }
+  ) });
+}
+function GradBtn({ children, onClick }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick, style: { width: "68%", height: 56, borderRadius: 9999, background: "#4F46E5", color: "#fff", fontSize: 17, fontWeight: 600, border: "none", cursor: "pointer", boxShadow: "0 4px 20px rgba(79,70,229,0.45)", transition: "filter 0.15s" }, onMouseEnter: (e) => {
+    e.currentTarget.style.filter = "brightness(1.14)";
+  }, onMouseLeave: (e) => {
+    e.currentTarget.style.filter = "brightness(1)";
+  }, children });
+}
+function PlainBtn({ children, onClick }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick, style: { background: "none", border: "none", color: "rgba(255,255,255,0.60)", fontSize: 16, cursor: "pointer", padding: "4px 0", transition: "color 0.15s" }, onMouseEnter: (e) => e.currentTarget.style.color = "rgba(255,255,255,0.90)", onMouseLeave: (e) => e.currentTarget.style.color = "rgba(255,255,255,0.60)", children });
+}
+function CenterBtn({ children, onClick, disabled }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick, disabled, style: { width: "55%", height: 50, borderRadius: 9999, background: disabled ? "#E5E7EB" : "#4F46E5", color: disabled ? "#9CA3AF" : "#fff", fontSize: 15, fontWeight: 600, border: "none", cursor: disabled ? "not-allowed" : "pointer", transition: "background 0.2s, filter 0.15s" }, onMouseEnter: (e) => {
+    if (!disabled) e.currentTarget.style.filter = "brightness(1.1)";
+  }, onMouseLeave: (e) => {
+    e.currentTarget.style.filter = "brightness(1)";
+  }, children }) });
+}
+function EyeBtn({ show, toggle }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: toggle, style: { position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "#9CA3AF", cursor: "pointer", padding: 0, display: "flex", alignItems: "center" }, children: show ? /* @__PURE__ */ jsxRuntimeExports.jsx(EyeOff, { size: 18 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Eye, { size: 18 }) });
+}
+function FieldLabel({ children }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("label", { style: { display: "block", fontSize: 14, fontWeight: 600, color: "#374151", marginBottom: 8 }, children });
+}
+function Required() {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "#EF4444" }, children: " *" });
+}
+const titleStyle = { fontSize: 26, fontWeight: 700, color: "#111827", margin: "0 0 12px" };
+const subStyle = { fontSize: 15, color: "#6B7280", lineHeight: 1.6, margin: "0 0 28px" };
+const inputSt = { width: "100%", height: 52, borderRadius: 12, padding: "0 48px 0 18px", fontSize: 15, color: "#111827", background: "#F9FAFB", border: "1px solid #E5E7EB", outline: "none", fontFamily: "inherit", boxSizing: "border-box", display: "block", marginBottom: 8 };
+const skipBtnStyle = { background: "none", border: "none", color: "#9CA3AF", fontSize: 15, cursor: "pointer", padding: "4px 0", transition: "color 0.15s" };
+const MARKET = [
+  { name: "Bitcoin", sym: "BTC", price: "$43,250.00", change: 2.1, cap: "$848.3B", vol: "$28.4B", color: "#F7931A", l: "₿" },
+  { name: "Ethereum", sym: "ETH", price: "$2,345.80", change: 1.8, cap: "$282.1B", vol: "$12.1B", color: "#627EEA", l: "Ξ" },
+  { name: "Tether", sym: "USDT", price: "$0.9998", change: 0, cap: "$95.2B", vol: "$45.1B", color: "#26A17B", l: "₮" },
+  { name: "BNB", sym: "BNB", price: "$323.40", change: 0.8, cap: "$47.0B", vol: "$1.2B", color: "#F3BA2F", l: "B" },
+  { name: "Solana", sym: "SOL", price: "$98.20", change: -1.2, cap: "$43.0B", vol: "$2.8B", color: "#9945FF", l: "◎" },
+  { name: "XRP", sym: "XRP", price: "$0.5840", change: 0.3, cap: "$32.1B", vol: "$1.5B", color: "#00AAE4", l: "X" },
+  { name: "USDC", sym: "USDC", price: "$1.0001", change: 0, cap: "$25.4B", vol: "$8.2B", color: "#2775CA", l: "$" },
+  { name: "Avalanche", sym: "AVAX", price: "$34.10", change: -0.5, cap: "$14.0B", vol: "$0.9B", color: "#E84142", l: "A" },
+  { name: "Dogecoin", sym: "DOGE", price: "$0.1234", change: 3.4, cap: "$17.2B", vol: "$1.8B", color: "#C2A633", l: "D" },
+  { name: "Cardano", sym: "ADA", price: "$0.4521", change: -0.8, cap: "$16.0B", vol: "$0.7B", color: "#0033AD", l: "A" }
+];
+const DEPOSIT_ASSETS = [
+  { name: "Ethereum", sub: "ETH on Ethereum Mainnet", color: "#627EEA", l: "Ξ" },
+  { name: "Ether", sub: "ETH on Base", color: "#0052FF", l: "Ξ" },
+  { name: "MATIC", sub: "MATIC on Polygon Mainnet", color: "#8247E5", l: "M" },
+  { name: "BNB", sub: "BNB on BNB Smart Chain", color: "#F3BA2F", l: "B" },
+  { name: "Solana", sub: "SOL on Solana Mainnet", color: "#9945FF", l: "◎" },
+  { name: "Bitcoin", sub: "BTC on Bitcoin Mainnet", color: "#F7931A", l: "₿" }
+];
+function QRCodeSVG({ value }) {
+  const cells = 21;
+  const pattern = Array.from(
+    { length: cells },
+    (_, r) => Array.from({ length: cells }, (_2, c) => {
+      const h = (value.charCodeAt((r * cells + c) % value.length) + r * 7 + c * 13) % 3 === 0;
+      if (r < 7 && c < 7 || r < 7 && c > cells - 8 || r > cells - 8 && c < 7) return true;
+      return h;
+    })
+  );
+  const sz = 180;
+  const cell = sz / cells;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: sz, height: sz, viewBox: `0 0 ${sz} ${sz}`, style: { display: "block" }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { width: sz, height: sz, fill: "white" }),
+    pattern.map(
+      (row, r) => row.map((on, c) => on ? /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: c * cell, y: r * cell, width: cell, height: cell, fill: "black" }, `${r}-${c}`) : null)
     )
   ] });
 }
-function PrimaryBtn({ children, onClick, disabled }) {
+function CoinAvatar({ color: color2, letter, size = 36 }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: size, height: size, borderRadius: "50%", background: color2, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: size * 0.44, fontWeight: 700, flexShrink: 0 }, children: letter });
+}
+function Dashboard({ onOpenBrowser }) {
+  const { addresses, lock, clearWallet } = useWalletStore();
+  const [section, setSection] = reactExports.useState("portfolio");
+  const [tab, setTab] = reactExports.useState("assets");
+  const [menuOpen, setMenuOpen] = reactExports.useState(false);
+  const [showBalances, setShowBalances] = reactExports.useState(true);
+  const [showNFTs, setShowNFTs] = reactExports.useState(true);
+  const [depositAsset, setDepositAsset] = reactExports.useState(null);
+  const [copied, setCopied] = reactExports.useState(null);
+  const [searchExplore, setSearchExplore] = reactExports.useState("");
+  const menuRef = reactExports.useRef(null);
+  reactExports.useEffect(() => {
+    const handler = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+  const copy2 = (text, key) => {
+    navigator.clipboard.writeText(text);
+    setCopied(key);
+    setTimeout(() => setCopied(null), 2e3);
+  };
+  const eth = addresses?.eth ?? "0x0000000000000000000000000000000000000000";
+  const btc = addresses?.btc ?? "bc1q0000000000000000000000000000000000000";
+  const sol = addresses?.sol ?? "SOL000000000000000000000000000000000";
+  const assets = [
+    { name: "Ethereum", sym: "ETH", sub: "ETH on Ethereum Mainnet", color: "#627EEA", l: "Ξ", bal: "0 ETH", usd: "$0.00", addr: eth },
+    { name: "Bitcoin", sym: "BTC", sub: "BTC on Bitcoin Mainnet", color: "#F7931A", l: "₿", bal: "0 BTC", usd: "$0.00", addr: btc },
+    { name: "Solana", sym: "SOL", sub: "SOL on Solana Mainnet", color: "#9945FF", l: "◎", bal: "0 SOL", usd: "$0.00", addr: sol }
+  ];
+  const accounts = [
+    { name: "Account 1", sub: "Ethereum + EVM Chains", sym: "ETH", color: "#627EEA", l: "Ξ", addr: eth, bal: "$0.00" },
+    { name: "Bitcoin Account 1", sub: "Bitcoin Mainnet", sym: "BTC", color: "#F7931A", l: "₿", addr: btc, bal: "$0.00" },
+    { name: "Solana Account 1", sub: "Solana + SVM Chains", sym: "SOL", color: "#9945FF", l: "◎", addr: sol, bal: "$0.00" }
+  ];
+  const filteredMarket = MARKET.filter(
+    (c) => c.name.toLowerCase().includes(searchExplore.toLowerCase()) || c.sym.toLowerCase().includes(searchExplore.toLowerCase())
+  );
+  const NAV = [
+    { id: "portfolio", label: "Portfolio", Icon: LayoutGrid },
+    { id: "accounts", label: "Accounts", Icon: User },
+    { id: "explore", label: "Explore", Icon: Compass },
+    { id: "buy", label: "Buy", Icon: ShoppingCart },
+    { id: "send", label: "Send", Icon: Send },
+    { id: "swap", label: "Swap", Icon: ArrowLeftRight },
+    { id: "bridge", label: "Bridge", Icon: Link },
+    { id: "deposit", label: "Deposit", Icon: Download }
+  ];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", height: "100vh", background: "#F5F6FA", overflow: "hidden", fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif", fontSize: 14 }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("aside", { style: { width: 240, background: "#fff", borderRight: "1px solid #E5E7EB", display: "flex", flexDirection: "column", flexShrink: 0 }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { padding: "20px 20px 16px", display: "flex", alignItems: "center", gap: 10, borderBottom: "1px solid #F3F4F6" }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 30, height: 30, borderRadius: 8, background: "#00FF87", display: "flex", alignItems: "center", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 16, color: "#000", strokeWidth: 2.5 }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 16, fontWeight: 700, color: "#111827" }, children: "dashboard" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("nav", { style: { flex: 1, overflowY: "auto", padding: "8px 0" }, children: NAV.map(({ id: id2, label, Icon: Icon2 }) => {
+        const active = section === id2;
+        return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "div",
+          {
+            onClick: () => {
+              setSection(id2);
+              setDepositAsset(null);
+            },
+            style: {
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              padding: "11px 20px",
+              cursor: "pointer",
+              color: active ? "#4F46E5" : "#6B7280",
+              fontWeight: active ? 600 : 400,
+              background: active ? "rgba(79,70,229,0.04)" : "transparent",
+              transition: "color 0.12s, background 0.12s"
+            },
+            onMouseEnter: (e) => {
+              if (!active) e.currentTarget.style.background = "#F9FAFB";
+            },
+            onMouseLeave: (e) => {
+              if (!active) e.currentTarget.style.background = "transparent";
+            },
+            children: [
+              active && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", left: 0, top: 6, bottom: 6, width: 3, background: "#4F46E5", borderRadius: "0 3px 3px 0" } }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Icon2, { size: 18, strokeWidth: active ? 2.2 : 1.8 }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 14 }, children: label })
+            ]
+          },
+          id2
+        );
+      }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { padding: "12px 12px 16px", borderTop: "1px solid #F3F4F6" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          onClick: onOpenBrowser,
+          style: { display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "10px 12px", borderRadius: 10, background: "#4F46E5", color: "#fff", border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, justifyContent: "center", transition: "filter 0.12s" },
+          onMouseEnter: (e) => {
+            e.currentTarget.style.filter = "brightness(1.1)";
+          },
+          onMouseLeave: (e) => {
+            e.currentTarget.style.filter = "brightness(1)";
+          },
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Monitor, { size: 15 }),
+            " Open Browser"
+          ]
+        }
+      ) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { style: { flex: 1, overflowY: "auto", padding: "24px 28px 24px", position: "relative" }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { ref: menuRef, style: { position: "absolute", top: 16, right: 20, zIndex: 50 }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            onClick: () => setMenuOpen((p) => !p),
+            style: { width: 36, height: 36, borderRadius: "50%", border: "1px solid #E5E7EB", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#374151", transition: "background 0.12s" },
+            onMouseEnter: (e) => {
+              e.currentTarget.style.background = "#F9FAFB";
+            },
+            onMouseLeave: (e) => {
+              e.currentTarget.style.background = "#fff";
+            },
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(EllipsisVertical, { size: 16 })
+          }
+        ),
+        menuOpen && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: {
+          position: "absolute",
+          top: 44,
+          right: 0,
+          width: 240,
+          background: "#fff",
+          borderRadius: 14,
+          boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+          border: "1px solid #E5E7EB",
+          overflow: "hidden",
+          zIndex: 100
+        }, children: [
+          [
+            { icon: Lock, label: "Lock dashboard", action: () => {
+              lock();
+              setMenuOpen(false);
+            } },
+            { icon: Shield, label: "Backup phrase", action: () => setMenuOpen(false) },
+            { icon: Settings, label: "Settings", action: () => setMenuOpen(false) }
+          ].map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: item.action, style: menuItemStyle, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(item.icon, { size: 16, style: { color: "#374151" } }),
+            " ",
+            item.label
+          ] }, item.label)),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { borderTop: "1px solid #F3F4F6", padding: "8px 16px 4px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 11, fontWeight: 600, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 4px" }, children: "Dashboard Settings" }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ToggleRow, { label: "Balances", value: showBalances, onChange: setShowBalances }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ToggleRow, { label: "NFTs tab", value: showNFTs, onChange: setShowNFTs }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { borderTop: "1px solid #F3F4F6", marginTop: 4 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: menuItemStyle, onClick: () => setMenuOpen(false), children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(CircleQuestionMark, { size: 16, style: { color: "#374151" } }),
+            " Help & support"
+          ] }) })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { background: "#fff", borderRadius: 20, padding: "28px 32px", minHeight: "calc(100vh - 64px)", boxShadow: "0 1px 8px rgba(0,0,0,0.05)" }, children: [
+        section === "portfolio" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: { fontSize: 22, fontWeight: 700, color: "#111827", margin: 0 }, children: "Portfolio" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 8 }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "button",
+                {
+                  onClick: onOpenBrowser,
+                  style: {
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 7,
+                    padding: "9px 18px",
+                    borderRadius: 9999,
+                    background: "#4F46E5",
+                    color: "#fff",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: 13,
+                    fontWeight: 600,
+                    boxShadow: "0 2px 10px rgba(79,70,229,0.30)",
+                    transition: "filter 0.12s"
+                  },
+                  onMouseEnter: (e) => {
+                    e.currentTarget.style.filter = "brightness(1.12)";
+                  },
+                  onMouseLeave: (e) => {
+                    e.currentTarget.style.filter = "brightness(1)";
+                  },
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(Monitor, { size: 15 }),
+                    " Go to Browser Mode"
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { width: 32, height: 32, borderRadius: "50%", border: "1.5px solid #E5E7EB", background: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 16 }) })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "flex-start", justifyContent: "space-between", margin: "24px 0 32px" }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: showBalances ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 32, fontWeight: 700, color: "#111827", margin: 0, letterSpacing: "-0.5px" }, children: "$0.00" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 32, fontWeight: 700, color: "#111827", margin: 0 }, children: "••••••" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", gap: 20 }, children: [
+              { icon: ShoppingCart, label: "Buy", action: () => setSection("buy") },
+              { icon: Send, label: "Send", action: () => setSection("send") },
+              { icon: ArrowLeftRight, label: "Swap", action: () => setSection("swap") },
+              { icon: EllipsisVertical, label: "More", action: () => {
+              } }
+            ].map((btn) => /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: btn.action, style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer" }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "div",
+                {
+                  style: { width: 48, height: 48, borderRadius: "50%", background: "#4F46E5", display: "flex", alignItems: "center", justifyContent: "center", transition: "filter 0.12s" },
+                  onMouseEnter: (e) => {
+                    e.currentTarget.style.filter = "brightness(1.15)";
+                  },
+                  onMouseLeave: (e) => {
+                    e.currentTarget.style.filter = "brightness(1)";
+                  },
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(btn.icon, { size: 20, color: "#fff", strokeWidth: 1.8 })
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, color: "#374151", fontWeight: 500 }, children: btn.label })
+            ] }, btn.label)) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", gap: 2, background: "#F3F4F6", borderRadius: 9999, padding: 3, width: "fit-content", marginBottom: 24 }, children: ["assets", showNFTs ? "nfts" : null, "activity"].filter(Boolean).map((t) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => setTab(t),
+              style: {
+                padding: "7px 20px",
+                borderRadius: 9999,
+                border: tab === t ? "1.5px solid #4F46E5" : "1.5px solid transparent",
+                background: tab === t ? "#fff" : "transparent",
+                color: tab === t ? "#4F46E5" : "#6B7280",
+                fontWeight: tab === t ? 600 : 400,
+                fontSize: 14,
+                cursor: "pointer",
+                transition: "all 0.12s"
+              },
+              children: t.charAt(0).toUpperCase() + t.slice(1)
+            },
+            t
+          )) }),
+          tab === "assets" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontWeight: 600, color: "#111827" }, children: "Assets" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", alignItems: "center", gap: 8 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8, border: "1px solid #E5E7EB", borderRadius: 9999, padding: "7px 14px", background: "#fff" }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 14, color: "#9CA3AF" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("input", { placeholder: "Search", style: { border: "none", outline: "none", fontSize: 13, color: "#374151", background: "transparent", width: 120 } })
+              ] }) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: assets.map((a) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", padding: "14px 0", borderBottom: "1px solid #F9FAFB", gap: 12 }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(CoinAvatar, { color: a.color, letter: a.l, size: 38 }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1 }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontWeight: 600, color: "#111827", fontSize: 14 }, children: a.name }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontSize: 12, color: "#9CA3AF" }, children: a.sub })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { textAlign: "right" }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontWeight: 600, color: "#111827", fontSize: 14 }, children: showBalances ? a.bal : "•••" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontSize: 12, color: "#9CA3AF" }, children: showBalances ? a.usd : "•••" })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { width: 28, height: 28, borderRadius: "50%", border: "none", background: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#9CA3AF" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(EllipsisVertical, { size: 14 }) })
+            ] }, a.sym)) })
+          ] }),
+          tab === "nfts" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { textAlign: "center", padding: "48px 0", color: "#9CA3AF" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 15 }, children: "No NFTs found" }) }),
+          tab === "activity" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { textAlign: "center", padding: "48px 0", color: "#9CA3AF" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 15 }, children: "No recent activity" }) })
+        ] }),
+        section === "accounts" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CardHeader, { title: "Accounts" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { marginTop: 24 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontWeight: 600, color: "#111827", marginBottom: 12 }, children: "Accounts" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { border: "1px solid #E5E7EB", borderRadius: 14, overflow: "hidden" }, children: accounts.map((acc, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 14, padding: "16px 20px", background: "#fff", borderBottom: i < accounts.length - 1 ? "1px solid #F3F4F6" : "none" }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(CoinAvatar, { color: acc.color, letter: acc.l, size: 40 }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1 }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontWeight: 600, color: "#111827", fontSize: 14 }, children: acc.name }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { margin: 0, fontSize: 12, color: "#9CA3AF", fontFamily: "monospace" }, children: [
+                  acc.addr.slice(0, 12),
+                  "***",
+                  acc.addr.slice(-4)
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontSize: 11, color: "#D1D5DB", marginTop: 1 }, children: acc.sub })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 14, fontWeight: 600, color: "#111827" }, children: acc.bal }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: iconBtnStyle, children: /* @__PURE__ */ jsxRuntimeExports.jsx(EllipsisVertical, { size: 14 }) })
+            ] }, acc.sym)) })
+          ] })
+        ] }),
+        section === "explore" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CardHeader, { title: "Explore" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 12, margin: "20px 0 16px" }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8, border: "1px solid #E5E7EB", borderRadius: 9999, padding: "8px 14px", background: "#fff", flex: 1 }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 14, color: "#9CA3AF" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("input", { value: searchExplore, onChange: (e) => setSearchExplore(e.target.value), placeholder: "Search", style: { border: "none", outline: "none", fontSize: 13, color: "#374151", background: "transparent", flex: 1 } })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", border: "1px solid #E5E7EB", borderRadius: 9999, background: "#fff", fontSize: 13, color: "#374151", cursor: "pointer" }, children: [
+              "All Assets ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14 })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { border: "1px solid #F3F4F6", borderRadius: 14, overflow: "hidden" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { style: { width: "100%", borderCollapse: "collapse" }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("tr", { style: { background: "#F9FAFB" }, children: ["Assets", "Price", "24hr", "Cap", "Volume", "Buy/Deposit"].map((h) => /* @__PURE__ */ jsxRuntimeExports.jsx("th", { style: { padding: "12px 16px", textAlign: "left", fontSize: 12, fontWeight: 600, color: "#6B7280", border: "none" }, children: h }, h)) }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: filteredMarket.map((c, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { style: { borderTop: "1px solid #F3F4F6", background: i % 2 === 0 ? "#fff" : "#FAFAFA" }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { style: { padding: "12px 16px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 10 }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(CoinAvatar, { color: c.color, letter: c.l, size: 32 }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontWeight: 600, color: "#111827", fontSize: 13 }, children: c.name }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontSize: 11, color: "#9CA3AF" }, children: c.sym })
+                ] })
+              ] }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { style: { padding: "12px 16px", fontSize: 13, color: "#111827", fontWeight: 500 }, children: c.price }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { style: { padding: "12px 16px", fontSize: 13, color: c.change >= 0 ? "#10B981" : "#EF4444", fontWeight: 500 }, children: [
+                c.change >= 0 ? "▲" : "▼",
+                " ",
+                Math.abs(c.change).toFixed(2),
+                "%"
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { style: { padding: "12px 16px", fontSize: 13, color: "#374151" }, children: c.cap }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { style: { padding: "12px 16px", fontSize: 13, color: "#374151" }, children: c.vol }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { style: { padding: "12px 16px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 6 }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setSection("buy"), style: pillBtnStyle, children: "Buy" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setSection("deposit"), style: pillBtnStyle, children: "Deposit" })
+              ] }) })
+            ] }, c.sym)) })
+          ] }) })
+        ] }),
+        section === "buy" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CardHeader, { title: "Buy ETH" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { maxWidth: 680, marginTop: 24 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 20, marginBottom: 20 }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1 }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("label", { style: formLabelStyle, children: "Asset" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: selectBtnStyle, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(CoinAvatar, { color: "#627EEA", letter: "Ξ", size: 22 }),
+                  " ETH ",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14 })
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 2 }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("label", { style: formLabelStyle, children: "Account" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: selectBtnStyle, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(CoinAvatar, { color: "#627EEA", letter: "Ξ", size: 22 }),
+                  " Account 1 ",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14 })
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1 }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("label", { style: formLabelStyle, children: "Amount" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 4 }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 24, fontWeight: 700, color: "#111827" }, children: "100" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { ...selectBtnStyle, padding: "4px 10px" }, children: [
+                    "USD ",
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14 })
+                  ] })
+                ] })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 12, color: "#9CA3AF", fontFamily: "monospace", marginBottom: 24 }, children: eth }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: 1, background: "#F3F4F6", marginBottom: 24 } }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 12, marginBottom: 24 }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, display: "flex", alignItems: "center", gap: 8, border: "1px solid #E5E7EB", borderRadius: 9999, padding: "8px 14px" }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 14, color: "#9CA3AF" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "#9CA3AF", fontSize: 13 }, children: "Search" })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { ...selectBtnStyle, flex: 1 }, children: [
+                "United States ",
+                /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14 })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { ...selectBtnStyle, flex: 1 }, children: [
+                "Credit & Debit Card ",
+                /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14 })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { textAlign: "center", padding: "32px 0" }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 36, height: 36, margin: "0 auto 12px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "36", height: "36", viewBox: "0 0 36 36", style: { animation: "spin 1s linear infinite" }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("style", { children: `@keyframes spin { to { transform: rotate(360deg); } }` }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "18", cy: "18", r: "14", stroke: "#E0E7FF", strokeWidth: "2.5", fill: "none" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "18", cy: "18", r: "14", stroke: "#4F46E5", strokeWidth: "2.5", fill: "none", strokeDasharray: "70", strokeDashoffset: "50", strokeLinecap: "round" })
+              ] }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { color: "#6B7280", fontSize: 14 }, children: "Getting best prices…" })
+            ] })
+          ] })
+        ] }),
+        section === "send" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          AssetActionPage,
+          {
+            title: "Send",
+            fromLabel: "From",
+            fromBtn: "Choose Asset",
+            toLabel: "To",
+            toBtn: "Choose recipient",
+            actionBtn: "Review send"
+          }
+        ),
+        section === "swap" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          AssetActionPage,
+          {
+            title: "Swap",
+            fromLabel: "From",
+            fromBtn: "Choose Asset",
+            toLabel: "Receive (est.)",
+            toBtn: "Choose Asset",
+            actionBtn: "Review swap",
+            showSwapIcon: true
+          }
+        ),
+        section === "bridge" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          AssetActionPage,
+          {
+            title: "Bridge",
+            fromLabel: "From",
+            fromBtn: "Choose Asset",
+            toLabel: "Receive (est.)",
+            toBtn: "Choose Asset",
+            actionBtn: "Review bridge",
+            showSwapIcon: true
+          }
+        ),
+        section === "deposit" && !depositAsset && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CardHeader, { title: "Deposit" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { maxWidth: 680, marginTop: 20 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 12, marginBottom: 20 }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, display: "flex", alignItems: "center", gap: 8, border: "1px solid #E5E7EB", borderRadius: 9999, padding: "8px 14px" }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 14, color: "#9CA3AF" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("input", { placeholder: "Search", style: { border: "none", outline: "none", fontSize: 13, color: "#374151", background: "transparent", flex: 1 } })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { ...selectBtnStyle }, children: [
+                "All Networks ",
+                /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14 })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { border: "1px solid #E5E7EB", borderRadius: 14, overflow: "hidden" }, children: DEPOSIT_ASSETS.map((a, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "div",
+              {
+                onClick: () => setDepositAsset(a),
+                style: { display: "flex", alignItems: "center", gap: 14, padding: "16px 20px", borderBottom: i < DEPOSIT_ASSETS.length - 1 ? "1px solid #F3F4F6" : "none", cursor: "pointer", background: "#fff", transition: "background 0.1s" },
+                onMouseEnter: (e) => {
+                  e.currentTarget.style.background = "#F9FAFB";
+                },
+                onMouseLeave: (e) => {
+                  e.currentTarget.style.background = "#fff";
+                },
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(CoinAvatar, { color: a.color, letter: a.l, size: 38 }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontWeight: 600, color: "#111827", fontSize: 14 }, children: a.name }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontSize: 12, color: "#9CA3AF" }, children: a.sub })
+                  ] })
+                ]
+              },
+              a.name + a.sub
+            )) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "center", marginTop: 24 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { padding: "12px 40px", borderRadius: 9999, background: "#E5E7EB", color: "#9CA3AF", fontWeight: 600, fontSize: 14, border: "none", cursor: "not-allowed" }, children: "Select an asset" }) })
+          ] })
+        ] }),
+        section === "deposit" && depositAsset && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setDepositAsset(null), style: { width: 36, height: 36, borderRadius: "50%", border: "1.5px solid #C7D2FE", background: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#4F46E5" }, children: "←" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: { fontSize: 22, fontWeight: 700, color: "#111827", margin: 0 }, children: "Deposit" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { maxWidth: 560, textAlign: "center" }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { style: { fontSize: 18, fontWeight: 700, color: "#111827", marginBottom: 8 }, children: [
+              "Deposit ",
+              depositAsset.name
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { fontSize: 14, color: "#6B7280", marginBottom: 24 }, children: [
+              "Only send tokens to this address on ",
+              depositAsset.sub.split(" on ")[1] ?? "this network"
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8, justifyContent: "center", marginBottom: 16 }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(CoinAvatar, { color: depositAsset.color, letter: depositAsset.l, size: 28 }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontWeight: 600, color: "#111827" }, children: "Account 1" })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontWeight: 700, color: "#111827", marginBottom: 8 }, children: "Address:" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 24 }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontFamily: "monospace", fontSize: 12, color: "#374151", wordBreak: "break-all" }, children: depositAsset.l === "Ξ" ? eth : depositAsset.l === "₿" ? btc : sol }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
+                {
+                  onClick: () => copy2(depositAsset.l === "Ξ" ? eth : depositAsset.l === "₿" ? btc : sol, "dep"),
+                  style: { background: "none", border: "none", cursor: "pointer", color: copied === "dep" ? "#10B981" : "#6B7280" },
+                  children: copied === "dep" ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 14 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Copy, { size: 14 })
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "inline-block", border: "1px solid #E5E7EB", borderRadius: 12, padding: 12, background: "#fff" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(QRCodeSVG, { value: depositAsset.l === "Ξ" ? eth : depositAsset.l === "₿" ? btc : sol }) })
+          ] })
+        ] })
+      ] })
+    ] })
+  ] });
+}
+function CardHeader({ title }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between" }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: { fontSize: 22, fontWeight: 700, color: "#111827", margin: 0 }, children: title }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { width: 32, height: 32, borderRadius: "50%", border: "1.5px solid #E5E7EB", background: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 16 }) })
+  ] });
+}
+function AssetActionPage({ title, fromLabel, fromBtn, toLabel, toBtn, actionBtn, showSwapIcon }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: { fontSize: 22, fontWeight: 700, color: "#111827", margin: "0 0 20px" }, children: title }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { maxWidth: 680 }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { border: "1px solid #E5E7EB", borderRadius: 14, padding: "16px 20px", marginBottom: 2, background: "#fff" }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 12, color: "#9CA3AF", margin: "0 0 8px" }, children: fromLabel }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between" }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { background: "none", border: "none", color: "#4F46E5", fontSize: 16, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }, children: [
+            fromBtn,
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 14, color: "#4F46E5" }, children: "›" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 22, color: "#D1D5DB", fontWeight: 300 }, children: "0.0" })
+        ] })
+      ] }),
+      showSwapIcon && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", alignItems: "center", padding: "4px 0", gap: 8 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { width: 34, height: 34, borderRadius: 9, border: "1px solid #E5E7EB", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6B7280" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeftRight, { size: 14 }) }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { border: "1px solid #E5E7EB", borderRadius: 14, padding: "16px 20px", background: "#EEF2FF", marginBottom: 2 }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 12, color: "#9CA3AF", margin: "0 0 8px" }, children: toLabel }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between" }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { background: "none", border: "none", color: "#374151", fontSize: 16, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }, children: [
+            toBtn,
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 14 }, children: "›" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 22, color: "#D1D5DB", fontWeight: 300 }, children: "0.0" })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "center", marginTop: 20 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { padding: "13px 48px", borderRadius: 9999, background: "#E5E7EB", color: "#9CA3AF", fontWeight: 600, fontSize: 14, border: "none", cursor: "not-allowed" }, children: actionBtn }) })
+    ] })
+  ] });
+}
+function ToggleRow({ label, value, onChange }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 16px" }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 13, color: "#374151" }, children: label }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onChange(!value), style: { width: 38, height: 22, borderRadius: 11, border: "none", background: value ? "#4F46E5" : "#D1D5DB", cursor: "pointer", position: "relative", transition: "background 0.15s" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", top: 3, left: value ? 19 : 3, width: 16, height: 16, borderRadius: "50%", background: "#fff", transition: "left 0.15s", boxShadow: "0 1px 3px rgba(0,0,0,0.2)" } }) })
+  ] });
+}
+const menuItemStyle = {
+  display: "flex",
+  alignItems: "center",
+  gap: 10,
+  width: "100%",
+  padding: "10px 16px",
+  background: "none",
+  border: "none",
+  cursor: "pointer",
+  fontSize: 13,
+  color: "#374151",
+  textAlign: "left",
+  transition: "background 0.1s"
+};
+const iconBtnStyle = {
+  width: 28,
+  height: 28,
+  borderRadius: "50%",
+  border: "none",
+  background: "none",
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "#9CA3AF"
+};
+const pillBtnStyle = {
+  padding: "4px 14px",
+  borderRadius: 9999,
+  border: "1px solid #E5E7EB",
+  background: "#fff",
+  fontSize: 12,
+  fontWeight: 500,
+  cursor: "pointer",
+  color: "#374151",
+  transition: "border-color 0.1s"
+};
+const selectBtnStyle = {
+  display: "flex",
+  alignItems: "center",
+  gap: 6,
+  padding: "8px 14px",
+  border: "1px solid #E5E7EB",
+  borderRadius: 10,
+  background: "#fff",
+  fontSize: 13,
+  color: "#374151",
+  cursor: "pointer"
+};
+const formLabelStyle = {
+  fontSize: 12,
+  fontWeight: 500,
+  color: "#9CA3AF",
+  display: "block",
+  marginBottom: 6
+};
+const NEW_TAB_URL = "orivon://newtab";
+function makeTab(url = NEW_TAB_URL) {
+  return {
+    id: `tab-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    url,
+    displayUrl: url === NEW_TAB_URL ? "" : url,
+    title: url === NEW_TAB_URL ? "New Tab" : url,
+    isLoading: false,
+    history: [url],
+    historyIndex: 0,
+    type: url === NEW_TAB_URL ? "newtab" : "https",
+    createdAt: Date.now()
+  };
+}
+const useTabsStore = create()(
+  persist(
+    (set, get) => ({
+      tabs: [makeTab()],
+      activeTabId: "",
+      addTab: (url = NEW_TAB_URL) => {
+        const tab = makeTab(url);
+        set((s) => ({ tabs: [...s.tabs, tab], activeTabId: tab.id }));
+        return tab.id;
+      },
+      closeTab: (id2) => {
+        const { tabs, activeTabId } = get();
+        if (tabs.length === 1) {
+          const fresh = makeTab();
+          set({ tabs: [fresh], activeTabId: fresh.id });
+          return;
+        }
+        const idx = tabs.findIndex((t) => t.id === id2);
+        const remaining = tabs.filter((t) => t.id !== id2);
+        let next = activeTabId;
+        if (id2 === activeTabId) {
+          next = (remaining[idx] ?? remaining[idx - 1] ?? remaining[0]).id;
+        }
+        set({ tabs: remaining, activeTabId: next });
+      },
+      setActiveTab: (id2) => set({ activeTabId: id2 }),
+      updateTab: (id2, patch) => set((s) => ({
+        tabs: s.tabs.map((t) => t.id === id2 ? { ...t, ...patch } : t)
+      })),
+      navigateTab: (id2, url, displayUrl, type) => {
+        set((s) => ({
+          tabs: s.tabs.map((t) => {
+            if (t.id !== id2) return t;
+            const newHistory = [...t.history.slice(0, t.historyIndex + 1), url];
+            return {
+              ...t,
+              url,
+              displayUrl,
+              type,
+              isLoading: true,
+              history: newHistory,
+              historyIndex: newHistory.length - 1,
+              title: url === NEW_TAB_URL ? "New Tab" : displayUrl || url
+            };
+          })
+        }));
+      },
+      goBack: (id2) => {
+        const tab = get().tabs.find((t) => t.id === id2);
+        if (!tab || tab.historyIndex <= 0) return null;
+        const url = tab.history[tab.historyIndex - 1];
+        set((s) => ({
+          tabs: s.tabs.map(
+            (t) => t.id === id2 ? { ...t, historyIndex: t.historyIndex - 1, url, isLoading: true } : t
+          )
+        }));
+        return url;
+      },
+      goForward: (id2) => {
+        const tab = get().tabs.find((t) => t.id === id2);
+        if (!tab || tab.historyIndex >= tab.history.length - 1) return null;
+        const url = tab.history[tab.historyIndex + 1];
+        set((s) => ({
+          tabs: s.tabs.map(
+            (t) => t.id === id2 ? { ...t, historyIndex: t.historyIndex + 1, url, isLoading: true } : t
+          )
+        }));
+        return url;
+      },
+      pinTab: (id2) => set((s) => ({
+        tabs: s.tabs.map((t) => t.id === id2 ? { ...t, pinned: !t.pinned } : t)
+      })),
+      reorderTabs: (from, to) => set((s) => {
+        const tabs = [...s.tabs];
+        const [moved] = tabs.splice(from, 1);
+        tabs.splice(to, 0, moved);
+        return { tabs };
+      }),
+      closeAllTabs: () => {
+        const fresh = makeTab();
+        set({ tabs: [fresh], activeTabId: fresh.id });
+      }
+    }),
+    {
+      name: "orivon-tabs",
+      storage: createJSONStorage(() => localStorage),
+      // Don't persist loading state — reset on restore
+      partialize: (s) => ({
+        ...s,
+        tabs: s.tabs.map((t) => ({ ...t, isLoading: false }))
+      }),
+      onRehydrateStorage: () => (state) => {
+        if (state && (!state.activeTabId || !state.tabs.find((t) => t.id === state.activeTabId))) {
+          state.activeTabId = state.tabs[0]?.id ?? "";
+        }
+      }
+    }
+  )
+);
+const NEW_TAB = NEW_TAB_URL;
+function TabBar({
+  tabs,
+  activeId,
+  onTabClick,
+  onTabClose,
+  onNewTab,
+  isDark,
+  windowControls
+}) {
+  const isMac = window.electronAPI?.platform === "darwin";
+  const tabBg = isDark ? "bg-[#141414]" : "bg-[#d5d5d5]";
+  const activeTabBg = isDark ? "#1a1a1a" : "#f0f0f0";
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `h-10 flex items-end shrink-0 drag ${tabBg}`, children: [
+    isMac && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "shrink-0 h-full", style: { width: 82 } }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-end flex-1 min-w-0 overflow-hidden gap-px pl-0.5", children: [
+      tabs.map((tab) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Tab,
+        {
+          tab,
+          isActive: tab.id === activeId,
+          isDark,
+          activeTabBg,
+          onClick: () => onTabClick(tab.id),
+          onClose: (e) => onTabClose(tab.id, e)
+        },
+        tab.id
+      )),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          onClick: onNewTab,
+          className: `no-drag w-8 h-8 mb-0.5 ml-0.5 rounded-full flex items-center justify-center shrink-0 transition-all ${isDark ? "text-white/30 hover:text-white/65 hover:bg-white/8" : "text-black/30 hover:text-black/65 hover:bg-black/8"}`,
+          title: "New tab",
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 14, strokeWidth: 2 })
+        }
+      )
+    ] }),
+    windowControls && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center shrink-0 self-center mr-1 gap-0.5 no-drag", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        WinCtrlBtn,
+        {
+          onClick: windowControls.onMinimize,
+          hoverColor: "rgba(255,255,255,0.1)",
+          isDark,
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 14, lineHeight: 1, display: "block", marginBottom: 3 }, children: "─" })
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        WinCtrlBtn,
+        {
+          onClick: windowControls.onMaximize,
+          hoverColor: "rgba(255,255,255,0.1)",
+          isDark,
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 11, lineHeight: 1, display: "block", border: `1.5px solid ${isDark ? "rgba(255,255,255,0.55)" : "rgba(0,0,0,0.55)"}`, width: 10, height: 10 } })
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        WinCtrlBtn,
+        {
+          onClick: windowControls.onClose,
+          hoverColor: "rgba(220,50,50,0.85)",
+          hoverTextColor: "#fff",
+          isDark,
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 13, strokeWidth: 2.5 })
+        }
+      )
+    ] })
+  ] });
+}
+function WinCtrlBtn({ children, onClick, hoverColor, hoverTextColor, isDark }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "button",
     {
       onClick,
-      disabled,
-      style: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 6,
-        width: "100%",
-        height: 48,
-        borderRadius: 9999,
-        background: disabled ? "rgba(79,70,229,0.35)" : "#4F46E5",
-        color: "#ffffff",
-        fontSize: 15,
-        fontWeight: 600,
-        border: "none",
-        cursor: disabled ? "not-allowed" : "pointer",
-        transition: "filter 0.15s"
-      },
+      className: "no-drag w-10 h-8 flex items-center justify-center transition-all",
+      style: { background: "transparent", border: "none", cursor: "pointer", color: isDark ? "rgba(255,255,255,0.55)" : "rgba(0,0,0,0.55)" },
       onMouseEnter: (e) => {
-        if (!disabled) e.currentTarget.style.filter = "brightness(1.12)";
+        e.currentTarget.style.background = hoverColor;
+        if (hoverTextColor) e.currentTarget.style.color = hoverTextColor;
       },
       onMouseLeave: (e) => {
-        e.currentTarget.style.filter = "brightness(1)";
+        e.currentTarget.style.background = "transparent";
+        e.currentTarget.style.color = isDark ? "rgba(255,255,255,0.55)" : "rgba(0,0,0,0.55)";
       },
       children
     }
   );
 }
-function OptionBtn({ icon, iconBg, label, sub, onClick, accent }) {
+function Tab({ tab, isActive, isDark, activeTabBg, onClick, onClose }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    "button",
+    "div",
     {
       onClick,
+      className: `
+        no-drag group relative flex items-center gap-2 h-9 px-3 cursor-pointer
+        rounded-tl-lg rounded-tr-lg flex-1 min-w-0 max-w-[220px] transition-all select-none
+      `,
       style: {
-        display: "flex",
-        alignItems: "center",
-        gap: 14,
-        padding: "14px 16px",
-        borderRadius: 14,
-        background: accent ? "rgba(0,255,135,0.08)" : "rgba(255,255,255,0.04)",
-        border: `1px solid ${accent ? "rgba(0,255,135,0.2)" : "rgba(255,255,255,0.08)"}`,
-        cursor: "pointer",
-        textAlign: "left",
-        width: "100%"
+        background: isActive ? activeTabBg : "transparent",
+        color: isActive ? isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.9)" : isDark ? "rgba(255,255,255,0.38)" : "rgba(0,0,0,0.38)",
+        zIndex: isActive ? 10 : 0
+      },
+      onMouseEnter: (e) => {
+        if (!isActive) {
+          e.currentTarget.style.background = isDark ? "#131313" : "#c8c8c8";
+          e.currentTarget.style.color = isDark ? "rgba(255,255,255,0.65)" : "rgba(0,0,0,0.65)";
+        }
+      },
+      onMouseLeave: (e) => {
+        if (!isActive) {
+          e.currentTarget.style.background = "transparent";
+          e.currentTarget.style.color = isDark ? "rgba(255,255,255,0.38)" : "rgba(0,0,0,0.38)";
+        }
       },
       children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 36, height: 36, borderRadius: 10, background: iconBg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }, children: icon }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 13, fontWeight: 600, color: accent ? "#fff" : "rgba(255,255,255,0.82)", margin: "0 0 3px" }, children: label }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 11, color: "rgba(255,255,255,0.38)", margin: 0 }, children: sub })
-        ] })
+        isActive && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute bottom-0 left-0 right-0 h-px", style: { background: activeTabBg } }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-4 h-4 shrink-0 flex items-center justify-center", children: tab.isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-3 h-3 border rounded-full border-t-transparent animate-spin ${isDark ? "border-white/30" : "border-black/30"}` }) : tab.type === "ens" ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-2.5 h-2.5 rounded-full bg-[#00FF87]/30 ring-1 ring-[#00FF87]/70" }) : tab.type === "ipfs" || tab.type === "ipns" ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-2.5 h-2.5 rounded-full bg-[#00D1FF]/30 ring-1 ring-[#00D1FF]/70" }) : tab.url === NEW_TAB ? /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 12, strokeWidth: 1.8, className: isDark ? "text-white/30" : "text-black/30" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 12, strokeWidth: 1.8 }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[12px] font-medium leading-none truncate flex-1 min-w-0", children: tab.title || "New Tab" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            onClick: (e) => {
+              e.stopPropagation();
+              onClose(e);
+            },
+            className: `shrink-0 w-4 h-4 rounded flex items-center justify-center transition-all ${isDark ? "opacity-0 group-hover:opacity-100 hover:bg-white/15 text-white/60" : "opacity-0 group-hover:opacity-100 hover:bg-black/10 text-black/50"}`,
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 10, strokeWidth: 2.5 })
+          }
+        )
       ]
     }
   );
-}
-function BackBtn({ onClick }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    "button",
-    {
-      onClick,
-      style: {
-        background: "none",
-        border: "none",
-        color: "rgba(255,255,255,0.32)",
-        cursor: "pointer",
-        fontSize: 12,
-        display: "flex",
-        alignItems: "center",
-        gap: 4,
-        padding: 0,
-        marginBottom: 16
-      },
-      children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 12 }),
-        " Back"
-      ]
-    }
-  );
-}
-function Title({ children }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 20, fontWeight: 700, color: "#fff", margin: "0 0 6px" }, children });
-}
-function Sub({ children }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 13, color: "rgba(255,255,255,0.42)", margin: "0 0 4px", lineHeight: 1.5 }, children });
-}
-function ErrMsg({ text }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 12, color: "#f87171", textAlign: "center", margin: "0 0 12px" }, children: text });
 }
 const useSettings = create()(
   persist(
@@ -41695,315 +42879,6 @@ const useSettings = create()(
     }
   )
 );
-const DEFAULT_NODES = [
-  { id: "wasm", name: "WASM Sandbox", status: "active", detail: "Isolation level 4", enabled: true },
-  { id: "ens", name: "ENS Resolver", status: "active", detail: "Ethereum mainnet", enabled: true },
-  { id: "ipfs", name: "IPFS Gateway", status: "active", detail: "ipfs.io + fallbacks", enabled: true },
-  { id: "p2p", name: "P2P Mesh", status: "standby", detail: "libp2p ready", enabled: false },
-  { id: "btc", name: "Bitcoin Light Client", status: "standby", detail: "BIP157 headers", enabled: false }
-];
-const useRuntimeStore = create()(
-  persist(
-    (set) => ({
-      nodes: DEFAULT_NODES,
-      runtimeVersion: "0.94.1",
-      isInitialized: true,
-      logs: [
-        { ts: Date.now(), msg: "Orivon runtime initialized", level: "info" },
-        { ts: Date.now(), msg: "WASM sandbox ready (isolation level 4)", level: "info" },
-        { ts: Date.now(), msg: "ENS resolver connected to Ethereum mainnet", level: "info" },
-        { ts: Date.now(), msg: "IPFS gateway active: ipfs.io", level: "info" }
-      ],
-      toggleNode: (id2) => set((s) => ({
-        nodes: s.nodes.map(
-          (n2) => n2.id === id2 ? { ...n2, enabled: !n2.enabled, status: n2.enabled ? "standby" : "active" } : n2
-        )
-      })),
-      addLog: (msg, level = "info") => set((s) => ({
-        logs: [...s.logs.slice(-199), { ts: Date.now(), msg, level }]
-      })),
-      clearLogs: () => set({ logs: [] }),
-      setNodeStatus: (id2, status, detail) => set((s) => ({
-        nodes: s.nodes.map((n2) => n2.id === id2 ? { ...n2, status, ...detail ? { detail } : {} } : n2)
-      }))
-    }),
-    {
-      name: "orivon-runtime",
-      storage: createJSONStorage(() => localStorage),
-      partialize: (s) => ({ nodes: s.nodes, runtimeVersion: s.runtimeVersion })
-    }
-  )
-);
-const STAGGER = (i) => ({
-  initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.35, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] } }
-});
-function Dashboard({ onOpenBrowser }) {
-  const { addresses, lock, getBalance } = useWalletStore();
-  const { theme, setTheme } = useSettings();
-  const { nodes } = useRuntimeStore();
-  const [copied, setCopied] = reactExports.useState(null);
-  const [balance, setBalance] = reactExports.useState(null);
-  const [loadingBal, setLoadingBal] = reactExports.useState(true);
-  const isDark = theme === "dark";
-  reactExports.useEffect(() => {
-    setLoadingBal(true);
-    getBalance().then((b2) => {
-      const n2 = parseFloat(b2);
-      setBalance(!isNaN(n2) ? n2.toFixed(6) : "0.000000");
-    }).catch(() => setBalance("0.000000")).finally(() => setLoadingBal(false));
-  }, []);
-  const copyAddr = (addr, key) => {
-    navigator.clipboard.writeText(addr);
-    setCopied(key);
-    setTimeout(() => setCopied(null), 2e3);
-  };
-  const chains = addresses ? [
-    {
-      key: "eth",
-      label: "Ethereum",
-      symbol: "ETH",
-      addr: addresses.eth,
-      color: "#00D1FF",
-      bgColor: "rgba(0,209,255,0.08)",
-      bal: loadingBal ? null : balance ? `${balance} ETH` : "0.000000 ETH"
-    },
-    {
-      key: "btc",
-      label: "Bitcoin",
-      symbol: "BTC",
-      addr: addresses.btc,
-      color: "#00FF87",
-      bgColor: "rgba(0,255,135,0.08)",
-      bal: null
-    },
-    {
-      key: "sol",
-      label: "Solana",
-      symbol: "SOL",
-      addr: addresses.sol,
-      color: "#a78bfa",
-      bgColor: "rgba(167,139,250,0.08)",
-      bal: null
-    }
-  ] : [];
-  const activeNodes = nodes.filter((n2) => n2.enabled && n2.status === "active");
-  const bg = isDark ? "bg-[#0a0a0a] text-white" : "bg-[#f4f4f4] text-black";
-  const card = isDark ? "bg-[#121212] border-white/[0.08]" : "bg-white border-black/[0.07]";
-  const cardHov = isDark ? "hover:border-white/15 hover:bg-[#161616]" : "hover:border-black/12 hover:bg-white";
-  const muted = isDark ? "text-white/35" : "text-black/35";
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `h-screen w-screen ${bg} overflow-y-auto`, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed inset-0 pointer-events-none overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-[#00FF87]/[0.025] blur-[120px] rounded-full" }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 max-w-xl mx-auto px-6 py-10 space-y-6", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...STAGGER(0), className: "flex items-center justify-between", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-9 h-9 rounded-[10px] bg-[#00FF87] flex items-center justify-center shadow-lg shadow-[#00FF87]/20", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 18, className: "text-black", strokeWidth: 2.5 }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[15px] font-semibold leading-none ${isDark ? "text-white" : "text-black"}`, children: "Orivon" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[11px] mt-0.5 ${muted}`, children: "Web3 Browser" })
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "button",
-            {
-              onClick: () => setTheme(isDark ? "light" : "dark"),
-              className: `w-8 h-8 rounded-lg flex items-center justify-center transition-all text-[13px] ${muted} ${isDark ? "hover:bg-white/8 hover:text-white/70" : "hover:bg-black/6 hover:text-black/70"}`,
-              title: "Toggle theme",
-              children: isDark ? "☀️" : "🌙"
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            "button",
-            {
-              onClick: () => lock(),
-              className: `flex items-center gap-1.5 h-8 px-3 rounded-lg text-[12px] font-medium border transition-all ${isDark ? "border-white/10 text-white/40 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/8" : "border-black/10 text-black/40 hover:text-red-500 hover:border-red-500/20"}`,
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 12 }),
-                " Lock"
-              ]
-            }
-          )
-        ] })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...STAGGER(1), className: `rounded-2xl border p-5 ${card}`, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-4", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Wallet$1, { size: 14, className: "text-[#00FF87]" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `text-[12px] font-semibold uppercase tracking-widest ${muted}`, children: "Wallet" })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-1.5 h-1.5 rounded-full bg-[#00FF87] animate-pulse" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `text-[10px] font-medium ${muted}`, children: "Active" })
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: chains.map((chain) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "div",
-          {
-            className: `flex items-center justify-between p-3.5 rounded-xl border transition-all ${isDark ? "border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10" : "border-black/[0.05] bg-black/[0.02] hover:bg-black/[0.04]"}`,
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "div",
-                  {
-                    className: "w-8 h-8 rounded-xl flex items-center justify-center shrink-0",
-                    style: { background: chain.bgColor },
-                    children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] font-bold", style: { color: chain.color }, children: chain.symbol })
-                  }
-                ),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[13px] font-semibold ${isDark ? "text-white/85" : "text-black/85"}`, children: chain.label }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: `text-[10px] font-mono mt-0.5 ${muted}`, children: [
-                    chain.addr.slice(0, 10),
-                    "…",
-                    chain.addr.slice(-8)
-                  ] })
-                ] })
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-                chain.bal && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] font-mono font-semibold", style: { color: chain.color }, children: chain.bal }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "button",
-                  {
-                    onClick: () => copyAddr(chain.addr, chain.key),
-                    className: `w-7 h-7 rounded-lg flex items-center justify-center transition-all shrink-0 ${muted} ${isDark ? "hover:bg-white/8 hover:text-white/70" : "hover:bg-black/6 hover:text-black/70"}`,
-                    children: copied === chain.key ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 13, className: "text-[#00FF87]" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Copy, { size: 13 })
-                  }
-                )
-              ] })
-            ]
-          },
-          chain.key
-        )) })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...STAGGER(2), className: "grid grid-cols-3 gap-3", children: [
-        { icon: Shield, label: "Security", value: "Active", color: "#00FF87", dot: true },
-        { icon: Network$1, label: "ENS/IPFS", value: `${activeNodes.length} nodes`, color: "#00D1FF", dot: true },
-        { icon: Cpu, label: "Runtime", value: "v0.94.1", color: "#a78bfa", dot: false }
-      ].map((item, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `rounded-xl border p-3.5 flex flex-col gap-2 ${card} transition-all ${cardHov}`, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(item.icon, { size: 14, style: { color: item.color } }),
-          item.dot && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-1.5 h-1.5 rounded-full animate-pulse", style: { background: item.color } })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[13px] font-semibold ${isDark ? "text-white/80" : "text-black/80"}`, children: item.value }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[10px] mt-0.5 ${muted}`, children: item.label })
-        ] })
-      ] }, i)) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...STAGGER(3), className: "grid grid-cols-2 gap-3", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          QuickLink,
-          {
-            icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 14 }),
-            label: "Uniswap",
-            sub: "uniswap.eth",
-            isDark,
-            card,
-            cardHov,
-            muted
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          QuickLink,
-          {
-            icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 14 }),
-            label: "ENS Domains",
-            sub: "app.ens.domains",
-            isDark,
-            card,
-            cardHov,
-            muted
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...STAGGER(4), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        "button",
-        {
-          onClick: onOpenBrowser,
-          className: "w-full h-12 flex items-center justify-center gap-2.5 rounded-2xl bg-white text-black text-[14px] font-semibold hover:bg-[#00FF87] active:scale-[0.98] transition-all shadow-lg shadow-black/10",
-          children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 16, strokeWidth: 2.5 }),
-            "Open Browser",
-            /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 15, strokeWidth: 2.5 })
-          ]
-        }
-      ) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(motion.p, { ...STAGGER(5), className: `text-center text-[11px] ${muted}`, children: "Your keys are encrypted and never leave this device" })
-    ] })
-  ] });
-}
-function QuickLink({ icon, label, sub, isDark, card, cardHov, muted }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `rounded-xl border p-3.5 flex items-center gap-3 ${card} transition-all ${cardHov} cursor-default`, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isDark ? "bg-white/[0.05]" : "bg-black/[0.04]"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: muted, children: icon }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[12px] font-semibold truncate ${isDark ? "text-white/75" : "text-black/75"}`, children: label }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[10px] font-mono truncate ${muted}`, children: sub })
-    ] })
-  ] });
-}
-function TabBar({ tabs, activeId, onTabClick, onTabClose, onNewTab, isDark }) {
-  const isMac = window.electronAPI?.platform === "darwin";
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    "div",
-    {
-      className: `h-10 flex items-end drag shrink-0 ${isDark ? "bg-[#0f0f0f]" : "bg-[#d8d8d8]"}`,
-      children: [
-        isMac && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-[80px] shrink-0 h-full" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-end flex-1 min-w-0 overflow-hidden pl-0.5 gap-px", children: [
-          tabs.map((tab) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Tab,
-            {
-              tab,
-              isActive: tab.id === activeId,
-              isDark,
-              onClick: () => onTabClick(tab.id),
-              onClose: (e) => onTabClose(tab.id, e)
-            },
-            tab.id
-          )),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "button",
-            {
-              onClick: onNewTab,
-              className: `no-drag w-8 h-8 mb-0.5 ml-0.5 rounded-full flex items-center justify-center shrink-0 transition-all ${isDark ? "text-white/30 hover:text-white/60 hover:bg-white/8" : "text-black/30 hover:text-black/60 hover:bg-black/8"}`,
-              title: "New tab (⌘T)",
-              children: /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 14, strokeWidth: 2 })
-            }
-          )
-        ] })
-      ]
-    }
-  );
-}
-function Tab({ tab, isActive, isDark, onClick, onClose }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    "div",
-    {
-      onClick,
-      className: `
-        no-drag group relative flex items-center gap-2 h-9 px-3 cursor-pointer
-        rounded-tl-lg rounded-tr-lg flex-1 min-w-0 max-w-[220px] transition-all select-none
-        ${isActive ? isDark ? "bg-[#1a1a1a] text-white/90 z-10" : "bg-[#f5f5f5] text-black/90 z-10" : isDark ? "bg-transparent text-white/40 hover:bg-[#131313] hover:text-white/65" : "bg-transparent text-black/40 hover:bg-[#c8c8c8] hover:text-black/65"}
-      `,
-      children: [
-        isActive && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `absolute bottom-0 left-0 right-0 h-px ${isDark ? "bg-[#1a1a1a]" : "bg-[#f5f5f5]"}` }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-4 h-4 shrink-0 flex items-center justify-center", children: tab.isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-3 h-3 border rounded-full border-t-transparent animate-spin ${isDark ? "border-white/30" : "border-black/30"}` }) : tab.type === "ens" ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-3 h-3 rounded-full bg-[#00FF87]/30 ring-1 ring-[#00FF87]/70" }) : tab.type === "ipfs" || tab.type === "ipns" ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-3 h-3 rounded-full bg-[#00D1FF]/30 ring-1 ring-[#00D1FF]/70" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 12, strokeWidth: 1.8 }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[12px] font-medium leading-none truncate flex-1 min-w-0", children: tab.title || "New Tab" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "button",
-          {
-            onClick: (e) => {
-              e.stopPropagation();
-              onClose(e);
-            },
-            className: `shrink-0 w-4 h-4 rounded flex items-center justify-center transition-all ${isDark ? "opacity-0 group-hover:opacity-100 hover:bg-white/15 text-white/60" : "opacity-0 group-hover:opacity-100 hover:bg-black/10 text-black/50"}`,
-            children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 10, strokeWidth: 2.5 })
-          }
-        )
-      ]
-    }
-  );
-}
 const CHROME_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
 const isElectron = typeof window !== "undefined" && !!window.electronAPI?.isElectron;
 const WebView = reactExports.forwardRef(({
@@ -42201,6 +43076,45 @@ function BlockedPage({ url, onRetry }) {
     ] })
   ] });
 }
+const DEFAULT_NODES = [
+  { id: "wasm", name: "WASM Sandbox", status: "active", detail: "Isolation level 4", enabled: true },
+  { id: "ens", name: "ENS Resolver", status: "active", detail: "Ethereum mainnet", enabled: true },
+  { id: "ipfs", name: "IPFS Gateway", status: "active", detail: "ipfs.io + fallbacks", enabled: true },
+  { id: "p2p", name: "P2P Mesh", status: "standby", detail: "libp2p ready", enabled: false },
+  { id: "btc", name: "Bitcoin Light Client", status: "standby", detail: "BIP157 headers", enabled: false }
+];
+const useRuntimeStore = create()(
+  persist(
+    (set) => ({
+      nodes: DEFAULT_NODES,
+      runtimeVersion: "0.94.1",
+      isInitialized: true,
+      logs: [
+        { ts: Date.now(), msg: "Orivon runtime initialized", level: "info" },
+        { ts: Date.now(), msg: "WASM sandbox ready (isolation level 4)", level: "info" },
+        { ts: Date.now(), msg: "ENS resolver connected to Ethereum mainnet", level: "info" },
+        { ts: Date.now(), msg: "IPFS gateway active: ipfs.io", level: "info" }
+      ],
+      toggleNode: (id2) => set((s) => ({
+        nodes: s.nodes.map(
+          (n2) => n2.id === id2 ? { ...n2, enabled: !n2.enabled, status: n2.enabled ? "standby" : "active" } : n2
+        )
+      })),
+      addLog: (msg, level = "info") => set((s) => ({
+        logs: [...s.logs.slice(-199), { ts: Date.now(), msg, level }]
+      })),
+      clearLogs: () => set({ logs: [] }),
+      setNodeStatus: (id2, status, detail) => set((s) => ({
+        nodes: s.nodes.map((n2) => n2.id === id2 ? { ...n2, status, ...detail ? { detail } : {} } : n2)
+      }))
+    }),
+    {
+      name: "orivon-runtime",
+      storage: createJSONStorage(() => localStorage),
+      partialize: (s) => ({ nodes: s.nodes, runtimeVersion: s.runtimeVersion })
+    }
+  )
+);
 function WalletPanel({ onClose, onOpenWalletModal, onOpenDashboard }) {
   const { status, addresses, lock, getBalance } = useWalletStore();
   const { theme, setTheme, blockTrackers, setBlockTrackers, blockAds, setBlockAds, showWeb3Scores, setShowWeb3Scores } = useSettings();
@@ -42397,136 +43311,31 @@ function WalletPanel({ onClose, onOpenWalletModal, onOpenDashboard }) {
     }
   );
 }
-const NEW_TAB_URL = "orivon://newtab";
-function makeTab(url = NEW_TAB_URL) {
-  return {
-    id: `tab-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    url,
-    displayUrl: url === NEW_TAB_URL ? "" : url,
-    title: url === NEW_TAB_URL ? "New Tab" : url,
-    isLoading: false,
-    history: [url],
-    historyIndex: 0,
-    type: url === NEW_TAB_URL ? "newtab" : "https",
-    createdAt: Date.now()
-  };
+const TOTAL_IMAGES = 10;
+let _lastImageIndex = -1;
+function pickNextImage() {
+  const choices = Array.from({ length: TOTAL_IMAGES }, (_, i) => i).filter((i) => i !== _lastImageIndex);
+  const picked = choices[Math.floor(Math.random() * choices.length)];
+  _lastImageIndex = picked;
+  return picked;
 }
-const useTabsStore = create()(
-  persist(
-    (set, get) => ({
-      tabs: [makeTab()],
-      activeTabId: "",
-      addTab: (url = NEW_TAB_URL) => {
-        const tab = makeTab(url);
-        set((s) => ({ tabs: [...s.tabs, tab], activeTabId: tab.id }));
-        return tab.id;
-      },
-      closeTab: (id2) => {
-        const { tabs, activeTabId } = get();
-        if (tabs.length === 1) {
-          const fresh = makeTab();
-          set({ tabs: [fresh], activeTabId: fresh.id });
-          return;
-        }
-        const idx = tabs.findIndex((t) => t.id === id2);
-        const remaining = tabs.filter((t) => t.id !== id2);
-        let next = activeTabId;
-        if (id2 === activeTabId) {
-          next = (remaining[idx] ?? remaining[idx - 1] ?? remaining[0]).id;
-        }
-        set({ tabs: remaining, activeTabId: next });
-      },
-      setActiveTab: (id2) => set({ activeTabId: id2 }),
-      updateTab: (id2, patch) => set((s) => ({
-        tabs: s.tabs.map((t) => t.id === id2 ? { ...t, ...patch } : t)
-      })),
-      navigateTab: (id2, url, displayUrl, type) => {
-        set((s) => ({
-          tabs: s.tabs.map((t) => {
-            if (t.id !== id2) return t;
-            const newHistory = [...t.history.slice(0, t.historyIndex + 1), url];
-            return {
-              ...t,
-              url,
-              displayUrl,
-              type,
-              isLoading: true,
-              history: newHistory,
-              historyIndex: newHistory.length - 1,
-              title: url === NEW_TAB_URL ? "New Tab" : displayUrl || url
-            };
-          })
-        }));
-      },
-      goBack: (id2) => {
-        const tab = get().tabs.find((t) => t.id === id2);
-        if (!tab || tab.historyIndex <= 0) return null;
-        const url = tab.history[tab.historyIndex - 1];
-        set((s) => ({
-          tabs: s.tabs.map(
-            (t) => t.id === id2 ? { ...t, historyIndex: t.historyIndex - 1, url, isLoading: true } : t
-          )
-        }));
-        return url;
-      },
-      goForward: (id2) => {
-        const tab = get().tabs.find((t) => t.id === id2);
-        if (!tab || tab.historyIndex >= tab.history.length - 1) return null;
-        const url = tab.history[tab.historyIndex + 1];
-        set((s) => ({
-          tabs: s.tabs.map(
-            (t) => t.id === id2 ? { ...t, historyIndex: t.historyIndex + 1, url, isLoading: true } : t
-          )
-        }));
-        return url;
-      },
-      pinTab: (id2) => set((s) => ({
-        tabs: s.tabs.map((t) => t.id === id2 ? { ...t, pinned: !t.pinned } : t)
-      })),
-      reorderTabs: (from, to) => set((s) => {
-        const tabs = [...s.tabs];
-        const [moved] = tabs.splice(from, 1);
-        tabs.splice(to, 0, moved);
-        return { tabs };
-      }),
-      closeAllTabs: () => {
-        const fresh = makeTab();
-        set({ tabs: [fresh], activeTabId: fresh.id });
-      }
-    }),
-    {
-      name: "orivon-tabs",
-      storage: createJSONStorage(() => localStorage),
-      // Don't persist loading state — reset on restore
-      partialize: (s) => ({
-        ...s,
-        tabs: s.tabs.map((t) => ({ ...t, isLoading: false }))
-      }),
-      onRehydrateStorage: () => (state) => {
-        if (state && (!state.activeTabId || !state.tabs.find((t) => t.id === state.activeTabId))) {
-          state.activeTabId = state.tabs[0]?.id ?? "";
-        }
-      }
-    }
-  )
-);
-const NEW_TAB = NEW_TAB_URL;
 const DAPPS = [
-  { name: "Uniswap", url: "https://app.uniswap.org", icon: "🦄", label: "DEX" },
-  { name: "OpenSea", url: "https://opensea.io", icon: "🌊", label: "NFT" },
-  { name: "Aave", url: "https://app.aave.com", icon: "👻", label: "DeFi" },
-  { name: "ENS App", url: "https://app.ens.domains", icon: "🔷", label: "ENS" },
-  { name: "Etherscan", url: "https://etherscan.io", icon: "🔍", label: "Explorer" },
-  { name: "Mirror", url: "https://mirror.xyz", icon: "🪞", label: "Publish" },
-  { name: "Radicle", url: "https://app.radicle.xyz", icon: "🌱", label: "Git" },
-  { name: "IPFS", url: "https://ipfs.io", icon: "📦", label: "Storage" }
+  { name: "Uniswap", url: "https://app.uniswap.org", icon: "🦄" },
+  { name: "OpenSea", url: "https://opensea.io", icon: "🌊" },
+  { name: "Aave", url: "https://app.aave.com", icon: "👻" },
+  { name: "ENS App", url: "https://app.ens.domains", icon: "🔷" },
+  { name: "Etherscan", url: "https://etherscan.io", icon: "🔍" },
+  { name: "Mirror", url: "https://mirror.xyz", icon: "🪞" },
+  { name: "Radicle", url: "https://app.radicle.xyz", icon: "🌱" },
+  { name: "IPFS", url: "https://ipfs.io", icon: "📦" }
 ];
 function NewTab({ onNavigate }) {
-  const { theme } = useSettings();
   const { tabs } = useTabsStore();
+  const { nodes } = useRuntimeStore();
   const [query, setQuery] = reactExports.useState("");
   const inputRef = reactExports.useRef(null);
-  const isDark = theme === "dark";
+  const [bgIndex] = reactExports.useState(() => pickNextImage());
+  const bgUrl = `/tap${bgIndex + 1}.jpg`;
   reactExports.useEffect(() => {
     inputRef.current?.focus();
   }, []);
@@ -42535,65 +43344,171 @@ function NewTab({ onNavigate }) {
     const q = query.trim();
     if (q) onNavigate(q);
   };
-  const recent = [...new Map(
-    tabs.filter((t) => t.url !== "orivon://newtab" && t.url !== "orivon://settings").map((t) => [t.url, t])
-  ).values()].slice(-4).reverse();
-  const bg = isDark ? "bg-[#0f0f0f]" : "bg-[#f0f0f0]";
-  const inputBg = isDark ? "bg-[#1a1a1a] border-white/[0.08] text-white/80 placeholder:text-white/25 focus:border-white/20" : "bg-white border-black/[0.08] text-black/80 placeholder:text-black/25 focus:border-black/20";
-  const cardBg = isDark ? "bg-[#141414] border-white/[0.06] hover:border-white/12 hover:bg-[#1a1a1a]" : "bg-white border-black/[0.06] hover:border-black/12";
-  const muted = isDark ? "text-white/30" : "text-black/30";
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `h-full ${bg} flex flex-col items-center justify-center gap-10 p-8 overflow-auto`, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center gap-2 -mt-8", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-10 h-10 rounded-[10px] bg-[#00FF87] flex items-center justify-center mb-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 20, className: "text-black", strokeWidth: 2.5 }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: `text-xl font-semibold tracking-tight ${isDark ? "text-white/70" : "text-black/70"}`, children: "Orivon" })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("form", { onSubmit: handleSubmit, className: "w-full max-w-[560px]", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `relative flex items-center rounded-2xl border ${inputBg} transition-all shadow-sm`, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 16, className: `absolute left-4 ${muted} pointer-events-none` }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "input",
-        {
-          ref: inputRef,
-          type: "text",
-          value: query,
-          onChange: (e) => setQuery(e.target.value),
-          placeholder: "Search or enter address · try app.eth · ipfs://",
-          className: "w-full h-12 bg-transparent pl-11 pr-4 text-[14px] focus:outline-none"
+  const trackerNodes = nodes.filter((n2) => n2.enabled);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", width: "100%", height: "100%", overflow: "hidden", fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "img",
+      {
+        src: bgUrl,
+        alt: "",
+        style: {
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          zIndex: 0,
+          transition: "opacity 0.4s ease"
+        },
+        onError: (e) => {
+          e.target.style.display = "none";
         }
-      )
-    ] }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full max-w-[560px] space-y-3", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[11px] font-semibold uppercase tracking-widest ${muted}`, children: "Web3 Apps" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-4 gap-2 sm:grid-cols-8", children: DAPPS.map((dapp) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", inset: 0, background: "rgba(0,0,0,0.28)", zIndex: 1 } }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        style: {
+          position: "absolute",
+          top: 16,
+          right: 16,
+          zIndex: 10,
+          width: 36,
+          height: 36,
+          borderRadius: "50%",
+          background: "rgba(0,0,0,0.35)",
+          border: "none",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          color: "rgba(255,255,255,0.7)",
+          backdropFilter: "blur(4px)",
+          transition: "background 0.15s"
+        },
+        onMouseEnter: (e) => {
+          e.currentTarget.style.background = "rgba(0,0,0,0.55)";
+        },
+        onMouseLeave: (e) => {
+          e.currentTarget.style.background = "rgba(0,0,0,0.35)";
+        },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { size: 16 })
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: {
+      position: "absolute",
+      inset: 0,
+      zIndex: 5,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 0
+    }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("form", { onSubmit: handleSubmit, style: { width: "100%", maxWidth: 520, marginBottom: 40 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        background: "rgba(20,20,30,0.85)",
+        backdropFilter: "blur(20px)",
+        borderRadius: 9999,
+        padding: "12px 20px",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.4)"
+      }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 26, height: 26, borderRadius: 8, background: "#00FF87", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 14, color: "#000", strokeWidth: 2.5 }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "input",
+          {
+            ref: inputRef,
+            type: "text",
+            value: query,
+            onChange: (e) => setQuery(e.target.value),
+            placeholder: "Search or enter address · .eth · ipfs://",
+            style: {
+              flex: 1,
+              background: "transparent",
+              border: "none",
+              outline: "none",
+              fontSize: 15,
+              color: "rgba(255,255,255,0.85)",
+              fontFamily: "inherit"
+            },
+            className: "newtab-input"
+          }
+        )
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "grid", gridTemplateColumns: "repeat(8, 64px)", gap: 12, marginBottom: 48 }, children: DAPPS.map((app) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "button",
         {
-          onClick: () => onNavigate(dapp.url),
-          className: `flex flex-col items-center gap-2 p-3 rounded-2xl border transition-all group ${cardBg}`,
+          onClick: () => onNavigate(app.url),
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 6,
+            background: "rgba(20,20,30,0.6)",
+            backdropFilter: "blur(10px)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            borderRadius: 16,
+            padding: "10px 4px",
+            cursor: "pointer",
+            transition: "background 0.15s, transform 0.1s"
+          },
+          onMouseEnter: (e) => {
+            e.currentTarget.style.background = "rgba(40,40,60,0.8)";
+            e.currentTarget.style.transform = "scale(1.05)";
+          },
+          onMouseLeave: (e) => {
+            e.currentTarget.style.background = "rgba(20,20,30,0.6)";
+            e.currentTarget.style.transform = "scale(1)";
+          },
           children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl leading-none", children: dapp.icon }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `text-[10px] font-medium leading-none text-center ${isDark ? "text-white/45 group-hover:text-white/70" : "text-black/45 group-hover:text-black/70"}`, children: dapp.name })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 22, lineHeight: 1 }, children: app.icon }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 9, color: "rgba(255,255,255,0.65)", fontWeight: 500, textAlign: "center", lineHeight: 1.2 }, children: app.name })
           ]
         },
-        dapp.name
+        app.name
       )) })
     ] }),
-    recent.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full max-w-[560px] space-y-3", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[11px] font-semibold uppercase tracking-widest ${muted}`, children: "Recent" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 gap-2", children: recent.map((tab) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        "button",
-        {
-          onClick: () => onNavigate(tab.url),
-          className: `flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${cardBg}`,
-          children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${tab.type === "ens" ? "bg-[#00FF87]/12" : tab.type === "ipfs" ? "bg-[#00D1FF]/12" : isDark ? "bg-white/[0.05]" : "bg-black/[0.04]"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 12, className: tab.type === "ens" ? "text-[#00FF87]" : tab.type === "ipfs" ? "text-[#00D1FF]" : muted }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[12px] font-medium truncate ${isDark ? "text-white/75" : "text-black/75"}`, children: tab.title }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[10px] font-mono truncate ${muted}`, children: tab.displayUrl || tab.url })
-            ] })
-          ]
-        },
-        tab.id + tab.url
-      )) })
-    ] })
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      zIndex: 5,
+      display: "flex",
+      gap: 0,
+      padding: 0
+    }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      StatPanel,
+      {
+        label: "STATS",
+        items: [
+          { value: "12", unit: "", desc: "Trackers & ads blocked", color: "#fff" },
+          { value: `${trackerNodes.length}`, unit: " KB", desc: "ENS resolutions", color: "#00D1FF" },
+          { value: "0", unit: " Seconds", desc: "Time saved", color: "#fff" }
+        ]
+      }
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("style", { children: `.newtab-input::placeholder { color: rgba(255,255,255,0.35); }` })
+  ] });
+}
+function StatPanel({ label, items }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: {
+    background: "rgba(20,20,30,0.75)",
+    backdropFilter: "blur(20px)",
+    borderTopRightRadius: 16,
+    padding: "16px 24px",
+    minWidth: 380
+  }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.5)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 10px" }, children: label }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", gap: 32 }, children: items.map((item, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { margin: 0, fontSize: 22, fontWeight: 700, color: item.color, letterSpacing: "-0.5px" }, children: [
+        item.value,
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 14, fontWeight: 400, color: item.color }, children: item.unit })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: "2px 0 0", fontSize: 11, color: "rgba(255,255,255,0.5)" }, children: item.desc })
+    ] }, i)) })
   ] });
 }
 function WalletModal({ mode, onClose, onSuccess }) {
@@ -42890,12 +43805,11 @@ function resolveDisplay(url) {
 function isSecureURL(url) {
   return url.startsWith("https://") || url.endsWith(".eth") || url.startsWith("ipfs://") || url.startsWith("ipns://") || url.startsWith("orivon://");
 }
-function Web3ScoreBadge({ url, isDark }) {
-  const isEns = url.endsWith(".eth");
-  const isIpfs = url.startsWith("ipfs://") || url.startsWith("ipns://");
-  const score = isEns ? 97 : isIpfs ? 95 : url.startsWith("https://") ? 85 : 60;
-  const color2 = score >= 90 ? "#00FF87" : score >= 70 ? "#facc15" : "#f87171";
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] font-semibold tabular-nums", style: { color: color2 }, children: score });
+function web3Score(url) {
+  if (!url || url === NEW_TAB) return null;
+  if (url.endsWith(".eth") || url.startsWith("ipfs://")) return 97;
+  if (url.startsWith("https://")) return 85;
+  return 60;
 }
 function Browser({ onOpenDashboard } = {}) {
   const { tabs, activeTabId, addTab, closeTab, updateTab, navigateTab, goBack, goForward, setActiveTab } = useTabsStore();
@@ -42904,13 +43818,25 @@ function Browser({ onOpenDashboard } = {}) {
   const { addLog } = useRuntimeStore();
   const webviewRefs = reactExports.useRef({});
   const addrRef = reactExports.useRef(null);
+  const menuRef = reactExports.useRef(null);
   const [addrInput, setAddrInput] = reactExports.useState("");
   const [isEditing, setIsEditing] = reactExports.useState(false);
   const [walletOpen, setWalletOpen] = reactExports.useState(false);
   const [walletModal, setWalletModal] = reactExports.useState(null);
+  const [menuOpen, setMenuOpen] = reactExports.useState(false);
+  const [zoom, setZoom] = reactExports.useState(100);
   const activeTab = tabs.find((t) => t.id === activeTabId) ?? tabs[0];
   const isDark = theme === "dark";
-  window.electronAPI?.platform === "darwin";
+  const isMac = window.electronAPI?.platform === "darwin";
+  const isElectron2 = !!window.electronAPI?.isElectron;
+  const score = activeTab ? web3Score(activeTab.url) : null;
+  reactExports.useEffect(() => {
+    const handler = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
   reactExports.useEffect(() => {
     if (!isEditing) setAddrInput(activeTab ? resolveDisplay(activeTab.url) : "");
   }, [activeTabId, activeTab?.url, isEditing]);
@@ -42925,21 +43851,14 @@ function Browser({ onOpenDashboard } = {}) {
       if (r.ok) {
         url = r.url;
         type = r.type;
-        if (type === "ens" || type === "ipfs" || type === "ipns") {
-          addLog(`[P2P Routing] Resolved ${input} via ${String(type).toUpperCase()}`);
-        }
       }
     } else {
-      if (input.endsWith(".eth") || input.includes(".eth/")) {
-        url = `https://${input.split("/")[0]}.limo${input.includes("/") ? input.slice(input.indexOf("/")) : ""}`;
+      if (input.endsWith(".eth")) {
+        url = `https://${input}.limo`;
         type = "ens";
-        addLog(`[P2P Routing] Bypassing DNS for ${input.split("/")[0]} via ENS`);
       } else if (input.startsWith("ipfs://")) {
         url = `https://ipfs.io/ipfs/${input.slice(7)}`;
         type = "ipfs";
-      } else if (input.startsWith("ipns://")) {
-        url = `https://ipfs.io/ipns/${input.slice(7)}`;
-        type = "ipns";
       } else if (input.startsWith("http://") || input.startsWith("https://")) {
         url = input;
         type = input.startsWith("https") ? "https" : "http";
@@ -42958,15 +43877,11 @@ function Browser({ onOpenDashboard } = {}) {
   }, [activeTabId, navigateTab, addLog]);
   const handleBack = () => {
     const url = goBack(activeTabId);
-    if (url) {
-      webviewRefs.current[activeTabId]?.goBack();
-    }
+    if (url) webviewRefs.current[activeTabId]?.goBack();
   };
   const handleForward = () => {
     const url = goForward(activeTabId);
-    if (url) {
-      webviewRefs.current[activeTabId]?.goForward();
-    }
+    if (url) webviewRefs.current[activeTabId]?.goForward();
   };
   const handleReload = () => webviewRefs.current[activeTabId]?.reload();
   const handleAddrSubmit = (e) => {
@@ -42993,10 +43908,11 @@ function Browser({ onOpenDashboard } = {}) {
       setTimeout(() => navigate(url, id2), 10);
     }
   });
-  const toolbarBg = isDark ? "bg-[#1a1a1a] border-white/[0.07]" : "bg-[#f5f5f5] border-black/[0.07]";
-  const addrBarBg = isDark ? "bg-[#111] hover:bg-[#141414] focus-within:bg-[#0d0d0d]" : "bg-white/70 hover:bg-white focus-within:bg-white";
-  const btnBase = isDark ? "text-white/40 hover:text-white/70 hover:bg-white/8" : "text-black/40 hover:text-black/70 hover:bg-black/7";
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `h-screen w-screen flex flex-col overflow-hidden ${isDark ? "bg-[#0a0a0a] text-white" : "bg-[#f5f5f5] text-black"}`, children: [
+  const toolbarBg = isDark ? "bg-[#1a1a1a] border-white/[0.07]" : "bg-[#f0f0f0] border-black/[0.07]";
+  const addrBg = isDark ? "bg-[#111] hover:bg-[#141414] focus-within:bg-[#0d0d0d]" : "bg-white/80 hover:bg-white focus-within:bg-white";
+  const btn = isDark ? "text-white/45 hover:text-white/80 hover:bg-white/8" : "text-black/45 hover:text-black/80 hover:bg-black/7";
+  const sep = isDark ? "bg-white/12" : "bg-black/12";
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `h-screen w-screen flex flex-col overflow-hidden ${isDark ? "bg-[#0f0f0f] text-white" : "bg-[#e8e8e8] text-black"}`, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       TabBar,
       {
@@ -43005,16 +43921,19 @@ function Browser({ onOpenDashboard } = {}) {
         onTabClick: setActiveTab,
         onTabClose: handleTabClose,
         onNewTab: () => addTab(),
-        isDark
+        isDark,
+        windowControls: !isMac && isElectron2 ? {
+          onMinimize: () => window.electronAPI?.window.minimize(),
+          onMaximize: () => window.electronAPI?.window.maximize(),
+          onClose: () => window.electronAPI?.window.close()
+        } : void 0
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `h-11 flex items-center gap-1.5 px-2 border-b ${toolbarBg} shrink-0`, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-0.5 shrink-0", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(NavBtn, { onClick: handleBack, disabled: !canBack, isDark, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 15 }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(NavBtn, { onClick: handleForward, disabled: !canForward, isDark, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 15 }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(NavBtn, { onClick: activeTab?.isLoading ? () => webviewRefs.current[activeTabId]?.stop() : handleReload, isDark, children: /* @__PURE__ */ jsxRuntimeExports.jsx(RotateCcw, { size: 13, className: activeTab?.isLoading ? "animate-spin" : "" }) })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("form", { onSubmit: handleAddrSubmit, className: "flex-1 mx-1.5 no-drag", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `relative flex items-center h-8 rounded-xl transition-all ${addrBarBg}`, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `h-10 flex items-center gap-1 px-2 border-b ${toolbarBg} shrink-0`, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(NavBtn, { onClick: handleBack, disabled: !canBack, isDark, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 14 }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(NavBtn, { onClick: handleForward, disabled: !canForward, isDark, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 14 }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(NavBtn, { onClick: activeTab?.isLoading ? () => webviewRefs.current[activeTabId]?.stop() : handleReload, isDark, children: /* @__PURE__ */ jsxRuntimeExports.jsx(RotateCcw, { size: 13, className: activeTab?.isLoading ? "animate-spin" : "" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("form", { onSubmit: handleAddrSubmit, className: "flex-1 mx-2 no-drag", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `relative flex items-center h-8 rounded-2xl transition-all ${addrBg}`, children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute left-3 pointer-events-none", children: !activeTab || activeTab.url === NEW_TAB ? /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 12, className: isDark ? "text-white/25" : "text-black/25" }) : isSecureURL(activeTab.url) ? /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 11, className: "text-[#00FF87]/70" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 12, className: isDark ? "text-white/25" : "text-black/25" }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           "input",
@@ -43030,37 +43949,26 @@ function Browser({ onOpenDashboard } = {}) {
             },
             onBlur: () => setIsEditing(false),
             placeholder: "Search or enter URL · .eth · ipfs://",
-            className: "w-full h-full bg-transparent pl-8 pr-12 text-[12.5px] font-mono focus:outline-none placeholder:text-current placeholder:opacity-25"
+            className: "w-full h-full bg-transparent pl-8 pr-10 text-[12.5px] font-mono focus:outline-none placeholder:text-current placeholder:opacity-20"
           }
         ),
         activeTab?.type === "ens" && !isEditing && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "absolute right-3 text-[9px] font-bold text-[#00FF87]/60 tracking-widest pointer-events-none", children: "ENS" }),
         (activeTab?.type === "ipfs" || activeTab?.type === "ipns") && !isEditing && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "absolute right-3 text-[9px] font-bold text-[#00D1FF]/60 tracking-widest pointer-events-none", children: "IPFS" })
       ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-0.5 shrink-0 relative no-drag", children: [
-        showWeb3Scores && activeTab && activeTab.url !== NEW_TAB && /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "button",
-          {
-            onClick: () => setRightPanelOpen(!rightPanelOpen),
-            className: `no-drag flex items-center gap-1.5 h-8 px-2.5 rounded-lg text-[11px] font-medium transition-all ${rightPanelOpen ? "bg-[#00FF87]/12 text-[#00FF87]" : btnBase}`,
-            title: "Web3 security panel",
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 13 }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Web3ScoreBadge, { url: activeTab.url, isDark })
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setTheme(isDark ? "light" : "dark"), className: `no-drag w-8 h-8 rounded-lg flex items-center justify-center transition-all ${btnBase}`, title: "Toggle theme", children: isDark ? /* @__PURE__ */ jsxRuntimeExports.jsx(Sun, { size: 14 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Moon, { size: 14 }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-0.5 shrink-0 no-drag", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(NavBtn, { isDark, title: "Bookmark", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Star, { size: 15 }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-px h-5 ${sep} mx-1` }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "button",
             {
               onClick: () => setWalletOpen((p) => !p),
-              className: `no-drag flex items-center gap-1.5 h-8 px-2.5 rounded-lg text-[12px] font-medium transition-all ${walletStatus === "unlocked" ? "text-[#00FF87] bg-[#00FF87]/10 hover:bg-[#00FF87]/18" : btnBase}`,
-              title: "Wallet",
+              title: "Orivon Wallet",
+              className: `no-drag flex items-center gap-1.5 h-8 px-2.5 rounded-lg text-[12px] font-medium transition-all ${walletStatus === "unlocked" ? "text-[#00FF87] bg-[#00FF87]/10 hover:bg-[#00FF87]/18" : btn}`,
               children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Wallet$1, { size: 14 }),
-                walletStatus === "unlocked" && addresses ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono", children: [
-                  addresses.eth.slice(0, 6),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Wallet$1, { size: 15 }),
+                walletStatus === "unlocked" && addresses ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[11px] font-mono", children: [
+                  addresses.eth.slice(0, 5),
                   "…"
                 ] }) : walletStatus === "locked" ? /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 11 }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px]", children: "Connect" })
               ]
@@ -43081,7 +43989,65 @@ function Browser({ onOpenDashboard } = {}) {
             }
           ) })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: `no-drag w-8 h-8 rounded-lg flex items-center justify-center transition-all ${btnBase}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Ellipsis, { size: 15 }) })
+        showWeb3Scores && score !== null && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            onClick: () => setRightPanelOpen(!rightPanelOpen),
+            title: `Web3 Score: ${score}`,
+            className: `no-drag flex items-center gap-1 h-8 px-2 rounded-lg text-[11px] font-semibold transition-all ${rightPanelOpen ? "bg-[#00FF87]/12 text-[#00FF87]" : btn}`,
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 14 }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: score >= 90 ? "#00FF87" : score >= 70 ? "#facc15" : "#f87171" }, children: score })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            onClick: () => onOpenDashboard?.(),
+            title: "Dashboard",
+            className: `no-drag w-8 h-8 rounded-full flex items-center justify-center transition-all border ${isDark ? "border-white/20 text-white/50 hover:text-white/80 hover:bg-white/8" : "border-black/20 text-black/50 hover:text-black/80 hover:bg-black/6"}`,
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(User, { size: 14 })
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { ref: menuRef, className: "relative", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => setMenuOpen((p) => !p),
+              title: "Menu",
+              className: `no-drag w-8 h-8 rounded-lg flex items-center justify-center transition-all ${menuOpen ? isDark ? "bg-white/10 text-white" : "bg-black/8 text-black" : btn}`,
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(TextAlignJustify, { size: 16 })
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: menuOpen && /* @__PURE__ */ jsxRuntimeExports.jsx(
+            BurgerMenu,
+            {
+              isDark,
+              zoom,
+              onZoomIn: () => setZoom((z) => Math.min(z + 10, 200)),
+              onZoomOut: () => setZoom((z) => Math.max(z - 10, 25)),
+              onNewTab: () => {
+                addTab();
+                setMenuOpen(false);
+              },
+              onDashboard: () => {
+                onOpenDashboard?.();
+                setMenuOpen(false);
+              },
+              onWallet: () => {
+                setWalletOpen(true);
+                setMenuOpen(false);
+              },
+              onTheme: () => {
+                setTheme(isDark ? "light" : "dark");
+                setMenuOpen(false);
+              },
+              isDarkMode: isDark,
+              onClose: () => setMenuOpen(false)
+            }
+          ) })
+        ] })
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 relative overflow-hidden flex", children: [
@@ -43090,9 +44056,6 @@ function Browser({ onOpenDashboard } = {}) {
         {
           className: "absolute inset-0",
           style: {
-            // Keep ALL tabs rendered — never use visibility:hidden or display:none
-            // on a tab that has a WebView. Chromium will pause media (e.g. YouTube)
-            // if the element is hidden. z-index + pointer-events is the correct approach.
             zIndex: tab.id === activeTabId ? 1 : 0,
             pointerEvents: tab.id === activeTabId ? "auto" : "none"
           },
@@ -43115,9 +44078,9 @@ function Browser({ onOpenDashboard } = {}) {
           initial: { width: 0, opacity: 0 },
           animate: { width: 260, opacity: 1 },
           exit: { width: 0, opacity: 0 },
-          transition: { duration: 0.2, ease: [0.4, 0, 0.2, 1] },
+          transition: { duration: 0.18, ease: [0.4, 0, 0.2, 1] },
           className: `shrink-0 overflow-hidden border-l ${isDark ? "bg-[#111] border-white/[0.07]" : "bg-white border-black/[0.07]"}`,
-          children: /* @__PURE__ */ jsxRuntimeExports.jsx(Web3ScorePanel, { tab: activeTab, isDark, onClose: () => setRightPanelOpen(false) })
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(Web3Panel, { score, tab: activeTab, isDark, onClose: () => setRightPanelOpen(false) })
         }
       ) })
     ] }),
@@ -43131,60 +44094,173 @@ function Browser({ onOpenDashboard } = {}) {
     ) })
   ] });
 }
-function NavBtn({ children, onClick, disabled, isDark }) {
+function BurgerMenu({ isDark, isDarkMode, zoom, onNewTab, onDashboard, onWallet, onTheme, onZoomIn, onZoomOut, onClose }) {
+  const bg = isDark ? "#1e1e1e" : "#ffffff";
+  const brd = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.09)";
+  const txt = isDark ? "rgba(255,255,255,0.82)" : "rgba(0,0,0,0.82)";
+  const short = isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)";
+  const hover2 = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.05)";
+  const item = (icon, label, shortcut, action, chevron) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "button",
+    {
+      onClick: action,
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        width: "100%",
+        padding: "9px 16px",
+        background: "none",
+        border: "none",
+        cursor: "pointer",
+        textAlign: "left",
+        color: txt,
+        fontSize: 13,
+        transition: "background 0.1s"
+      },
+      onMouseEnter: (e) => {
+        e.currentTarget.style.background = hover2;
+      },
+      onMouseLeave: (e) => {
+        e.currentTarget.style.background = "none";
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { width: 18, display: "flex", alignItems: "center", justifyContent: "center", color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)", flexShrink: 0 }, children: icon }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { flex: 1 }, children: label }),
+        shortcut && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 11, color: short }, children: shortcut }),
+        chevron && /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronRight, { size: 13, style: { color: short } })
+      ]
+    },
+    label
+  );
+  const divider = () => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: 1, background: brd, margin: "4px 0" } });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    motion.div,
+    {
+      initial: { opacity: 0, y: -8, scale: 0.97 },
+      animate: { opacity: 1, y: 0, scale: 1 },
+      exit: { opacity: 0, y: -6, scale: 0.97 },
+      transition: { duration: 0.15, ease: [0.22, 1, 0.36, 1] },
+      style: {
+        position: "absolute",
+        top: 40,
+        right: 0,
+        width: 320,
+        zIndex: 200,
+        background: bg,
+        borderRadius: 14,
+        border: `1px solid ${brd}`,
+        boxShadow: "0 12px 40px rgba(0,0,0,0.25)",
+        overflow: "hidden",
+        paddingBottom: 4
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { paddingTop: 4 }, children: [
+          item(/* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 16 }), "New Tab", "⌘T", onNewTab),
+          item(/* @__PURE__ */ jsxRuntimeExports.jsx(Square, { size: 15 }), "New Window", "⌘N", () => onClose()),
+          item(/* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 14 }), "New Private Window", "⇧⌘N", () => onClose())
+        ] }),
+        divider(),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(LayoutGrid, { size: 15 }), "Dashboard", "", onDashboard),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Wallet$1, { size: 15 }), "Orivon Wallet", "", onWallet),
+        item(isDarkMode ? /* @__PURE__ */ jsxRuntimeExports.jsx(Sun, { size: 15 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Moon, { size: 15 }), isDarkMode ? "Light mode" : "Dark mode", "", onTheme),
+        divider(),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(History, { size: 15 }), "History", "⌘Y", () => onClose(), true),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Bookmark, { size: 15 }), "Bookmarks", "", () => onClose(), true),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Download, { size: 15 }), "Downloads", "⌥⌘L", () => onClose()),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 14 }), "Delete Browsing Data…", "⇧⌘⌫", () => onClose()),
+        divider(),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", padding: "6px 16px", gap: 12 }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ZoomIn, { size: 16, style: { color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)" } }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { flex: 1, fontSize: 13, color: txt }, children: "Zoom" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", alignItems: "center", gap: 0, border: `1px solid ${brd}`, borderRadius: 8, overflow: "hidden" }, children: [
+            { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(ZoomOut, { size: 13 }), action: onZoomOut },
+            { icon: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { style: { fontSize: 12, padding: "0 10px", minWidth: 52, textAlign: "center" }, children: [
+              zoom,
+              "%"
+            ] }), action: () => {
+            } },
+            { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(ZoomIn, { size: 13 }), action: onZoomIn },
+            { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Maximize2, { size: 12 }), action: () => {
+            } }
+          ].map((b2, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: b2.action,
+              style: { padding: "6px 8px", background: "none", border: "none", cursor: "pointer", color: txt, display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.1s", borderLeft: i > 0 ? `1px solid ${brd}` : "none" },
+              onMouseEnter: (e) => {
+                e.currentTarget.style.background = hover2;
+              },
+              onMouseLeave: (e) => {
+                e.currentTarget.style.background = "none";
+              },
+              children: b2.icon
+            },
+            i
+          )) })
+        ] }),
+        divider(),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Printer, { size: 15 }), "Print…", "⌘P", () => onClose()),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(FileSearch, { size: 15 }), "Find in page", "⌘F", () => onClose()),
+        divider(),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(CircleQuestionMark, { size: 15 }), "Help", "", () => onClose(), true),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { size: 15 }), "Settings", "⌘,", () => onClose())
+      ]
+    }
+  );
+}
+function NavBtn({ children, onClick, disabled, isDark, title }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "button",
     {
       onClick,
       disabled,
+      title,
       className: `no-drag w-8 h-8 rounded-lg flex items-center justify-center transition-all
-        ${isDark ? "text-white/40 hover:text-white/70 hover:bg-white/8" : "text-black/40 hover:text-black/70 hover:bg-black/7"}
-        disabled:opacity-25 disabled:cursor-not-allowed`,
+        ${isDark ? "text-white/45 hover:text-white/80 hover:bg-white/8" : "text-black/45 hover:text-black/80 hover:bg-black/7"}
+        disabled:opacity-20 disabled:cursor-not-allowed`,
       children
     }
   );
 }
-function Web3ScorePanel({ tab, isDark, onClose }) {
-  const isEns = tab?.type === "ens";
-  const isIpfs = tab?.type === "ipfs" || tab?.type === "ipns";
-  const scores = [
-    { label: "Trust", value: isEns ? 97 : isIpfs ? 95 : 85, color: "#00FF87" },
-    { label: "Security", value: isEns ? 94 : isIpfs ? 92 : 80, color: "#00D1FF" },
-    { label: "Privacy", value: isEns ? 92 : isIpfs ? 90 : 76, color: "#a78bfa" }
-  ];
+function Web3Panel({ score, tab, isDark, onClose }) {
   const muted = isDark ? "text-white/35" : "text-black/35";
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 h-full overflow-y-auto scrollbar-thin", children: [
+  const scores = [
+    { label: "Trust", value: score ?? 0, color: "#00FF87" },
+    { label: "Security", value: score ? Math.round(score * 0.97) : 0, color: "#00D1FF" },
+    { label: "Privacy", value: 96, color: "#a78bfa" }
+  ];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 h-full overflow-y-auto", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `text-[10px] font-semibold uppercase tracking-widest ${muted}`, children: "Web3 Score" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: onClose, className: `w-6 h-6 rounded flex items-center justify-center ${isDark ? "hover:bg-white/8 text-white/35" : "hover:bg-black/6 text-black/35"} transition-all`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 12 }) })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: onClose, className: `w-6 h-6 rounded flex items-center justify-center ${isDark ? "hover:bg-white/8 text-white/35" : "hover:bg-black/6 text-black/35"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 12 }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-3.5", children: scores.map((s) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between text-[11px]", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: muted, children: s.label }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-semibold", style: { color: s.color }, children: s.value })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `h-1 rounded-full overflow-hidden ${isDark ? "bg-white/[0.06]" : "bg-black/[0.06]"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-full rounded-full transition-all duration-700", style: { width: `${s.value}%`, backgroundColor: s.color } }) })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `h-1 rounded-full overflow-hidden ${isDark ? "bg-white/[0.06]" : "bg-black/[0.06]"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-full rounded-full", style: { width: `${s.value}%`, backgroundColor: s.color } }) })
     ] }, s.label)) }),
-    tab && tab.url !== NEW_TAB && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `mt-4 pt-4 border-t ${isDark ? "border-white/[0.07]" : "border-black/[0.07]"} space-y-2`, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(InfoRow, { label: "Protocol", value: isEns ? "ENS/IPFS" : tab.url.startsWith("https") ? "HTTPS" : "HTTP", isDark }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(InfoRow, { label: "Tracking", value: "Blocked (12)", isDark }),
-      isEns && /* @__PURE__ */ jsxRuntimeExports.jsx(InfoRow, { label: "Censorship", value: "Resistant", isDark, color: "#00FF87" })
-    ] })
+    tab && tab.url !== NEW_TAB && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `mt-4 pt-4 border-t ${isDark ? "border-white/[0.07]" : "border-black/[0.07]"} space-y-2`, children: [
+      ["Protocol", tab.type === "ens" ? "ENS/IPFS" : "HTTPS"],
+      ["Trackers", "Blocked (12)"],
+      ["Cookies", "Managed"]
+    ].map(([l, v]) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between text-[11px]", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: muted, children: l }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: isDark ? "text-white/60" : "text-black/60", children: v })
+    ] }, l)) })
   ] });
 }
-function InfoRow({ label, value, isDark, color: color2 }) {
-  const muted = isDark ? "text-white/35" : "text-black/35";
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between text-[11px]", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: muted, children: label }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `font-medium ${isDark ? "text-white/60" : "text-black/60"}`, style: color2 ? { color: color2 } : {}, children: value })
-  ] });
-}
-function App() {
-  const { encryptedJson, status: walletStatus } = useWalletStore();
-  const { theme } = useSettings();
-  const [view, setView] = reactExports.useState(
-    () => encryptedJson ? "BROWSER" : "ONBOARDING"
+function clearSession() {
+  ["orivon-wallet", "orivon-tabs", "orivon-runtime"].forEach(
+    (k) => localStorage.removeItem(k)
   );
+}
+clearSession();
+function App() {
+  const { theme } = useSettings();
+  const [view, setView] = reactExports.useState("ONBOARDING");
   reactExports.useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
   }, [theme]);
@@ -43198,12 +44274,7 @@ function App() {
         animate: { opacity: 1 },
         exit: { opacity: 0 },
         transition: ease2,
-        children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Onboarding,
-          {
-            onDone: (hasWallet) => setView(hasWallet ? "DASHBOARD" : "BROWSER")
-          }
-        )
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Onboarding, { onDone: (hasWallet) => setView(hasWallet ? "DASHBOARD" : "BROWSER") })
       },
       "onboarding"
     ),

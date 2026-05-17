@@ -9,21 +9,23 @@ import Onboarding from './views/Onboarding';
 import Dashboard  from './pages/Dashboard';
 import Browser    from './components/Browser';
 
-import { useWalletStore } from './store/wallet';
-import { useSettings }    from './store/settings';
+import { useSettings } from './store/settings';
 
 type View = 'ONBOARDING' | 'DASHBOARD' | 'BROWSER';
 
-export default function App() {
-  const { encryptedJson, status: walletStatus } = useWalletStore();
-  const { theme } = useSettings();
-
-  // Returning user with a wallet → go straight to browser
-  const [view, setView] = useState<View>(() =>
-    encryptedJson ? 'BROWSER' : 'ONBOARDING'
+// Clear all persisted session data every time the app starts.
+// This ensures the onboarding flow is always shown fresh.
+function clearSession() {
+  ['orivon-wallet', 'orivon-tabs', 'orivon-runtime'].forEach(k =>
+    localStorage.removeItem(k)
   );
+}
+clearSession();
 
-  // Apply theme class to <html> so Tailwind dark: variants work
+export default function App() {
+  const { theme } = useSettings();
+  const [view, setView] = useState<View>('ONBOARDING');
+
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
   }, [theme]);
@@ -39,9 +41,7 @@ export default function App() {
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             transition={ease}
           >
-            <Onboarding
-              onDone={(hasWallet) => setView(hasWallet ? 'DASHBOARD' : 'BROWSER')}
-            />
+            <Onboarding onDone={(hasWallet) => setView(hasWallet ? 'DASHBOARD' : 'BROWSER')} />
           </motion.div>
         )}
 
