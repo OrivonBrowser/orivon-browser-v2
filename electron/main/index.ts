@@ -7,6 +7,36 @@ import { resolveURL } from './resolvers/url-router';
 
 const isDev = !!process.env['ELECTRON_RENDERER_URL'];
 
+// Chrome user-agent — must match a real Chrome version so sites like YouTube serve their
+// full player with all features (seeking, quality selection, DRM, etc.)
+const CHROME_UA = process.platform === 'darwin'
+  ? 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+  : process.platform === 'win32'
+    ? 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+    : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
+
+// ─── Chromium switches (must be set before app.whenReady) ─────────────────────
+//
+// These affect the entire Chromium instance — not just the shell window.
+// Background-tab switches are critical: they stop Chromium from pausing media,
+// timers and rendering in tabs that are not currently visible.
+
+// Keep background tabs fully alive (video/audio continues when switching tabs)
+app.commandLine.appendSwitch('disable-background-timer-throttling');
+app.commandLine.appendSwitch('disable-renderer-backgrounding');
+app.commandLine.appendSwitch('disable-backgrounding-occluded-windows');
+
+// Allow media to auto-play without a user gesture (required for many Web3 apps)
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
+
+// Hardware video decoding (smoother YouTube, reduces CPU)
+app.commandLine.appendSwitch('enable-accelerated-video-decode');
+app.commandLine.appendSwitch('enable-accelerated-video-encode');
+
+// Disable the OS-level media-key handling that Electron intercepts — lets
+// media-key events reach the webview instead (pause/play keys work in YouTube)
+app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling,MediaSessionService');
+
 // ─── Persistent store (userData JSON) ─────────────────────────────────────────
 
 function storePath(): string {
@@ -33,12 +63,11 @@ function createWindow(): BrowserWindow {
     show: false,
     icon: path.join(__dirname, '../../build/icon.png'),
     webPreferences: {
-      // ── Preload path — file is index.mjs (ESM output from electron-vite) ──
       preload: path.join(__dirname, '../preload/index.mjs'),
-      nodeIntegration: false,   // Never expose Node in renderer
-      contextIsolation: true,   // Enforce context separation
-      webviewTag: true,         // Allow <webview> for real browsing
-      sandbox: false,           // Required for preload with contextBridge
+      nodeIntegration: false,
+      contextIsolation: true,
+      webviewTag: true,
+      sandbox: false,
       webSecurity: true,
       allowRunningInsecureContent: false,
     },
@@ -46,7 +75,6 @@ function createWindow(): BrowserWindow {
 
   win.once('ready-to-show', () => win.show());
 
-  // ── Load renderer ──────────────────────────────────────────────────────────
   if (isDev) {
     win.loadURL(process.env['ELECTRON_RENDERER_URL']!);
     win.webContents.openDevTools({ mode: 'detach' });
@@ -54,26 +82,21 @@ function createWindow(): BrowserWindow {
     win.loadFile(path.join(__dirname, '../renderer/index.html'));
   }
 
-  // ── Content Security Policy for the shell window ──────────────────────────
-  // Webviews have their own session and are not covered here.
+  // CSP for the shell window only (webviews have their own session)
   win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-    if (!details.url.startsWith('devtools://')) {
-      callback({
-        responseHeaders: {
-          ...details.responseHeaders,
-          // Allow the renderer to load fonts from Google Fonts and connect to Ethereum RPC
-          'Content-Security-Policy': [
-            "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; " +
-            "connect-src 'self' https: wss:; " +
-            "font-src 'self' https://fonts.gstatic.com data:; " +
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
-            "img-src 'self' data: https:;",
-          ],
-        },
-      });
-    } else {
-      callback({});
-    }
+    if (details.url.startsWith('devtools://')) { callback({}); return; }
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': [
+          "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; " +
+          "connect-src 'self' https: wss:; " +
+          "font-src 'self' https://fonts.gstatic.com data:; " +
+          "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+          "img-src 'self' data: https:;",
+        ],
+      },
+    });
   });
 
   return win;
@@ -82,7 +105,21 @@ function createWindow(): BrowserWindow {
 // ─── App lifecycle ────────────────────────────────────────────────────────────
 
 app.whenReady().then(() => {
-  // Allow CORS from webview requests (users are browsing real websites)
+  // ── User agent — override for ALL requests from this session ──────────────
+  // This makes sites serve the same content they'd serve to Chrome.
+  // The webview element also sets useragent="" which overrides navigator.userAgent
+  // inside the page — both levels are needed for full YouTube compatibility.
+  session.defaultSession.setUserAgent(CHROME_UA);
+
+  // ── Permissions — grant everything webviews ask for ───────────────────────
+  // Webview pages need media access (camera, mic, DRM), notifications, etc.
+  // We grant everything here; real permission UX can be layered on top later.
+  session.defaultSession.setPermissionRequestHandler((_wc, _permission, callback) => {
+    callback(true); // allow all (media, geolocation, notifications, clipboard, etc.)
+  });
+  session.defaultSession.setPermissionCheckHandler(() => true);
+
+  // ── CORS headers — allow cross-origin requests from webviews ──────────────
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({
       responseHeaders: {
@@ -98,12 +135,9 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 
-  // ── Auto-updater (production only, GitHub Releases) ───────────────────────
   if (!isDev) {
-    autoUpdater.logger = null; // Silence verbose logging; handle events below
-    autoUpdater.checkForUpdatesAndNotify().catch(() => {
-      // Non-fatal: runs fine without network or before first release
-    });
+    autoUpdater.logger = null;
+    autoUpdater.checkForUpdatesAndNotify().catch(() => {});
   }
 });
 
@@ -111,7 +145,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
-// ─── IPC: Persistent store ─────────────────────────────────────────────────────
+// ─── IPC: Store ───────────────────────────────────────────────────────────────
 
 ipcMain.handle('store:get', (_e, key: string) => {
   const s = readStore(); return key ? s[key] : s;
@@ -123,7 +157,7 @@ ipcMain.handle('store:delete', (_e, key: string) => {
   const s = readStore(); delete s[key]; writeStore(s); return true;
 });
 
-// ─── IPC: URL resolution (ENS / IPFS / ipns) ──────────────────────────────────
+// ─── IPC: URL resolution ──────────────────────────────────────────────────────
 
 ipcMain.handle('resolve:url', async (_e, url: string) => {
   try { return await resolveURL(url); }
@@ -140,32 +174,24 @@ ipcMain.on('window:maximize', e => {
 ipcMain.on('window:close', e => BrowserWindow.fromWebContents(e.sender)?.close());
 ipcMain.on('shell:open',   (_e, url: string) => shell.openExternal(url));
 
-// ─── Security: lock down new windows and webview navigations ──────────────────
+// ─── Security: control new windows and navigations ───────────────────────────
 
 app.on('web-contents-created', (_e, contents) => {
   contents.on('will-navigate', (ev, url) => {
-    // Block devtools navigations in the shell window
     if (url.startsWith('devtools://') && !isDev) ev.preventDefault();
   });
 
-  // Open _blank links in the system browser, never spawn new Electron windows
   contents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith('https://') || url.startsWith('http://')) {
-      shell.openExternal(url);
-    }
+    if (url.startsWith('https://') || url.startsWith('http://')) shell.openExternal(url);
     return { action: 'deny' };
   });
 });
 
-// ─── Auto-updater events (sent to all windows) ────────────────────────────────
+// ─── Auto-updater ─────────────────────────────────────────────────────────────
 
 autoUpdater.on('update-available', () => {
-  BrowserWindow.getAllWindows().forEach(w =>
-    w.webContents.send('app:update-available')
-  );
+  BrowserWindow.getAllWindows().forEach(w => w.webContents.send('app:update-available'));
 });
 autoUpdater.on('update-downloaded', () => {
-  BrowserWindow.getAllWindows().forEach(w =>
-    w.webContents.send('app:update-downloaded')
-  );
+  BrowserWindow.getAllWindows().forEach(w => w.webContents.send('app:update-downloaded'));
 });

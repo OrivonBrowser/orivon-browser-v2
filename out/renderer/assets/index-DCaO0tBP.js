@@ -20606,11 +20606,33 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$j = [
+const __iconNode$l = [
   ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
   ["path", { d: "M19 12H5", key: "x3x0zl" }]
 ];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$j);
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$l);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$k = [
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
+];
+const ArrowRight = createLucideIcon("arrow-right", __iconNode$k);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$j = [
+  ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
+  ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
+];
+const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$j);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20618,10 +20640,10 @@ const ArrowLeft = createLucideIcon("arrow-left", __iconNode$j);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$i = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
+  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
+  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
 ];
-const ArrowRight = createLucideIcon("arrow-right", __iconNode$i);
+const Copy = createLucideIcon("copy", __iconNode$i);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20629,10 +20651,22 @@ const ArrowRight = createLucideIcon("arrow-right", __iconNode$i);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$h = [
-  ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
-  ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
+  ["path", { d: "M12 20v2", key: "1lh1kg" }],
+  ["path", { d: "M12 2v2", key: "tus03m" }],
+  ["path", { d: "M17 20v2", key: "1rnc9c" }],
+  ["path", { d: "M17 2v2", key: "11trls" }],
+  ["path", { d: "M2 12h2", key: "1t8f8n" }],
+  ["path", { d: "M2 17h2", key: "7oei6x" }],
+  ["path", { d: "M2 7h2", key: "asdhe0" }],
+  ["path", { d: "M20 12h2", key: "1q8mjw" }],
+  ["path", { d: "M20 17h2", key: "1fpfkl" }],
+  ["path", { d: "M20 7h2", key: "1o8tra" }],
+  ["path", { d: "M7 20v2", key: "4gnj0m" }],
+  ["path", { d: "M7 2v2", key: "1i4yhu" }],
+  ["rect", { x: "4", y: "4", width: "16", height: "16", rx: "2", key: "1vbyd7" }],
+  ["rect", { x: "8", y: "8", width: "8", height: "8", rx: "1", key: "z9xiuo" }]
 ];
-const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$h);
+const Cpu = createLucideIcon("cpu", __iconNode$h);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20640,10 +20674,11 @@ const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$h);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$g = [
-  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
-  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
+  ["circle", { cx: "12", cy: "12", r: "1", key: "41hilf" }],
+  ["circle", { cx: "19", cy: "12", r: "1", key: "1wjl8i" }],
+  ["circle", { cx: "5", cy: "12", r: "1", key: "1pcz8c" }]
 ];
-const Copy = createLucideIcon("copy", __iconNode$g);
+const Ellipsis = createLucideIcon("ellipsis", __iconNode$g);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20651,18 +20686,6 @@ const Copy = createLucideIcon("copy", __iconNode$g);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$f = [
-  ["circle", { cx: "12", cy: "12", r: "1", key: "41hilf" }],
-  ["circle", { cx: "19", cy: "12", r: "1", key: "1wjl8i" }],
-  ["circle", { cx: "5", cy: "12", r: "1", key: "1pcz8c" }]
-];
-const Ellipsis = createLucideIcon("ellipsis", __iconNode$f);
-/**
- * @license lucide-react v0.546.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$e = [
   [
     "path",
     {
@@ -20680,14 +20703,14 @@ const __iconNode$e = [
   ],
   ["path", { d: "m2 2 20 20", key: "1ooewy" }]
 ];
-const EyeOff = createLucideIcon("eye-off", __iconNode$e);
+const EyeOff = createLucideIcon("eye-off", __iconNode$f);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$d = [
+const __iconNode$e = [
   [
     "path",
     {
@@ -20697,7 +20720,19 @@ const __iconNode$d = [
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const Eye = createLucideIcon("eye", __iconNode$d);
+const Eye = createLucideIcon("eye", __iconNode$e);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$d = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
+  ["path", { d: "M2 12h20", key: "9i4pu4" }]
+];
+const Globe = createLucideIcon("globe", __iconNode$d);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20705,11 +20740,11 @@ const Eye = createLucideIcon("eye", __iconNode$d);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$c = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
-  ["path", { d: "M2 12h20", key: "9i4pu4" }]
+  ["path", { d: "m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4", key: "g0fldk" }],
+  ["path", { d: "m21 2-9.6 9.6", key: "1j0ho8" }],
+  ["circle", { cx: "7.5", cy: "15.5", r: "5.5", key: "yqb3hr" }]
 ];
-const Globe = createLucideIcon("globe", __iconNode$c);
+const Key = createLucideIcon("key", __iconNode$c);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20717,11 +20752,10 @@ const Globe = createLucideIcon("globe", __iconNode$c);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$b = [
-  ["path", { d: "m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4", key: "g0fldk" }],
-  ["path", { d: "m21 2-9.6 9.6", key: "1j0ho8" }],
-  ["circle", { cx: "7.5", cy: "15.5", r: "5.5", key: "yqb3hr" }]
+  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
+  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
 ];
-const Key = createLucideIcon("key", __iconNode$b);
+const Lock = createLucideIcon("lock", __iconNode$b);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20729,17 +20763,6 @@ const Key = createLucideIcon("key", __iconNode$b);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$a = [
-  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
-  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
-];
-const Lock = createLucideIcon("lock", __iconNode$a);
-/**
- * @license lucide-react v0.546.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$9 = [
   [
     "path",
     {
@@ -20748,7 +20771,21 @@ const __iconNode$9 = [
     }
   ]
 ];
-const Moon = createLucideIcon("moon", __iconNode$9);
+const Moon = createLucideIcon("moon", __iconNode$a);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$9 = [
+  ["rect", { x: "16", y: "16", width: "6", height: "6", rx: "1", key: "4q2zg0" }],
+  ["rect", { x: "2", y: "16", width: "6", height: "6", rx: "1", key: "8cvhb9" }],
+  ["rect", { x: "9", y: "2", width: "6", height: "6", rx: "1", key: "1egb70" }],
+  ["path", { d: "M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3", key: "1jsf9p" }],
+  ["path", { d: "M12 12V8", key: "2874zd" }]
+];
+const Network$1 = createLucideIcon("network", __iconNode$9);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -41408,17 +41445,63 @@ const useSettings = create()(
     }
   )
 );
+const DEFAULT_NODES = [
+  { id: "wasm", name: "WASM Sandbox", status: "active", detail: "Isolation level 4", enabled: true },
+  { id: "ens", name: "ENS Resolver", status: "active", detail: "Ethereum mainnet", enabled: true },
+  { id: "ipfs", name: "IPFS Gateway", status: "active", detail: "ipfs.io + fallbacks", enabled: true },
+  { id: "p2p", name: "P2P Mesh", status: "standby", detail: "libp2p ready", enabled: false },
+  { id: "btc", name: "Bitcoin Light Client", status: "standby", detail: "BIP157 headers", enabled: false }
+];
+const useRuntimeStore = create()(
+  persist(
+    (set) => ({
+      nodes: DEFAULT_NODES,
+      runtimeVersion: "0.94.1",
+      isInitialized: true,
+      logs: [
+        { ts: Date.now(), msg: "Orivon runtime initialized", level: "info" },
+        { ts: Date.now(), msg: "WASM sandbox ready (isolation level 4)", level: "info" },
+        { ts: Date.now(), msg: "ENS resolver connected to Ethereum mainnet", level: "info" },
+        { ts: Date.now(), msg: "IPFS gateway active: ipfs.io", level: "info" }
+      ],
+      toggleNode: (id2) => set((s) => ({
+        nodes: s.nodes.map(
+          (n2) => n2.id === id2 ? { ...n2, enabled: !n2.enabled, status: n2.enabled ? "standby" : "active" } : n2
+        )
+      })),
+      addLog: (msg, level = "info") => set((s) => ({
+        logs: [...s.logs.slice(-199), { ts: Date.now(), msg, level }]
+      })),
+      clearLogs: () => set({ logs: [] }),
+      setNodeStatus: (id2, status, detail) => set((s) => ({
+        nodes: s.nodes.map((n2) => n2.id === id2 ? { ...n2, status, ...detail ? { detail } : {} } : n2)
+      }))
+    }),
+    {
+      name: "orivon-runtime",
+      storage: createJSONStorage(() => localStorage),
+      partialize: (s) => ({ nodes: s.nodes, runtimeVersion: s.runtimeVersion })
+    }
+  )
+);
+const STAGGER = (i) => ({
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.35, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] } }
+});
 function Dashboard({ onOpenBrowser }) {
   const { addresses, lock, getBalance } = useWalletStore();
-  const { theme } = useSettings();
+  const { theme, setTheme } = useSettings();
+  const { nodes } = useRuntimeStore();
   const [copied, setCopied] = reactExports.useState(null);
   const [balance, setBalance] = reactExports.useState(null);
+  const [loadingBal, setLoadingBal] = reactExports.useState(true);
   const isDark = theme === "dark";
   reactExports.useEffect(() => {
+    setLoadingBal(true);
     getBalance().then((b2) => {
       const n2 = parseFloat(b2);
-      if (!isNaN(n2)) setBalance(n2.toFixed(4));
-    });
+      setBalance(!isNaN(n2) ? n2.toFixed(6) : "0.000000");
+    }).catch(() => setBalance("0.000000")).finally(() => setLoadingBal(false));
   }, []);
   const copyAddr = (addr, key) => {
     navigator.clipboard.writeText(addr);
@@ -41426,82 +41509,186 @@ function Dashboard({ onOpenBrowser }) {
     setTimeout(() => setCopied(null), 2e3);
   };
   const chains = addresses ? [
-    { key: "eth", label: "Ethereum", symbol: "ETH", addr: addresses.eth, color: "#00D1FF", bal: balance ? `${balance} ETH` : null },
-    { key: "btc", label: "Bitcoin", symbol: "BTC", addr: addresses.btc, color: "#00FF87", bal: null },
-    { key: "sol", label: "Solana", symbol: "SOL", addr: addresses.sol, color: "#a78bfa", bal: null }
+    {
+      key: "eth",
+      label: "Ethereum",
+      symbol: "ETH",
+      addr: addresses.eth,
+      color: "#00D1FF",
+      bgColor: "rgba(0,209,255,0.08)",
+      bal: loadingBal ? null : balance ? `${balance} ETH` : "0.000000 ETH"
+    },
+    {
+      key: "btc",
+      label: "Bitcoin",
+      symbol: "BTC",
+      addr: addresses.btc,
+      color: "#00FF87",
+      bgColor: "rgba(0,255,135,0.08)",
+      bal: null
+    },
+    {
+      key: "sol",
+      label: "Solana",
+      symbol: "SOL",
+      addr: addresses.sol,
+      color: "#a78bfa",
+      bgColor: "rgba(167,139,250,0.08)",
+      bal: null
+    }
   ] : [];
-  const bg = isDark ? "bg-[#0a0a0a] text-white" : "bg-[#f5f5f5] text-black";
-  const card = isDark ? "bg-[#111] border-white/[0.07]" : "bg-white border-black/[0.07]";
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `h-screen w-screen ${bg} flex flex-col items-center justify-center p-6`, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 pointer-events-none", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[400px] rounded-full bg-[#00FF87]/[0.025] blur-[100px]" }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      motion.div,
-      {
-        initial: { opacity: 0, y: 16 },
-        animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
-        className: "relative z-10 w-full max-w-md space-y-5",
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-6", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-8 h-8 rounded-xl bg-[#00FF87] flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 16, className: "text-black", strokeWidth: 2.5 }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[15px] font-semibold ${isDark ? "text-white" : "text-black"}`, children: "Your Wallet" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[11px] ${isDark ? "text-white/35" : "text-black/35"}`, children: "Multi-chain · Encrypted locally" })
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              "button",
-              {
-                onClick: () => lock(),
-                className: `flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium border transition-all ${isDark ? "border-white/10 text-white/35 hover:text-white/60 hover:border-white/20" : "border-black/10 text-black/35 hover:text-black/60"}`,
-                children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 11 }),
-                  " Lock"
-                ]
-              }
-            )
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: chains.map((chain) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `flex items-center justify-between p-4 rounded-2xl border ${card}`, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-8 h-8 rounded-full flex items-center justify-center", style: { background: `${chain.color}18` }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Wallet$1, { size: 14, style: { color: chain.color } }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[12px] font-semibold ${isDark ? "text-white/80" : "text-black/80"}`, children: chain.label }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: `text-[11px] font-mono ${isDark ? "text-white/30" : "text-black/30"}`, children: [
-                  chain.addr.slice(0, 8),
-                  "…",
-                  chain.addr.slice(-6)
-                ] })
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-              chain.bal && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[12px] font-semibold", style: { color: chain.color }, children: chain.bal }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                "button",
-                {
-                  onClick: () => copyAddr(chain.addr, chain.key),
-                  className: `w-7 h-7 rounded-lg flex items-center justify-center transition-all ${isDark ? "hover:bg-white/8 text-white/30 hover:text-white/60" : "hover:bg-black/5 text-black/30 hover:text-black/60"}`,
-                  children: copied === chain.key ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 13, className: "text-[#00FF87]" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Copy, { size: 13 })
-                }
-              )
-            ] })
-          ] }, chain.key)) }),
+  const activeNodes = nodes.filter((n2) => n2.enabled && n2.status === "active");
+  const bg = isDark ? "bg-[#0a0a0a] text-white" : "bg-[#f4f4f4] text-black";
+  const card = isDark ? "bg-[#121212] border-white/[0.08]" : "bg-white border-black/[0.07]";
+  const cardHov = isDark ? "hover:border-white/15 hover:bg-[#161616]" : "hover:border-black/12 hover:bg-white";
+  const muted = isDark ? "text-white/35" : "text-black/35";
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `h-screen w-screen ${bg} overflow-y-auto`, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed inset-0 pointer-events-none overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-[#00FF87]/[0.025] blur-[120px] rounded-full" }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 max-w-xl mx-auto px-6 py-10 space-y-6", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...STAGGER(0), className: "flex items-center justify-between", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-9 h-9 rounded-[10px] bg-[#00FF87] flex items-center justify-center shadow-lg shadow-[#00FF87]/20", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 18, className: "text-black", strokeWidth: 2.5 }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[15px] font-semibold leading-none ${isDark ? "text-white" : "text-black"}`, children: "Orivon" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[11px] mt-0.5 ${muted}`, children: "Web3 Browser" })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => setTheme(isDark ? "light" : "dark"),
+              className: `w-8 h-8 rounded-lg flex items-center justify-center transition-all text-[13px] ${muted} ${isDark ? "hover:bg-white/8 hover:text-white/70" : "hover:bg-black/6 hover:text-black/70"}`,
+              title: "Toggle theme",
+              children: isDark ? "☀️" : "🌙"
+            }
+          ),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "button",
             {
-              onClick: onOpenBrowser,
-              className: "w-full h-12 flex items-center justify-center gap-2 rounded-2xl bg-white text-black text-[13px] font-semibold hover:bg-[#00FF87] transition-all active:scale-[0.98] mt-2",
+              onClick: () => lock(),
+              className: `flex items-center gap-1.5 h-8 px-3 rounded-lg text-[12px] font-medium border transition-all ${isDark ? "border-white/10 text-white/40 hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/8" : "border-black/10 text-black/40 hover:text-red-500 hover:border-red-500/20"}`,
               children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 16 }),
-                "Open Browser",
-                /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 15 })
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 12 }),
+                " Lock"
               ]
             }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-center text-[11px] ${isDark ? "text-white/20" : "text-black/20"}`, children: "Your keys never leave this device" })
-        ]
-      }
-    )
+          )
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...STAGGER(1), className: `rounded-2xl border p-5 ${card}`, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Wallet$1, { size: 14, className: "text-[#00FF87]" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `text-[12px] font-semibold uppercase tracking-widest ${muted}`, children: "Wallet" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-1.5 h-1.5 rounded-full bg-[#00FF87] animate-pulse" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `text-[10px] font-medium ${muted}`, children: "Active" })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: chains.map((chain) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "div",
+          {
+            className: `flex items-center justify-between p-3.5 rounded-xl border transition-all ${isDark ? "border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10" : "border-black/[0.05] bg-black/[0.02] hover:bg-black/[0.04]"}`,
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "div",
+                  {
+                    className: "w-8 h-8 rounded-xl flex items-center justify-center shrink-0",
+                    style: { background: chain.bgColor },
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] font-bold", style: { color: chain.color }, children: chain.symbol })
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[13px] font-semibold ${isDark ? "text-white/85" : "text-black/85"}`, children: chain.label }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: `text-[10px] font-mono mt-0.5 ${muted}`, children: [
+                    chain.addr.slice(0, 10),
+                    "…",
+                    chain.addr.slice(-8)
+                  ] })
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+                chain.bal && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] font-mono font-semibold", style: { color: chain.color }, children: chain.bal }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    onClick: () => copyAddr(chain.addr, chain.key),
+                    className: `w-7 h-7 rounded-lg flex items-center justify-center transition-all shrink-0 ${muted} ${isDark ? "hover:bg-white/8 hover:text-white/70" : "hover:bg-black/6 hover:text-black/70"}`,
+                    children: copied === chain.key ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 13, className: "text-[#00FF87]" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Copy, { size: 13 })
+                  }
+                )
+              ] })
+            ]
+          },
+          chain.key
+        )) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...STAGGER(2), className: "grid grid-cols-3 gap-3", children: [
+        { icon: Shield, label: "Security", value: "Active", color: "#00FF87", dot: true },
+        { icon: Network$1, label: "ENS/IPFS", value: `${activeNodes.length} nodes`, color: "#00D1FF", dot: true },
+        { icon: Cpu, label: "Runtime", value: "v0.94.1", color: "#a78bfa", dot: false }
+      ].map((item, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `rounded-xl border p-3.5 flex flex-col gap-2 ${card} transition-all ${cardHov}`, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(item.icon, { size: 14, style: { color: item.color } }),
+          item.dot && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-1.5 h-1.5 rounded-full animate-pulse", style: { background: item.color } })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[13px] font-semibold ${isDark ? "text-white/80" : "text-black/80"}`, children: item.value }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[10px] mt-0.5 ${muted}`, children: item.label })
+        ] })
+      ] }, i)) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...STAGGER(3), className: "grid grid-cols-2 gap-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          QuickLink,
+          {
+            icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 14 }),
+            label: "Uniswap",
+            sub: "uniswap.eth",
+            isDark,
+            card,
+            cardHov,
+            muted
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          QuickLink,
+          {
+            icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 14 }),
+            label: "ENS Domains",
+            sub: "app.ens.domains",
+            isDark,
+            card,
+            cardHov,
+            muted
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...STAGGER(4), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          onClick: onOpenBrowser,
+          className: "w-full h-12 flex items-center justify-center gap-2.5 rounded-2xl bg-white text-black text-[14px] font-semibold hover:bg-[#00FF87] active:scale-[0.98] transition-all shadow-lg shadow-black/10",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 16, strokeWidth: 2.5 }),
+            "Open Browser",
+            /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 15, strokeWidth: 2.5 })
+          ]
+        }
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(motion.p, { ...STAGGER(5), className: `text-center text-[11px] ${muted}`, children: "Your keys are encrypted and never leave this device" })
+    ] })
+  ] });
+}
+function QuickLink({ icon, label, sub, isDark, card, cardHov, muted }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `rounded-xl border p-3.5 flex items-center gap-3 ${card} transition-all ${cardHov} cursor-default`, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isDark ? "bg-white/[0.05]" : "bg-black/[0.04]"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: muted, children: icon }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[12px] font-semibold truncate ${isDark ? "text-white/75" : "text-black/75"}`, children: label }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[10px] font-mono truncate ${muted}`, children: sub })
+    ] })
   ] });
 }
 function TabBar({ tabs, activeId, onTabClick, onTabClose, onNewTab, isDark }) {
@@ -41567,6 +41754,7 @@ function Tab({ tab, isActive, isDark, onClick, onClose }) {
     }
   );
 }
+const CHROME_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
 const isElectron = typeof window !== "undefined" && !!window.electronAPI?.isElectron;
 const WebView = reactExports.forwardRef(({
   src,
@@ -41580,58 +41768,71 @@ const WebView = reactExports.forwardRef(({
 }, ref) => {
   const wvRef = reactExports.useRef(null);
   const ifrRef = reactExports.useRef(null);
+  const timerRef = reactExports.useRef(null);
   const [iframeBlocked, setIframeBlocked] = reactExports.useState(false);
-  const [iframeLoaded, setIframeLoaded] = reactExports.useState(false);
+  const [overlay, setOverlay] = reactExports.useState(true);
+  const [fading, setFading] = reactExports.useState(false);
+  const showOverlay = reactExports.useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    setFading(false);
+    setOverlay(true);
+  }, []);
+  const hideOverlay = reactExports.useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      setFading(true);
+      timerRef.current = setTimeout(() => setOverlay(false), 180);
+    }, 80);
+  }, []);
   reactExports.useImperativeHandle(ref, () => ({
     loadURL: (url) => {
       if (isElectron && wvRef.current) {
+        showOverlay();
         wvRef.current.loadURL(url);
       } else {
         setIframeBlocked(false);
-        setIframeLoaded(false);
         if (ifrRef.current) ifrRef.current.src = url;
       }
     },
     goBack: () => {
-      if (isElectron && wvRef.current && wvRef.current.canGoBack()) wvRef.current.goBack();
+      if (isElectron && wvRef.current?.canGoBack()) {
+        showOverlay();
+        wvRef.current.goBack();
+      }
     },
     goForward: () => {
-      if (isElectron && wvRef.current && wvRef.current.canGoForward()) wvRef.current.goForward();
+      if (isElectron && wvRef.current?.canGoForward()) {
+        showOverlay();
+        wvRef.current.goForward();
+      }
     },
     reload: () => {
-      if (isElectron && wvRef.current) wvRef.current.reload();
-      else if (ifrRef.current) {
+      if (isElectron && wvRef.current) {
+        showOverlay();
+        wvRef.current.reload();
+      } else if (ifrRef.current) {
         ifrRef.current.src = ifrRef.current.src;
       }
     },
     stop: () => {
       if (isElectron && wvRef.current) wvRef.current.stop();
     },
-    canGoBack: () => isElectron && wvRef.current ? wvRef.current.canGoBack() : false,
-    canGoForward: () => isElectron && wvRef.current ? wvRef.current.canGoForward() : false,
-    getURL: () => {
-      if (isElectron && wvRef.current) return wvRef.current.getURL();
-      return ifrRef.current?.src ?? src;
-    }
+    canGoBack: () => !!(isElectron && wvRef.current?.canGoBack()),
+    canGoForward: () => !!(isElectron && wvRef.current?.canGoForward()),
+    getURL: () => isElectron && wvRef.current ? wvRef.current.getURL() : ifrRef.current?.src ?? src
   }));
   reactExports.useEffect(() => {
     if (!isElectron || !wvRef.current) return;
     const wv = wvRef.current;
-    const onStart = () => onLoadStart?.();
-    const onStop = () => onLoadStop?.();
-    const onNav = (e) => {
-      onDidNavigate?.(e.url ?? wv.getURL());
-    };
-    const onTitle = (e) => {
-      onTitleUpdate?.(e.title ?? "");
-    };
-    const onFail = (e) => {
-      onLoadFail?.(e.errorCode, e.errorDescription);
-    };
+    const onNav = (e) => onDidNavigate?.(e.url ?? wv.getURL());
+    const onTitle = (e) => onTitleUpdate?.(e.title ?? "");
+    const onFail = (e) => onLoadFail?.(e.errorCode, e.errorDescription);
     const onNewWin = (e) => {
       onNewWindow?.(e.url ?? "");
       e.preventDefault();
     };
+    const onStart = () => onLoadStart?.();
+    const onStop = () => onLoadStop?.();
     wv.addEventListener("did-start-loading", onStart);
     wv.addEventListener("did-stop-loading", onStop);
     wv.addEventListener("did-navigate", onNav);
@@ -41649,44 +41850,90 @@ const WebView = reactExports.forwardRef(({
       wv.removeEventListener("new-window", onNewWin);
     };
   }, [onLoadStart, onLoadStop, onDidNavigate, onTitleUpdate, onLoadFail, onNewWindow]);
+  reactExports.useEffect(() => {
+    if (!isElectron) return;
+    const wv = wvRef.current;
+    if (!wv) return;
+    const onStart = () => showOverlay();
+    const onStop = () => hideOverlay();
+    const onFail = () => hideOverlay();
+    wv.addEventListener("did-start-loading", onStart);
+    wv.addEventListener("did-stop-loading", onStop);
+    wv.addEventListener("did-fail-load", onFail);
+    return () => {
+      wv.removeEventListener("did-start-loading", onStart);
+      wv.removeEventListener("did-stop-loading", onStop);
+      wv.removeEventListener("did-fail-load", onFail);
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
   if (isElectron) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("webview", { ref: wvRef, src, className: `w-full h-full border-none ${className}`, allowpopups: "true", webpreferences: "contextIsolation=yes", style: { display: "flex" } });
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `relative w-full h-full overflow-hidden ${className}`, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "webview",
+        {
+          ref: wvRef,
+          src,
+          useragent: CHROME_UA,
+          allowpopups: "true",
+          webpreferences: "contextIsolation=yes, javascript=yes, images=yes",
+          style: { width: "100%", height: "100%", border: "none", display: "flex" }
+        }
+      ),
+      overlay && /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          "aria-hidden": "true",
+          style: {
+            position: "absolute",
+            inset: 0,
+            zIndex: 10,
+            background: "#0f0f0f",
+            opacity: fading ? 0 : 1,
+            transition: fading ? "opacity 0.18s ease" : "none",
+            pointerEvents: "none"
+          }
+        }
+      )
+    ] });
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `relative w-full h-full bg-white ${className}`, children: [
-    !iframeBlocked && /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "iframe",
-      {
-        ref: ifrRef,
-        src,
-        className: "w-full h-full border-none",
-        onLoad: () => setIframeLoaded(true),
-        onError: () => setIframeBlocked(true),
-        title: "browser-content",
-        sandbox: "allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation"
-      }
-    ),
-    iframeBlocked && /* @__PURE__ */ jsxRuntimeExports.jsx(BlockedPage, { url: src, onRetry: () => setIframeBlocked(false) })
-  ] });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `relative w-full h-full bg-white ${className}`, children: !iframeBlocked ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "iframe",
+    {
+      ref: ifrRef,
+      src,
+      className: "w-full h-full border-none",
+      onError: () => setIframeBlocked(true),
+      title: "browser-content",
+      sandbox: "allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation"
+    }
+  ) : /* @__PURE__ */ jsxRuntimeExports.jsx(BlockedPage, { url: src, onRetry: () => setIframeBlocked(false) }) });
 });
 WebView.displayName = "WebView";
 function BlockedPage({ url, onRetry }) {
+  const { theme } = useSettings();
   let hostname = url;
   try {
     hostname = new URL(url).hostname;
   } catch {
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full h-full flex flex-col items-center justify-center gap-5 bg-[#0f0f0f] text-white", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-12 h-12 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 22, className: "text-white/25" }) }),
+  const isDark = theme === "dark";
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `w-full h-full flex flex-col items-center justify-center gap-5 ${isDark ? "bg-[#0f0f0f] text-white" : "bg-[#f5f5f5] text-black"}`, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-12 h-12 rounded-xl flex items-center justify-center ${isDark ? "bg-white/[0.04] border border-white/[0.08]" : "bg-black/[0.03] border border-black/[0.07]"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 22, className: isDark ? "text-white/25" : "text-black/25" }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center space-y-2", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[15px] font-semibold text-white/60", children: hostname }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] text-white/30", children: "This site blocks embedding. In the Electron build, it opens via native WebView." })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[15px] font-semibold ${isDark ? "text-white/60" : "text-black/60"}`, children: hostname }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: `text-[12px] ${isDark ? "text-white/30" : "text-black/30"}`, children: [
+        "This site blocks embedding. Run ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: `px-1 rounded text-[11px] ${isDark ? "bg-white/5" : "bg-black/5"}`, children: "npm run dev" }),
+        " to browse with real WebView."
+      ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "button",
         {
           onClick: onRetry,
-          className: "flex items-center gap-2 h-8 px-4 rounded-lg bg-white/[0.05] hover:bg-white/10 text-[12px] text-white/50 hover:text-white/80 border border-white/[0.07] transition-all",
+          className: `flex items-center gap-2 h-8 px-4 rounded-lg text-[12px] border transition-all ${isDark ? "bg-white/[0.04] hover:bg-white/8 text-white/50 hover:text-white/80 border-white/[0.07]" : "bg-black/[0.03] hover:bg-black/6 text-black/50 border-black/[0.07]"}`,
           children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCcw, { size: 12 }),
             " Retry"
@@ -41697,58 +41944,14 @@ function BlockedPage({ url, onRetry }) {
         "button",
         {
           onClick: () => window.electronAPI.openExternal(url),
-          className: "flex items-center gap-2 h-8 px-4 rounded-lg bg-white/[0.05] hover:bg-white/10 text-[12px] text-white/50 hover:text-white/80 border border-white/[0.07] transition-all",
-          children: "Open in system browser"
+          className: `flex items-center gap-2 h-8 px-4 rounded-lg text-[12px] border transition-all ${isDark ? "bg-white/[0.04] hover:bg-white/8 text-white/50 hover:text-white/80 border-white/[0.07]" : "bg-black/[0.03] hover:bg-black/6 text-black/50 border-black/[0.07]"}`,
+          children: "Open externally"
         }
       )
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[10px] text-white/15 text-center max-w-xs", children: [
-      "Dev mode limitation. Run ",
-      /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "bg-white/5 px-1 rounded", children: "npm run electron:dev" }),
-      " to browse with real WebView."
     ] })
   ] });
 }
-const DEFAULT_NODES = [
-  { id: "wasm", name: "WASM Sandbox", status: "active", detail: "Isolation level 4", enabled: true },
-  { id: "ens", name: "ENS Resolver", status: "active", detail: "Ethereum mainnet", enabled: true },
-  { id: "ipfs", name: "IPFS Gateway", status: "active", detail: "ipfs.io + fallbacks", enabled: true },
-  { id: "p2p", name: "P2P Mesh", status: "standby", detail: "libp2p ready", enabled: false },
-  { id: "btc", name: "Bitcoin Light Client", status: "standby", detail: "BIP157 headers", enabled: false }
-];
-const useRuntimeStore = create()(
-  persist(
-    (set) => ({
-      nodes: DEFAULT_NODES,
-      runtimeVersion: "0.94.1",
-      isInitialized: true,
-      logs: [
-        { ts: Date.now(), msg: "Orivon runtime initialized", level: "info" },
-        { ts: Date.now(), msg: "WASM sandbox ready (isolation level 4)", level: "info" },
-        { ts: Date.now(), msg: "ENS resolver connected to Ethereum mainnet", level: "info" },
-        { ts: Date.now(), msg: "IPFS gateway active: ipfs.io", level: "info" }
-      ],
-      toggleNode: (id2) => set((s) => ({
-        nodes: s.nodes.map(
-          (n2) => n2.id === id2 ? { ...n2, enabled: !n2.enabled, status: n2.enabled ? "standby" : "active" } : n2
-        )
-      })),
-      addLog: (msg, level = "info") => set((s) => ({
-        logs: [...s.logs.slice(-199), { ts: Date.now(), msg, level }]
-      })),
-      clearLogs: () => set({ logs: [] }),
-      setNodeStatus: (id2, status, detail) => set((s) => ({
-        nodes: s.nodes.map((n2) => n2.id === id2 ? { ...n2, status, ...detail ? { detail } : {} } : n2)
-      }))
-    }),
-    {
-      name: "orivon-runtime",
-      storage: createJSONStorage(() => localStorage),
-      partialize: (s) => ({ nodes: s.nodes, runtimeVersion: s.runtimeVersion })
-    }
-  )
-);
-function WalletPanel({ onClose, onOpenWalletModal }) {
+function WalletPanel({ onClose, onOpenWalletModal, onOpenDashboard }) {
   const { status, addresses, lock, getBalance } = useWalletStore();
   const { theme, setTheme, blockTrackers, setBlockTrackers, blockAds, setBlockAds, showWeb3Scores, setShowWeb3Scores } = useSettings();
   const { nodes, toggleNode } = useRuntimeStore();
@@ -41816,20 +42019,33 @@ function WalletPanel({ onClose, onOpenWalletModal }) {
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[10px] font-mono break-all ${muted}`, children: chain.addr })
             ] }, chain.key)),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              "button",
-              {
-                onClick: () => {
-                  lock();
-                  onClose();
-                },
-                className: `flex items-center gap-2 w-full h-9 px-3 rounded-xl text-[12px] font-medium transition-all ${row}`,
-                children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 13 }),
-                  " Lock wallet"
-                ]
-              }
-            )
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `flex gap-2 pt-1 border-t ${isDark ? "border-white/[0.07]" : "border-black/[0.07]"}`, children: [
+              onOpenDashboard && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "button",
+                {
+                  onClick: onOpenDashboard,
+                  className: `flex-1 flex items-center justify-center gap-1.5 h-9 rounded-xl text-[12px] font-medium border transition-all ${isDark ? "border-white/10 bg-white/[0.03] hover:bg-white/[0.07] text-white/60" : "border-black/10 bg-black/[0.02] hover:bg-black/[0.05] text-black/60"}`,
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(Wallet$1, { size: 12 }),
+                    " Dashboard"
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "button",
+                {
+                  onClick: () => {
+                    lock();
+                    onClose();
+                  },
+                  className: `flex-1 flex items-center justify-center gap-1.5 h-9 rounded-xl text-[12px] font-medium border transition-all ${isDark ? "border-white/10 bg-white/[0.03] hover:bg-red-500/10 hover:border-red-500/20 hover:text-red-400 text-white/60" : "border-black/10 bg-black/[0.02] hover:bg-red-500/8 hover:border-red-500/20 hover:text-red-500 text-black/60"}`,
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 12 }),
+                    " Lock"
+                  ]
+                }
+              )
+            ] })
           ] }) : status === "locked" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `p-3 rounded-xl ${subBg} flex items-center gap-3`, children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 16, className: "text-yellow-500/70" }),
@@ -42431,7 +42647,7 @@ function Web3ScoreBadge({ url, isDark }) {
   const color2 = score >= 90 ? "#00FF87" : score >= 70 ? "#facc15" : "#f87171";
   return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] font-semibold tabular-nums", style: { color: color2 }, children: score });
 }
-function Browser() {
+function Browser({ onOpenDashboard } = {}) {
   const { tabs, activeTabId, addTab, closeTab, updateTab, navigateTab, goBack, goForward, setActiveTab } = useTabsStore();
   const { theme, setTheme, rightPanelOpen, setRightPanelOpen, showWeb3Scores } = useSettings();
   const { status: walletStatus, addresses } = useWalletStore();
@@ -42603,7 +42819,11 @@ function Browser() {
               onOpenWalletModal: (mode) => {
                 setWalletModal(mode);
                 setWalletOpen(false);
-              }
+              },
+              onOpenDashboard: onOpenDashboard ? () => {
+                setWalletOpen(false);
+                onOpenDashboard();
+              } : void 0
             }
           ) })
         ] }),
@@ -42615,7 +42835,13 @@ function Browser() {
         "div",
         {
           className: "absolute inset-0",
-          style: { zIndex: tab.id === activeTabId ? 1 : 0, visibility: tab.id === activeTabId ? "visible" : "hidden" },
+          style: {
+            // Keep ALL tabs rendered — never use visibility:hidden or display:none
+            // on a tab that has a WebView. Chromium will pause media (e.g. YouTube)
+            // if the element is hidden. z-index + pointer-events is the correct approach.
+            zIndex: tab.id === activeTabId ? 1 : 0,
+            pointerEvents: tab.id === activeTabId ? "auto" : "none"
+          },
           children: tab.url === NEW_TAB ? /* @__PURE__ */ jsxRuntimeExports.jsx(NewTab, { onNavigate: (url) => navigate(url, tab.id) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
             WebView,
             {
@@ -42747,7 +42973,7 @@ function App() {
         animate: { opacity: 1 },
         exit: { opacity: 0 },
         transition: ease2,
-        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Browser, {})
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Browser, { onOpenDashboard: () => setView("DASHBOARD") })
       },
       "browser"
     )

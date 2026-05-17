@@ -63,6 +63,14 @@ async function resolveENS(name) {
 }
 const { autoUpdater } = updaterPkg;
 const isDev = !!process.env["ELECTRON_RENDERER_URL"];
+const CHROME_UA = process.platform === "darwin" ? "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" : process.platform === "win32" ? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" : "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
+app.commandLine.appendSwitch("disable-background-timer-throttling");
+app.commandLine.appendSwitch("disable-renderer-backgrounding");
+app.commandLine.appendSwitch("disable-backgrounding-occluded-windows");
+app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+app.commandLine.appendSwitch("enable-accelerated-video-decode");
+app.commandLine.appendSwitch("enable-accelerated-video-encode");
+app.commandLine.appendSwitch("disable-features", "HardwareMediaKeyHandling,MediaSessionService");
 function storePath() {
   return path.join(app.getPath("userData"), "orivon-store.json");
 }
@@ -88,16 +96,11 @@ function createWindow() {
     show: false,
     icon: path.join(__dirname, "../../build/icon.png"),
     webPreferences: {
-      // ── Preload path — file is index.mjs (ESM output from electron-vite) ──
       preload: path.join(__dirname, "../preload/index.mjs"),
       nodeIntegration: false,
-      // Never expose Node in renderer
       contextIsolation: true,
-      // Enforce context separation
       webviewTag: true,
-      // Allow <webview> for real browsing
       sandbox: false,
-      // Required for preload with contextBridge
       webSecurity: true,
       allowRunningInsecureContent: false
     }
@@ -110,23 +113,27 @@ function createWindow() {
     win.loadFile(path.join(__dirname, "../renderer/index.html"));
   }
   win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-    if (!details.url.startsWith("devtools://")) {
-      callback({
-        responseHeaders: {
-          ...details.responseHeaders,
-          // Allow the renderer to load fonts from Google Fonts and connect to Ethereum RPC
-          "Content-Security-Policy": [
-            "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src 'self' https: wss:; font-src 'self' https://fonts.gstatic.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:;"
-          ]
-        }
-      });
-    } else {
+    if (details.url.startsWith("devtools://")) {
       callback({});
+      return;
     }
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        "Content-Security-Policy": [
+          "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src 'self' https: wss:; font-src 'self' https://fonts.gstatic.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:;"
+        ]
+      }
+    });
   });
   return win;
 }
 app.whenReady().then(() => {
+  session.defaultSession.setUserAgent(CHROME_UA);
+  session.defaultSession.setPermissionRequestHandler((_wc, _permission, callback) => {
+    callback(true);
+  });
+  session.defaultSession.setPermissionCheckHandler(() => true);
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({
       responseHeaders: {
@@ -183,19 +190,13 @@ app.on("web-contents-created", (_e, contents) => {
     if (url.startsWith("devtools://") && !isDev) ev.preventDefault();
   });
   contents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith("https://") || url.startsWith("http://")) {
-      shell.openExternal(url);
-    }
+    if (url.startsWith("https://") || url.startsWith("http://")) shell.openExternal(url);
     return { action: "deny" };
   });
 });
 autoUpdater.on("update-available", () => {
-  BrowserWindow.getAllWindows().forEach(
-    (w) => w.webContents.send("app:update-available")
-  );
+  BrowserWindow.getAllWindows().forEach((w) => w.webContents.send("app:update-available"));
 });
 autoUpdater.on("update-downloaded", () => {
-  BrowserWindow.getAllWindows().forEach(
-    (w) => w.webContents.send("app:update-downloaded")
-  );
+  BrowserWindow.getAllWindows().forEach((w) => w.webContents.send("app:update-downloaded"));
 });
