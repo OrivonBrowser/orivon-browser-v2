@@ -1,5 +1,5 @@
 import { app, session, BrowserWindow, ipcMain, shell } from "electron";
-import { autoUpdater } from "electron-updater";
+import updaterPkg from "electron-updater";
 import path from "path";
 import fs from "fs";
 import __cjs_mod__ from "node:module";
@@ -61,6 +61,7 @@ async function resolveENS(name) {
     return { ok: false, url: "", originalUrl: name, type: "error", error: `ENS resolution failed: ${err}` };
   }
 }
+const { autoUpdater } = updaterPkg;
 const isDev = !!process.env["ELECTRON_RENDERER_URL"];
 function storePath() {
   return path.join(app.getPath("userData"), "orivon-store.json");

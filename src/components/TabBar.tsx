@@ -52,11 +52,9 @@ export default function TabBar({ tabs, activeId, onTabClick, onTabClose, onNewTa
 }
 
 function Tab({ tab, isActive, isDark, onClick, onClose }: {
-  tab: TabEntry;
-  isActive: boolean;
-  isDark: boolean;
-  onClick: () => void;
-  onClose: (e: React.MouseEvent) => void;
+  tab: TabEntry; isActive: boolean; isDark: boolean;
+  onClick: () => void; onClose: (e: React.MouseEvent) => void;
+  key?: string; // React key – exists at call site, not in props
 }) {
   return (
     <div

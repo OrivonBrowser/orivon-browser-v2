@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, shell, session } from 'electron';
-import { autoUpdater } from 'electron-updater';
+import updaterPkg from 'electron-updater';
+const { autoUpdater } = updaterPkg;
 import path from 'path';
 import fs from 'fs';
 import { resolveURL } from './resolvers/url-router';

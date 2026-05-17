@@ -15,11 +15,12 @@ import { useRuntimeStore } from '../store/runtime';
 interface WalletPanelProps {
   onClose: () => void;
   onOpenWalletModal: (mode: 'create' | 'import' | 'unlock') => void;
+  onOpenDashboard?: () => void;
 }
 
 type PanelTab = 'wallet' | 'settings' | 'network';
 
-export default function WalletPanel({ onClose, onOpenWalletModal }: WalletPanelProps) {
+export default function WalletPanel({ onClose, onOpenWalletModal, onOpenDashboard }: WalletPanelProps) {
   const { status, addresses, lock, getBalance } = useWalletStore();
   const { theme, setTheme, blockTrackers, setBlockTrackers, blockAds, setBlockAds, showWeb3Scores, setShowWeb3Scores } = useSettings();
   const { nodes, toggleNode } = useRuntimeStore();
@@ -105,12 +106,27 @@ export default function WalletPanel({ onClose, onOpenWalletModal }: WalletPanelP
                     <p className={`text-[10px] font-mono break-all ${muted}`}>{chain.addr}</p>
                   </div>
                 ))}
-                <button
-                  onClick={() => { lock(); onClose(); }}
-                  className={`flex items-center gap-2 w-full h-9 px-3 rounded-xl text-[12px] font-medium transition-all ${row}`}
-                >
-                  <Lock size={13} /> Lock wallet
-                </button>
+                {/* Dashboard + Lock actions */}
+                <div className={`flex gap-2 pt-1 border-t ${isDark ? 'border-white/[0.07]' : 'border-black/[0.07]'}`}>
+                  {onOpenDashboard && (
+                    <button
+                      onClick={onOpenDashboard}
+                      className={`flex-1 flex items-center justify-center gap-1.5 h-9 rounded-xl text-[12px] font-medium border transition-all ${
+                        isDark ? 'border-white/10 bg-white/[0.03] hover:bg-white/[0.07] text-white/60' : 'border-black/10 bg-black/[0.02] hover:bg-black/[0.05] text-black/60'
+                      }`}
+                    >
+                      <Wallet size={12} /> Dashboard
+                    </button>
+                  )}
+                  <button
+                    onClick={() => { lock(); onClose(); }}
+                    className={`flex-1 flex items-center justify-center gap-1.5 h-9 rounded-xl text-[12px] font-medium border transition-all ${
+                      isDark ? 'border-white/10 bg-white/[0.03] hover:bg-red-500/10 hover:border-red-500/20 hover:text-red-400 text-white/60' : 'border-black/10 bg-black/[0.02] hover:bg-red-500/8 hover:border-red-500/20 hover:text-red-500 text-black/60'
+                    }`}
+                  >
+                    <Lock size={12} /> Lock
+                  </button>
+                </div>
               </>
             ) : status === 'locked' ? (
               <div className="space-y-3">

@@ -39,7 +39,11 @@ function Web3ScoreBadge({ url, isDark }: { url: string; isDark: boolean }) {
   );
 }
 
-export default function Browser() {
+interface BrowserProps {
+  onOpenDashboard?: () => void;
+}
+
+export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
   const { tabs, activeTabId, addTab, closeTab, updateTab, navigateTab, goBack, goForward, setActiveTab } = useTabsStore();
   const { theme, setTheme, rightPanelOpen, setRightPanelOpen, showWeb3Scores } = useSettings();
   const { status: walletStatus, addresses } = useWalletStore();
@@ -216,6 +220,7 @@ export default function Browser() {
                 <WalletPanel
                   onClose={() => setWalletOpen(false)}
                   onOpenWalletModal={(mode) => { setWalletModal(mode); setWalletOpen(false); }}
+                  onOpenDashboard={onOpenDashboard ? () => { setWalletOpen(false); onOpenDashboard(); } : undefined}
                 />
               )}
             </AnimatePresence>
@@ -236,7 +241,13 @@ export default function Browser() {
             <div
               key={tab.id}
               className="absolute inset-0"
-              style={{ zIndex: tab.id === activeTabId ? 1 : 0, visibility: tab.id === activeTabId ? 'visible' : 'hidden' }}
+              style={{
+                // Keep ALL tabs rendered — never use visibility:hidden or display:none
+                // on a tab that has a WebView. Chromium will pause media (e.g. YouTube)
+                // if the element is hidden. z-index + pointer-events is the correct approach.
+                zIndex: tab.id === activeTabId ? 1 : 0,
+                pointerEvents: tab.id === activeTabId ? 'auto' : 'none',
+              }}
             >
               {tab.url === NEW_TAB ? (
                 <NewTab onNavigate={url => navigate(url, tab.id)} />
