@@ -75,13 +75,24 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
 
     // Resolve URL
     let url = input;
-    let type: ReturnType<typeof useTabsStore.getState>['tabs'][0]['type'] = 'https';
+    let type: any = 'https';
 
     if (window.electronAPI?.resolveURL) {
       const r = await window.electronAPI.resolveURL(input);
-      if (r.ok) { url = r.url; type = r.type as typeof type; }
+      if (r.ok) {
+        url = r.url;
+        type = r.type as any;
+        // If it's a Web3/P2P resolution, add a log to demonstrate the routing
+        if (type === 'ens' || type === 'ipfs' || type === 'ipns') {
+          addLog(`[P2P Routing] Resolved ${input} via ${String(type).toUpperCase()}`);
+        }
+      }
     } else {
-      if (input.endsWith('.eth'))                         { url = `https://${input}.limo`; type = 'ens'; }
+      if (input.endsWith('.eth') || input.includes('.eth/')) {
+        url = `https://${input.split('/')[0]}.limo${input.includes('/') ? input.slice(input.indexOf('/')) : ''}`;
+        type = 'ens';
+        addLog(`[P2P Routing] Bypassing DNS for ${input.split('/')[0]} via ENS`);
+      }
       else if (input.startsWith('ipfs://'))               { url = `https://ipfs.io/ipfs/${input.slice(7)}`; type = 'ipfs'; }
       else if (input.startsWith('ipns://'))               { url = `https://ipfs.io/ipns/${input.slice(7)}`; type = 'ipns'; }
       else if (input.startsWith('http://') || input.startsWith('https://')) { url = input; type = input.startsWith('https') ? 'https' : 'http'; }

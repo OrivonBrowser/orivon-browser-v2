@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRight, ArrowLeft, Eye, EyeOff, Copy, CheckCircle, Shield, Key, Globe } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Eye, EyeOff, Copy, CircleCheck, Shield, Key, Globe, CircleHelp, Settings, Info, Zap, LayoutGrid } from 'lucide-react';
 import { useWalletStore } from '../store/wallet';
 
 type Step = 'welcome' | 'create-phrase' | 'create-password' | 'import' | 'encrypting' | 'success';
@@ -66,54 +66,128 @@ export default function Onboarding({ onDone }: OnboardingProps) {
   }, [importPhrase, password, importWallet]);
 
   return (
-    <div className="h-screen w-screen bg-[#0a0a0a] flex flex-col items-center justify-center overflow-hidden">
-      {/* Subtle background glow */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#00FF87]/[0.03] blur-[120px]" />
+    <div className="h-screen w-screen bg-black flex flex-col items-center justify-center overflow-hidden relative">
+      {/* Background Image */}
+      <img
+        src="/background.jpg"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover opacity-40 z-0"
+      />
+
+      {/* Top Right Utilities */}
+      <div className="absolute top-6 right-8 z-20 flex items-center gap-5">
+        <button className="text-white/40 hover:text-white transition-colors cursor-pointer">
+          <CircleHelp size={19} />
+        </button>
+        <button className="text-white/40 hover:text-white transition-colors cursor-pointer">
+          <Settings size={19} />
+        </button>
       </div>
 
-      <div className="relative z-10 w-full max-w-sm px-6">
+      <div className={`relative z-10 w-full h-full flex flex-col items-center ${step === 'welcome' ? 'justify-start' : 'justify-center'} overflow-y-auto scrollbar-none py-12 px-6 ${step !== 'welcome' ? 'max-w-sm' : ''}`}>
         <AnimatePresence mode="wait">
 
           {/* ── Welcome ─────────────────────────────────────────────────────── */}
           {step === 'welcome' && (
-            <motion.div key="welcome" {...SLIDE} className="space-y-8">
-              <div className="text-center space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-[#00FF87] flex items-center justify-center mx-auto">
-                  <Globe size={22} className="text-black" strokeWidth={2.5} />
+            <motion.div key="welcome" {...SLIDE} className="w-full max-w-5xl mx-auto space-y-16">
+              <div className="text-center space-y-4">
+                <div className="w-16 h-16 rounded-2xl bg-[#00FF87] flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(0,255,135,0.2)]">
+                  <Globe size={32} className="text-black" strokeWidth={2.5} />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-semibold tracking-tight text-white">Orivon</h1>
-                  <p className="text-sm text-white/40 mt-1">Your Web3 browser</p>
+                  <h1 className="text-5xl font-bold tracking-tight text-white mb-3">Welcome to Orivon</h1>
+                  <p className="text-xl text-white/60 max-w-2xl mx-auto">
+                    People will switch to Orivon because today’s Web3 user experience is fundamentally broken and insecure, and traditional browsers cannot fix it without completely changing how they are built.
+                  </p>
                 </div>
               </div>
 
-              <div className="space-y-2.5">
-                <WelcomeBtn
-                  icon={<Shield size={16} />}
-                  label="Create new wallet"
-                  sub="Generate a fresh wallet with seed phrase"
-                  onClick={() => { setMode('create'); setStep('create-phrase'); }}
-                  accent
+              {/* 4 Core Pillars */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <Pillar
+                  icon={<Shield className="text-[#00FF87]" size={28} />}
+                  title="Eliminating the 'Extension Hack' (Security)"
+                  description="The wallet is not an extension; it is a native layer of the browser architecture. A malicious website literally cannot interact with or scan your wallet unless explicitly permitted through the secure hardware/OS layer."
                 />
-                <WelcomeBtn
-                  icon={<Key size={16} />}
-                  label="Import existing wallet"
-                  sub="Restore from your 12 or 24-word phrase"
-                  onClick={() => { setMode('import'); setStep('import'); }}
+                <Pillar
+                  icon={<Zap className="text-[#00D1FF]" size={28} />}
+                  title="True Decentralization vs. Web2 Hosting"
+                  description="Type uniswap.eth and bypass DNS entirely. Orivon fetches app code directly from decentralized P2P networks (IPFS/Arweave). It is unstoppable and cannot be censored or altered."
                 />
-                <button
-                  onClick={() => onDone(false)}
-                  className="w-full h-11 flex items-center justify-center gap-2 rounded-xl text-[13px] text-white/35 hover:text-white/60 transition-colors"
-                >
-                  <Globe size={14} />
-                  Browse without wallet
-                </button>
+                <Pillar
+                  icon={<Info className="text-[#A855F7]" size={28} />}
+                  title="Ending 'Blind Signing' (Trust Layer)"
+                  description="Orivon’s Trust Layer parses contract code into plain language. It displays a visual Trustless and Privacy Score before you sign, so you know exactly what the transaction does."
+                />
+                <Pillar
+                  icon={<LayoutGrid className="text-[#F97316]" size={28} />}
+                  title="Zero-Setup P2P Infrastructure"
+                  description="It is 'Open → Use.' Orivon contains a native P2P networking layer. Spin up a Bitcoin light client or seed a file network simply by leaving a tab open. No terminal or Docker required."
+                />
               </div>
 
-              <p className="text-center text-[11px] text-white/20">
-                v0.94.1 · Electron · Chromium
-              </p>
+              {/* Comparison Table */}
+              <div className="rounded-3xl border border-white/[0.08] bg-white/[0.02] overflow-hidden backdrop-blur-sm">
+                <table className="w-full text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-white/[0.08] bg-white/[0.03]">
+                      <th className="px-6 py-4 font-semibold text-white/50 uppercase tracking-wider text-[11px]">Feature</th>
+                      <th className="px-6 py-4 font-semibold text-white/50 uppercase tracking-wider text-[11px]">The Norm (Chrome + Extensions)</th>
+                      <th className="px-6 py-4 font-semibold text-[#00FF87] uppercase tracking-wider text-[11px]">The Orivon Way</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/[0.04]">
+                    <tr>
+                      <td className="px-6 py-4 font-medium text-white/80">Setup</td>
+                      <td className="px-6 py-4 text-white/40">Download browser → Install extensions → Configure networks</td>
+                      <td className="px-6 py-4 text-white/80">Open and use immediately</td>
+                    </tr>
+                    <tr>
+                      <td className="px-6 py-4 font-medium text-white/80">Architecture</td>
+                      <td className="px-6 py-4 text-white/40">Web2 browser wrapped around a Web3 add-on</td>
+                      <td className="px-6 py-4 text-white/80">Native Web3 operating environment</td>
+                    </tr>
+                    <tr>
+                      <td className="px-6 py-4 font-medium text-white/80">Hosting</td>
+                      <td className="px-6 py-4 text-white/40">Centralized cloud servers (vulnerable to downtime/censorship)</td>
+                      <td className="px-6 py-4 text-white/80">Local execution via P2P/WASM</td>
+                    </tr>
+                    <tr>
+                      <td className="px-6 py-4 font-medium text-white/80">Security</td>
+                      <td className="px-6 py-4 text-white/40">Blindly signing transactions; vulnerable to phishing</td>
+                      <td className="px-6 py-4 text-white/80">Visual Trust & Safety metrics before you sign</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col items-center gap-6 pt-4">
+                <div className="flex items-center gap-4 w-full max-w-md">
+                  <button
+                    onClick={() => { setMode('create'); setStep('create-phrase'); }}
+                    className="flex-1 h-14 rounded-2xl bg-[#00FF87] text-black font-bold text-lg hover:brightness-105 transition-all shadow-[0_0_20px_rgba(0,255,135,0.15)] flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <Shield size={20} />
+                    Create Wallet
+                  </button>
+                  <button
+                    onClick={() => { setMode('import'); setStep('import'); }}
+                    className="flex-1 h-14 rounded-2xl bg-white/[0.05] border border-white/[0.1] text-white font-bold text-lg hover:bg-white/[0.08] transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <Key size={20} />
+                    Import Wallet
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => onDone(false)}
+                  className="text-white/30 hover:text-white/60 transition-colors text-sm font-medium flex items-center gap-2 cursor-pointer"
+                >
+                  <ArrowRight size={16} />
+                  Skip and browse privately
+                </button>
+              </div>
             </motion.div>
           )}
 
@@ -139,7 +213,7 @@ export default function Onboarding({ onDone }: OnboardingProps) {
                     : 'border-white/10 text-white/40 hover:text-white/60 hover:border-white/20'
                 }`}
               >
-                {copied ? <CheckCircle size={14} /> : <Copy size={14} />}
+                {copied ? <CircleCheck size={14} /> : <Copy size={14} />}
                 {copied ? 'Copied!' : 'Copy to clipboard'}
               </button>
 
@@ -224,7 +298,7 @@ export default function Onboarding({ onDone }: OnboardingProps) {
           {step === 'success' && (
             <motion.div key="success" {...SLIDE} className="text-center space-y-7 py-2">
               <div className="w-14 h-14 rounded-full bg-[#00FF87]/15 border border-[#00FF87]/25 flex items-center justify-center mx-auto">
-                <CheckCircle size={24} className="text-[#00FF87]" />
+                <CircleCheck size={24} className="text-[#00FF87]" />
               </div>
               <div>
                 <p className="text-[17px] font-semibold text-white">Wallet ready</p>
@@ -336,4 +410,18 @@ function PrimaryBtn({ children, onClick, disabled }: {
 
 function ErrorMsg({ text }: { text: string }) {
   return <p className="text-[12px] text-red-400 text-center">{text}</p>;
+}
+
+function Pillar({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
+  return (
+    <div className="flex gap-5 p-6 rounded-3xl bg-white/[0.03] border border-white/[0.06] backdrop-blur-md">
+      <div className="shrink-0 w-12 h-12 rounded-2xl bg-white/[0.04] flex items-center justify-center">
+        {icon}
+      </div>
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold text-white/90">{title}</h3>
+        <p className="text-sm text-white/40 leading-relaxed">{description}</p>
+      </div>
+    </div>
+  );
 }
