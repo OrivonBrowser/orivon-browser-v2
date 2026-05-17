@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Fira Code", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-orivon-bg: #000000;
+  --color-orivon-surface: #0A0A0A;
+  --color-orivon-card: #0F0F0F;
+  --color-orivon-accent: #00FF87;
+  --color-orivon-blue: #00D1FF;
+  --color-orivon-border: #1A1A1A;
+  --color-orivon-muted: #404040;
+}
+
+@layer base {
+  body {
+    @apply bg-orivon-bg text-[#E5E5E5] font-sans antialiased;
+    overflow: hidden;
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer components {
+  .grid-bg {
+    background-image: 
+      linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .nav-blur {
+    @apply backdrop-blur-xl bg-black/40 border-b border-orivon-border;
+  }
+
+  .web3-card {
+    @apply bg-orivon-card border border-orivon-border rounded-[2px] transition-all duration-300;
+  }
+  
+  .btn-primary {
+    @apply px-6 py-3 bg-white text-black font-bold uppercase tracking-widest text-[10px] rounded-[1px] hover:bg-orivon-accent transition-all active:scale-[0.98] cursor-pointer flex items-center justify-center;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 border border-orivon-border text-white font-bold uppercase tracking-widest text-[10px] rounded-[1px] hover:border-white transition-all active:scale-[0.98] cursor-pointer flex items-center justify-center;
+  }
+
+  .noise-bg {
+    position: relative;
+  }
+  
+  .noise-bg::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.02;
+    pointer-events: none;
+    z-index: 50;
+  }
+}
+

@@ -1,0 +1,8 @@
+{
+  "name": "Orivon Browser",
+  "description": "A next-generation desktop browser with integrated decentralized identity and node runtimes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
