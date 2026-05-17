@@ -68,78 +68,83 @@ export default function Onboarding({ onFinish, seed }: OnboardingProps) {
           <div className="flex gap-4 items-center">
              <Shield size={12} className={`text-orivon-accent ${isDark ? 'opacity-50' : 'opacity-80'}`} />
              <div className={`w-4 h-4 rounded-full flex items-center justify-center border transition-colors duration-500 ${isDark ? 'bg-blue-500/20 border-blue-500/40' : 'bg-blue-500/10 border-blue-500/20'}`}>
-               <span className="text-[6px] font-bold text-blue-400">B</span>
              </div>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 w-full flex flex-col items-center justify-center pt-16 relative px-6">
-        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] blur-[140px] pointer-events-none rounded-full transition-colors duration-1000 ${isDark ? 'bg-orivon-accent/[0.03]' : 'bg-orivon-accent/[0.08]'}`}></div>
+      <div className="flex-1 w-full flex flex-col items-center justify-center pt-24 pb-12 relative px-6">
+        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] blur-[140px] pointer-events-none rounded-full transition-colors duration-1000 ${isDark ? 'bg-orivon-accent/[0.02]' : 'bg-orivon-accent/[0.06]'}`}></div>
 
         <AnimatePresence mode="wait">
           {step === 'INITIAL' && (
             <motion.div 
               key="initial"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full flex flex-col items-center space-y-10 z-10"
+              className="w-full flex flex-col items-center space-y-8 z-10"
             >
-              <div className="space-y-8 text-center max-w-lg">
+              <div className="text-center max-w-lg">
                 <motion.h1
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className={`text-7xl md:text-9xl font-black tracking-[0.15em] uppercase transition-colors duration-500 ${isDark ? 'text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.05)]' : 'text-black drop-shadow-[0_0_30px_rgba(0,0,0,0.05)]'}`}
+                  className={`text-5xl md:text-6xl font-black tracking-[0.2em] uppercase transition-colors duration-500 ${isDark ? 'text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.05)]' : 'text-black drop-shadow-[0_0_20px_rgba(0,0,0,0.05)]'}`}
                 >
                   ORIVON
                 </motion.h1>
-                <div className="space-y-5">
-                  <p className={`text-xl font-bold tracking-tight transition-colors duration-500 ${isDark ? 'text-white/90' : 'text-black/90'}`}>
-                    The Decentralized Operating Layer.
-                  </p>
-                  <div className="space-y-1.5">
-                    <p className={`text-[9px] uppercase tracking-[0.5em] font-black leading-relaxed transition-colors duration-500 ${isDark ? 'text-white/20' : 'text-black/20'}`}>
-                      Zero middlemen <span className="opacity-30 px-1">//</span> Peer-to-peer distribution
-                    </p>
-                    <p className={`text-[9px] uppercase tracking-[0.5em] font-black leading-relaxed transition-colors duration-500 ${isDark ? 'text-white/20' : 'text-black/20'}`}>
-                      Isolated WASM runtime protocols.
-                    </p>
-                  </div>
-                </div>
               </div>
 
-              {/* Compact Interaction Hub */}
-              <div className={`w-full max-w-[320px] backdrop-blur-3xl rounded-[2rem] p-3 shadow-2xl flex flex-col gap-1.5 border transition-all duration-500 ${isDark ? 'bg-white/[0.02] border-white/5' : 'bg-black/[0.02] border-black/5 shadow-xl'}`}>
-                <div className="grid grid-cols-2 gap-1.5">
+              {/* Interaction Hub - Compact & Rearranged */}
+              <div className={`w-full max-w-[340px] rounded-[2.5rem] p-8 shadow-2xl flex flex-col items-center gap-6 border transition-all duration-700 ${isDark ? 'bg-white/[0.03] border-white/10 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.8)]' : 'bg-white border-black/5 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.1)]'}`}>
+                {/* Protocol Icon */}
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border shadow-inner transition-colors duration-500 ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/5'}`}>
+                  <div className="w-6 h-6 rounded-full border-2 border-dashed border-orivon-accent animate-[spin_10s_linear_infinite] flex items-center justify-center p-1">
+                    <div className="w-full h-full rounded-full bg-orivon-accent/20 blur-[1px]"></div>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 text-center">
+                  <h2 className={`text-xl font-black tracking-tight transition-colors duration-500 ${isDark ? 'text-white' : 'text-black'}`}>Welcome to the Layer</h2>
+                  <p className={`text-[9px] font-bold uppercase tracking-[0.15em] transition-colors duration-500 ${isDark ? 'text-white/30' : 'text-black/30'}`}>Access your decentralized node</p>
+                </div>
+
+                <div className="w-full space-y-2.5">
                   <button 
                     onClick={() => setStep('SEED')}
-                    className={`flex flex-col items-center justify-center gap-2 py-8 border transition-all rounded-[1.5rem] group cursor-pointer ${isDark ? 'border-white/5 bg-white/[0.01] hover:bg-white/[0.04] hover:border-white/10' : 'border-black/5 bg-black/[0.01] hover:bg-black/[0.04] hover:border-black/10'}`}
+                    className={`w-full py-4 px-6 rounded-xl border flex items-center justify-center gap-3 transition-all cursor-pointer font-black text-[9px] uppercase tracking-widest ${isDark ? 'bg-white text-black hover:bg-white/90' : 'bg-black text-white hover:bg-black/90'}`}
                   >
-                    <div className={`w-7 h-7 rounded-full border flex items-center justify-center transition-all ${isDark ? 'border-white/5 group-hover:bg-white group-hover:text-black' : 'border-black/10 group-hover:bg-black group-hover:text-white'}`}>
-                      <Shield size={14} />
-                    </div>
-                    <span className={`text-[8px] font-black uppercase tracking-[0.15em] transition-colors ${isDark ? 'text-white/40 group-hover:text-white' : 'text-black/40 group-hover:text-black'}`}>Create Wallet</span>
+                    Create Wallet
                   </button>
 
                   <button 
                     onClick={() => setStep('IMPORT')}
-                    className={`flex flex-col items-center justify-center gap-2 py-8 border transition-all rounded-[1.5rem] group cursor-pointer ${isDark ? 'border-white/5 bg-white/[0.01] hover:bg-white/[0.04] hover:border-white/10' : 'border-black/5 bg-black/[0.01] hover:bg-black/[0.04] hover:border-black/10'}`}
+                    className={`w-full py-3.5 px-6 rounded-xl border flex items-center justify-center gap-3 transition-all cursor-pointer font-bold text-[9px] uppercase tracking-widest ${isDark ? 'bg-white/[0.02] border-white/5 hover:bg-white/[0.05] text-white/50 hover:text-white' : 'bg-black/[0.01] border-black/5 hover:bg-black/[0.03] text-black/50 hover:text-black'}`}
                   >
-                    <div className={`w-7 h-7 rounded-full border flex items-center justify-center transition-all ${isDark ? 'border-white/5 group-hover:bg-white group-hover:text-black' : 'border-black/10 group-hover:bg-black group-hover:text-white'}`}>
-                      <Key size={14} />
-                    </div>
-                    <span className={`text-[8px] font-black uppercase tracking-[0.15em] transition-colors ${isDark ? 'text-white/40 group-hover:text-white' : 'text-black/40 group-hover:text-black'}`}>Import Wallet</span>
+                    Import Wallet
                   </button>
                 </div>
 
-                <button 
-                  onClick={() => onFinish(deriveAddresses())}
-                  className={`w-full h-16 flex items-center justify-center gap-4 rounded-[1.5rem] transition-all active:scale-[0.98] group shadow-xl cursor-pointer ${isDark ? 'bg-white text-black hover:bg-orivon-accent' : 'bg-black text-white hover:bg-orivon-accent'}`}
-                >
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em]">Open Browser</span>
-                  <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                </button>
+                <div className="w-full flex items-center gap-4">
+                  <div className={`flex-1 h-px transition-colors duration-500 ${isDark ? 'bg-white/5' : 'bg-black/5'}`}></div>
+                  <span className={`text-[8px] font-bold uppercase tracking-widest transition-colors duration-500 ${isDark ? 'text-white/10' : 'text-black/10'}`}>or</span>
+                  <div className={`flex-1 h-px transition-colors duration-500 ${isDark ? 'bg-white/5' : 'bg-black/5'}`}></div>
+                </div>
+
+                <div className="w-full">
+                  <button 
+                    onClick={() => onFinish(deriveAddresses())}
+                    className={`w-full h-14 flex items-center justify-center gap-3 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-all active:scale-[0.98] shadow-lg cursor-pointer ${isDark ? 'bg-white/[0.05] text-white hover:bg-white/[0.1] border border-white/10' : 'bg-black/[0.02] text-black hover:bg-black/[0.05] border border-black/5'}`}
+                  >
+                    Open Browser
+                    <ArrowUpRight size={14} />
+                  </button>
+                </div>
+
+                <p className={`text-[7px] text-center leading-relaxed transition-colors duration-500 ${isDark ? 'text-white/20' : 'text-black/20'}`}>
+                  By initializing, you agree to the <br/>
+                  <span className="underline cursor-pointer">Protocol Terms</span> and <span className="underline cursor-pointer">Privacy Standards</span>
+                </p>
               </div>
 
               <div className="flex gap-4 font-mono text-[7px] font-bold uppercase tracking-[0.2em]">
@@ -319,8 +324,35 @@ export default function Onboarding({ onFinish, seed }: OnboardingProps) {
         </button>
       </div>
 
-      <div className={`absolute bottom-6 right-8 flex gap-8 opacity-20 pointer-events-none transition-colors duration-500 ${isDark ? 'text-white' : 'text-black'}`}>
+      <div className={`absolute bottom-12 right-8 flex gap-8 opacity-20 pointer-events-none transition-colors duration-500 ${isDark ? 'text-white' : 'text-black'}`}>
         <div className="text-[7px] font-mono uppercase tracking-[0.6em] font-black">Secure_Protocol_Node: v0.94-Active</div>
+      </div>
+
+      {/* Crypto Ticker - Very Bottom */}
+      <div className={`absolute bottom-0 left-0 w-full h-7 border-t transition-colors duration-500 flex items-center overflow-hidden ${isDark ? 'bg-black/40 border-white/5' : 'bg-black/[0.02] border-black/5'}`}>
+        <motion.div 
+          animate={{ x: [0, -1500] }}
+          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+          className="flex gap-16 whitespace-nowrap px-10"
+        >
+          {[...Array(10)].map((_, i) => (
+            <div key={i} className="flex gap-12">
+              {[
+                { s: 'BTC', p: '$63,241.50', c: '+2.4%' },
+                { s: 'ETH', p: '$3,412.12', c: '-1.2%' },
+                { s: 'SOL', p: '$145.67', c: '+5.7%' },
+                { s: 'DOT', p: '$7.23', c: '+0.5%' },
+                { s: 'LINK', p: '$18.42', c: '+1.8%' },
+              ].map((token, j) => (
+                <div key={j} className="flex items-center gap-2 group">
+                  <span className={`text-[8px] font-mono font-black ${isDark ? 'text-white/20' : 'text-black/20'}`}>{token.s}</span>
+                  <span className={`text-[8px] font-mono font-bold ${isDark ? 'text-white/60' : 'text-black/60'}`}>{token.p}</span>
+                  <span className={`text-[7px] font-mono ${token.c.startsWith('+') ? 'text-green-500/50' : 'text-red-500/50'}`}>{token.c}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </motion.div>
       </div>
     </div>
   );
