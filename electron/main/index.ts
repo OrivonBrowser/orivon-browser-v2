@@ -1,28 +1,24 @@
-import { app, BrowserWindow, ipcMain, shell, session, protocol } from 'electron';
+import { app, BrowserWindow, ipcMain, shell, session } from 'electron';
+import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import fs from 'fs';
 import { resolveURL } from './resolvers/url-router';
 
-// ─── Persistence (simple JSON file in userData) ───────────────────────────────
+const isDev = !!process.env['ELECTRON_RENDERER_URL'];
+
+// ─── Persistent store (userData JSON) ─────────────────────────────────────────
 
 function storePath(): string {
   return path.join(app.getPath('userData'), 'orivon-store.json');
 }
-
 function readStore(): Record<string, unknown> {
-  try {
-    const raw = fs.readFileSync(storePath(), 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return {};
-  }
+  try { return JSON.parse(fs.readFileSync(storePath(), 'utf-8')); } catch { return {}; }
 }
-
 function writeStore(data: Record<string, unknown>): void {
   fs.writeFileSync(storePath(), JSON.stringify(data, null, 2), 'utf-8');
 }
 
-// ─── Window creation ──────────────────────────────────────────────────────────
+// ─── Window factory ───────────────────────────────────────────────────────────
 
 function createWindow(): BrowserWindow {
   const win = new BrowserWindow({
@@ -34,28 +30,50 @@ function createWindow(): BrowserWindow {
     frame: process.platform !== 'darwin',
     backgroundColor: '#0f0f0f',
     show: false,
+    icon: path.join(__dirname, '../../build/icon.png'),
     webPreferences: {
-      preload: path.join(__dirname, '../preload/index.js'),
-      nodeIntegration: false,
-      contextIsolation: true,
-      webviewTag: true,          // Enable <webview> tags in renderer
-      sandbox: false,            // Required for preload
+      // ── Preload path — file is index.mjs (ESM output from electron-vite) ──
+      preload: path.join(__dirname, '../preload/index.mjs'),
+      nodeIntegration: false,   // Never expose Node in renderer
+      contextIsolation: true,   // Enforce context separation
+      webviewTag: true,         // Allow <webview> for real browsing
+      sandbox: false,           // Required for preload with contextBridge
       webSecurity: true,
+      allowRunningInsecureContent: false,
     },
   });
 
-  win.once('ready-to-show', () => {
-    win.show();
-  });
+  win.once('ready-to-show', () => win.show());
 
-  // Load renderer
-  if (process.env['ELECTRON_RENDERER_URL']) {
-    // electron-vite dev mode
-    win.loadURL(process.env['ELECTRON_RENDERER_URL']);
+  // ── Load renderer ──────────────────────────────────────────────────────────
+  if (isDev) {
+    win.loadURL(process.env['ELECTRON_RENDERER_URL']!);
     win.webContents.openDevTools({ mode: 'detach' });
   } else {
     win.loadFile(path.join(__dirname, '../renderer/index.html'));
   }
+
+  // ── Content Security Policy for the shell window ──────────────────────────
+  // Webviews have their own session and are not covered here.
+  win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+    if (!details.url.startsWith('devtools://')) {
+      callback({
+        responseHeaders: {
+          ...details.responseHeaders,
+          // Allow the renderer to load fonts from Google Fonts and connect to Ethereum RPC
+          'Content-Security-Policy': [
+            "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; " +
+            "connect-src 'self' https: wss:; " +
+            "font-src 'self' https://fonts.gstatic.com data:; " +
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+            "img-src 'self' data: https:;",
+          ],
+        },
+      });
+    } else {
+      callback({});
+    }
+  });
 
   return win;
 }
@@ -63,7 +81,7 @@ function createWindow(): BrowserWindow {
 // ─── App lifecycle ────────────────────────────────────────────────────────────
 
 app.whenReady().then(() => {
-  // Allow all content security policies in webviews (real browsing)
+  // Allow CORS from webview requests (users are browsing real websites)
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({
       responseHeaders: {
@@ -73,90 +91,80 @@ app.whenReady().then(() => {
     });
   });
 
-  // Intercept webview navigations to resolve ENS / IPFS
-  session.defaultSession.webRequest.onBeforeRequest(
-    { urls: ['*://*/*'] },
-    (details, callback) => {
-      callback({});
-    }
-  );
-
   createWindow();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
+
+  // ── Auto-updater (production only, GitHub Releases) ───────────────────────
+  if (!isDev) {
+    autoUpdater.logger = null; // Silence verbose logging; handle events below
+    autoUpdater.checkForUpdatesAndNotify().catch(() => {
+      // Non-fatal: runs fine without network or before first release
+    });
+  }
 });
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
-// ─── IPC: Persistent store ────────────────────────────────────────────────────
+// ─── IPC: Persistent store ─────────────────────────────────────────────────────
 
-ipcMain.handle('store:get', (_evt, key: string) => {
-  const store = readStore();
-  return key ? store[key] : store;
+ipcMain.handle('store:get', (_e, key: string) => {
+  const s = readStore(); return key ? s[key] : s;
+});
+ipcMain.handle('store:set', (_e, key: string, value: unknown) => {
+  const s = readStore(); s[key] = value; writeStore(s); return true;
+});
+ipcMain.handle('store:delete', (_e, key: string) => {
+  const s = readStore(); delete s[key]; writeStore(s); return true;
 });
 
-ipcMain.handle('store:set', (_evt, key: string, value: unknown) => {
-  const store = readStore();
-  store[key] = value;
-  writeStore(store);
-  return true;
+// ─── IPC: URL resolution (ENS / IPFS / ipns) ──────────────────────────────────
+
+ipcMain.handle('resolve:url', async (_e, url: string) => {
+  try { return await resolveURL(url); }
+  catch (err) { return { ok: false, url, type: 'error', error: String(err) }; }
 });
 
-ipcMain.handle('store:delete', (_evt, key: string) => {
-  const store = readStore();
-  delete store[key];
-  writeStore(store);
-  return true;
+// ─── IPC: Window controls ──────────────────────────────────────────────────────
+
+ipcMain.on('window:minimize', e => BrowserWindow.fromWebContents(e.sender)?.minimize());
+ipcMain.on('window:maximize', e => {
+  const w = BrowserWindow.fromWebContents(e.sender);
+  w?.isMaximized() ? w.unmaximize() : w?.maximize();
 });
+ipcMain.on('window:close', e => BrowserWindow.fromWebContents(e.sender)?.close());
+ipcMain.on('shell:open',   (_e, url: string) => shell.openExternal(url));
 
-// ─── IPC: URL resolution (ENS / IPFS / ipns) ─────────────────────────────────
+// ─── Security: lock down new windows and webview navigations ──────────────────
 
-ipcMain.handle('resolve:url', async (_evt, url: string) => {
-  try {
-    return await resolveURL(url);
-  } catch (err) {
-    return { ok: false, url, type: 'error', error: String(err) };
-  }
-});
-
-// ─── IPC: Window controls (non-macOS) ─────────────────────────────────────────
-
-ipcMain.on('window:minimize', (evt) => {
-  BrowserWindow.fromWebContents(evt.sender)?.minimize();
-});
-
-ipcMain.on('window:maximize', (evt) => {
-  const win = BrowserWindow.fromWebContents(evt.sender);
-  if (!win) return;
-  win.isMaximized() ? win.unmaximize() : win.maximize();
-});
-
-ipcMain.on('window:close', (evt) => {
-  BrowserWindow.fromWebContents(evt.sender)?.close();
-});
-
-// ─── IPC: Open external URL in system browser ─────────────────────────────────
-
-ipcMain.on('shell:open', (_evt, url: string) => {
-  shell.openExternal(url);
-});
-
-// ─── IPC: Webview permissions ─────────────────────────────────────────────────
-
-app.on('web-contents-created', (_evt, contents) => {
-  // For webview contents, allow navigation but block dangerous things
-  contents.on('will-navigate', (_e, url) => {
-    // Allow all navigations within webview (user browsing)
-    if (url.startsWith('devtools://')) _e.preventDefault();
+app.on('web-contents-created', (_e, contents) => {
+  contents.on('will-navigate', (ev, url) => {
+    // Block devtools navigations in the shell window
+    if (url.startsWith('devtools://') && !isDev) ev.preventDefault();
   });
 
-  // Open links that target _blank in system browser
+  // Open _blank links in the system browser, never spawn new Electron windows
   contents.setWindowOpenHandler(({ url }) => {
-    shell.openExternal(url);
+    if (url.startsWith('https://') || url.startsWith('http://')) {
+      shell.openExternal(url);
+    }
     return { action: 'deny' };
   });
+});
+
+// ─── Auto-updater events (sent to all windows) ────────────────────────────────
+
+autoUpdater.on('update-available', () => {
+  BrowserWindow.getAllWindows().forEach(w =>
+    w.webContents.send('app:update-available')
+  );
+});
+autoUpdater.on('update-downloaded', () => {
+  BrowserWindow.getAllWindows().forEach(w =>
+    w.webContents.send('app:update-downloaded')
+  );
 });

@@ -1,56 +1,156 @@
 {
   "name": "orivon",
   "productName": "Orivon Browser",
+  "description": "A native Web3 desktop browser built on Electron and Chromium.",
+  "author": { "name": "Orivon", "email": "team@orivon.io" },
   "private": true,
   "version": "0.94.1",
   "type": "module",
   "main": "out/main/index.js",
   "scripts": {
-    "dev": "vite --port=3000 --host=0.0.0.0",
-    "build": "vite build",
-    "preview": "vite preview",
-    "electron:dev": "electron-vite dev",
+    "dev": "electron-vite dev",
+    "web:dev": "vite --port=3000 --host=0.0.0.0",
     "electron:build": "electron-vite build",
     "electron:preview": "electron-vite preview",
-    "package": "electron-vite build && electron-builder",
-    "clean": "rm -rf dist out server.js",
+
+    "icons": "node scripts/generate-icons.mjs",
+
+    "build": "npm run icons && electron-vite build",
+    "build:win": "npm run build && electron-builder --win",
+    "build:mac": "npm run build && electron-builder --mac",
+    "build:linux": "npm run build && electron-builder --linux",
+    "dist": "npm run build && electron-builder --win --mac --linux",
+
+    "package:dir": "npm run build && electron-builder --dir",
+
+    "clean": "rm -rf out release",
     "lint": "tsc -p tsconfig.web.json --noEmit"
   },
+
   "build": {
     "appId": "com.orivon.browser",
     "productName": "Orivon",
-    "directories": { "output": "release" },
-    "files": ["out/**/*"],
-    "mac":     { "target": "dmg",   "category": "public.app-category.utilities" },
-    "win":     { "target": "nsis"  },
-    "linux":   { "target": "AppImage" }
+    "copyright": "Copyright © 2025 Orivon",
+
+    "icon": "build/icon",
+
+    "asar": true,
+    "asarUnpack": [],
+
+    "npmRebuild": false,
+    "nodeGypRebuild": false,
+
+    "files": [
+      "out/**/*",
+      "!out/**/*.map",
+      "package.json"
+    ],
+
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+
+    "extraMetadata": {
+      "main": "out/main/index.js"
+    },
+
+    "publish": {
+      "provider": "github",
+      "owner": "orivon",
+      "repo": "orivon-browser",
+      "releaseType": "release"
+    },
+
+    "win": {
+      "target": [{ "target": "nsis", "arch": ["x64"] }],
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false
+    },
+
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Orivon Browser",
+      "uninstallDisplayName": "Orivon Browser",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "deleteAppDataOnUninstall": false,
+      "runAfterFinish": true
+    },
+
+    "mac": {
+      "target": [
+        { "target": "dmg",  "arch": ["x64", "arm64"] },
+        { "target": "zip",  "arch": ["x64", "arm64"] }
+      ],
+      "icon": "build/icon.icns",
+      "category": "public.app-category.utilities",
+      "darkModeSupport": true,
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
+    },
+
+    "dmg": {
+      "title": "${productName} ${version}",
+      "icon": "build/icon.icns",
+      "background": null,
+      "contents": [
+        { "x": 130, "y": 220 },
+        { "x": 410, "y": 220, "type": "link", "path": "/Applications" }
+      ],
+      "window": { "width": 540, "height": 400 }
+    },
+
+    "linux": {
+      "target": [{ "target": "AppImage", "arch": ["x64"] }],
+      "icon": "build/icons",
+      "category": "Network;WebBrowser",
+      "description": "Orivon Web3 Browser",
+      "desktop": {
+        "entry": {
+          "Name": "Orivon Browser",
+          "Comment": "Web3 desktop browser",
+          "Categories": "Network;WebBrowser;",
+          "StartupWMClass": "Orivon"
+        }
+      }
+    }
   },
+
   "dependencies": {
+    "electron-updater": "^6.8.3",
+    "ethers": "^6.16.0"
+  },
+
+  "devDependencies": {
     "@google/genai": "^1.29.0",
     "@tailwindcss/vite": "^4.1.14",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.4",
+    "autoprefixer": "^10.4.21",
     "dotenv": "^17.2.3",
+    "esbuild": "^0.25.0",
     "electron": "^42.1.0",
     "electron-builder": "^26.8.1",
     "electron-store": "^11.0.2",
     "electron-vite": "^5.0.0",
-    "ethers": "^6.16.0",
     "express": "^4.21.2",
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
-    "vite": "^6.2.3",
-    "zustand": "^5.0.13"
-  },
-  "devDependencies": {
-    "@types/express": "^4.17.21",
-    "@types/node": "^22.14.0",
-    "autoprefixer": "^10.4.21",
-    "esbuild": "^0.25.0",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
-    "vite": "^6.2.3"
+    "vite": "^6.2.3",
+    "zustand": "^5.0.13"
   }
 }

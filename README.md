@@ -1,20 +1,107 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Orivon Browser
 
-# Run and deploy your AI Studio app
+A native Web3 desktop browser built on Electron and Chromium.  
+Browse ENS domains, IPFS apps, and the open web with a built-in multi-chain wallet.
 
-This contains everything you need to run your app locally.
+---
 
-View your app in AI Studio: https://ai.studio/apps/9681f8da-e9d9-4e2c-9958-bdfa991b2b1b
+## Quick Start
 
-## Run Locally
+### Prerequisites
+- [Node.js](https://nodejs.org) v18 or higher
 
-**Prerequisites:**  Node.js
+### Launch the Electron browser
 
+```bash
+npm install
+npm run dev
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+This opens the **real Electron desktop application**
+
+---
+
+## Build installable packages
+
+```bash
+# macOS (.dmg — Intel + Apple Silicon)
+npm run build:mac
+
+# Windows (.exe NSIS installer)
+npm run build:win
+
+# Linux (.AppImage)
+npm run build:linux
+
+# All platforms at once
+npm run dist
+```
+
+Installers are saved to the `release/` folder.
+
+---
+
+## User flow
+
+1. **First launch** → Create Wallet · Import Wallet · Open Browser (no wallet)
+2. **Create Wallet** → 12-word seed phrase displayed → set password → wallet encrypted locally
+3. **Dashboard** → view multi-chain addresses → Open Browser
+4. **Browser** → full Chromium browsing, Chrome-style tabs, ENS/IPFS resolution
+5. **Wallet button** (top-right toolbar) → manage wallet, settings, network
+
+---
+
+## What works
+
+| Feature | Status |
+|---------|--------|
+| Real page browsing (Chromium webview) | ✅ |
+| ENS domain resolution (`.eth`) | ✅ |
+| IPFS link loading (`ipfs://`) | ✅ |
+| Multi-tab browsing | ✅ |
+| Back / Forward / Reload | ✅ |
+| Wallet create / import (BIP-39) | ✅ |
+| Encrypted local wallet storage | ✅ |
+| Dark / Light theme (persisted) | ✅ |
+| Web3 trust/security/privacy scores | ✅ |
+| Auto-update via GitHub Releases | ✅ |
+
+---
+
+## All scripts
+
+| Command | What it does |
+|---------|-------------|
+| `npm run dev` | **Launch Electron** in dev mode with live reload |
+| `npm run build` | Build all outputs (icons + electron-vite) |
+| `npm run build:mac` | Package macOS DMG |
+| `npm run build:win` | Package Windows NSIS installer |
+| `npm run build:linux` | Package Linux AppImage |
+| `npm run dist` | Package all platforms |
+| `npm run lint` | TypeScript type-check |
+| `npm run clean` | Remove `out/` and `release/` |
+
+---
+
+## Stack
+
+| Layer | Technology |
+|-------|------------|
+| Desktop shell | Electron 42 + Chromium |
+| Frontend | React 19 · TypeScript · TailwindCSS 4 |
+| Build | electron-vite 5 · Vite 6 |
+| Wallet | ethers.js v6 · BIP-39 / BIP-44 |
+| State | Zustand (localStorage persistence) |
+| Web3 | ENS via eth.limo · IPFS public gateways |
+| Packaging | electron-builder 26 |
+| Updates | electron-updater |
+
+---
+
+## Shipping a release
+
+```bash
+git tag v0.94.1
+git push origin v0.94.1
+# → GitHub Actions builds Win / Mac / Linux and publishes to GitHub Releases
+```

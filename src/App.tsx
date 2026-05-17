@@ -4,147 +4,60 @@
  */
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { ethers } from 'ethers';
 
-import { ViewState } from './types';
-import Onboarding     from './views/Onboarding';
-import Dashboard      from './views/Dashboard';
-import LoadingTerminal from './views/LoadingTerminal';
-import Browser        from './components/Browser';
+import Onboarding from './views/Onboarding';
+import Dashboard  from './pages/Dashboard';
+import Browser    from './components/Browser';
 
-import { useWalletStore }  from './store/wallet';
-import { useSettings }     from './store/settings';
-import { useTabsStore }    from './store/tabs';
+import { useWalletStore } from './store/wallet';
+import { useSettings }    from './store/settings';
 
-// Legacy seed used only for the Onboarding display
-const DISPLAY_SEED = 'alpha bravo charlie delta echo foxtrot golf hotel india juliet kilo lima';
-
-type LegacyIdentity = {
-  seed: string;
-  addresses: { btc: string; eth: string; sol: string } | null;
-  isInitialized: boolean;
-  isLocked: boolean;
-};
+type View = 'ONBOARDING' | 'DASHBOARD' | 'BROWSER';
 
 export default function App() {
-  const { status: walletStatus, addresses, encryptedJson, createWallet, lock, unlock } = useWalletStore();
+  const { encryptedJson, status: walletStatus } = useWalletStore();
   const { theme } = useSettings();
 
-  // Determine initial view based on persisted wallet state
-  const getInitialView = (): ViewState => {
-    if (encryptedJson) return 'BROWSER_MODE';   // Has wallet → go straight to browser
-    return 'ONBOARDING';
-  };
+  // Returning user with a wallet → go straight to browser
+  const [view, setView] = useState<View>(() =>
+    encryptedJson ? 'BROWSER' : 'ONBOARDING'
+  );
 
-  const [view, setView]               = useState<ViewState>(getInitialView);
-  const [launchUrl, setLaunchUrl]     = useState('');
-
-  // Legacy identity shape that Onboarding / Dashboard expect
-  const [legacyIdentity, setLegacyIdentity] = useState<LegacyIdentity>({
-    seed: DISPLAY_SEED,
-    addresses: addresses
-      ? { btc: addresses.btc, eth: addresses.eth, sol: addresses.sol }
-      : null,
-    isInitialized: walletStatus !== 'none',
-    isLocked: walletStatus === 'locked',
-  });
-
-  // Keep legacy identity in sync with wallet store
-  useEffect(() => {
-    setLegacyIdentity({
-      seed: DISPLAY_SEED,
-      addresses: addresses ?? null,
-      isInitialized: walletStatus !== 'none',
-      isLocked: walletStatus === 'locked',
-    });
-  }, [walletStatus, addresses]);
-
-  // Sync theme class on <html>
+  // Apply theme class to <html> so Tailwind dark: variants work
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
   }, [theme]);
 
-  // ── Handlers ─────────────────────────────────────────────────────────────
-
-  const handleOnboardingFinish = async (legacyAddresses: { btc: string; eth: string; sol: string } | null) => {
-    if (legacyAddresses) {
-      // Onboarding created a wallet via the old system — migrate to Zustand store
-      // Generate a mnemonic and create encrypted wallet in store
-      const entropy = ethers.randomBytes(16);
-      const mnemonic = ethers.Mnemonic.fromEntropy(entropy).phrase;
-      try {
-        await createWallet(mnemonic, 'orivon-default', () => {});
-      } catch {
-        // Non-fatal: the legacy addresses are still shown
-      }
-      setView('DASHBOARD');
-    } else {
-      setView('BROWSER_MODE');
-    }
-  };
-
-  const handleDashboardLaunch = (url: string) => {
-    setLaunchUrl(url);
-    setView('LOADING');
-  };
-
-  const handleDashboardLock = () => {
-    lock();
-    setView('BROWSER_MODE');
-  };
-
-  const handleLoadingComplete = () => {
-    setView('BROWSER_MODE');
-    // When coming from dashboard launch, open the URL in the browser store
-    if (launchUrl) {
-      const { addTab, setActiveTab } = useTabsStore.getState();
-      const id = addTab(launchUrl);
-      // Browser component will pick up the new tab automatically
-    }
-  };
+  const ease = { duration: 0.3, ease: [0.22, 1, 0.36, 1] as const };
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-orivon-bg text-white font-sans selection:bg-orivon-accent selection:text-black">
+    <div className="h-screen w-screen overflow-hidden bg-[#0a0a0a] text-white">
       <AnimatePresence mode="wait">
 
         {view === 'ONBOARDING' && (
-          <motion.div key="onboarding"
+          <motion.div key="onboarding" className="h-full"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="h-full"
+            transition={ease}
           >
             <Onboarding
-              onFinish={handleOnboardingFinish}
-              seed={DISPLAY_SEED}
+              onDone={(hasWallet) => setView(hasWallet ? 'DASHBOARD' : 'BROWSER')}
             />
           </motion.div>
         )}
 
         {view === 'DASHBOARD' && (
-          <motion.div key="dashboard"
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-            className="h-full"
+          <motion.div key="dashboard" className="h-full"
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+            transition={ease}
           >
-            <Dashboard
-              identity={legacyIdentity}
-              onLock={handleDashboardLock}
-              onLaunch={handleDashboardLaunch}
-            />
+            <Dashboard onOpenBrowser={() => setView('BROWSER')} />
           </motion.div>
         )}
 
-        {view === 'LOADING' && (
-          <motion.div key="loading"
+        {view === 'BROWSER' && (
+          <motion.div key="browser" className="h-full"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="h-full"
-          >
-            <LoadingTerminal onComplete={handleLoadingComplete} />
-          </motion.div>
-        )}
-
-        {view === 'BROWSER_MODE' && (
-          <motion.div key="browser"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="h-full"
+            transition={ease}
           >
             <Browser />
           </motion.div>

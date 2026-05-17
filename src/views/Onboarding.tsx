@@ -1,404 +1,339 @@
-import { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Shield, Key, ArrowRight, ArrowUpRight, Command, Cpu, Layers, Sun, Moon } from 'lucide-react';
-import { WalletAddresses } from '../types';
+import { ArrowRight, ArrowLeft, Eye, EyeOff, Copy, CheckCircle, Shield, Key, Globe } from 'lucide-react';
+import { useWalletStore } from '../store/wallet';
+
+type Step = 'welcome' | 'create-phrase' | 'create-password' | 'import' | 'encrypting' | 'success';
 
 interface OnboardingProps {
-  onFinish: (addresses: WalletAddresses | null) => void;
-  seed: string;
+  onDone: (hasWallet: boolean) => void;
 }
 
-export default function Onboarding({ onFinish, seed }: OnboardingProps) {
-  const [step, setStep] = useState<'INITIAL' | 'SEED' | 'IMPORT' | 'DERIVED'>('INITIAL');
-  const [password, setPassword] = useState('');
-  const [importPhrase, setImportPhrase] = useState('');
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+const SLIDE = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } },
+  exit:    { opacity: 0, y: -8, transition: { duration: 0.18, ease: 'easeIn' } },
+};
 
-  const deriveAddresses = (): WalletAddresses => {
-    return {
-      btc: `bc1q${Math.random().toString(36).substring(2, 15)}`,
-      eth: `0x${Math.random().toString(16).substring(2, 42)}`,
-      sol: `SOL${Math.random().toString(36).substring(2, 32)}`,
-    };
+export default function Onboarding({ onDone }: OnboardingProps) {
+  const { generateMnemonic, createWallet, importWallet } = useWalletStore();
+
+  const [step, setStep]             = useState<Step>('welcome');
+  const [mode, setMode]             = useState<'create' | 'import'>('create');
+  const [mnemonic]                  = useState(() => generateMnemonic());
+  const [importPhrase, setImport]   = useState('');
+  const [password, setPassword]     = useState('');
+  const [confirmPw, setConfirmPw]   = useState('');
+  const [showPw, setShowPw]         = useState(false);
+  const [copied, setCopied]         = useState(false);
+  const [progress, setProgress]     = useState(0);
+  const [error, setError]           = useState('');
+
+  const words = mnemonic.split(' ');
+
+  const copyPhrase = () => {
+    navigator.clipboard.writeText(mnemonic);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
-  const [addresses, setAddresses] = useState<WalletAddresses | null>(null);
-
-  const handleInitialize = () => {
-    if (password.length < 4) return;
-    const newAddresses = deriveAddresses();
-    setAddresses(newAddresses);
-    setStep('DERIVED');
-  };
-
-  const handleImport = () => {
-    if (importPhrase.trim().split(/\s+/).length >= 12 && password.length >= 4) {
-      handleInitialize();
+  const handleCreate = useCallback(async () => {
+    if (password.length < 6) { setError('Password must be at least 6 characters'); return; }
+    if (password !== confirmPw) { setError('Passwords do not match'); return; }
+    setError(''); setStep('encrypting');
+    try {
+      await createWallet(mnemonic, password, setProgress);
+      setStep('success');
+    } catch (e) {
+      setStep('create-password');
+      setError(String(e));
     }
-  };
+  }, [password, confirmPw, mnemonic, createWallet]);
 
-  const isDark = theme === 'dark';
+  const handleImport = useCallback(async () => {
+    const phrase = importPhrase.trim();
+    const wc = phrase.split(/\s+/).length;
+    if (wc !== 12 && wc !== 24) { setError('Enter a valid 12 or 24-word recovery phrase'); return; }
+    if (password.length < 6) { setError('Password must be at least 6 characters'); return; }
+    setError(''); setStep('encrypting');
+    try {
+      await importWallet(phrase, password, setProgress);
+      setStep('success');
+    } catch (e) {
+      setStep('import');
+      setError(String(e));
+    }
+  }, [importPhrase, password, importWallet]);
 
   return (
-    <div className={`relative h-full w-full flex flex-col items-center justify-center overflow-hidden noise-bg font-sans transition-colors duration-700 ${isDark ? 'bg-[#050505] text-white' : 'bg-[#fafafa] text-black'}`}>
-      {/* Browser Chrome Header */}
-      <div className="absolute top-0 left-0 w-full z-50">
-        <div className={`h-9 flex items-center px-4 gap-2 border-b transition-colors duration-500 ${isDark ? 'bg-[#121212] border-white/5' : 'bg-[#eeeeee] border-black/5'}`}>
-          <div className="flex gap-1.5 px-2">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]/80 border border-black/10"></div>
-            <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e]/80 border border-black/10"></div>
-            <div className="w-2.5 h-2.5 rounded-full bg-[#28c840]/80 border border-black/10"></div>
-          </div>
-          <div className={`flex items-center gap-2 ml-3 h-7 px-4 rounded-t-lg border-x border-t min-w-[120px] shadow-sm transition-colors duration-500 ${isDark ? 'bg-[#1e1e1e] border-white/5' : 'bg-white border-black/5'}`}>
-            <div className="w-2 h-2 bg-orivon-accent rounded-[1px]"></div>
-            <span className={`text-[9px] font-black uppercase tracking-tighter ${isDark ? 'text-white/40' : 'text-black/40'}`}>Orivon Shell</span>
-          </div>
-        </div>
-
-        <div className={`h-10 flex items-center px-5 gap-5 border-b transition-colors duration-500 ${isDark ? 'bg-[#1a1a1a] border-white/5' : 'bg-[#f0f0f0] border-black/5'}`}>
-          <div className={`flex gap-3 ${isDark ? 'text-white/10' : 'text-black/10'}`}>
-            <ArrowRight size={12} className="rotate-180" />
-            <ArrowRight size={12} />
-            <Layers size={12} className="opacity-50" />
-          </div>
-          <div className={`flex-1 h-6 border rounded-full flex items-center px-4 gap-3 transition-colors duration-500 ${isDark ? 'bg-black/40 border-white/5' : 'bg-white/60 border-black/5'}`}>
-             <div className="w-1 h-1 rounded-full bg-orivon-accent animate-pulse"></div>
-             <span className={`text-[9px] font-mono tracking-tight ${isDark ? 'text-white/20' : 'text-black/20'}`}>orivon://gateway/protocol_initialization</span>
-          </div>
-          <div className="flex gap-4 items-center">
-             <Shield size={12} className={`text-orivon-accent ${isDark ? 'opacity-50' : 'opacity-80'}`} />
-             <div className={`w-4 h-4 rounded-full flex items-center justify-center border transition-colors duration-500 ${isDark ? 'bg-blue-500/20 border-blue-500/40' : 'bg-blue-500/10 border-blue-500/20'}`}>
-             </div>
-          </div>
-        </div>
+    <div className="h-screen w-screen bg-[#0a0a0a] flex flex-col items-center justify-center overflow-hidden">
+      {/* Subtle background glow */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#00FF87]/[0.03] blur-[120px]" />
       </div>
 
-      <div className="flex-1 w-full flex flex-col items-center justify-center pt-24 pb-12 relative px-6">
-        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] blur-[140px] pointer-events-none rounded-full transition-colors duration-1000 ${isDark ? 'bg-orivon-accent/[0.02]' : 'bg-orivon-accent/[0.06]'}`}></div>
-
+      <div className="relative z-10 w-full max-w-sm px-6">
         <AnimatePresence mode="wait">
-          {step === 'INITIAL' && (
-            <motion.div 
-              key="initial"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full flex flex-col items-center space-y-8 z-10"
-            >
-              <div className="text-center max-w-lg">
-                <motion.h1
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className={`text-5xl md:text-6xl font-black tracking-[0.2em] uppercase transition-colors duration-500 ${isDark ? 'text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.05)]' : 'text-black drop-shadow-[0_0_20px_rgba(0,0,0,0.05)]'}`}
+
+          {/* ── Welcome ─────────────────────────────────────────────────────── */}
+          {step === 'welcome' && (
+            <motion.div key="welcome" {...SLIDE} className="space-y-8">
+              <div className="text-center space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-[#00FF87] flex items-center justify-center mx-auto">
+                  <Globe size={22} className="text-black" strokeWidth={2.5} />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-semibold tracking-tight text-white">Orivon</h1>
+                  <p className="text-sm text-white/40 mt-1">Your Web3 browser</p>
+                </div>
+              </div>
+
+              <div className="space-y-2.5">
+                <WelcomeBtn
+                  icon={<Shield size={16} />}
+                  label="Create new wallet"
+                  sub="Generate a fresh wallet with seed phrase"
+                  onClick={() => { setMode('create'); setStep('create-phrase'); }}
+                  accent
+                />
+                <WelcomeBtn
+                  icon={<Key size={16} />}
+                  label="Import existing wallet"
+                  sub="Restore from your 12 or 24-word phrase"
+                  onClick={() => { setMode('import'); setStep('import'); }}
+                />
+                <button
+                  onClick={() => onDone(false)}
+                  className="w-full h-11 flex items-center justify-center gap-2 rounded-xl text-[13px] text-white/35 hover:text-white/60 transition-colors"
                 >
-                  ORIVON
-                </motion.h1>
+                  <Globe size={14} />
+                  Browse without wallet
+                </button>
               </div>
 
-              {/* Interaction Hub - Compact & Rearranged */}
-              <div className={`w-full max-w-[340px] rounded-[2.5rem] p-8 shadow-2xl flex flex-col items-center gap-6 border transition-all duration-700 ${isDark ? 'bg-white/[0.03] border-white/10 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.8)]' : 'bg-white border-black/5 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.1)]'}`}>
-                {/* Protocol Icon */}
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border shadow-inner transition-colors duration-500 ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/5'}`}>
-                  <div className="w-6 h-6 rounded-full border-2 border-dashed border-orivon-accent animate-[spin_10s_linear_infinite] flex items-center justify-center p-1">
-                    <div className="w-full h-full rounded-full bg-orivon-accent/20 blur-[1px]"></div>
-                  </div>
-                </div>
-
-                <div className="space-y-1.5 text-center">
-                  <h2 className={`text-xl font-black tracking-tight transition-colors duration-500 ${isDark ? 'text-white' : 'text-black'}`}>Welcome to the Layer</h2>
-                  <p className={`text-[9px] font-bold uppercase tracking-[0.15em] transition-colors duration-500 ${isDark ? 'text-white/30' : 'text-black/30'}`}>Access your decentralized node</p>
-                </div>
-
-                <div className="w-full space-y-2.5">
-                  <button 
-                    onClick={() => setStep('SEED')}
-                    className={`w-full py-4 px-6 rounded-xl border flex items-center justify-center gap-3 transition-all cursor-pointer font-black text-[9px] uppercase tracking-widest ${isDark ? 'bg-white text-black hover:bg-white/90' : 'bg-black text-white hover:bg-black/90'}`}
-                  >
-                    Create Wallet
-                  </button>
-
-                  <button 
-                    onClick={() => setStep('IMPORT')}
-                    className={`w-full py-3.5 px-6 rounded-xl border flex items-center justify-center gap-3 transition-all cursor-pointer font-bold text-[9px] uppercase tracking-widest ${isDark ? 'bg-white/[0.02] border-white/5 hover:bg-white/[0.05] text-white/50 hover:text-white' : 'bg-black/[0.01] border-black/5 hover:bg-black/[0.03] text-black/50 hover:text-black'}`}
-                  >
-                    Import Wallet
-                  </button>
-                </div>
-
-                <div className="w-full flex items-center gap-4">
-                  <div className={`flex-1 h-px transition-colors duration-500 ${isDark ? 'bg-white/5' : 'bg-black/5'}`}></div>
-                  <span className={`text-[8px] font-bold uppercase tracking-widest transition-colors duration-500 ${isDark ? 'text-white/10' : 'text-black/10'}`}>or</span>
-                  <div className={`flex-1 h-px transition-colors duration-500 ${isDark ? 'bg-white/5' : 'bg-black/5'}`}></div>
-                </div>
-
-                <div className="w-full">
-                  <button 
-                    onClick={() => onFinish(null)}
-                    className={`w-full h-14 flex items-center justify-center gap-3 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-all active:scale-[0.98] shadow-lg cursor-pointer ${isDark ? 'bg-white/[0.05] text-white hover:bg-white/[0.1] border border-white/10' : 'bg-black/[0.02] text-black hover:bg-black/[0.05] border border-black/5'}`}
-                  >
-                    Open Browser
-                    <ArrowUpRight size={14} />
-                  </button>
-                </div>
-
-                <p className={`text-[7px] text-center leading-relaxed transition-colors duration-500 ${isDark ? 'text-white/20' : 'text-black/20'}`}>
-                  By initializing, you agree to the <br/>
-                  <span className="underline cursor-pointer">Protocol Terms</span> and <span className="underline cursor-pointer">Privacy Standards</span>
-                </p>
-              </div>
-
-              <div className="flex gap-4 font-mono text-[7px] font-bold uppercase tracking-[0.2em]">
-                <div className={`px-3 py-1.5 rounded-full border transition-colors duration-500 ${isDark ? 'bg-white/[0.03] border-white/5 text-white/30' : 'bg-black/[0.03] border-black/5 text-black/30'}`}>
-                  Build 0.94.1
-                </div>
-                <div className={`px-3 py-1.5 rounded-full border flex items-center gap-1.5 transition-colors duration-500 ${isDark ? 'bg-white/[0.03] border-white/5 text-white/40' : 'bg-black/[0.03] border-black/5 text-black/40'}`}>
-                  <div className="w-1 h-1 rounded-full bg-orivon-accent animate-pulse shadow-[0_0_8px_rgba(255,165,0,0.4)]"></div>
-                  P2P Node Active
-                </div>
-              </div>
+              <p className="text-center text-[11px] text-white/20">
+                v0.94.1 · Electron · Chromium
+              </p>
             </motion.div>
           )}
 
-          {step === 'SEED' && (
-            <motion.div 
-              key="seed"
-              initial={{ opacity: 0, scale: 0.98, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              className={`max-w-[720px] w-full space-y-8 backdrop-blur-3xl p-10 rounded-[3rem] z-10 border transition-all duration-700 ${isDark ? 'bg-white/[0.03] border-white/10 shadow-2xl' : 'bg-white border-black/5 shadow-xl'}`}
-            >
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b pb-6 transition-colors duration-500" style={{ borderColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }}>
-                <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/5'}`}>
-                    <Shield size={20} className="text-orivon-accent" />
-                  </div>
-                  <div>
-                    <h2 className={`text-2xl font-black tracking-tight uppercase transition-colors ${isDark ? 'text-white' : 'text-black'}`}>Identity Seed</h2>
-                    <p className={`text-[9px] uppercase tracking-[0.2em] font-black transition-colors ${isDark ? 'text-white/30' : 'text-black/30'}`}>Secure physical backup mandatory</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                   <div className="px-3 py-1.5 rounded-full bg-orivon-accent/10 border border-orivon-accent/30 text-orivon-accent text-[8px] font-black uppercase tracking-widest">
-                     Primary Key Generated
-                   </div>
-                </div>
-              </div>
-              
-              <div className={`grid grid-cols-2 md:grid-cols-4 gap-3 p-6 border font-mono text-[9px] rounded-2xl transition-all ${isDark ? 'border-white/5 bg-black/40' : 'border-black/5 bg-white/40'}`}>
-                {seed.split(' ').map((word, i) => (
-                  <div key={i} className={`flex gap-3 items-center py-2.5 px-3 border border-transparent hover:border-orivon-accent/20 rounded-xl transition-all ${isDark ? 'text-white/80' : 'text-black/80'}`}>
-                    <span className={`font-black opacity-20 w-4`}>{(i + 1).toString().padStart(2, '0')}</span>
-                    <span className="font-bold tracking-wider">{word}</span>
+          {/* ── Seed phrase display ──────────────────────────────────────────── */}
+          {step === 'create-phrase' && (
+            <motion.div key="phrase" {...SLIDE} className="space-y-6">
+              <StepHeader title="Your recovery phrase" sub="Write these 12 words down and keep them safe. They cannot be recovered." onBack={() => setStep('welcome')} />
+
+              <div className="grid grid-cols-3 gap-1.5">
+                {words.map((word, i) => (
+                  <div key={i} className="flex items-center gap-1.5 bg-white/[0.04] border border-white/[0.07] rounded-lg px-2.5 py-2">
+                    <span className="text-[10px] text-white/25 w-4 shrink-0 tabular-nums">{i + 1}</span>
+                    <span className="text-[12px] font-medium text-white/80">{word}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="flex flex-col md:flex-row gap-4 items-end">
-                <div className="flex-1 space-y-2 w-full">
-                  <label className={`text-[8px] font-black uppercase tracking-widest ml-1 transition-colors ${isDark ? 'text-white/30' : 'text-black/30'}`}>Set Master Access Phrase</label>
-                  <input 
-                    type="password"
-                    autoFocus
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Min. 4 characters..."
-                    onKeyDown={(e) => e.key === 'Enter' && handleInitialize()}
-                    className={`w-full border px-6 py-4 rounded-2xl focus:outline-none transition-all font-mono text-[11px] placeholder:opacity-20 ${isDark ? 'bg-black/40 border-white/10 focus:border-white/30 text-white' : 'bg-white border-black/10 focus:border-black/30 text-black'}`}
+              <button
+                onClick={copyPhrase}
+                className={`flex items-center justify-center gap-2 w-full h-10 rounded-xl text-[12px] font-medium border transition-all ${
+                  copied
+                    ? 'border-[#00FF87]/30 text-[#00FF87] bg-[#00FF87]/8'
+                    : 'border-white/10 text-white/40 hover:text-white/60 hover:border-white/20'
+                }`}
+              >
+                {copied ? <CheckCircle size={14} /> : <Copy size={14} />}
+                {copied ? 'Copied!' : 'Copy to clipboard'}
+              </button>
+
+              <PrimaryBtn onClick={() => setStep('create-password')}>
+                I've saved my phrase <ArrowRight size={15} />
+              </PrimaryBtn>
+            </motion.div>
+          )}
+
+          {/* ── Create password ──────────────────────────────────────────────── */}
+          {step === 'create-password' && (
+            <motion.div key="create-pw" {...SLIDE} className="space-y-5">
+              <StepHeader title="Protect your wallet" sub="Set a password to encrypt your wallet locally." onBack={() => setStep('create-phrase')} />
+              <PasswordFields
+                password={password} setPassword={setPassword}
+                confirm={confirmPw} setConfirm={setConfirmPw}
+                show={showPw} toggleShow={() => setShowPw(p => !p)}
+                onSubmit={handleCreate}
+              />
+              {error && <ErrorMsg text={error} />}
+              <PrimaryBtn onClick={handleCreate} disabled={password.length < 6 || password !== confirmPw}>
+                Create wallet
+              </PrimaryBtn>
+            </motion.div>
+          )}
+
+          {/* ── Import ──────────────────────────────────────────────────────── */}
+          {step === 'import' && (
+            <motion.div key="import" {...SLIDE} className="space-y-5">
+              <StepHeader title="Import wallet" sub="Enter your recovery phrase to restore access." onBack={() => setStep('welcome')} />
+              <textarea
+                value={importPhrase}
+                onChange={e => setImport(e.target.value)}
+                placeholder="Enter your 12 or 24-word recovery phrase..."
+                rows={3}
+                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none focus:border-white/20 font-mono resize-none transition-colors"
+              />
+              <PasswordFields
+                password={password} setPassword={setPassword}
+                show={showPw} toggleShow={() => setShowPw(p => !p)}
+                onSubmit={handleImport}
+                singleField
+                placeholder="Set a new wallet password"
+              />
+              {error && <ErrorMsg text={error} />}
+              <PrimaryBtn
+                onClick={handleImport}
+                disabled={importPhrase.trim().split(/\s+/).length < 12 || password.length < 6}
+              >
+                Import wallet
+              </PrimaryBtn>
+            </motion.div>
+          )}
+
+          {/* ── Encrypting ──────────────────────────────────────────────────── */}
+          {step === 'encrypting' && (
+            <motion.div key="encrypting" {...SLIDE} className="text-center space-y-6 py-4">
+              <div className="relative w-16 h-16 mx-auto">
+                <svg className="w-16 h-16 -rotate-90">
+                  <circle cx="32" cy="32" r="28" stroke="rgba(255,255,255,0.06)" strokeWidth="3" fill="none" />
+                  <circle
+                    cx="32" cy="32" r="28"
+                    stroke="#00FF87" strokeWidth="3" fill="none"
+                    strokeDasharray={`${2 * Math.PI * 28}`}
+                    strokeDashoffset={`${2 * Math.PI * 28 * (1 - progress / 100)}`}
+                    strokeLinecap="round"
+                    style={{ transition: 'stroke-dashoffset 0.3s ease' }}
                   />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-[13px] font-semibold text-white/70">{Math.round(progress)}%</span>
                 </div>
-                <button 
-                  onClick={handleInitialize}
-                  disabled={password.length < 4}
-                  className={`py-4 px-8 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all active:scale-[0.98] shadow-xl cursor-pointer h-[50px] ${isDark ? 'bg-white text-black hover:bg-white/90' : 'bg-black text-white hover:bg-black/90'}`}
-                >
-                  Bind Protocol
-                </button>
               </div>
-
-              <div className="text-center">
-                <button 
-                  onClick={() => setStep('INITIAL')}
-                  className={`text-[9px] font-black uppercase tracking-[0.2em] transition-all cursor-pointer ${isDark ? 'text-white/20 hover:text-white' : 'text-black/20 hover:text-black'}`}
-                >
-                  Return to Gateway
-                </button>
+              <div>
+                <p className="text-[15px] font-medium text-white/80">Encrypting wallet</p>
+                <p className="text-[12px] text-white/30 mt-1">This takes a moment...</p>
               </div>
             </motion.div>
           )}
 
-          {step === 'IMPORT' && (
-            <motion.div 
-              key="import"
-              initial={{ opacity: 0, scale: 0.98, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              className={`max-w-[720px] w-full space-y-8 backdrop-blur-3xl p-10 rounded-[3rem] z-10 border transition-all duration-700 ${isDark ? 'bg-white/[0.03] border-white/10 shadow-2xl' : 'bg-white border-black/5 shadow-xl'}`}
-            >
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b pb-6 transition-colors duration-500" style={{ borderColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }}>
-                <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/5'}`}>
-                    <Key size={20} className="text-orivon-accent" />
-                  </div>
-                  <div>
-                    <h2 className={`text-2xl font-black tracking-tight uppercase transition-colors ${isDark ? 'text-white' : 'text-black'}`}>Restore Node</h2>
-                    <p className={`text-[9px] uppercase tracking-[0.2em] font-black transition-colors ${isDark ? 'text-white/30' : 'text-black/30'}`}>Enter BIP-39 mnemonic phrase</p>
-                  </div>
-                </div>
-                <div className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/30 text-[8px] font-black uppercase tracking-widest hidden md:block">
-                  Awaiting Sync...
-                </div>
+          {/* ── Success ─────────────────────────────────────────────────────── */}
+          {step === 'success' && (
+            <motion.div key="success" {...SLIDE} className="text-center space-y-7 py-2">
+              <div className="w-14 h-14 rounded-full bg-[#00FF87]/15 border border-[#00FF87]/25 flex items-center justify-center mx-auto">
+                <CheckCircle size={24} className="text-[#00FF87]" />
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-3">
-                  <label className={`text-[8px] font-black uppercase tracking-widest ml-1 transition-colors ${isDark ? 'text-white/30' : 'text-black/30'}`}>Recovery Phrase</label>
-                  <textarea 
-                    autoFocus
-                    value={importPhrase}
-                    onChange={(e) => setImportPhrase(e.target.value)}
-                    placeholder="word1 word2 word3..."
-                    className={`w-full h-40 border px-6 py-5 rounded-2xl focus:outline-none transition-all font-mono text-[11px] resize-none placeholder:opacity-20 leading-relaxed ${isDark ? 'bg-black/40 border-white/10 focus:border-white/30 text-white' : 'bg-white border-black/10 focus:border-black/30 text-black'}`}
-                  />
-                </div>
-                
-                <div className="flex flex-col justify-end space-y-5">
-                   <div className="space-y-2">
-                      <label className={`text-[8px] font-black uppercase tracking-widest ml-1 transition-colors ${isDark ? 'text-white/30' : 'text-black/30'}`}>New Master Password</label>
-                      <input 
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="••••••••"
-                        className={`w-full border px-6 py-4 rounded-2xl focus:outline-none transition-all font-mono text-[11px] text-center placeholder:opacity-20 ${isDark ? 'bg-black/40 border-white/10 focus:border-white/30 text-white' : 'bg-white border-black/10 focus:border-black/30 text-black'}`}
-                      />
-                   </div>
-                  <button 
-                    onClick={handleImport}
-                    disabled={importPhrase.trim().split(/\s+/).length < 12 || password.length < 4}
-                    className={`w-full py-5 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all active:scale-[0.98] shadow-xl cursor-pointer ${isDark ? 'bg-white text-black hover:bg-white/90' : 'bg-black text-white hover:bg-black/90'}`}
-                  >
-                    Resync Identity Core
-                  </button>
-                  <button 
-                    onClick={() => setStep('INITIAL')}
-                    className={`w-full text-[9px] font-black uppercase tracking-[0.2em] transition-all cursor-pointer text-center ${isDark ? 'text-white/20 hover:text-white' : 'text-black/20 hover:text-black'}`}
-                  >
-                    Return to Gateway
-                  </button>
-                </div>
+              <div>
+                <p className="text-[17px] font-semibold text-white">Wallet ready</p>
+                <p className="text-[13px] text-white/40 mt-1.5">Your wallet is encrypted and stored locally.</p>
               </div>
+              <PrimaryBtn onClick={() => onDone(true)}>
+                Open your dashboard <ArrowRight size={15} />
+              </PrimaryBtn>
             </motion.div>
           )}
 
-          {step === 'DERIVED' && addresses && (
-            <motion.div 
-              key="derived"
-              initial={{ opacity: 0, scale: 0.98, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              className={`max-w-[720px] w-full space-y-8 backdrop-blur-3xl p-10 rounded-[3rem] z-10 border transition-all duration-700 ${isDark ? 'bg-white/[0.03] border-white/10 shadow-2xl' : 'bg-white border-black/5 shadow-xl'}`}
-            >
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b pb-6 transition-colors duration-500" style={{ borderColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }}>
-                <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/5'}`}>
-                    <Layers size={20} className="text-orivon-blue" />
-                  </div>
-                  <div>
-                    <h2 className={`text-2xl font-black tracking-tight uppercase transition-colors ${isDark ? 'text-white' : 'text-black'}`}>Node Bindings</h2>
-                    <p className={`text-[9px] uppercase tracking-[0.2em] font-black transition-colors ${isDark ? 'text-white/30' : 'text-black/30'}`}>Synchronization Successful</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                   <div className="px-3 py-1.5 rounded-full bg-orivon-blue/10 border border-orivon-blue/30 text-orivon-blue text-[8px] font-black uppercase tracking-widest">
-                     Multichain Bound
-                   </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {[
-                  { label: 'BTC_CORE', val: addresses.btc, color: 'text-orivon-accent' },
-                  { label: 'ETH_EVM', val: addresses.eth, color: 'text-orivon-blue' },
-                  { label: 'SOL_NET', val: addresses.sol, color: isDark ? 'text-white' : 'text-black' }
-                ].map(addr => (
-                  <div key={addr.label} className={`p-6 border rounded-2xl flex flex-col justify-between group transition-all shadow-inner h-32 ${isDark ? 'border-white/5 bg-black/40 hover:border-white/10' : 'border-black/5 bg-white/40 hover:border-black/10'}`}>
-                    <div className={`text-[7px] font-mono font-black uppercase tracking-[0.2em] ${isDark ? 'text-white/20' : 'text-black/20'}`}>{addr.label}</div>
-                    <div className={`text-[10px] break-all font-mono leading-relaxed transition-colors opacity-60 ${addr.color}`}>{addr.val}</div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex justify-center">
-                <button 
-                  onClick={() => onFinish(addresses)}
-                  className={`py-5 px-12 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all active:scale-[0.98] shadow-xl cursor-pointer ${isDark ? 'bg-white text-black hover:bg-white/90' : 'bg-black text-white hover:bg-black/90'}`}
-                >
-                  Enter Sovereign Shell
-                </button>
-              </div>
-            </motion.div>
-          )}
         </AnimatePresence>
-      </div>
-
-      {/* Theme Toggle - Bottom Left */}
-      <div className="absolute bottom-6 left-8 z-50">
-        <button 
-          onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
-          className={`group relative flex items-center justify-center w-10 h-10 rounded-full border transition-all duration-500 cursor-pointer overflow-hidden ${isDark ? 'bg-[#121212] border-white/10 hover:border-white/30' : 'bg-[#eeeeee] border-black/10 hover:border-black/30'}`}
-        >
-          <motion.div
-            animate={{ 
-              y: isDark ? 0 : 40,
-              opacity: isDark ? 1 : 0,
-              scale: isDark ? 1 : 0.5
-            }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="absolute"
-          >
-            <Moon size={16} className="text-white" />
-          </motion.div>
-          <motion.div
-            animate={{ 
-              y: isDark ? -40 : 0,
-              opacity: isDark ? 0 : 1,
-              scale: isDark ? 0.5 : 1
-            }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="absolute"
-          >
-            <Sun size={16} className="text-black" />
-          </motion.div>
-        </button>
-      </div>
-
-      <div className={`absolute bottom-12 right-8 flex gap-8 opacity-20 pointer-events-none transition-colors duration-500 ${isDark ? 'text-white' : 'text-black'}`}>
-        <div className="text-[7px] font-mono uppercase tracking-[0.6em] font-black">Secure_Protocol_Node: v0.94-Active</div>
-      </div>
-
-      {/* Crypto Ticker - Very Bottom */}
-      <div className={`absolute bottom-0 left-0 w-full h-7 border-t transition-colors duration-500 flex items-center overflow-hidden ${isDark ? 'bg-black/40 border-white/5' : 'bg-black/[0.02] border-black/5'}`}>
-        <motion.div 
-          animate={{ x: [0, -1500] }}
-          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-          className="flex gap-16 whitespace-nowrap px-10"
-        >
-          {[...Array(10)].map((_, i) => (
-            <div key={i} className="flex gap-12">
-              {[
-                { s: 'BTC', p: '$63,241.50', c: '+2.4%' },
-                { s: 'ETH', p: '$3,412.12', c: '-1.2%' },
-                { s: 'SOL', p: '$145.67', c: '+5.7%' },
-                { s: 'DOT', p: '$7.23', c: '+0.5%' },
-                { s: 'LINK', p: '$18.42', c: '+1.8%' },
-              ].map((token, j) => (
-                <div key={j} className="flex items-center gap-2 group">
-                  <span className={`text-[8px] font-mono font-black ${isDark ? 'text-white/20' : 'text-black/20'}`}>{token.s}</span>
-                  <span className={`text-[8px] font-mono font-bold ${isDark ? 'text-white/60' : 'text-black/60'}`}>{token.p}</span>
-                  <span className={`text-[7px] font-mono ${token.c.startsWith('+') ? 'text-green-500/50' : 'text-red-500/50'}`}>{token.c}</span>
-                </div>
-              ))}
-            </div>
-          ))}
-        </motion.div>
       </div>
     </div>
   );
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+function WelcomeBtn({ icon, label, sub, onClick, accent }: {
+  icon: React.ReactNode; label: string; sub: string;
+  onClick: () => void; accent?: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full flex items-center gap-4 p-4 rounded-2xl border text-left transition-all group ${
+        accent
+          ? 'bg-[#00FF87] border-[#00FF87] hover:brightness-105'
+          : 'bg-white/[0.03] border-white/[0.08] hover:bg-white/[0.06] hover:border-white/[0.12]'
+      }`}
+    >
+      <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+        accent ? 'bg-black/15' : 'bg-white/[0.06]'
+      }`}>
+        <span className={accent ? 'text-black' : 'text-white/50'}>{icon}</span>
+      </div>
+      <div>
+        <p className={`text-[13px] font-semibold leading-none mb-1 ${accent ? 'text-black' : 'text-white/90'}`}>{label}</p>
+        <p className={`text-[11px] ${accent ? 'text-black/60' : 'text-white/35'}`}>{sub}</p>
+      </div>
+    </button>
+  );
+}
+
+function StepHeader({ title, sub, onBack }: { title: string; sub: string; onBack: () => void }) {
+  return (
+    <div className="space-y-1">
+      <button onClick={onBack} className="flex items-center gap-1.5 text-[12px] text-white/35 hover:text-white/60 mb-4 transition-colors">
+        <ArrowLeft size={13} /> Back
+      </button>
+      <h2 className="text-[17px] font-semibold text-white/90">{title}</h2>
+      <p className="text-[12px] text-white/40 leading-relaxed">{sub}</p>
+    </div>
+  );
+}
+
+function PasswordFields({ password, setPassword, confirm, setConfirm, show, toggleShow, onSubmit, singleField, placeholder }: {
+  password: string; setPassword: (v: string) => void;
+  confirm?: string; setConfirm?: (v: string) => void;
+  show: boolean; toggleShow: () => void;
+  onSubmit: () => void;
+  singleField?: boolean;
+  placeholder?: string;
+}) {
+  return (
+    <div className="space-y-2.5">
+      <div className="relative">
+        <input
+          type={show ? 'text' : 'password'}
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          placeholder={placeholder || 'Password (min 6 characters)'}
+          autoFocus
+          onKeyDown={e => e.key === 'Enter' && !singleField && setConfirm && confirm && onSubmit()}
+          className="w-full h-11 bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 pr-11 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none focus:border-white/20 transition-colors"
+        />
+        <button onClick={toggleShow} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/50 transition-colors">
+          {show ? <EyeOff size={15} /> : <Eye size={15} />}
+        </button>
+      </div>
+      {!singleField && setConfirm && (
+        <input
+          type="password"
+          value={confirm}
+          onChange={e => setConfirm(e.target.value)}
+          placeholder="Confirm password"
+          onKeyDown={e => e.key === 'Enter' && onSubmit()}
+          className="w-full h-11 bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none focus:border-white/20 transition-colors"
+        />
+      )}
+    </div>
+  );
+}
+
+function PrimaryBtn({ children, onClick, disabled }: {
+  children: React.ReactNode; onClick: () => void; disabled?: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className="w-full h-11 flex items-center justify-center gap-2 rounded-xl bg-white text-black text-[13px] font-semibold hover:bg-[#00FF87] transition-colors disabled:opacity-35 disabled:cursor-not-allowed"
+    >
+      {children}
+    </button>
+  );
+}
+
+function ErrorMsg({ text }: { text: string }) {
+  return <p className="text-[12px] text-red-400 text-center">{text}</p>;
 }
