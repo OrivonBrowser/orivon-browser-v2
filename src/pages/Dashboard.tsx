@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  LayoutGrid, User, Compass, ShoppingCart, Send, ArrowLeftRight,
+  BarChart3, User, Compass, ShoppingCart, Send, RefreshCw,
   Link as LinkIcon, Download, Globe, MoreVertical, Plus,
   Search, Lock, Shield, Settings, HelpCircle,
   Copy, CheckCircle, ChevronDown,
-  X, Monitor
+  X, Monitor, Sparkles, Filter, ListFilter, MoreHorizontal, Eye
 } from 'lucide-react';
 import { useWalletStore } from '../store/wallet';
 
@@ -102,9 +102,9 @@ export default function Dashboard({ onOpenBrowser }: DashboardProps) {
   const sol = addresses?.sol ?? 'SOL000000000000000000000000000000000';
 
   const assets = [
-    { name: 'Ethereum', sym: 'ETH',   sub: 'ETH on Ethereum Mainnet', color: '#627EEA', l: 'Ξ',  bal: '0 ETH',  usd: '$0.00', addr: eth },
-    { name: 'Bitcoin',  sym: 'BTC',   sub: 'BTC on Bitcoin Mainnet',  color: '#F7931A', l: '₿',  bal: '0 BTC',  usd: '$0.00', addr: btc },
-    { name: 'Solana',   sym: 'SOL',   sub: 'SOL on Solana Mainnet',   color: '#9945FF', l: '◎',  bal: '0 SOL',  usd: '$0.00', addr: sol },
+    { name: 'Ethereum', sym: 'ETH',   sub: 'ETH on Ethereum Mainnet', color: '#627EEA', l: 'Ξ',  bal: '0',  usd: '$0.00', addr: eth },
+    { name: 'Bitcoin',  sym: 'BTC',   sub: 'BTC on Bitcoin Mainnet',  color: '#F7931A', l: '₿',  bal: '0',  usd: '$0.00', addr: btc },
+    { name: 'Solana',   sym: 'SOL',   sub: 'SOL on Solana Mainnet',   color: '#9945FF', l: '◎',  bal: '0',  usd: '$0.00', addr: sol },
   ];
 
   const accounts = [
@@ -119,67 +119,71 @@ export default function Dashboard({ onOpenBrowser }: DashboardProps) {
   );
 
   const NAV: { id: Section; label: string; Icon: React.ElementType }[] = [
-    { id: 'portfolio', label: 'Portfolio',  Icon: LayoutGrid   },
+    { id: 'portfolio', label: 'Portfolio',  Icon: BarChart3   },
     { id: 'accounts',  label: 'Accounts',   Icon: User         },
     { id: 'explore',   label: 'Explore',    Icon: Compass      },
     { id: 'buy',       label: 'Buy',        Icon: ShoppingCart },
     { id: 'send',      label: 'Send',       Icon: Send         },
-    { id: 'swap',      label: 'Swap',       Icon: ArrowLeftRight },
+    { id: 'swap',      label: 'Swap',       Icon: RefreshCw    },
     { id: 'bridge',    label: 'Bridge',     Icon: LinkIcon     },
     { id: 'deposit',   label: 'Deposit',    Icon: Download     },
   ];
 
   return (
-    <div style={{ display: 'flex', height: '100vh', background: '#F5F6FA', overflow: 'hidden', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', fontSize: 14 }}>
+    <div style={{ display: 'flex', height: '100vh', background: '#f3f4f6', overflow: 'hidden', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', fontSize: 14 }}>
 
       {/* ── Left Sidebar ───────────────────────────────────────────────────── */}
-      <aside style={{ width: 240, background: '#fff', borderRight: '1px solid #E5E7EB', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
+      <aside style={{ width: 240, background: '#fff', borderRight: '1px solid #e5e7eb', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
         {/* Brand */}
-        <div style={{ padding: '20px 20px 16px', display: 'flex', alignItems: 'center', gap: 10, borderBottom: '1px solid #F3F4F6' }}>
-          <div style={{ width: 30, height: 30, borderRadius: 8, background: '#00FF87', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Globe size={16} color="#000" strokeWidth={2.5} />
-          </div>
-          <span style={{ fontSize: 16, fontWeight: 700, color: '#111827' }}>dashboard</span>
+        <div style={{ padding: '24px 24px 20px', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M28.483 15.143L23.473 11.233L21.758 4.298L16.002 9.533L10.245 4.298L8.53 11.233L3.52 15.143L8.607 19.34L8.747 26.697L16.002 23.363L23.257 26.697L23.396 19.34L28.483 15.143Z" fill="#fb542b"/>
+          </svg>
+          <span style={{ fontSize: 20, fontWeight: 700, color: '#111827' }}>wallet</span>
         </div>
 
         {/* Nav */}
         <nav style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
-          {NAV.map(({ id, label, Icon }) => {
+          {NAV.map(({ id, label, Icon }, index) => {
             const active = section === id;
             return (
-              <div
-                key={id}
-                onClick={() => { setSection(id); setDepositAsset(null); }}
-                style={{
-                  position: 'relative', display: 'flex', alignItems: 'center', gap: 12,
-                  padding: '11px 20px', cursor: 'pointer',
-                  color: active ? '#4F46E5' : '#6B7280',
-                  fontWeight: active ? 600 : 400,
-                  background: active ? 'rgba(79,70,229,0.04)' : 'transparent',
-                  transition: 'color 0.12s, background 0.12s',
-                }}
-                onMouseEnter={e => { if (!active) (e.currentTarget as HTMLDivElement).style.background = '#F9FAFB'; }}
-                onMouseLeave={e => { if (!active) (e.currentTarget as HTMLDivElement).style.background = 'transparent'; }}
-              >
-                {/* Active indicator bar */}
-                {active && <div style={{ position: 'absolute', left: 0, top: 6, bottom: 6, width: 3, background: '#4F46E5', borderRadius: '0 3px 3px 0' }} />}
-                <Icon size={18} strokeWidth={active ? 2.2 : 1.8} />
-                <span style={{ fontSize: 14 }}>{label}</span>
-              </div>
+              <React.Fragment key={id}>
+                {index === 3 && <div style={{ height: 1, background: '#f3f4f6', margin: '8px 24px' }} />}
+                <div
+                  onClick={() => { setSection(id); setDepositAsset(null); }}
+                  style={{
+                    position: 'relative', display: 'flex', alignItems: 'center', gap: 12,
+                    padding: '12px 24px', cursor: 'pointer',
+                    color: active ? '#4f46e5' : '#4b5563',
+                    fontWeight: active ? 600 : 500,
+                    transition: 'all 0.12s',
+                  }}
+                >
+                  {/* Active indicator bar */}
+                  {active && <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 3, background: '#4f46e5' }} />}
+                  <Icon size={18} strokeWidth={active ? 2.5 : 2} />
+                  <span style={{ fontSize: 14 }}>{label}</span>
+                </div>
+              </React.Fragment>
             );
           })}
         </nav>
 
-        {/* Open browser */}
-        <div style={{ padding: '12px 12px 16px', borderTop: '1px solid #F3F4F6' }}>
-          <button
+        {/* Go to browser */}
+        <div style={{ padding: '16px 0', borderTop: '1px solid #f3f4f6' }}>
+          <div
             onClick={onOpenBrowser}
-            style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '10px 12px', borderRadius: 10, background: '#4F46E5', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, justifyContent: 'center', transition: 'filter 0.12s' }}
-            onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.1)'; }}
-            onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; }}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 12,
+              padding: '12px 24px', cursor: 'pointer',
+              color: '#4b5563',
+              fontWeight: 500,
+              transition: 'all 0.12s',
+            }}
           >
-            <Monitor size={15} /> Open Browser
-          </button>
+            <Globe size={18} strokeWidth={2} />
+            <span style={{ fontSize: 14 }}>Go to browser</span>
+          </div>
         </div>
       </aside>
 
@@ -187,14 +191,12 @@ export default function Dashboard({ onOpenBrowser }: DashboardProps) {
       <main style={{ flex: 1, overflowY: 'auto', padding: '24px 28px 24px', position: 'relative' }}>
 
         {/* Three-dot menu */}
-        <div ref={menuRef} style={{ position: 'absolute', top: 16, right: 20, zIndex: 50 }}>
+        <div ref={menuRef} style={{ position: 'absolute', top: 20, right: 24, zIndex: 50 }}>
           <button
             onClick={() => setMenuOpen(p => !p)}
-            style={{ width: 36, height: 36, borderRadius: '50%', border: '1px solid #E5E7EB', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#374151', transition: 'background 0.12s' }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#F9FAFB'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = '#fff'; }}
+            style={{ width: 32, height: 32, borderRadius: '50%', border: 'none', background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#9ca3af' }}
           >
-            <MoreVertical size={16} />
+            <MoreVertical size={20} />
           </button>
 
           {menuOpen && (
@@ -229,108 +231,97 @@ export default function Dashboard({ onOpenBrowser }: DashboardProps) {
         </div>
 
         {/* ── Card ──────────────────────────────────────────────────────────── */}
-        <div style={{ background: '#fff', borderRadius: 20, padding: '28px 32px', minHeight: 'calc(100vh - 64px)', boxShadow: '0 1px 8px rgba(0,0,0,0.05)' }}>
+        <div style={{ background: '#fff', borderRadius: 16, padding: '40px', minHeight: 'calc(100vh - 48px)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
 
           {/* ── PORTFOLIO ─────────────────────────────────────────────────── */}
           {section === 'portfolio' && (
             <>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 700, color: '#111827', margin: 0 }}>Portfolio</h2>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <button
-                    onClick={onOpenBrowser}
-                    style={{
-                      display: 'flex', alignItems: 'center', gap: 7,
-                      padding: '9px 18px', borderRadius: 9999,
-                      background: '#4F46E5', color: '#fff',
-                      border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600,
-                      boxShadow: '0 2px 10px rgba(79,70,229,0.30)',
-                      transition: 'filter 0.12s',
-                    }}
-                    onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.12)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; }}
-                  >
-                    <Monitor size={15} /> Go to Browser Mode
-                  </button>
-                  <button style={{ width: 32, height: 32, borderRadius: '50%', border: '1.5px solid #E5E7EB', background: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#6B7280' }}>
-                    <Plus size={16} />
-                  </button>
-                </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
+                <h2 style={{ fontSize: 24, fontWeight: 800, color: '#111827', margin: 0 }}>Portfolio</h2>
+                <button style={{ width: 32, height: 32, borderRadius: '50%', border: '1px solid #e5e7eb', background: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4f46e5' }}>
+                  <Plus size={18} />
+                </button>
               </div>
 
               {/* Balance + actions */}
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', margin: '24px 0 32px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 48 }}>
                 <div>
                   {showBalances
-                    ? <p style={{ fontSize: 32, fontWeight: 700, color: '#111827', margin: 0, letterSpacing: '-0.5px' }}>$0.00</p>
-                    : <p style={{ fontSize: 32, fontWeight: 700, color: '#111827', margin: 0 }}>••••••</p>
+                    ? <p style={{ fontSize: 42, fontWeight: 700, color: '#111827', margin: 0, letterSpacing: '-1px' }}>$0.0000001559</p>
+                    : <p style={{ fontSize: 42, fontWeight: 700, color: '#111827', margin: 0 }}>••••••</p>
                   }
                 </div>
-                <div style={{ display: 'flex', gap: 20 }}>
+                <div style={{ display: 'flex', gap: 16 }}>
                   {[
-                    { icon: ShoppingCart, label: 'Buy',  action: () => setSection('buy') },
+                    { icon: Eye, label: 'Buy',  action: () => setSection('buy') },
                     { icon: Send,         label: 'Send', action: () => setSection('send') },
-                    { icon: ArrowLeftRight, label: 'Swap', action: () => setSection('swap') },
-                    { icon: MoreVertical, label: 'More', action: () => {} },
+                    { icon: RefreshCw,    label: 'Swap', action: () => setSection('swap') },
+                    { icon: MoreHorizontal, label: 'More', action: () => {} },
                   ].map(btn => (
-                    <button key={btn.label} onClick={btn.action} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer' }}>
-                      <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#4F46E5', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'filter 0.12s' }}
-                        onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.filter = 'brightness(1.15)'; }}
-                        onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.filter = 'brightness(1)'; }}
-                      >
-                        <btn.icon size={20} color="#fff" strokeWidth={1.8} />
+                    <button key={btn.label} onClick={btn.action} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, background: 'none', border: 'none', cursor: 'pointer' }}>
+                      <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#4f46e5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <btn.icon size={20} color="#fff" strokeWidth={2} />
                       </div>
-                      <span style={{ fontSize: 12, color: '#374151', fontWeight: 500 }}>{btn.label}</span>
+                      <span style={{ fontSize: 13, color: '#111827', fontWeight: 600 }}>{btn.label}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
               {/* Tabs */}
-              <div style={{ display: 'flex', gap: 2, background: '#F3F4F6', borderRadius: 9999, padding: 3, width: 'fit-content', marginBottom: 24 }}>
-                {(['assets', showNFTs ? 'nfts' : null, 'activity'] as (PortfolioTab | null)[]).filter(Boolean).map(t => (
-                  <button
-                    key={t!}
-                    onClick={() => setTab(t!)}
-                    style={{
-                      padding: '7px 20px', borderRadius: 9999, border: tab === t ? '1.5px solid #4F46E5' : '1.5px solid transparent',
-                      background: tab === t ? '#fff' : 'transparent',
-                      color: tab === t ? '#4F46E5' : '#6B7280',
-                      fontWeight: tab === t ? 600 : 400, fontSize: 14, cursor: 'pointer',
-                      transition: 'all 0.12s',
-                    }}
-                  >
-                    {t!.charAt(0).toUpperCase() + t!.slice(1)}
-                  </button>
-                ))}
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 40 }}>
+                <div style={{ display: 'flex', background: '#f3f4f6', borderRadius: 9999, padding: 4, width: 'fit-content' }}>
+                  {(['assets', showNFTs ? 'nfts' : null, 'activity'] as (PortfolioTab | null)[]).filter(Boolean).map(t => (
+                    <button
+                      key={t!}
+                      onClick={() => setTab(t!)}
+                      style={{
+                        padding: '8px 28px', borderRadius: 9999,
+                        background: tab === t ? '#fff' : 'transparent',
+                        border: tab === t ? '1.5px solid #4f46e5' : '1.5px solid transparent',
+                        color: tab === t ? '#4f46e5' : '#6b7280',
+                        fontWeight: 600, fontSize: 14, cursor: 'pointer',
+                        transition: 'all 0.12s',
+                      }}
+                    >
+                      {t!.charAt(0).toUpperCase() + t!.slice(1)}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Assets list */}
               {tab === 'assets' && (
                 <>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                    <span style={{ fontWeight: 600, color: '#111827' }}>Assets</span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, border: '1px solid #E5E7EB', borderRadius: 9999, padding: '7px 14px', background: '#fff' }}>
-                        <Search size={14} color="#9CA3AF" />
-                        <input placeholder="Search" style={{ border: 'none', outline: 'none', fontSize: 13, color: '#374151', background: 'transparent', width: 120 }} />
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+                    <span style={{ fontSize: 18, fontWeight: 700, color: '#111827' }}>Assets</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#f3f4f6', borderRadius: 10, padding: '8px 14px', width: 220 }}>
+                        <Search size={16} color="#9ca3af" />
+                        <input placeholder="Search" style={{ border: 'none', outline: 'none', fontSize: 14, color: '#111827', background: 'transparent', width: '100%' }} />
                       </div>
+                      <button style={{ width: 36, height: 36, borderRadius: '50%', border: '1px solid #e5e7eb', background: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4f46e5' }}>
+                        <ListFilter size={18} />
+                      </button>
+                      <button style={{ width: 36, height: 36, borderRadius: '50%', border: '1px solid #e5e7eb', background: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#4f46e5' }}>
+                        <Filter size={18} />
+                      </button>
                     </div>
                   </div>
-                  <div>
+                  <div style={{ maxHeight: 400, overflowY: 'auto', paddingRight: 8 }}>
                     {assets.map(a => (
-                      <div key={a.sym} style={{ display: 'flex', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid #F9FAFB', gap: 12 }}>
-                        <CoinAvatar color={a.color} letter={a.l} size={38} />
+                      <div key={a.sym} style={{ display: 'flex', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid #f3f4f6', gap: 16 }}>
+                        <CoinAvatar color={a.color} letter={a.l} size={40} />
                         <div style={{ flex: 1 }}>
-                          <p style={{ margin: 0, fontWeight: 600, color: '#111827', fontSize: 14 }}>{a.name}</p>
-                          <p style={{ margin: 0, fontSize: 12, color: '#9CA3AF' }}>{a.sub}</p>
+                          <p style={{ margin: 0, fontWeight: 700, color: '#111827', fontSize: 15 }}>{a.name}</p>
+                          <p style={{ margin: 0, fontSize: 13, color: '#6b7280' }}>{a.sub}</p>
                         </div>
                         <div style={{ textAlign: 'right' }}>
-                          <p style={{ margin: 0, fontWeight: 600, color: '#111827', fontSize: 14 }}>{showBalances ? a.bal : '•••'}</p>
-                          <p style={{ margin: 0, fontSize: 12, color: '#9CA3AF' }}>{showBalances ? a.usd : '•••'}</p>
+                          <p style={{ margin: 0, fontWeight: 700, color: '#111827', fontSize: 15 }}>{showBalances ? a.bal : '•••'} {a.sym}</p>
+                          <p style={{ margin: 0, fontSize: 13, color: '#6b7280' }}>{showBalances ? a.usd : '•••'}</p>
                         </div>
-                        <button style={{ width: 28, height: 28, borderRadius: '50%', border: 'none', background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9CA3AF' }}>
-                          <MoreVertical size={14} />
+                        <button style={{ width: 32, height: 32, borderRadius: '50%', border: 'none', background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#111827' }}>
+                          <MoreVertical size={20} />
                         </button>
                       </div>
                     ))}
@@ -597,6 +588,24 @@ export default function Dashboard({ onOpenBrowser }: DashboardProps) {
 
         </div>
       </main>
+
+      {/* Floating Request Feature Button */}
+      <button
+        style={{
+          position: 'fixed', bottom: 24, right: 24, zIndex: 100,
+          display: 'flex', alignItems: 'center', gap: 10,
+          padding: '12px 20px', borderRadius: 9999,
+          background: '#4f46e5', color: '#fff',
+          border: 'none', cursor: 'pointer',
+          boxShadow: '0 4px 14px rgba(79,70,229,0.4)',
+          transition: 'all 0.2s',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.1)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+        onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+      >
+        <Sparkles size={18} fill="#fff" />
+        <span style={{ fontSize: 14, fontWeight: 700 }}>Request feature</span>
+      </button>
     </div>
   );
 }
@@ -637,7 +646,7 @@ function AssetActionPage({ title, fromLabel, fromBtn, toLabel, toBtn, actionBtn,
         {showSwapIcon && (
           <div style={{ display: 'flex', alignItems: 'center', padding: '4px 0', gap: 8 }}>
             <button style={{ width: 34, height: 34, borderRadius: 9, border: '1px solid #E5E7EB', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#6B7280' }}>
-              <ArrowLeftRight size={14} />
+              <RefreshCw size={14} />
             </button>
           </div>
         )}
