@@ -1,33 +1,66 @@
 import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRight, ArrowLeft, Eye, EyeOff, Copy, CircleCheck, Shield, Key, Globe, CircleHelp, Settings, Info, Zap, LayoutGrid } from 'lucide-react';
+import {
+  ArrowRight, ArrowLeft, Eye, EyeOff,
+  Copy, CircleCheck, Shield, Key, Globe,
+  CircleHelp, Settings
+} from 'lucide-react';
 import { useWalletStore } from '../store/wallet';
 
-type Step = 'welcome' | 'create-phrase' | 'create-password' | 'import' | 'encrypting' | 'success';
+type Step =
+  | 'welcome'
+  | 'choose'
+  | 'create-phrase'
+  | 'create-password'
+  | 'import'
+  | 'encrypting'
+  | 'success';
 
 interface OnboardingProps {
   onDone: (hasWallet: boolean) => void;
 }
 
 const SLIDE = {
-  initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } },
-  exit:    { opacity: 0, y: -8, transition: { duration: 0.18, ease: 'easeIn' } },
+  initial: { opacity: 0, y: 10 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } },
+  exit:    { opacity: 0, y: -6, transition: { duration: 0.18, ease: 'easeIn' } },
 };
+
+// ── Frosted card used by every step except welcome ────────────────────────────
+function InnerCard({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        width: '100%',
+        maxWidth: 480,
+        borderRadius: 20,
+        padding: '36px 40px 36px',
+        background: 'rgba(255,255,255,0.13)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+        boxShadow: '0 16px 48px rgba(0,0,0,0.35)',
+        textAlign: 'left',
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 export default function Onboarding({ onDone }: OnboardingProps) {
   const { generateMnemonic, createWallet, importWallet } = useWalletStore();
 
-  const [step, setStep]             = useState<Step>('welcome');
-  const [mode, setMode]             = useState<'create' | 'import'>('create');
-  const [mnemonic]                  = useState(() => generateMnemonic());
-  const [importPhrase, setImport]   = useState('');
-  const [password, setPassword]     = useState('');
-  const [confirmPw, setConfirmPw]   = useState('');
-  const [showPw, setShowPw]         = useState(false);
-  const [copied, setCopied]         = useState(false);
-  const [progress, setProgress]     = useState(0);
-  const [error, setError]           = useState('');
+  const [step, setStep]           = useState<Step>('welcome');
+  const [mnemonic]                = useState(() => generateMnemonic());
+  const [importPhrase, setImport] = useState('');
+  const [password, setPassword]   = useState('');
+  const [confirmPw, setConfirmPw] = useState('');
+  const [showPw, setShowPw]       = useState(false);
+  const [copied, setCopied]       = useState(false);
+  const [progress, setProgress]   = useState(0);
+  const [error, setError]         = useState('');
 
   const words = mnemonic.split(' ');
 
@@ -38,7 +71,7 @@ export default function Onboarding({ onDone }: OnboardingProps) {
   };
 
   const handleCreate = useCallback(async () => {
-    if (password.length < 6) { setError('Password must be at least 6 characters'); return; }
+    if (password.length < 6)    { setError('Password must be at least 6 characters'); return; }
     if (password !== confirmPw) { setError('Passwords do not match'); return; }
     setError(''); setStep('encrypting');
     try {
@@ -53,8 +86,8 @@ export default function Onboarding({ onDone }: OnboardingProps) {
   const handleImport = useCallback(async () => {
     const phrase = importPhrase.trim();
     const wc = phrase.split(/\s+/).length;
-    if (wc !== 12 && wc !== 24) { setError('Enter a valid 12 or 24-word recovery phrase'); return; }
-    if (password.length < 6) { setError('Password must be at least 6 characters'); return; }
+    if (wc !== 12 && wc !== 24) { setError('Enter a valid 12 or 24 word recovery phrase'); return; }
+    if (password.length < 6)    { setError('Password must be at least 6 characters'); return; }
     setError(''); setStep('encrypting');
     try {
       await importWallet(phrase, password, setProgress);
@@ -66,247 +99,313 @@ export default function Onboarding({ onDone }: OnboardingProps) {
   }, [importPhrase, password, importWallet]);
 
   return (
-    <div className="h-screen w-screen bg-black flex flex-col items-center justify-center overflow-hidden relative">
-      {/* Background Image */}
+    <div
+      style={{
+        position: 'relative',
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#0a0a0a',
+      }}
+    >
+      {/* Background image */}
       <img
         src="/background.jpg"
         alt=""
-        className="absolute inset-0 w-full h-full object-cover opacity-40 z-0"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          opacity: 0.5,
+          zIndex: 0,
+        }}
       />
 
-      {/* Top Right Utilities */}
-      <div className="absolute top-6 right-8 z-20 flex items-center gap-5">
-        <button className="text-white/40 hover:text-white transition-colors cursor-pointer">
-          <CircleHelp size={19} />
+      {/* Top-right icons */}
+      <div style={{ position: 'absolute', top: 24, right: 32, zIndex: 20, display: 'flex', gap: 20 }}>
+        <button style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>
+          <CircleHelp size={20} />
         </button>
-        <button className="text-white/40 hover:text-white transition-colors cursor-pointer">
-          <Settings size={19} />
+        <button style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>
+          <Settings size={20} />
         </button>
       </div>
 
-      <div className={`relative z-10 w-full h-full flex flex-col items-center ${step === 'welcome' ? 'justify-start' : 'justify-center'} overflow-y-auto scrollbar-none py-12 px-6 ${step !== 'welcome' ? 'max-w-sm' : ''}`}>
+      {/* Content */}
+      <div style={{ position: 'relative', zIndex: 10, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 24px' }}>
         <AnimatePresence mode="wait">
 
-          {/* ── Welcome ─────────────────────────────────────────────────────── */}
+          {/* ── WELCOME ──────────────────────────────────────────────────── */}
           {step === 'welcome' && (
-            <motion.div key="welcome" {...SLIDE} className="w-full max-w-5xl mx-auto space-y-16">
-              <div className="text-center space-y-4">
-                <div className="w-16 h-16 rounded-2xl bg-[#00FF87] flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(0,255,135,0.2)]">
-                  <Globe size={32} className="text-black" strokeWidth={2.5} />
+            <motion.div
+              key="welcome"
+              {...SLIDE}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}
+            >
+              {/* Logo — floats above, overlaps card top by ~58px */}
+              <div style={{ position: 'relative', zIndex: 2, marginBottom: -58 }}>
+                <div style={{
+                  width: 116, height: 116,
+                  borderRadius: 28,
+                  background: 'linear-gradient(145deg, #00FF87, #00E87A)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: '0 12px 40px rgba(0,255,135,0.40), 0 4px 12px rgba(0,0,0,0.5)',
+                }}>
+                  <Globe size={56} color="#000" strokeWidth={1.8} />
                 </div>
-                <div>
-                  <h1 className="text-5xl font-bold tracking-tight text-white mb-3">Welcome to Orivon</h1>
-                  <p className="text-xl text-white/60 max-w-2xl mx-auto">
-                    People will switch to Orivon because today’s Web3 user experience is fundamentally broken and insecure, and traditional browsers cannot fix it without completely changing how they are built.
-                  </p>
+              </div>
+
+              {/* Card */}
+              <div style={{
+                width: '100%', maxWidth: 680, borderRadius: 24,
+                /* paddingTop covers the logo overlap (58px) + breathing room (36px) */
+                padding: '94px 64px 52px',
+                background: 'rgba(255,255,255,0.16)',
+                backdropFilter: 'blur(28px)',
+                WebkitBackdropFilter: 'blur(28px)',
+                textAlign: 'center',
+                position: 'relative', zIndex: 1,
+                boxShadow: '0 20px 60px rgba(0,0,0,0.30)',
+              }}>
+                {/* Headline */}
+                <h1 style={{
+                  fontSize: 42,
+                  fontWeight: 800,
+                  color: '#ffffff',
+                  margin: '0 0 16px',
+                  letterSpacing: '-0.8px',
+                  lineHeight: 1.15,
+                }}>
+                  Web3. By Default.
+                </h1>
+
+                {/* Two-line subtitle */}
+                <p style={{
+                  fontSize: 18,
+                  color: 'rgba(255,255,255,0.65)',
+                  lineHeight: 1.65,
+                  margin: '0 0 44px',
+                }}>
+                  Browse ENS domains and decentralized apps natively.
+                  <br />
+                  Your wallet lives inside the browser, not an extension.
+                </p>
+
+                {/* Button — NOT full width, centered like Brave */}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }}>
+                  <button
+                    onClick={() => setStep('choose')}
+                    style={{
+                      width: '68%', height: 56,
+                      borderRadius: 9999,
+                      background: '#4F46E5',
+                      color: '#ffffff', fontSize: 17, fontWeight: 600,
+                      border: 'none', cursor: 'pointer',
+                      letterSpacing: '-0.1px',
+                      boxShadow: '0 4px 20px rgba(79,70,229,0.45)',
+                      transition: 'filter 0.15s, transform 0.1s',
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.14)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; }}
+                    onMouseDown={e =>  { e.currentTarget.style.transform = 'scale(0.97)'; }}
+                    onMouseUp={e =>    { e.currentTarget.style.transform = 'scale(1)'; }}
+                  >
+                    Create / Import Wallet
+                  </button>
+
+                  <button
+                    onClick={() => onDone(false)}
+                    style={{
+                      background: 'none', border: 'none',
+                      color: 'rgba(255,255,255,0.52)', fontSize: 16,
+                      cursor: 'pointer', padding: '4px 0',
+                      transition: 'color 0.15s',
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.85)')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.52)')}
+                  >
+                    Skip
+                  </button>
                 </div>
               </div>
+            </motion.div>
+          )}
 
-              {/* 4 Core Pillars */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <Pillar
-                  icon={<Shield className="text-[#00FF87]" size={28} />}
-                  title="Eliminating the 'Extension Hack' (Security)"
-                  description="The wallet is not an extension; it is a native layer of the browser architecture. A malicious website literally cannot interact with or scan your wallet unless explicitly permitted through the secure hardware/OS layer."
-                />
-                <Pillar
-                  icon={<Zap className="text-[#00D1FF]" size={28} />}
-                  title="True Decentralization vs. Web2 Hosting"
-                  description="Type uniswap.eth and bypass DNS entirely. Orivon fetches app code directly from decentralized P2P networks (IPFS/Arweave). It is unstoppable and cannot be censored or altered."
-                />
-                <Pillar
-                  icon={<Info className="text-[#A855F7]" size={28} />}
-                  title="Ending 'Blind Signing' (Trust Layer)"
-                  description="Orivon’s Trust Layer parses contract code into plain language. It displays a visual Trustless and Privacy Score before you sign, so you know exactly what the transaction does."
-                />
-                <Pillar
-                  icon={<LayoutGrid className="text-[#F97316]" size={28} />}
-                  title="Zero-Setup P2P Infrastructure"
-                  description="It is 'Open → Use.' Orivon contains a native P2P networking layer. Spin up a Bitcoin light client or seed a file network simply by leaving a tab open. No terminal or Docker required."
-                />
-              </div>
+          {/* ── Choose ────────────────────────────────────────────────────── */}
+          {step === 'choose' && (
+            <motion.div key="choose" {...SLIDE} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+              <InnerCard>
+                <BackBtn onClick={() => setStep('welcome')} />
+                <Title>Set up your wallet</Title>
+                <Sub>How would you like to get started?</Sub>
 
-              {/* Comparison Table */}
-              <div className="rounded-3xl border border-white/[0.08] bg-white/[0.02] overflow-hidden backdrop-blur-sm">
-                <table className="w-full text-left text-sm">
-                  <thead>
-                    <tr className="border-b border-white/[0.08] bg-white/[0.03]">
-                      <th className="px-6 py-4 font-semibold text-white/50 uppercase tracking-wider text-[11px]">Feature</th>
-                      <th className="px-6 py-4 font-semibold text-white/50 uppercase tracking-wider text-[11px]">The Norm (Chrome + Extensions)</th>
-                      <th className="px-6 py-4 font-semibold text-[#00FF87] uppercase tracking-wider text-[11px]">The Orivon Way</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-white/[0.04]">
-                    <tr>
-                      <td className="px-6 py-4 font-medium text-white/80">Setup</td>
-                      <td className="px-6 py-4 text-white/40">Download browser → Install extensions → Configure networks</td>
-                      <td className="px-6 py-4 text-white/80">Open and use immediately</td>
-                    </tr>
-                    <tr>
-                      <td className="px-6 py-4 font-medium text-white/80">Architecture</td>
-                      <td className="px-6 py-4 text-white/40">Web2 browser wrapped around a Web3 add-on</td>
-                      <td className="px-6 py-4 text-white/80">Native Web3 operating environment</td>
-                    </tr>
-                    <tr>
-                      <td className="px-6 py-4 font-medium text-white/80">Hosting</td>
-                      <td className="px-6 py-4 text-white/40">Centralized cloud servers (vulnerable to downtime/censorship)</td>
-                      <td className="px-6 py-4 text-white/80">Local execution via P2P/WASM</td>
-                    </tr>
-                    <tr>
-                      <td className="px-6 py-4 font-medium text-white/80">Security</td>
-                      <td className="px-6 py-4 text-white/40">Blindly signing transactions; vulnerable to phishing</td>
-                      <td className="px-6 py-4 text-white/80">Visual Trust & Safety metrics before you sign</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
+                  <OptionBtn
+                    icon={<Shield size={18} color="#00FF87" />}
+                    iconBg="rgba(0,255,135,0.15)"
+                    label="Create new wallet"
+                    sub="Generate a fresh 12-word seed phrase"
+                    onClick={() => setStep('create-phrase')}
+                    accent
+                  />
+                  <OptionBtn
+                    icon={<Key size={18} color="rgba(255,255,255,0.55)" />}
+                    iconBg="rgba(255,255,255,0.08)"
+                    label="Import existing wallet"
+                    sub="Restore from your 12 or 24-word phrase"
+                    onClick={() => setStep('import')}
+                  />
+                </div>
+              </InnerCard>
+            </motion.div>
+          )}
 
-              {/* Action Buttons */}
-              <div className="flex flex-col items-center gap-6 pt-4">
-                <div className="flex items-center gap-4 w-full max-w-md">
-                  <button
-                    onClick={() => { setMode('create'); setStep('create-phrase'); }}
-                    className="flex-1 h-14 rounded-2xl bg-[#00FF87] text-black font-bold text-lg hover:brightness-105 transition-all shadow-[0_0_20px_rgba(0,255,135,0.15)] flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <Shield size={20} />
-                    Create Wallet
-                  </button>
-                  <button
-                    onClick={() => { setMode('import'); setStep('import'); }}
-                    className="flex-1 h-14 rounded-2xl bg-white/[0.05] border border-white/[0.1] text-white font-bold text-lg hover:bg-white/[0.08] transition-all flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <Key size={20} />
-                    Import Wallet
-                  </button>
+          {/* ── Seed phrase ───────────────────────────────────────────────── */}
+          {step === 'create-phrase' && (
+            <motion.div key="phrase" {...SLIDE} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+              <InnerCard>
+                <BackBtn onClick={() => setStep('choose')} />
+                <Title>Your recovery phrase</Title>
+                <Sub>Write down these 12 words and store them somewhere safe. This is the only way to recover your wallet.</Sub>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6, margin: '16px 0' }}>
+                  {words.map((word, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '8px 10px' }}>
+                      <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.22)', width: 14, flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
+                      <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.82)' }}>{word}</span>
+                    </div>
+                  ))}
                 </div>
 
                 <button
-                  onClick={() => onDone(false)}
-                  className="text-white/30 hover:text-white/60 transition-colors text-sm font-medium flex items-center gap-2 cursor-pointer"
+                  onClick={copyPhrase}
+                  style={{
+                    width: '100%', height: 38, borderRadius: 10, fontSize: 12, fontWeight: 500,
+                    background: copied ? 'rgba(0,255,135,0.12)' : 'rgba(255,255,255,0.05)',
+                    border: `1px solid ${copied ? 'rgba(0,255,135,0.3)' : 'rgba(255,255,255,0.1)'}`,
+                    color: copied ? '#00FF87' : 'rgba(255,255,255,0.45)',
+                    cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginBottom: 14,
+                  }}
                 >
-                  <ArrowRight size={16} />
-                  Skip and browse privately
+                  {copied ? <CircleCheck size={13} /> : <Copy size={13} />}
+                  {copied ? 'Copied!' : 'Copy to clipboard'}
                 </button>
-              </div>
+
+                <PrimaryBtn onClick={() => setStep('create-password')}>
+                  I have saved my phrase &nbsp;<ArrowRight size={14} />
+                </PrimaryBtn>
+              </InnerCard>
             </motion.div>
           )}
 
-          {/* ── Seed phrase display ──────────────────────────────────────────── */}
-          {step === 'create-phrase' && (
-            <motion.div key="phrase" {...SLIDE} className="space-y-6">
-              <StepHeader title="Your recovery phrase" sub="Write these 12 words down and keep them safe. They cannot be recovered." onBack={() => setStep('welcome')} />
-
-              <div className="grid grid-cols-3 gap-1.5">
-                {words.map((word, i) => (
-                  <div key={i} className="flex items-center gap-1.5 bg-white/[0.04] border border-white/[0.07] rounded-lg px-2.5 py-2">
-                    <span className="text-[10px] text-white/25 w-4 shrink-0 tabular-nums">{i + 1}</span>
-                    <span className="text-[12px] font-medium text-white/80">{word}</span>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                onClick={copyPhrase}
-                className={`flex items-center justify-center gap-2 w-full h-10 rounded-xl text-[12px] font-medium border transition-all ${
-                  copied
-                    ? 'border-[#00FF87]/30 text-[#00FF87] bg-[#00FF87]/8'
-                    : 'border-white/10 text-white/40 hover:text-white/60 hover:border-white/20'
-                }`}
-              >
-                {copied ? <CircleCheck size={14} /> : <Copy size={14} />}
-                {copied ? 'Copied!' : 'Copy to clipboard'}
-              </button>
-
-              <PrimaryBtn onClick={() => setStep('create-password')}>
-                I've saved my phrase <ArrowRight size={15} />
-              </PrimaryBtn>
-            </motion.div>
-          )}
-
-          {/* ── Create password ──────────────────────────────────────────────── */}
+          {/* ── Password ──────────────────────────────────────────────────── */}
           {step === 'create-password' && (
-            <motion.div key="create-pw" {...SLIDE} className="space-y-5">
-              <StepHeader title="Protect your wallet" sub="Set a password to encrypt your wallet locally." onBack={() => setStep('create-phrase')} />
-              <PasswordFields
-                password={password} setPassword={setPassword}
-                confirm={confirmPw} setConfirm={setConfirmPw}
-                show={showPw} toggleShow={() => setShowPw(p => !p)}
-                onSubmit={handleCreate}
-              />
-              {error && <ErrorMsg text={error} />}
-              <PrimaryBtn onClick={handleCreate} disabled={password.length < 6 || password !== confirmPw}>
-                Create wallet
-              </PrimaryBtn>
-            </motion.div>
-          )}
+            <motion.div key="create-pw" {...SLIDE} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+              <InnerCard>
+                <BackBtn onClick={() => setStep('create-phrase')} />
+                <Title>Protect your wallet</Title>
+                <Sub>This password encrypts your wallet on your device. You will need it every time you unlock.</Sub>
 
-          {/* ── Import ──────────────────────────────────────────────────────── */}
-          {step === 'import' && (
-            <motion.div key="import" {...SLIDE} className="space-y-5">
-              <StepHeader title="Import wallet" sub="Enter your recovery phrase to restore access." onBack={() => setStep('welcome')} />
-              <textarea
-                value={importPhrase}
-                onChange={e => setImport(e.target.value)}
-                placeholder="Enter your 12 or 24-word recovery phrase..."
-                rows={3}
-                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none focus:border-white/20 font-mono resize-none transition-colors"
-              />
-              <PasswordFields
-                password={password} setPassword={setPassword}
-                show={showPw} toggleShow={() => setShowPw(p => !p)}
-                onSubmit={handleImport}
-                singleField
-                placeholder="Set a new wallet password"
-              />
-              {error && <ErrorMsg text={error} />}
-              <PrimaryBtn
-                onClick={handleImport}
-                disabled={importPhrase.trim().split(/\s+/).length < 12 || password.length < 6}
-              >
-                Import wallet
-              </PrimaryBtn>
-            </motion.div>
-          )}
-
-          {/* ── Encrypting ──────────────────────────────────────────────────── */}
-          {step === 'encrypting' && (
-            <motion.div key="encrypting" {...SLIDE} className="text-center space-y-6 py-4">
-              <div className="relative w-16 h-16 mx-auto">
-                <svg className="w-16 h-16 -rotate-90">
-                  <circle cx="32" cy="32" r="28" stroke="rgba(255,255,255,0.06)" strokeWidth="3" fill="none" />
-                  <circle
-                    cx="32" cy="32" r="28"
-                    stroke="#00FF87" strokeWidth="3" fill="none"
-                    strokeDasharray={`${2 * Math.PI * 28}`}
-                    strokeDashoffset={`${2 * Math.PI * 28 * (1 - progress / 100)}`}
-                    strokeLinecap="round"
-                    style={{ transition: 'stroke-dashoffset 0.3s ease' }}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, margin: '16px 0' }}>
+                  <PwInput value={password} onChange={setPassword} placeholder="Password (min 6 characters)" show={showPw} toggle={() => setShowPw(p => !p)} autoFocus onEnter={() => {}} />
+                  <input
+                    type="password"
+                    value={confirmPw}
+                    onChange={e => setConfirmPw(e.target.value)}
+                    placeholder="Confirm password"
+                    onKeyDown={e => e.key === 'Enter' && handleCreate()}
+                    style={inputStyle}
                   />
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-[13px] font-semibold text-white/70">{Math.round(progress)}%</span>
                 </div>
-              </div>
-              <div>
-                <p className="text-[15px] font-medium text-white/80">Encrypting wallet</p>
-                <p className="text-[12px] text-white/30 mt-1">This takes a moment...</p>
-              </div>
+                {error && <ErrMsg text={error} />}
+                <PrimaryBtn onClick={handleCreate} disabled={password.length < 6 || password !== confirmPw}>
+                  Create wallet
+                </PrimaryBtn>
+              </InnerCard>
             </motion.div>
           )}
 
-          {/* ── Success ─────────────────────────────────────────────────────── */}
+          {/* ── Import ────────────────────────────────────────────────────── */}
+          {step === 'import' && (
+            <motion.div key="import" {...SLIDE} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+              <InnerCard>
+                <BackBtn onClick={() => setStep('choose')} />
+                <Title>Import your wallet</Title>
+                <Sub>Enter your 12 or 24-word recovery phrase to restore access to your wallet.</Sub>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, margin: '16px 0' }}>
+                  <textarea
+                    value={importPhrase}
+                    onChange={e => setImport(e.target.value)}
+                    placeholder="word1 word2 word3..."
+                    rows={3}
+                    style={{ ...inputStyle, resize: 'none', fontFamily: 'monospace', paddingTop: 12 }}
+                  />
+                  <PwInput value={password} onChange={setPassword} placeholder="Set a new password" show={showPw} toggle={() => setShowPw(p => !p)} autoFocus onEnter={handleImport} />
+                </div>
+                {error && <ErrMsg text={error} />}
+                <PrimaryBtn onClick={handleImport} disabled={importPhrase.trim().split(/\s+/).length < 12 || password.length < 6}>
+                  Import wallet
+                </PrimaryBtn>
+              </InnerCard>
+            </motion.div>
+          )}
+
+          {/* ── Encrypting ────────────────────────────────────────────────── */}
+          {step === 'encrypting' && (
+            <motion.div key="encrypting" {...SLIDE} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+              <InnerCard>
+                <div style={{ textAlign: 'center', padding: '16px 0' }}>
+                  <div style={{ position: 'relative', width: 64, height: 64, margin: '0 auto 20px' }}>
+                    <svg width="64" height="64" viewBox="0 0 64 64" style={{ transform: 'rotate(-90deg)' }}>
+                      <circle cx="32" cy="32" r="28" stroke="rgba(255,255,255,0.08)" strokeWidth="3" fill="none" />
+                      <circle
+                        cx="32" cy="32" r="28"
+                        stroke="#00FF87" strokeWidth="3" fill="none"
+                        strokeDasharray={`${2 * Math.PI * 28}`}
+                        strokeDashoffset={`${2 * Math.PI * 28 * (1 - progress / 100)}`}
+                        strokeLinecap="round"
+                        style={{ transition: 'stroke-dashoffset 0.3s ease' }}
+                      />
+                    </svg>
+                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>{Math.round(progress)}%</span>
+                    </div>
+                  </div>
+                  <p style={{ fontSize: 16, fontWeight: 600, color: 'rgba(255,255,255,0.85)', margin: '0 0 6px' }}>Encrypting your wallet</p>
+                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', margin: 0 }}>Just a moment while we secure your keys</p>
+                </div>
+              </InnerCard>
+            </motion.div>
+          )}
+
+          {/* ── Success ───────────────────────────────────────────────────── */}
           {step === 'success' && (
-            <motion.div key="success" {...SLIDE} className="text-center space-y-7 py-2">
-              <div className="w-14 h-14 rounded-full bg-[#00FF87]/15 border border-[#00FF87]/25 flex items-center justify-center mx-auto">
-                <CircleCheck size={24} className="text-[#00FF87]" />
-              </div>
-              <div>
-                <p className="text-[17px] font-semibold text-white">Wallet ready</p>
-                <p className="text-[13px] text-white/40 mt-1.5">Your wallet is encrypted and stored locally.</p>
-              </div>
-              <PrimaryBtn onClick={() => onDone(true)}>
-                Open your dashboard <ArrowRight size={15} />
-              </PrimaryBtn>
+            <motion.div key="success" {...SLIDE} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+              <InnerCard>
+                <div style={{ textAlign: 'center', padding: '8px 0' }}>
+                  <div style={{
+                    width: 56, height: 56, borderRadius: '50%',
+                    background: 'rgba(0,255,135,0.12)', border: '1px solid rgba(0,255,135,0.25)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    margin: '0 auto 20px',
+                  }}>
+                    <CircleCheck size={26} color="#00FF87" />
+                  </div>
+                  <p style={{ fontSize: 20, fontWeight: 700, color: '#fff', margin: '0 0 8px' }}>Wallet ready</p>
+                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.42)', margin: '0 0 28px' }}>
+                    Encrypted and stored locally on your device. Only you have access.
+                  </p>
+                  <PrimaryBtn onClick={() => onDone(true)}>
+                    Open Orivon &nbsp;<ArrowRight size={14} />
+                  </PrimaryBtn>
+                </div>
+              </InnerCard>
             </motion.div>
           )}
 
@@ -316,80 +415,42 @@ export default function Onboarding({ onDone }: OnboardingProps) {
   );
 }
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+// ─── Shared sub-components ────────────────────────────────────────────────────
 
-function WelcomeBtn({ icon, label, sub, onClick, accent }: {
-  icon: React.ReactNode; label: string; sub: string;
-  onClick: () => void; accent?: boolean;
+const inputStyle: React.CSSProperties = {
+  width: '100%',
+  height: 44,
+  borderRadius: 12,
+  padding: '0 16px',
+  fontSize: 13,
+  color: 'rgba(255,255,255,0.8)',
+  background: 'rgba(255,255,255,0.05)',
+  border: '1px solid rgba(255,255,255,0.09)',
+  outline: 'none',
+  fontFamily: 'inherit',
+};
+
+function PwInput({ value, onChange, placeholder, show, toggle, autoFocus, onEnter }: {
+  value: string; onChange: (v: string) => void; placeholder: string;
+  show: boolean; toggle: () => void; autoFocus?: boolean; onEnter: () => void;
 }) {
   return (
-    <button
-      onClick={onClick}
-      className={`w-full flex items-center gap-4 p-4 rounded-2xl border text-left transition-all group ${
-        accent
-          ? 'bg-[#00FF87] border-[#00FF87] hover:brightness-105'
-          : 'bg-white/[0.03] border-white/[0.08] hover:bg-white/[0.06] hover:border-white/[0.12]'
-      }`}
-    >
-      <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-        accent ? 'bg-black/15' : 'bg-white/[0.06]'
-      }`}>
-        <span className={accent ? 'text-black' : 'text-white/50'}>{icon}</span>
-      </div>
-      <div>
-        <p className={`text-[13px] font-semibold leading-none mb-1 ${accent ? 'text-black' : 'text-white/90'}`}>{label}</p>
-        <p className={`text-[11px] ${accent ? 'text-black/60' : 'text-white/35'}`}>{sub}</p>
-      </div>
-    </button>
-  );
-}
-
-function StepHeader({ title, sub, onBack }: { title: string; sub: string; onBack: () => void }) {
-  return (
-    <div className="space-y-1">
-      <button onClick={onBack} className="flex items-center gap-1.5 text-[12px] text-white/35 hover:text-white/60 mb-4 transition-colors">
-        <ArrowLeft size={13} /> Back
+    <div style={{ position: 'relative' }}>
+      <input
+        type={show ? 'text' : 'password'}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        autoFocus={autoFocus}
+        onKeyDown={e => e.key === 'Enter' && onEnter()}
+        style={{ ...inputStyle, paddingRight: 40 }}
+      />
+      <button
+        onClick={toggle}
+        style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'rgba(255,255,255,0.28)', cursor: 'pointer', padding: 0 }}
+      >
+        {show ? <EyeOff size={14} /> : <Eye size={14} />}
       </button>
-      <h2 className="text-[17px] font-semibold text-white/90">{title}</h2>
-      <p className="text-[12px] text-white/40 leading-relaxed">{sub}</p>
-    </div>
-  );
-}
-
-function PasswordFields({ password, setPassword, confirm, setConfirm, show, toggleShow, onSubmit, singleField, placeholder }: {
-  password: string; setPassword: (v: string) => void;
-  confirm?: string; setConfirm?: (v: string) => void;
-  show: boolean; toggleShow: () => void;
-  onSubmit: () => void;
-  singleField?: boolean;
-  placeholder?: string;
-}) {
-  return (
-    <div className="space-y-2.5">
-      <div className="relative">
-        <input
-          type={show ? 'text' : 'password'}
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          placeholder={placeholder || 'Password (min 6 characters)'}
-          autoFocus
-          onKeyDown={e => e.key === 'Enter' && !singleField && setConfirm && confirm && onSubmit()}
-          className="w-full h-11 bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 pr-11 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none focus:border-white/20 transition-colors"
-        />
-        <button onClick={toggleShow} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/50 transition-colors">
-          {show ? <EyeOff size={15} /> : <Eye size={15} />}
-        </button>
-      </div>
-      {!singleField && setConfirm && (
-        <input
-          type="password"
-          value={confirm}
-          onChange={e => setConfirm(e.target.value)}
-          placeholder="Confirm password"
-          onKeyDown={e => e.key === 'Enter' && onSubmit()}
-          className="w-full h-11 bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none focus:border-white/20 transition-colors"
-        />
-      )}
     </div>
   );
 }
@@ -401,27 +462,71 @@ function PrimaryBtn({ children, onClick, disabled }: {
     <button
       onClick={onClick}
       disabled={disabled}
-      className="w-full h-11 flex items-center justify-center gap-2 rounded-xl bg-white text-black text-[13px] font-semibold hover:bg-[#00FF87] transition-colors disabled:opacity-35 disabled:cursor-not-allowed"
+      style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+        width: '100%', height: 48, borderRadius: 9999,
+        background: disabled ? 'rgba(79,70,229,0.35)' : '#4F46E5',
+        color: '#ffffff', fontSize: 15, fontWeight: 600,
+        border: 'none', cursor: disabled ? 'not-allowed' : 'pointer',
+        transition: 'filter 0.15s',
+      }}
+      onMouseEnter={e => { if (!disabled) e.currentTarget.style.filter = 'brightness(1.12)'; }}
+      onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; }}
     >
       {children}
     </button>
   );
 }
 
-function ErrorMsg({ text }: { text: string }) {
-  return <p className="text-[12px] text-red-400 text-center">{text}</p>;
-}
-
-function Pillar({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
+function OptionBtn({ icon, iconBg, label, sub, onClick, accent }: {
+  icon: React.ReactNode; iconBg: string; label: string; sub: string;
+  onClick: () => void; accent?: boolean;
+}) {
   return (
-    <div className="flex gap-5 p-6 rounded-3xl bg-white/[0.03] border border-white/[0.06] backdrop-blur-md">
-      <div className="shrink-0 w-12 h-12 rounded-2xl bg-white/[0.04] flex items-center justify-center">
+    <button
+      onClick={onClick}
+      style={{
+        display: 'flex', alignItems: 'center', gap: 14,
+        padding: '14px 16px', borderRadius: 14,
+        background: accent ? 'rgba(0,255,135,0.08)' : 'rgba(255,255,255,0.04)',
+        border: `1px solid ${accent ? 'rgba(0,255,135,0.2)' : 'rgba(255,255,255,0.08)'}`,
+        cursor: 'pointer', textAlign: 'left', width: '100%',
+      }}
+    >
+      <div style={{ width: 36, height: 36, borderRadius: 10, background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
         {icon}
       </div>
-      <div className="space-y-2">
-        <h3 className="text-lg font-semibold text-white/90">{title}</h3>
-        <p className="text-sm text-white/40 leading-relaxed">{description}</p>
+      <div>
+        <p style={{ fontSize: 13, fontWeight: 600, color: accent ? '#fff' : 'rgba(255,255,255,0.82)', margin: '0 0 3px' }}>{label}</p>
+        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', margin: 0 }}>{sub}</p>
       </div>
-    </div>
+    </button>
   );
+}
+
+function BackBtn({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        background: 'none', border: 'none', color: 'rgba(255,255,255,0.32)',
+        cursor: 'pointer', fontSize: 12, display: 'flex', alignItems: 'center', gap: 4,
+        padding: 0, marginBottom: 16,
+      }}
+    >
+      <ArrowLeft size={12} /> Back
+    </button>
+  );
+}
+
+function Title({ children }: { children: React.ReactNode }) {
+  return <p style={{ fontSize: 20, fontWeight: 700, color: '#fff', margin: '0 0 6px' }}>{children}</p>;
+}
+
+function Sub({ children }: { children: React.ReactNode }) {
+  return <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.42)', margin: '0 0 4px', lineHeight: 1.5 }}>{children}</p>;
+}
+
+function ErrMsg({ text }: { text: string }) {
+  return <p style={{ fontSize: 12, color: '#f87171', textAlign: 'center', margin: '0 0 12px' }}>{text}</p>;
 }

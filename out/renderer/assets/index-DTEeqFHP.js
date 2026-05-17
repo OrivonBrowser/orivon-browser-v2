@@ -20606,11 +20606,44 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$l = [
+const __iconNode$o = [
   ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
   ["path", { d: "M19 12H5", key: "x3x0zl" }]
 ];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$l);
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$o);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$n = [
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
+];
+const ArrowRight = createLucideIcon("arrow-right", __iconNode$n);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$m = [
+  ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
+  ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
+];
+const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$m);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$l = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+];
+const CircleCheck = createLucideIcon("circle-check", __iconNode$l);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20618,10 +20651,11 @@ const ArrowLeft = createLucideIcon("arrow-left", __iconNode$l);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$k = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3", key: "1u773s" }],
+  ["path", { d: "M12 17h.01", key: "p32p05" }]
 ];
-const ArrowRight = createLucideIcon("arrow-right", __iconNode$k);
+const CircleQuestionMark = createLucideIcon("circle-question-mark", __iconNode$k);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20629,10 +20663,10 @@ const ArrowRight = createLucideIcon("arrow-right", __iconNode$k);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$j = [
-  ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
-  ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
+  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
+  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
 ];
-const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$j);
+const Copy = createLucideIcon("copy", __iconNode$j);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20640,17 +20674,6 @@ const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$j);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$i = [
-  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
-  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
-];
-const Copy = createLucideIcon("copy", __iconNode$i);
-/**
- * @license lucide-react v0.546.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$h = [
   ["path", { d: "M12 20v2", key: "1lh1kg" }],
   ["path", { d: "M12 2v2", key: "tus03m" }],
   ["path", { d: "M17 20v2", key: "1rnc9c" }],
@@ -20666,7 +20689,19 @@ const __iconNode$h = [
   ["rect", { x: "4", y: "4", width: "16", height: "16", rx: "2", key: "1vbyd7" }],
   ["rect", { x: "8", y: "8", width: "8", height: "8", rx: "1", key: "z9xiuo" }]
 ];
-const Cpu = createLucideIcon("cpu", __iconNode$h);
+const Cpu = createLucideIcon("cpu", __iconNode$i);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$h = [
+  ["circle", { cx: "12", cy: "12", r: "1", key: "41hilf" }],
+  ["circle", { cx: "19", cy: "12", r: "1", key: "1wjl8i" }],
+  ["circle", { cx: "5", cy: "12", r: "1", key: "1pcz8c" }]
+];
+const Ellipsis = createLucideIcon("ellipsis", __iconNode$h);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20674,18 +20709,6 @@ const Cpu = createLucideIcon("cpu", __iconNode$h);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$g = [
-  ["circle", { cx: "12", cy: "12", r: "1", key: "41hilf" }],
-  ["circle", { cx: "19", cy: "12", r: "1", key: "1wjl8i" }],
-  ["circle", { cx: "5", cy: "12", r: "1", key: "1pcz8c" }]
-];
-const Ellipsis = createLucideIcon("ellipsis", __iconNode$g);
-/**
- * @license lucide-react v0.546.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$f = [
   [
     "path",
     {
@@ -20703,14 +20726,14 @@ const __iconNode$f = [
   ],
   ["path", { d: "m2 2 20 20", key: "1ooewy" }]
 ];
-const EyeOff = createLucideIcon("eye-off", __iconNode$f);
+const EyeOff = createLucideIcon("eye-off", __iconNode$g);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$e = [
+const __iconNode$f = [
   [
     "path",
     {
@@ -20720,7 +20743,19 @@ const __iconNode$e = [
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const Eye = createLucideIcon("eye", __iconNode$e);
+const Eye = createLucideIcon("eye", __iconNode$f);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$e = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
+  ["path", { d: "M2 12h20", key: "9i4pu4" }]
+];
+const Globe = createLucideIcon("globe", __iconNode$e);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20728,11 +20763,11 @@ const Eye = createLucideIcon("eye", __iconNode$e);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$d = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
-  ["path", { d: "M2 12h20", key: "9i4pu4" }]
+  ["path", { d: "m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4", key: "g0fldk" }],
+  ["path", { d: "m21 2-9.6 9.6", key: "1j0ho8" }],
+  ["circle", { cx: "7.5", cy: "15.5", r: "5.5", key: "yqb3hr" }]
 ];
-const Globe = createLucideIcon("globe", __iconNode$d);
+const Key = createLucideIcon("key", __iconNode$d);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20740,11 +20775,10 @@ const Globe = createLucideIcon("globe", __iconNode$d);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$c = [
-  ["path", { d: "m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4", key: "g0fldk" }],
-  ["path", { d: "m21 2-9.6 9.6", key: "1j0ho8" }],
-  ["circle", { cx: "7.5", cy: "15.5", r: "5.5", key: "yqb3hr" }]
+  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
+  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
 ];
-const Key = createLucideIcon("key", __iconNode$c);
+const Lock = createLucideIcon("lock", __iconNode$c);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20752,17 +20786,6 @@ const Key = createLucideIcon("key", __iconNode$c);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$b = [
-  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
-  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
-];
-const Lock = createLucideIcon("lock", __iconNode$b);
-/**
- * @license lucide-react v0.546.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$a = [
   [
     "path",
     {
@@ -20771,7 +20794,21 @@ const __iconNode$a = [
     }
   ]
 ];
-const Moon = createLucideIcon("moon", __iconNode$a);
+const Moon = createLucideIcon("moon", __iconNode$b);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$a = [
+  ["rect", { x: "16", y: "16", width: "6", height: "6", rx: "1", key: "4q2zg0" }],
+  ["rect", { x: "2", y: "16", width: "6", height: "6", rx: "1", key: "8cvhb9" }],
+  ["rect", { x: "9", y: "2", width: "6", height: "6", rx: "1", key: "1egb70" }],
+  ["path", { d: "M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3", key: "1jsf9p" }],
+  ["path", { d: "M12 12V8", key: "2874zd" }]
+];
+const Network$1 = createLucideIcon("network", __iconNode$a);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20779,13 +20816,10 @@ const Moon = createLucideIcon("moon", __iconNode$a);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$9 = [
-  ["rect", { x: "16", y: "16", width: "6", height: "6", rx: "1", key: "4q2zg0" }],
-  ["rect", { x: "2", y: "16", width: "6", height: "6", rx: "1", key: "8cvhb9" }],
-  ["rect", { x: "9", y: "2", width: "6", height: "6", rx: "1", key: "1egb70" }],
-  ["path", { d: "M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3", key: "1jsf9p" }],
-  ["path", { d: "M12 12V8", key: "2874zd" }]
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "M12 5v14", key: "s699le" }]
 ];
-const Network$1 = createLucideIcon("network", __iconNode$9);
+const Plus = createLucideIcon("plus", __iconNode$9);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20793,10 +20827,12 @@ const Network$1 = createLucideIcon("network", __iconNode$9);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$8 = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "M12 5v14", key: "s699le" }]
+  ["path", { d: "M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "14sxne" }],
+  ["path", { d: "M3 3v5h5", key: "1xhq8a" }],
+  ["path", { d: "M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16", key: "1hlbsb" }],
+  ["path", { d: "M16 16h5v5", key: "ccwih5" }]
 ];
-const Plus = createLucideIcon("plus", __iconNode$8);
+const RefreshCcw = createLucideIcon("refresh-ccw", __iconNode$8);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20804,12 +20840,10 @@ const Plus = createLucideIcon("plus", __iconNode$8);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$7 = [
-  ["path", { d: "M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "14sxne" }],
-  ["path", { d: "M3 3v5h5", key: "1xhq8a" }],
-  ["path", { d: "M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16", key: "1hlbsb" }],
-  ["path", { d: "M16 16h5v5", key: "ccwih5" }]
+  ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
+  ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
 ];
-const RefreshCcw = createLucideIcon("refresh-ccw", __iconNode$7);
+const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$7);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20817,10 +20851,10 @@ const RefreshCcw = createLucideIcon("refresh-ccw", __iconNode$7);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$6 = [
-  ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
-  ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
+  ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
+  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
 ];
-const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$6);
+const Search = createLucideIcon("search", __iconNode$6);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20828,10 +20862,16 @@ const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$6);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$5 = [
-  ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
-  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
+  [
+    "path",
+    {
+      d: "M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915",
+      key: "1i5ecw"
+    }
+  ],
+  ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const Search = createLucideIcon("search", __iconNode$5);
+const Settings = createLucideIcon("settings", __iconNode$5);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -41116,9 +41156,28 @@ const useWalletStore = create()(
 );
 const SLIDE = {
   initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] } },
-  exit: { opacity: 0, y: -6, transition: { duration: 0.16, ease: "easeIn" } }
+  animate: { opacity: 1, y: 0, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } },
+  exit: { opacity: 0, y: -6, transition: { duration: 0.18, ease: "easeIn" } }
 };
+function InnerCard({ children }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "div",
+    {
+      style: {
+        width: "100%",
+        maxWidth: 480,
+        borderRadius: 20,
+        padding: "36px 40px 36px",
+        background: "rgba(255,255,255,0.13)",
+        backdropFilter: "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
+        boxShadow: "0 16px 48px rgba(0,0,0,0.35)",
+        textAlign: "left"
+      },
+      children
+    }
+  );
+}
 function Onboarding({ onDone }) {
   const { generateMnemonic, createWallet, importWallet } = useWalletStore();
   const [step, setStep] = reactExports.useState("welcome");
@@ -41159,7 +41218,7 @@ function Onboarding({ onDone }) {
     const phrase = importPhrase.trim();
     const wc = phrase.split(/\s+/).length;
     if (wc !== 12 && wc !== 24) {
-      setError("Enter a valid 12 or 24-word recovery phrase");
+      setError("Enter a valid 12 or 24 word recovery phrase");
       return;
     }
     if (password.length < 6) {
@@ -41176,362 +41235,435 @@ function Onboarding({ onDone }) {
       setError(String(e));
     }
   }, [importPhrase, password, importWallet]);
-  const isWelcome = step === "welcome";
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "div",
     {
-      className: "h-screen w-screen overflow-hidden relative flex items-center justify-center",
-      style: { background: "linear-gradient(155deg, #0c0920 0%, #180b35 45%, #0d1128 100%)" },
+      style: {
+        position: "relative",
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#0a0a0a"
+      },
       children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Shapes, {}),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "div",
+          "img",
           {
-            className: "relative z-10 w-full",
-            style: { maxWidth: isWelcome ? 480 : 400, padding: "0 24px" },
-            children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "div",
-              {
-                className: "rounded-3xl p-10 text-center",
-                style: {
-                  background: "rgba(255,255,255,0.055)",
+            src: "/background.jpg",
+            alt: "",
+            style: {
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              opacity: 0.5,
+              zIndex: 0
+            }
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "absolute", top: 24, right: 32, zIndex: 20, display: "flex", gap: 20 }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleQuestionMark, { size: 20 }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { background: "none", border: "none", color: "rgba(255,255,255,0.4)", cursor: "pointer" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { size: 20 }) })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 10, width: "100%", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 24px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(AnimatePresence, { mode: "wait", children: [
+          step === "welcome" && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            motion.div,
+            {
+              ...SLIDE,
+              style: { display: "flex", flexDirection: "column", alignItems: "center", width: "100%" },
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 2, marginBottom: -58 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: {
+                  width: 116,
+                  height: 116,
+                  borderRadius: 28,
+                  background: "linear-gradient(145deg, #00FF87, #00E87A)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 12px 40px rgba(0,255,135,0.40), 0 4px 12px rgba(0,0,0,0.5)"
+                }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 56, color: "#000", strokeWidth: 1.8 }) }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: {
+                  width: "100%",
+                  maxWidth: 680,
+                  borderRadius: 24,
+                  /* paddingTop covers the logo overlap (58px) + breathing room (36px) */
+                  padding: "94px 64px 52px",
+                  background: "rgba(255,255,255,0.16)",
                   backdropFilter: "blur(28px)",
                   WebkitBackdropFilter: "blur(28px)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  boxShadow: "0 24px 60px rgba(0,0,0,0.5)"
-                },
-                children: /* @__PURE__ */ jsxRuntimeExports.jsxs(AnimatePresence, { mode: "wait", children: [
-                  step === "welcome" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-8", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                      "div",
-                      {
-                        className: "w-20 h-20 rounded-[22px] flex items-center justify-center",
-                        style: {
-                          background: "#00FF87",
-                          boxShadow: "0 0 40px rgba(0,255,135,0.30), 0 8px 24px rgba(0,0,0,0.4)"
-                        },
-                        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 38, className: "text-black", strokeWidth: 2.5 })
-                      }
-                    ) }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-[32px] font-bold text-white tracking-tight leading-tight", children: "Web3. By Default." }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-white/55 text-[15px] leading-relaxed", children: [
-                        "The first browser where your wallet is native,",
-                        /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
-                        "not an extension. Private and decentralized."
-                      ] })
-                    ] }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3 pt-1", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(
-                        "button",
-                        {
-                          onClick: () => setStep("choose"),
-                          className: "w-full h-12 rounded-full text-white text-[15px] font-semibold transition-all active:scale-[0.97] hover:brightness-110",
-                          style: { background: "linear-gradient(135deg, #4F46E5, #7C3AED)" },
-                          children: "Create / Import Wallet"
-                        }
-                      ),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(
-                        "button",
-                        {
-                          onClick: () => onDone(false),
-                          className: "w-full h-10 text-white/45 hover:text-white/75 text-[14px] transition-colors",
-                          children: "Skip"
-                        }
-                      )
-                    ] })
-                  ] }, "welcome"),
-                  step === "choose" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-6", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-[20px] font-bold text-white", children: "Set up your wallet" }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-white/45 text-[13px]", children: "Choose how you'd like to get started." })
-                    ] }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2.5", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                        "button",
-                        {
-                          onClick: () => setStep("create-phrase"),
-                          className: "w-full flex items-center gap-4 p-4 rounded-2xl text-left transition-all",
-                          style: { background: "rgba(0,255,135,0.12)", border: "1px solid rgba(0,255,135,0.25)" },
-                          children: [
-                            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-9 h-9 rounded-xl flex items-center justify-center shrink-0", style: { background: "rgba(0,255,135,0.2)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 18, className: "text-[#00FF87]" }) }),
-                            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[13px] font-semibold text-white leading-none mb-1", children: "Create new wallet" }),
-                              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] text-white/40", children: "Generate a new 12-word seed phrase" })
-                            ] })
-                          ]
-                        }
-                      ),
-                      /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                        "button",
-                        {
-                          onClick: () => setStep("import"),
-                          className: "w-full flex items-center gap-4 p-4 rounded-2xl text-left transition-all",
-                          style: { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)" },
-                          children: [
-                            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-9 h-9 rounded-xl flex items-center justify-center shrink-0", style: { background: "rgba(255,255,255,0.07)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Key, { size: 18, className: "text-white/55" }) }),
-                            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[13px] font-semibold text-white/85 leading-none mb-1", children: "Import existing wallet" }),
-                              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] text-white/40", children: "Restore from 12 or 24-word phrase" })
-                            ] })
-                          ]
-                        }
-                      )
-                    ] }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => setStep("welcome"), className: "flex items-center gap-1.5 text-[12px] text-white/30 hover:text-white/60 transition-colors mx-auto", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 13 }),
-                      " Back"
-                    ] })
-                  ] }, "choose"),
-                  step === "create-phrase" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-5 text-left", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(InnerHeader, { title: "Recovery phrase", sub: "Write these 12 words down. They're the only way to recover your wallet.", onBack: () => setStep("choose") }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-3 gap-1.5", children: words2.map((word, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 rounded-lg px-2.5 py-2", style: { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }, children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-white/22 w-4 shrink-0 tabular-nums", children: i + 1 }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11.5px] font-medium text-white/80", children: word })
-                    ] }, i)) }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  textAlign: "center",
+                  position: "relative",
+                  zIndex: 1,
+                  boxShadow: "0 20px 60px rgba(0,0,0,0.30)"
+                }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: {
+                    fontSize: 42,
+                    fontWeight: 800,
+                    color: "#ffffff",
+                    margin: "0 0 16px",
+                    letterSpacing: "-0.8px",
+                    lineHeight: 1.15
+                  }, children: "Web3. By Default." }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: {
+                    fontSize: 18,
+                    color: "rgba(255,255,255,0.65)",
+                    lineHeight: 1.65,
+                    margin: "0 0 44px"
+                  }, children: [
+                    "Browse ENS domains and decentralized apps natively.",
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+                    "Your wallet lives inside the browser, not an extension."
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 18 }, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
                       "button",
                       {
-                        onClick: copyPhrase,
-                        className: "flex items-center justify-center gap-2 w-full h-9 rounded-xl text-[12px] font-medium transition-all",
+                        onClick: () => setStep("choose"),
                         style: {
-                          background: copied ? "rgba(0,255,135,0.1)" : "rgba(255,255,255,0.04)",
-                          border: `1px solid ${copied ? "rgba(0,255,135,0.3)" : "rgba(255,255,255,0.09)"}`,
-                          color: copied ? "#00FF87" : "rgba(255,255,255,0.45)"
+                          width: "68%",
+                          height: 56,
+                          borderRadius: 9999,
+                          background: "#4F46E5",
+                          color: "#ffffff",
+                          fontSize: 17,
+                          fontWeight: 600,
+                          border: "none",
+                          cursor: "pointer",
+                          letterSpacing: "-0.1px",
+                          boxShadow: "0 4px 20px rgba(79,70,229,0.45)",
+                          transition: "filter 0.15s, transform 0.1s"
                         },
-                        children: [
-                          copied ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 13 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Copy, { size: 13 }),
-                          copied ? "Copied!" : "Copy to clipboard"
-                        ]
+                        onMouseEnter: (e) => {
+                          e.currentTarget.style.filter = "brightness(1.14)";
+                        },
+                        onMouseLeave: (e) => {
+                          e.currentTarget.style.filter = "brightness(1)";
+                        },
+                        onMouseDown: (e) => {
+                          e.currentTarget.style.transform = "scale(0.97)";
+                        },
+                        onMouseUp: (e) => {
+                          e.currentTarget.style.transform = "scale(1)";
+                        },
+                        children: "Create / Import Wallet"
                       }
                     ),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs(CTABtn, { onClick: () => setStep("create-password"), children: [
-                      "I've saved my phrase ",
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 14 })
-                    ] })
-                  ] }, "phrase"),
-                  step === "create-password" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-5 text-left", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(InnerHeader, { title: "Set a password", sub: "Encrypts your wallet locally. You'll need it to unlock.", onBack: () => setStep("create-phrase") }),
                     /* @__PURE__ */ jsxRuntimeExports.jsx(
-                      PasswordFields,
+                      "button",
                       {
-                        password,
-                        setPassword,
-                        confirm: confirmPw,
-                        setConfirm: setConfirmPw,
-                        show: showPw,
-                        toggleShow: () => setShowPw((p) => !p),
-                        onSubmit: handleCreate
+                        onClick: () => onDone(false),
+                        style: {
+                          background: "none",
+                          border: "none",
+                          color: "rgba(255,255,255,0.52)",
+                          fontSize: 16,
+                          cursor: "pointer",
+                          padding: "4px 0",
+                          transition: "color 0.15s"
+                        },
+                        onMouseEnter: (e) => e.currentTarget.style.color = "rgba(255,255,255,0.85)",
+                        onMouseLeave: (e) => e.currentTarget.style.color = "rgba(255,255,255,0.52)",
+                        children: "Skip"
                       }
-                    ),
-                    error && /* @__PURE__ */ jsxRuntimeExports.jsx(ErrMsg, { text: error }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(CTABtn, { onClick: handleCreate, disabled: password.length < 6 || password !== confirmPw, children: "Create wallet" })
-                  ] }, "create-pw"),
-                  step === "import" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-5 text-left", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(InnerHeader, { title: "Import wallet", sub: "Enter your 12 or 24-word recovery phrase.", onBack: () => setStep("choose") }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(
-                      "textarea",
-                      {
-                        value: importPhrase,
-                        onChange: (e) => setImport(e.target.value),
-                        placeholder: "word1 word2 word3...",
-                        rows: 3,
-                        className: "w-full rounded-xl px-4 py-3 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none font-mono resize-none transition-colors",
-                        style: { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
-                      }
-                    ),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(
-                        "input",
-                        {
-                          type: showPw ? "text" : "password",
-                          value: password,
-                          onChange: (e) => setPassword(e.target.value),
-                          placeholder: "Set a new password (min 6 chars)",
-                          autoFocus: true,
-                          onKeyDown: (e) => e.key === "Enter" && handleImport(),
-                          className: "w-full h-11 rounded-xl px-4 pr-11 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none transition-colors",
-                          style: { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
-                        }
-                      ),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setShowPw((p) => !p), className: "absolute right-3 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/50 transition-colors", children: showPw ? /* @__PURE__ */ jsxRuntimeExports.jsx(EyeOff, { size: 14 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Eye, { size: 14 }) })
-                    ] }),
-                    error && /* @__PURE__ */ jsxRuntimeExports.jsx(ErrMsg, { text: error }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(CTABtn, { onClick: handleImport, disabled: importPhrase.trim().split(/\s+/).length < 12 || password.length < 6, children: "Import wallet" })
-                  ] }, "import"),
-                  step === "encrypting" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-6 py-4", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative w-16 h-16 mx-auto", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { className: "w-16 h-16 -rotate-90", viewBox: "0 0 64 64", children: [
-                        /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "32", cy: "32", r: "28", stroke: "rgba(255,255,255,0.07)", strokeWidth: "3", fill: "none" }),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx(
-                          "circle",
-                          {
-                            cx: "32",
-                            cy: "32",
-                            r: "28",
-                            stroke: "#00FF87",
-                            strokeWidth: "3",
-                            fill: "none",
-                            strokeDasharray: `${2 * Math.PI * 28}`,
-                            strokeDashoffset: `${2 * Math.PI * 28 * (1 - progress2 / 100)}`,
-                            strokeLinecap: "round",
-                            style: { transition: "stroke-dashoffset 0.3s ease" }
-                          }
-                        )
-                      ] }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[13px] font-semibold text-white/70", children: [
-                        Math.round(progress2),
-                        "%"
-                      ] }) })
-                    ] }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[15px] font-medium text-white/85", children: "Encrypting wallet…" }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] text-white/35 mt-1", children: "This takes a moment" })
-                    ] })
-                  ] }, "encrypting"),
-                  step === "success" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-7 py-2", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-14 h-14 rounded-full flex items-center justify-center mx-auto", style: { background: "rgba(0,255,135,0.12)", border: "1px solid rgba(0,255,135,0.25)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 24, className: "text-[#00FF87]" }) }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[17px] font-semibold text-white", children: "Wallet ready" }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[13px] text-white/40 mt-1.5", children: "Encrypted and stored locally on your device." })
-                    ] }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs(CTABtn, { onClick: () => onDone(true), children: [
-                      "Open Orivon ",
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 14 })
-                    ] })
-                  ] }, "success")
+                    )
+                  ] })
                 ] })
+              ]
+            },
+            "welcome"
+          ),
+          step === "choose" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, style: { width: "100%", display: "flex", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(InnerCard, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(BackBtn, { onClick: () => setStep("welcome") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Title, { children: "Set up your wallet" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Sub, { children: "How would you like to get started?" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", flexDirection: "column", gap: 10, marginBottom: 24 }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                OptionBtn,
+                {
+                  icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 18, color: "#00FF87" }),
+                  iconBg: "rgba(0,255,135,0.15)",
+                  label: "Create new wallet",
+                  sub: "Generate a fresh 12-word seed phrase",
+                  onClick: () => setStep("create-phrase"),
+                  accent: true
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                OptionBtn,
+                {
+                  icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Key, { size: 18, color: "rgba(255,255,255,0.55)" }),
+                  iconBg: "rgba(255,255,255,0.08)",
+                  label: "Import existing wallet",
+                  sub: "Restore from your 12 or 24-word phrase",
+                  onClick: () => setStep("import")
+                }
+              )
+            ] })
+          ] }) }, "choose"),
+          step === "create-phrase" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, style: { width: "100%", display: "flex", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(InnerCard, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(BackBtn, { onClick: () => setStep("choose") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Title, { children: "Your recovery phrase" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Sub, { children: "Write down these 12 words and store them somewhere safe. This is the only way to recover your wallet." }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6, margin: "16px 0" }, children: words2.map((word, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: "8px 10px" }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 10, color: "rgba(255,255,255,0.22)", width: 14, flexShrink: 0, fontVariantNumeric: "tabular-nums" }, children: i + 1 }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, fontWeight: 500, color: "rgba(255,255,255,0.82)" }, children: word })
+            ] }, i)) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "button",
+              {
+                onClick: copyPhrase,
+                style: {
+                  width: "100%",
+                  height: 38,
+                  borderRadius: 10,
+                  fontSize: 12,
+                  fontWeight: 500,
+                  background: copied ? "rgba(0,255,135,0.12)" : "rgba(255,255,255,0.05)",
+                  border: `1px solid ${copied ? "rgba(0,255,135,0.3)" : "rgba(255,255,255,0.1)"}`,
+                  color: copied ? "#00FF87" : "rgba(255,255,255,0.45)",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 6,
+                  marginBottom: 14
+                },
+                children: [
+                  copied ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { size: 13 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Copy, { size: 13 }),
+                  copied ? "Copied!" : "Copy to clipboard"
+                ]
               }
-            )
-          }
-        )
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(PrimaryBtn, { onClick: () => setStep("create-password"), children: [
+              "I have saved my phrase  ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 14 })
+            ] })
+          ] }) }, "phrase"),
+          step === "create-password" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, style: { width: "100%", display: "flex", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(InnerCard, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(BackBtn, { onClick: () => setStep("create-phrase") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Title, { children: "Protect your wallet" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Sub, { children: "This password encrypts your wallet on your device. You will need it every time you unlock." }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", flexDirection: "column", gap: 10, margin: "16px 0" }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(PwInput, { value: password, onChange: setPassword, placeholder: "Password (min 6 characters)", show: showPw, toggle: () => setShowPw((p) => !p), autoFocus: true, onEnter: () => {
+              } }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "input",
+                {
+                  type: "password",
+                  value: confirmPw,
+                  onChange: (e) => setConfirmPw(e.target.value),
+                  placeholder: "Confirm password",
+                  onKeyDown: (e) => e.key === "Enter" && handleCreate(),
+                  style: inputStyle
+                }
+              )
+            ] }),
+            error && /* @__PURE__ */ jsxRuntimeExports.jsx(ErrMsg, { text: error }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(PrimaryBtn, { onClick: handleCreate, disabled: password.length < 6 || password !== confirmPw, children: "Create wallet" })
+          ] }) }, "create-pw"),
+          step === "import" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, style: { width: "100%", display: "flex", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(InnerCard, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(BackBtn, { onClick: () => setStep("choose") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Title, { children: "Import your wallet" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Sub, { children: "Enter your 12 or 24-word recovery phrase to restore access to your wallet." }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", flexDirection: "column", gap: 10, margin: "16px 0" }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "textarea",
+                {
+                  value: importPhrase,
+                  onChange: (e) => setImport(e.target.value),
+                  placeholder: "word1 word2 word3...",
+                  rows: 3,
+                  style: { ...inputStyle, resize: "none", fontFamily: "monospace", paddingTop: 12 }
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(PwInput, { value: password, onChange: setPassword, placeholder: "Set a new password", show: showPw, toggle: () => setShowPw((p) => !p), autoFocus: true, onEnter: handleImport })
+            ] }),
+            error && /* @__PURE__ */ jsxRuntimeExports.jsx(ErrMsg, { text: error }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(PrimaryBtn, { onClick: handleImport, disabled: importPhrase.trim().split(/\s+/).length < 12 || password.length < 6, children: "Import wallet" })
+          ] }) }, "import"),
+          step === "encrypting" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, style: { width: "100%", display: "flex", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(InnerCard, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { textAlign: "center", padding: "16px 0" }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", width: 64, height: 64, margin: "0 auto 20px" }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "64", height: "64", viewBox: "0 0 64 64", style: { transform: "rotate(-90deg)" }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "32", cy: "32", r: "28", stroke: "rgba(255,255,255,0.08)", strokeWidth: "3", fill: "none" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "circle",
+                  {
+                    cx: "32",
+                    cy: "32",
+                    r: "28",
+                    stroke: "#00FF87",
+                    strokeWidth: "3",
+                    fill: "none",
+                    strokeDasharray: `${2 * Math.PI * 28}`,
+                    strokeDashoffset: `${2 * Math.PI * 28 * (1 - progress2 / 100)}`,
+                    strokeLinecap: "round",
+                    style: { transition: "stroke-dashoffset 0.3s ease" }
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { style: { fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.7)" }, children: [
+                Math.round(progress2),
+                "%"
+              ] }) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 16, fontWeight: 600, color: "rgba(255,255,255,0.85)", margin: "0 0 6px" }, children: "Encrypting your wallet" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 13, color: "rgba(255,255,255,0.35)", margin: 0 }, children: "Just a moment while we secure your keys" })
+          ] }) }) }, "encrypting"),
+          step === "success" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, style: { width: "100%", display: "flex", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(InnerCard, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { textAlign: "center", padding: "8px 0" }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: {
+              width: 56,
+              height: 56,
+              borderRadius: "50%",
+              background: "rgba(0,255,135,0.12)",
+              border: "1px solid rgba(0,255,135,0.25)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 20px"
+            }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { size: 26, color: "#00FF87" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 20, fontWeight: 700, color: "#fff", margin: "0 0 8px" }, children: "Wallet ready" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 14, color: "rgba(255,255,255,0.42)", margin: "0 0 28px" }, children: "Encrypted and stored locally on your device. Only you have access." }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(PrimaryBtn, { onClick: () => onDone(true), children: [
+              "Open Orivon  ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 14 })
+            ] })
+          ] }) }) }, "success")
+        ] }) })
       ]
     }
   );
 }
-function Shapes() {
-  const items = [
-    // Plus signs — scattered like Brave's welcome page
-    { type: "plus", x: "7%", y: "8%", size: 22, color: "rgba(192,132,252,0.55)", rot: 0 },
-    { type: "plus", x: "14%", y: "22%", size: 16, color: "rgba(236,72,153,0.5)", rot: 15 },
-    { type: "plus", x: "4%", y: "45%", size: 28, color: "rgba(249,115,22,0.6)", rot: 0 },
-    { type: "plus", x: "9%", y: "68%", size: 18, color: "rgba(192,132,252,0.45)", rot: 20 },
-    { type: "plus", x: "3%", y: "82%", size: 14, color: "rgba(236,72,153,0.4)", rot: 0 },
-    { type: "plus", x: "82%", y: "6%", size: 20, color: "rgba(249,115,22,0.55)", rot: 10 },
-    { type: "plus", x: "91%", y: "20%", size: 16, color: "rgba(192,132,252,0.5)", rot: 0 },
-    { type: "plus", x: "88%", y: "50%", size: 24, color: "rgba(236,72,153,0.55)", rot: 15 },
-    { type: "plus", x: "93%", y: "72%", size: 14, color: "rgba(249,115,22,0.5)", rot: 5 },
-    { type: "plus", x: "85%", y: "86%", size: 20, color: "rgba(192,132,252,0.45)", rot: 0 },
-    // Triangles
-    { type: "triangle", x: "22%", y: "12%", size: 18, color: "rgba(192,132,252,0.4)", rot: 0 },
-    { type: "triangle", x: "78%", y: "15%", size: 22, color: "rgba(249,115,22,0.45)", rot: 180 },
-    { type: "triangle", x: "18%", y: "80%", size: 16, color: "rgba(236,72,153,0.4)", rot: 0 },
-    { type: "triangle", x: "80%", y: "82%", size: 20, color: "rgba(192,132,252,0.5)", rot: 180 },
-    // Dots
-    { type: "dot", x: "30%", y: "7%", size: 8, color: "rgba(255,255,255,0.35)", rot: 0 },
-    { type: "dot", x: "68%", y: "9%", size: 10, color: "rgba(96,165,250,0.5)", rot: 0 },
-    { type: "dot", x: "25%", y: "90%", size: 7, color: "rgba(255,255,255,0.25)", rot: 0 },
-    { type: "dot", x: "72%", y: "88%", size: 12, color: "rgba(249,115,22,0.4)", rot: 0 }
-  ];
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "absolute inset-0 pointer-events-none overflow-hidden", "aria-hidden": true, children: [
-    items.map((item, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "div",
-      {
-        style: {
-          position: "absolute",
-          left: item.x,
-          top: item.y,
-          transform: `rotate(${item.rot}deg)`
-        },
-        children: [
-          item.type === "plus" && /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: item.size, height: item.size, viewBox: "0 0 24 24", fill: "none", children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M12 2v20M2 12h20", stroke: item.color, strokeWidth: "2.5", strokeLinecap: "round" }) }),
-          item.type === "triangle" && /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: item.size, height: item.size, viewBox: "0 0 24 24", fill: "none", children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M12 3L22 20H2L12 3Z", stroke: item.color, strokeWidth: "2", strokeLinejoin: "round" }) }),
-          item.type === "dot" && /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "div",
-            {
-              style: {
-                width: item.size,
-                height: item.size,
-                borderRadius: "50%",
-                background: item.color
-              }
-            }
-          )
-        ]
-      },
-      i
-    )),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", top: "20%", left: "15%", width: 300, height: 300, borderRadius: "50%", background: "rgba(139,92,246,0.07)", filter: "blur(80px)" } }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", top: "50%", right: "10%", width: 250, height: 250, borderRadius: "50%", background: "rgba(79,70,229,0.06)", filter: "blur(80px)" } }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", bottom: "10%", left: "30%", width: 350, height: 200, borderRadius: "50%", background: "rgba(124,58,237,0.05)", filter: "blur(100px)" } })
-  ] });
-}
-function InnerHeader({ title, sub, onBack }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: onBack, className: "flex items-center gap-1.5 text-[12px] text-white/30 hover:text-white/60 mb-4 transition-colors", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 12 }),
-      " Back"
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[17px] font-semibold text-white leading-snug", children: title }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] text-white/40 mt-1 leading-relaxed", children: sub })
-  ] });
-}
-function PasswordFields({
-  password,
-  setPassword,
-  confirm,
-  setConfirm,
-  show,
-  toggleShow,
-  onSubmit
-}) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2.5", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "input",
-        {
-          type: show ? "text" : "password",
-          value: password,
-          onChange: (e) => setPassword(e.target.value),
-          placeholder: "Password (min 6 characters)",
-          autoFocus: true,
-          onKeyDown: (e) => {
-            if (e.key === "Enter" && confirm !== void 0) onSubmit();
-          },
-          className: "w-full h-11 rounded-xl px-4 pr-11 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none transition-colors",
-          style: { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
-        }
-      ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: toggleShow, className: "absolute right-3 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/50 transition-colors", children: show ? /* @__PURE__ */ jsxRuntimeExports.jsx(EyeOff, { size: 14 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Eye, { size: 14 }) })
-    ] }),
-    setConfirm && /* @__PURE__ */ jsxRuntimeExports.jsx(
+const inputStyle = {
+  width: "100%",
+  height: 44,
+  borderRadius: 12,
+  padding: "0 16px",
+  fontSize: 13,
+  color: "rgba(255,255,255,0.8)",
+  background: "rgba(255,255,255,0.05)",
+  border: "1px solid rgba(255,255,255,0.09)",
+  outline: "none",
+  fontFamily: "inherit"
+};
+function PwInput({ value, onChange, placeholder, show, toggle, autoFocus, onEnter }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative" }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
       "input",
       {
-        type: "password",
-        value: confirm ?? "",
-        onChange: (e) => setConfirm(e.target.value),
-        placeholder: "Confirm password",
-        onKeyDown: (e) => e.key === "Enter" && onSubmit(),
-        className: "w-full h-11 rounded-xl px-4 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none transition-colors",
-        style: { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
+        type: show ? "text" : "password",
+        value,
+        onChange: (e) => onChange(e.target.value),
+        placeholder,
+        autoFocus,
+        onKeyDown: (e) => e.key === "Enter" && onEnter(),
+        style: { ...inputStyle, paddingRight: 40 }
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        onClick: toggle,
+        style: { position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "rgba(255,255,255,0.28)", cursor: "pointer", padding: 0 },
+        children: show ? /* @__PURE__ */ jsxRuntimeExports.jsx(EyeOff, { size: 14 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Eye, { size: 14 })
       }
     )
   ] });
 }
-function CTABtn({ children, onClick, disabled }) {
+function PrimaryBtn({ children, onClick, disabled }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "button",
     {
       onClick,
       disabled,
-      className: "w-full h-11 rounded-full text-white text-[14px] font-semibold flex items-center justify-center gap-2 transition-all active:scale-[0.97] hover:brightness-110 disabled:opacity-35 disabled:cursor-not-allowed",
-      style: { background: "linear-gradient(135deg, #4F46E5, #7C3AED)" },
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 6,
+        width: "100%",
+        height: 48,
+        borderRadius: 9999,
+        background: disabled ? "rgba(79,70,229,0.35)" : "#4F46E5",
+        color: "#ffffff",
+        fontSize: 15,
+        fontWeight: 600,
+        border: "none",
+        cursor: disabled ? "not-allowed" : "pointer",
+        transition: "filter 0.15s"
+      },
+      onMouseEnter: (e) => {
+        if (!disabled) e.currentTarget.style.filter = "brightness(1.12)";
+      },
+      onMouseLeave: (e) => {
+        e.currentTarget.style.filter = "brightness(1)";
+      },
       children
     }
   );
 }
+function OptionBtn({ icon, iconBg, label, sub, onClick, accent }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "button",
+    {
+      onClick,
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 14,
+        padding: "14px 16px",
+        borderRadius: 14,
+        background: accent ? "rgba(0,255,135,0.08)" : "rgba(255,255,255,0.04)",
+        border: `1px solid ${accent ? "rgba(0,255,135,0.2)" : "rgba(255,255,255,0.08)"}`,
+        cursor: "pointer",
+        textAlign: "left",
+        width: "100%"
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 36, height: 36, borderRadius: 10, background: iconBg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }, children: icon }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 13, fontWeight: 600, color: accent ? "#fff" : "rgba(255,255,255,0.82)", margin: "0 0 3px" }, children: label }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 11, color: "rgba(255,255,255,0.38)", margin: 0 }, children: sub })
+        ] })
+      ]
+    }
+  );
+}
+function BackBtn({ onClick }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "button",
+    {
+      onClick,
+      style: {
+        background: "none",
+        border: "none",
+        color: "rgba(255,255,255,0.32)",
+        cursor: "pointer",
+        fontSize: 12,
+        display: "flex",
+        alignItems: "center",
+        gap: 4,
+        padding: 0,
+        marginBottom: 16
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 12 }),
+        " Back"
+      ]
+    }
+  );
+}
+function Title({ children }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 20, fontWeight: 700, color: "#fff", margin: "0 0 6px" }, children });
+}
+function Sub({ children }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 13, color: "rgba(255,255,255,0.42)", margin: "0 0 4px", lineHeight: 1.5 }, children });
+}
 function ErrMsg({ text }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] text-red-400 text-center", children: text });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 12, color: "#f87171", textAlign: "center", margin: "0 0 12px" }, children: text });
 }
 const useSettings = create()(
   persist(
