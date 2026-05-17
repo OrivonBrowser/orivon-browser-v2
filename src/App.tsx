@@ -2,153 +2,155 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
-
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { ViewState, AppState } from './types';
-import Onboarding from './views/Onboarding';
-import Dashboard from './views/Dashboard';
+import { ethers } from 'ethers';
+
+import { ViewState } from './types';
+import Onboarding     from './views/Onboarding';
+import Dashboard      from './views/Dashboard';
 import LoadingTerminal from './views/LoadingTerminal';
-import BrowserMode from './views/BrowserMode';
+import Browser        from './components/Browser';
+
+import { useWalletStore }  from './store/wallet';
+import { useSettings }     from './store/settings';
+import { useTabsStore }    from './store/tabs';
+
+// Legacy seed used only for the Onboarding display
+const DISPLAY_SEED = 'alpha bravo charlie delta echo foxtrot golf hotel india juliet kilo lima';
+
+type LegacyIdentity = {
+  seed: string;
+  addresses: { btc: string; eth: string; sol: string } | null;
+  isInitialized: boolean;
+  isLocked: boolean;
+};
 
 export default function App() {
-  const [state, setState] = useState<AppState>({
-    view: 'ONBOARDING',
-    identity: {
-      seed: 'alpha bravo charlie delta echo foxtrot golf hotel india juliet kilo lima',
-      addresses: null,
-      isInitialized: false,
-      isLocked: false,
-    },
-    navigation: {
-      targetUrl: '',
-      currentUrl: '',
-    },
+  const { status: walletStatus, addresses, encryptedJson, createWallet, lock, unlock } = useWalletStore();
+  const { theme } = useSettings();
+
+  // Determine initial view based on persisted wallet state
+  const getInitialView = (): ViewState => {
+    if (encryptedJson) return 'BROWSER_MODE';   // Has wallet → go straight to browser
+    return 'ONBOARDING';
+  };
+
+  const [view, setView]               = useState<ViewState>(getInitialView);
+  const [launchUrl, setLaunchUrl]     = useState('');
+
+  // Legacy identity shape that Onboarding / Dashboard expect
+  const [legacyIdentity, setLegacyIdentity] = useState<LegacyIdentity>({
+    seed: DISPLAY_SEED,
+    addresses: addresses
+      ? { btc: addresses.btc, eth: addresses.eth, sol: addresses.sol }
+      : null,
+    isInitialized: walletStatus !== 'none',
+    isLocked: walletStatus === 'locked',
   });
 
-  const setView = (view: ViewState) => {
-    setState((prev) => ({ ...prev, view }));
+  // Keep legacy identity in sync with wallet store
+  useEffect(() => {
+    setLegacyIdentity({
+      seed: DISPLAY_SEED,
+      addresses: addresses ?? null,
+      isInitialized: walletStatus !== 'none',
+      isLocked: walletStatus === 'locked',
+    });
+  }, [walletStatus, addresses]);
+
+  // Sync theme class on <html>
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+  }, [theme]);
+
+  // ── Handlers ─────────────────────────────────────────────────────────────
+
+  const handleOnboardingFinish = async (legacyAddresses: { btc: string; eth: string; sol: string } | null) => {
+    if (legacyAddresses) {
+      // Onboarding created a wallet via the old system — migrate to Zustand store
+      // Generate a mnemonic and create encrypted wallet in store
+      const entropy = ethers.randomBytes(16);
+      const mnemonic = ethers.Mnemonic.fromEntropy(entropy).phrase;
+      try {
+        await createWallet(mnemonic, 'orivon-default', () => {});
+      } catch {
+        // Non-fatal: the legacy addresses are still shown
+      }
+      setView('DASHBOARD');
+    } else {
+      setView('BROWSER_MODE');
+    }
   };
 
-  const setIdentity = (addresses: AppState['identity']['addresses']) => {
-    setState((prev) => ({
-      ...prev,
-      identity: { ...prev.identity, addresses, isInitialized: true, isLocked: false },
-    }));
+  const handleDashboardLaunch = (url: string) => {
+    setLaunchUrl(url);
+    setView('LOADING');
   };
 
-  const lockWallet = () => {
-    setState(prev => ({
-      ...prev,
-      identity: { ...prev.identity, isLocked: true }
-    }));
+  const handleDashboardLock = () => {
+    lock();
+    setView('BROWSER_MODE');
   };
 
-  const unlockWallet = () => {
-    setState(prev => ({
-      ...prev,
-      identity: { ...prev.identity, isLocked: false }
-    }));
-  };
-
-  const setNavigation = (targetUrl: string) => {
-    setState((prev) => ({
-      ...prev,
-      navigation: { ...prev.navigation, targetUrl },
-    }));
+  const handleLoadingComplete = () => {
+    setView('BROWSER_MODE');
+    // When coming from dashboard launch, open the URL in the browser store
+    if (launchUrl) {
+      const { addTab, setActiveTab } = useTabsStore.getState();
+      const id = addTab(launchUrl);
+      // Browser component will pick up the new tab automatically
+    }
   };
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-orivon-bg text-white font-sans selection:bg-orivon-accent selection:text-black">
       <AnimatePresence mode="wait">
-        {state.view === 'ONBOARDING' && (
-          <motion.div
-            key="onboarding"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+
+        {view === 'ONBOARDING' && (
+          <motion.div key="onboarding"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="h-full"
           >
-            <Onboarding 
-              onFinish={(addresses) => {
-                if (addresses) {
-                  setIdentity(addresses);
-                  setView('DASHBOARD');
-                } else {
-                  setView('BROWSER_MODE');
-                }
-              }} 
-              seed={state.identity.seed}
+            <Onboarding
+              onFinish={handleOnboardingFinish}
+              seed={DISPLAY_SEED}
             />
           </motion.div>
         )}
 
-        {state.view === 'DASHBOARD' && (
-          <motion.div
-            key="dashboard"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+        {view === 'DASHBOARD' && (
+          <motion.div key="dashboard"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
             className="h-full"
           >
-            <Dashboard 
-              identity={state.identity}
-              onLock={() => {
-                lockWallet();
-                setView('BROWSER_MODE'); // Go back to browser when locked
-              }}
-              onLaunch={(url) => {
-                setNavigation(url);
-                setView('LOADING');
-              }}
+            <Dashboard
+              identity={legacyIdentity}
+              onLock={handleDashboardLock}
+              onLaunch={handleDashboardLaunch}
             />
           </motion.div>
         )}
 
-        {state.view === 'LOADING' && (
-          <motion.div
-            key="loading"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+        {view === 'LOADING' && (
+          <motion.div key="loading"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="h-full"
           >
-            <LoadingTerminal 
-              onComplete={() => setView('BROWSER_MODE')}
-            />
+            <LoadingTerminal onComplete={handleLoadingComplete} />
           </motion.div>
         )}
 
-        {state.view === 'BROWSER_MODE' && (
-          <motion.div
-            key="browser"
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.02 }}
+        {view === 'BROWSER_MODE' && (
+          <motion.div key="browser"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="h-full"
           >
-            <BrowserMode 
-              url={state.navigation.targetUrl}
-              identity={state.identity}
-              onExit={() => setView('DASHBOARD')}
-              onNavigate={(url) => {
-                setNavigation(url);
-                setView('LOADING');
-              }}
-              onUnlock={unlockWallet}
-              onLock={lockWallet}
-              onInitialize={setIdentity}
-              seed={state.identity.seed}
-            />
+            <Browser />
           </motion.div>
         )}
+
       </AnimatePresence>
     </div>
   );
 }
-

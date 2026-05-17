@@ -1,0 +1,61 @@
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+
+export type Theme = 'dark' | 'light';
+
+interface SettingsState {
+  theme: Theme;
+  sidebarOpen: boolean;
+  rightPanelOpen: boolean;
+  homepage: string;
+  searchEngine: 'google' | 'duckduckgo' | 'brave';
+  blockTrackers: boolean;
+  blockAds: boolean;
+  showWeb3Scores: boolean;
+  ipfsGateway: string;
+  rpcUrl: string;
+
+  // Actions
+  setTheme: (theme: Theme) => void;
+  setSidebarOpen: (open: boolean) => void;
+  setRightPanelOpen: (open: boolean) => void;
+  setHomepage: (url: string) => void;
+  setSearchEngine: (engine: SettingsState['searchEngine']) => void;
+  setBlockTrackers: (v: boolean) => void;
+  setBlockAds: (v: boolean) => void;
+  setShowWeb3Scores: (v: boolean) => void;
+  setIpfsGateway: (url: string) => void;
+  setRpcUrl: (url: string) => void;
+}
+
+export const useSettings = create<SettingsState>()(
+  persist(
+    (set) => ({
+      theme: 'dark',
+      sidebarOpen: true,
+      rightPanelOpen: false,
+      homepage: 'orivon://newtab',
+      searchEngine: 'google',
+      blockTrackers: true,
+      blockAds: true,
+      showWeb3Scores: true,
+      ipfsGateway: 'https://ipfs.io',
+      rpcUrl: 'https://cloudflare-eth.com',
+
+      setTheme:          (theme)         => set({ theme }),
+      setSidebarOpen:    (sidebarOpen)   => set({ sidebarOpen }),
+      setRightPanelOpen: (rightPanelOpen) => set({ rightPanelOpen }),
+      setHomepage:       (homepage)      => set({ homepage }),
+      setSearchEngine:   (searchEngine)  => set({ searchEngine }),
+      setBlockTrackers:  (v)             => set({ blockTrackers: v }),
+      setBlockAds:       (v)             => set({ blockAds: v }),
+      setShowWeb3Scores: (v)             => set({ showWeb3Scores: v }),
+      setIpfsGateway:    (url)           => set({ ipfsGateway: url }),
+      setRpcUrl:         (url)           => set({ rpcUrl: url }),
+    }),
+    {
+      name: 'orivon-settings',
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);
