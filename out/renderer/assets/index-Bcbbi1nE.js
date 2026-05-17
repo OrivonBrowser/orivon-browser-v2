@@ -41115,14 +41115,13 @@ const useWalletStore = create()(
   )
 );
 const SLIDE = {
-  initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } },
-  exit: { opacity: 0, y: -8, transition: { duration: 0.18, ease: "easeIn" } }
+  initial: { opacity: 0, y: 10 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] } },
+  exit: { opacity: 0, y: -6, transition: { duration: 0.16, ease: "easeIn" } }
 };
 function Onboarding({ onDone }) {
   const { generateMnemonic, createWallet, importWallet } = useWalletStore();
   const [step, setStep] = reactExports.useState("welcome");
-  const [mode, setMode] = reactExports.useState("create");
   const [mnemonic] = reactExports.useState(() => generateMnemonic());
   const [importPhrase, setImport] = reactExports.useState("");
   const [password, setPassword] = reactExports.useState("");
@@ -41177,201 +41176,315 @@ function Onboarding({ onDone }) {
       setError(String(e));
     }
   }, [importPhrase, password, importWallet]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "h-screen w-screen bg-[#0a0a0a] flex flex-col items-center justify-center overflow-hidden", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 pointer-events-none", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#00FF87]/[0.03] blur-[120px]" }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative z-10 w-full max-w-sm px-6", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(AnimatePresence, { mode: "wait", children: [
-      step === "welcome" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-8", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center space-y-3", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-12 h-12 rounded-2xl bg-[#00FF87] flex items-center justify-center mx-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 22, className: "text-black", strokeWidth: 2.5 }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-semibold tracking-tight text-white", children: "Orivon" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-white/40 mt-1", children: "Your Web3 browser" })
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2.5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            WelcomeBtn,
-            {
-              icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 16 }),
-              label: "Create new wallet",
-              sub: "Generate a fresh wallet with seed phrase",
-              onClick: () => {
-                setMode("create");
-                setStep("create-phrase");
-              },
-              accent: true
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            WelcomeBtn,
-            {
-              icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Key, { size: 16 }),
-              label: "Import existing wallet",
-              sub: "Restore from your 12 or 24-word phrase",
-              onClick: () => {
-                setMode("import");
-                setStep("import");
-              }
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            "button",
-            {
-              onClick: () => onDone(false),
-              className: "w-full h-11 flex items-center justify-center gap-2 rounded-xl text-[13px] text-white/35 hover:text-white/60 transition-colors",
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 14 }),
-                "Browse without wallet"
-              ]
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-center text-[11px] text-white/20", children: "v0.94.1 · Electron · Chromium" })
-      ] }, "welcome"),
-      step === "create-phrase" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-6", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(StepHeader, { title: "Your recovery phrase", sub: "Write these 12 words down and keep them safe. They cannot be recovered.", onBack: () => setStep("welcome") }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-3 gap-1.5", children: words2.map((word, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 bg-white/[0.04] border border-white/[0.07] rounded-lg px-2.5 py-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-white/25 w-4 shrink-0 tabular-nums", children: i + 1 }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[12px] font-medium text-white/80", children: word })
-        ] }, i)) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "button",
-          {
-            onClick: copyPhrase,
-            className: `flex items-center justify-center gap-2 w-full h-10 rounded-xl text-[12px] font-medium border transition-all ${copied ? "border-[#00FF87]/30 text-[#00FF87] bg-[#00FF87]/8" : "border-white/10 text-white/40 hover:text-white/60 hover:border-white/20"}`,
-            children: [
-              copied ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 14 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Copy, { size: 14 }),
-              copied ? "Copied!" : "Copy to clipboard"
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(PrimaryBtn, { onClick: () => setStep("create-password"), children: [
-          "I've saved my phrase ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 15 })
-        ] })
-      ] }, "phrase"),
-      step === "create-password" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-5", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(StepHeader, { title: "Protect your wallet", sub: "Set a password to encrypt your wallet locally.", onBack: () => setStep("create-phrase") }),
+  const isWelcome = step === "welcome";
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      className: "h-screen w-screen overflow-hidden relative flex items-center justify-center",
+      style: { background: "linear-gradient(155deg, #0c0920 0%, #180b35 45%, #0d1128 100%)" },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Shapes, {}),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
-          PasswordFields,
+          "div",
           {
-            password,
-            setPassword,
-            confirm: confirmPw,
-            setConfirm: setConfirmPw,
-            show: showPw,
-            toggleShow: () => setShowPw((p) => !p),
-            onSubmit: handleCreate
-          }
-        ),
-        error && /* @__PURE__ */ jsxRuntimeExports.jsx(ErrorMsg, { text: error }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(PrimaryBtn, { onClick: handleCreate, disabled: password.length < 6 || password !== confirmPw, children: "Create wallet" })
-      ] }, "create-pw"),
-      step === "import" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-5", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(StepHeader, { title: "Import wallet", sub: "Enter your recovery phrase to restore access.", onBack: () => setStep("welcome") }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "textarea",
-          {
-            value: importPhrase,
-            onChange: (e) => setImport(e.target.value),
-            placeholder: "Enter your 12 or 24-word recovery phrase...",
-            rows: 3,
-            className: "w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none focus:border-white/20 font-mono resize-none transition-colors"
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          PasswordFields,
-          {
-            password,
-            setPassword,
-            show: showPw,
-            toggleShow: () => setShowPw((p) => !p),
-            onSubmit: handleImport,
-            singleField: true,
-            placeholder: "Set a new wallet password"
-          }
-        ),
-        error && /* @__PURE__ */ jsxRuntimeExports.jsx(ErrorMsg, { text: error }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          PrimaryBtn,
-          {
-            onClick: handleImport,
-            disabled: importPhrase.trim().split(/\s+/).length < 12 || password.length < 6,
-            children: "Import wallet"
-          }
-        )
-      ] }, "import"),
-      step === "encrypting" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "text-center space-y-6 py-4", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative w-16 h-16 mx-auto", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { className: "w-16 h-16 -rotate-90", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "32", cy: "32", r: "28", stroke: "rgba(255,255,255,0.06)", strokeWidth: "3", fill: "none" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "circle",
+            className: "relative z-10 w-full",
+            style: { maxWidth: isWelcome ? 480 : 400, padding: "0 24px" },
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "div",
               {
-                cx: "32",
-                cy: "32",
-                r: "28",
-                stroke: "#00FF87",
-                strokeWidth: "3",
-                fill: "none",
-                strokeDasharray: `${2 * Math.PI * 28}`,
-                strokeDashoffset: `${2 * Math.PI * 28 * (1 - progress2 / 100)}`,
-                strokeLinecap: "round",
-                style: { transition: "stroke-dashoffset 0.3s ease" }
+                className: "rounded-3xl p-10 text-center",
+                style: {
+                  background: "rgba(255,255,255,0.055)",
+                  backdropFilter: "blur(28px)",
+                  WebkitBackdropFilter: "blur(28px)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  boxShadow: "0 24px 60px rgba(0,0,0,0.5)"
+                },
+                children: /* @__PURE__ */ jsxRuntimeExports.jsxs(AnimatePresence, { mode: "wait", children: [
+                  step === "welcome" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-8", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      "div",
+                      {
+                        className: "w-20 h-20 rounded-[22px] flex items-center justify-center",
+                        style: {
+                          background: "#00FF87",
+                          boxShadow: "0 0 40px rgba(0,255,135,0.30), 0 8px 24px rgba(0,0,0,0.4)"
+                        },
+                        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 38, className: "text-black", strokeWidth: 2.5 })
+                      }
+                    ) }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-[32px] font-bold text-white tracking-tight leading-tight", children: "Web3. By Default." }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-white/55 text-[15px] leading-relaxed", children: [
+                        "The first browser where your wallet is native,",
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+                        "not an extension. Private and decentralized."
+                      ] })
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3 pt-1", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "button",
+                        {
+                          onClick: () => setStep("choose"),
+                          className: "w-full h-12 rounded-full text-white text-[15px] font-semibold transition-all active:scale-[0.97] hover:brightness-110",
+                          style: { background: "linear-gradient(135deg, #4F46E5, #7C3AED)" },
+                          children: "Create / Import Wallet"
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "button",
+                        {
+                          onClick: () => onDone(false),
+                          className: "w-full h-10 text-white/45 hover:text-white/75 text-[14px] transition-colors",
+                          children: "Skip"
+                        }
+                      )
+                    ] })
+                  ] }, "welcome"),
+                  step === "choose" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-6", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-[20px] font-bold text-white", children: "Set up your wallet" }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-white/45 text-[13px]", children: "Choose how you'd like to get started." })
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2.5", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                        "button",
+                        {
+                          onClick: () => setStep("create-phrase"),
+                          className: "w-full flex items-center gap-4 p-4 rounded-2xl text-left transition-all",
+                          style: { background: "rgba(0,255,135,0.12)", border: "1px solid rgba(0,255,135,0.25)" },
+                          children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-9 h-9 rounded-xl flex items-center justify-center shrink-0", style: { background: "rgba(0,255,135,0.2)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 18, className: "text-[#00FF87]" }) }),
+                            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[13px] font-semibold text-white leading-none mb-1", children: "Create new wallet" }),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] text-white/40", children: "Generate a new 12-word seed phrase" })
+                            ] })
+                          ]
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                        "button",
+                        {
+                          onClick: () => setStep("import"),
+                          className: "w-full flex items-center gap-4 p-4 rounded-2xl text-left transition-all",
+                          style: { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)" },
+                          children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-9 h-9 rounded-xl flex items-center justify-center shrink-0", style: { background: "rgba(255,255,255,0.07)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Key, { size: 18, className: "text-white/55" }) }),
+                            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[13px] font-semibold text-white/85 leading-none mb-1", children: "Import existing wallet" }),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] text-white/40", children: "Restore from 12 or 24-word phrase" })
+                            ] })
+                          ]
+                        }
+                      )
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => setStep("welcome"), className: "flex items-center gap-1.5 text-[12px] text-white/30 hover:text-white/60 transition-colors mx-auto", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 13 }),
+                      " Back"
+                    ] })
+                  ] }, "choose"),
+                  step === "create-phrase" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-5 text-left", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(InnerHeader, { title: "Recovery phrase", sub: "Write these 12 words down. They're the only way to recover your wallet.", onBack: () => setStep("choose") }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-3 gap-1.5", children: words2.map((word, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 rounded-lg px-2.5 py-2", style: { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }, children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-white/22 w-4 shrink-0 tabular-nums", children: i + 1 }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11.5px] font-medium text-white/80", children: word })
+                    ] }, i)) }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                      "button",
+                      {
+                        onClick: copyPhrase,
+                        className: "flex items-center justify-center gap-2 w-full h-9 rounded-xl text-[12px] font-medium transition-all",
+                        style: {
+                          background: copied ? "rgba(0,255,135,0.1)" : "rgba(255,255,255,0.04)",
+                          border: `1px solid ${copied ? "rgba(0,255,135,0.3)" : "rgba(255,255,255,0.09)"}`,
+                          color: copied ? "#00FF87" : "rgba(255,255,255,0.45)"
+                        },
+                        children: [
+                          copied ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 13 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Copy, { size: 13 }),
+                          copied ? "Copied!" : "Copy to clipboard"
+                        ]
+                      }
+                    ),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs(CTABtn, { onClick: () => setStep("create-password"), children: [
+                      "I've saved my phrase ",
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 14 })
+                    ] })
+                  ] }, "phrase"),
+                  step === "create-password" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-5 text-left", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(InnerHeader, { title: "Set a password", sub: "Encrypts your wallet locally. You'll need it to unlock.", onBack: () => setStep("create-phrase") }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      PasswordFields,
+                      {
+                        password,
+                        setPassword,
+                        confirm: confirmPw,
+                        setConfirm: setConfirmPw,
+                        show: showPw,
+                        toggleShow: () => setShowPw((p) => !p),
+                        onSubmit: handleCreate
+                      }
+                    ),
+                    error && /* @__PURE__ */ jsxRuntimeExports.jsx(ErrMsg, { text: error }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(CTABtn, { onClick: handleCreate, disabled: password.length < 6 || password !== confirmPw, children: "Create wallet" })
+                  ] }, "create-pw"),
+                  step === "import" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-5 text-left", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(InnerHeader, { title: "Import wallet", sub: "Enter your 12 or 24-word recovery phrase.", onBack: () => setStep("choose") }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      "textarea",
+                      {
+                        value: importPhrase,
+                        onChange: (e) => setImport(e.target.value),
+                        placeholder: "word1 word2 word3...",
+                        rows: 3,
+                        className: "w-full rounded-xl px-4 py-3 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none font-mono resize-none transition-colors",
+                        style: { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
+                      }
+                    ),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "input",
+                        {
+                          type: showPw ? "text" : "password",
+                          value: password,
+                          onChange: (e) => setPassword(e.target.value),
+                          placeholder: "Set a new password (min 6 chars)",
+                          autoFocus: true,
+                          onKeyDown: (e) => e.key === "Enter" && handleImport(),
+                          className: "w-full h-11 rounded-xl px-4 pr-11 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none transition-colors",
+                          style: { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setShowPw((p) => !p), className: "absolute right-3 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/50 transition-colors", children: showPw ? /* @__PURE__ */ jsxRuntimeExports.jsx(EyeOff, { size: 14 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Eye, { size: 14 }) })
+                    ] }),
+                    error && /* @__PURE__ */ jsxRuntimeExports.jsx(ErrMsg, { text: error }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(CTABtn, { onClick: handleImport, disabled: importPhrase.trim().split(/\s+/).length < 12 || password.length < 6, children: "Import wallet" })
+                  ] }, "import"),
+                  step === "encrypting" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-6 py-4", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative w-16 h-16 mx-auto", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { className: "w-16 h-16 -rotate-90", viewBox: "0 0 64 64", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "32", cy: "32", r: "28", stroke: "rgba(255,255,255,0.07)", strokeWidth: "3", fill: "none" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "circle",
+                          {
+                            cx: "32",
+                            cy: "32",
+                            r: "28",
+                            stroke: "#00FF87",
+                            strokeWidth: "3",
+                            fill: "none",
+                            strokeDasharray: `${2 * Math.PI * 28}`,
+                            strokeDashoffset: `${2 * Math.PI * 28 * (1 - progress2 / 100)}`,
+                            strokeLinecap: "round",
+                            style: { transition: "stroke-dashoffset 0.3s ease" }
+                          }
+                        )
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[13px] font-semibold text-white/70", children: [
+                        Math.round(progress2),
+                        "%"
+                      ] }) })
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[15px] font-medium text-white/85", children: "Encrypting wallet…" }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] text-white/35 mt-1", children: "This takes a moment" })
+                    ] })
+                  ] }, "encrypting"),
+                  step === "success" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "space-y-7 py-2", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-14 h-14 rounded-full flex items-center justify-center mx-auto", style: { background: "rgba(0,255,135,0.12)", border: "1px solid rgba(0,255,135,0.25)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 24, className: "text-[#00FF87]" }) }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[17px] font-semibold text-white", children: "Wallet ready" }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[13px] text-white/40 mt-1.5", children: "Encrypted and stored locally on your device." })
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs(CTABtn, { onClick: () => onDone(true), children: [
+                      "Open Orivon ",
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 14 })
+                    ] })
+                  ] }, "success")
+                ] })
               }
             )
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[13px] font-semibold text-white/70", children: [
-            Math.round(progress2),
-            "%"
-          ] }) })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[15px] font-medium text-white/80", children: "Encrypting wallet" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] text-white/30 mt-1", children: "This takes a moment..." })
-        ] })
-      ] }, "encrypting"),
-      step === "success" && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { ...SLIDE, className: "text-center space-y-7 py-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-14 h-14 rounded-full bg-[#00FF87]/15 border border-[#00FF87]/25 flex items-center justify-center mx-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 24, className: "text-[#00FF87]" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[17px] font-semibold text-white", children: "Wallet ready" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[13px] text-white/40 mt-1.5", children: "Your wallet is encrypted and stored locally." })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(PrimaryBtn, { onClick: () => onDone(true), children: [
-          "Open your dashboard ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 15 })
-        ] })
-      ] }, "success")
-    ] }) })
-  ] });
-}
-function WelcomeBtn({ icon, label, sub, onClick, accent }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    "button",
-    {
-      onClick,
-      className: `w-full flex items-center gap-4 p-4 rounded-2xl border text-left transition-all group ${accent ? "bg-[#00FF87] border-[#00FF87] hover:brightness-105" : "bg-white/[0.03] border-white/[0.08] hover:bg-white/[0.06] hover:border-white/[0.12]"}`,
-      children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${accent ? "bg-black/15" : "bg-white/[0.06]"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: accent ? "text-black" : "text-white/50", children: icon }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[13px] font-semibold leading-none mb-1 ${accent ? "text-black" : "text-white/90"}`, children: label }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[11px] ${accent ? "text-black/60" : "text-white/35"}`, children: sub })
-        ] })
+          }
+        )
       ]
     }
   );
 }
-function StepHeader({ title, sub, onBack }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: onBack, className: "flex items-center gap-1.5 text-[12px] text-white/35 hover:text-white/60 mb-4 transition-colors", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 13 }),
-      " Back"
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-[17px] font-semibold text-white/90", children: title }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] text-white/40 leading-relaxed", children: sub })
+function Shapes() {
+  const items = [
+    // Plus signs — scattered like Brave's welcome page
+    { type: "plus", x: "7%", y: "8%", size: 22, color: "rgba(192,132,252,0.55)", rot: 0 },
+    { type: "plus", x: "14%", y: "22%", size: 16, color: "rgba(236,72,153,0.5)", rot: 15 },
+    { type: "plus", x: "4%", y: "45%", size: 28, color: "rgba(249,115,22,0.6)", rot: 0 },
+    { type: "plus", x: "9%", y: "68%", size: 18, color: "rgba(192,132,252,0.45)", rot: 20 },
+    { type: "plus", x: "3%", y: "82%", size: 14, color: "rgba(236,72,153,0.4)", rot: 0 },
+    { type: "plus", x: "82%", y: "6%", size: 20, color: "rgba(249,115,22,0.55)", rot: 10 },
+    { type: "plus", x: "91%", y: "20%", size: 16, color: "rgba(192,132,252,0.5)", rot: 0 },
+    { type: "plus", x: "88%", y: "50%", size: 24, color: "rgba(236,72,153,0.55)", rot: 15 },
+    { type: "plus", x: "93%", y: "72%", size: 14, color: "rgba(249,115,22,0.5)", rot: 5 },
+    { type: "plus", x: "85%", y: "86%", size: 20, color: "rgba(192,132,252,0.45)", rot: 0 },
+    // Triangles
+    { type: "triangle", x: "22%", y: "12%", size: 18, color: "rgba(192,132,252,0.4)", rot: 0 },
+    { type: "triangle", x: "78%", y: "15%", size: 22, color: "rgba(249,115,22,0.45)", rot: 180 },
+    { type: "triangle", x: "18%", y: "80%", size: 16, color: "rgba(236,72,153,0.4)", rot: 0 },
+    { type: "triangle", x: "80%", y: "82%", size: 20, color: "rgba(192,132,252,0.5)", rot: 180 },
+    // Dots
+    { type: "dot", x: "30%", y: "7%", size: 8, color: "rgba(255,255,255,0.35)", rot: 0 },
+    { type: "dot", x: "68%", y: "9%", size: 10, color: "rgba(96,165,250,0.5)", rot: 0 },
+    { type: "dot", x: "25%", y: "90%", size: 7, color: "rgba(255,255,255,0.25)", rot: 0 },
+    { type: "dot", x: "72%", y: "88%", size: 12, color: "rgba(249,115,22,0.4)", rot: 0 }
+  ];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "absolute inset-0 pointer-events-none overflow-hidden", "aria-hidden": true, children: [
+    items.map((item, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        style: {
+          position: "absolute",
+          left: item.x,
+          top: item.y,
+          transform: `rotate(${item.rot}deg)`
+        },
+        children: [
+          item.type === "plus" && /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: item.size, height: item.size, viewBox: "0 0 24 24", fill: "none", children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M12 2v20M2 12h20", stroke: item.color, strokeWidth: "2.5", strokeLinecap: "round" }) }),
+          item.type === "triangle" && /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: item.size, height: item.size, viewBox: "0 0 24 24", fill: "none", children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M12 3L22 20H2L12 3Z", stroke: item.color, strokeWidth: "2", strokeLinejoin: "round" }) }),
+          item.type === "dot" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "div",
+            {
+              style: {
+                width: item.size,
+                height: item.size,
+                borderRadius: "50%",
+                background: item.color
+              }
+            }
+          )
+        ]
+      },
+      i
+    )),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", top: "20%", left: "15%", width: 300, height: 300, borderRadius: "50%", background: "rgba(139,92,246,0.07)", filter: "blur(80px)" } }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", top: "50%", right: "10%", width: 250, height: 250, borderRadius: "50%", background: "rgba(79,70,229,0.06)", filter: "blur(80px)" } }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", bottom: "10%", left: "30%", width: 350, height: 200, borderRadius: "50%", background: "rgba(124,58,237,0.05)", filter: "blur(100px)" } })
   ] });
 }
-function PasswordFields({ password, setPassword, confirm, setConfirm, show, toggleShow, onSubmit, singleField, placeholder }) {
+function InnerHeader({ title, sub, onBack }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: onBack, className: "flex items-center gap-1.5 text-[12px] text-white/30 hover:text-white/60 mb-4 transition-colors", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 12 }),
+      " Back"
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[17px] font-semibold text-white leading-snug", children: title }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] text-white/40 mt-1 leading-relaxed", children: sub })
+  ] });
+}
+function PasswordFields({
+  password,
+  setPassword,
+  confirm,
+  setConfirm,
+  show,
+  toggleShow,
+  onSubmit
+}) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2.5", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -41380,39 +41493,44 @@ function PasswordFields({ password, setPassword, confirm, setConfirm, show, togg
           type: show ? "text" : "password",
           value: password,
           onChange: (e) => setPassword(e.target.value),
-          placeholder: placeholder || "Password (min 6 characters)",
+          placeholder: "Password (min 6 characters)",
           autoFocus: true,
-          onKeyDown: (e) => e.key === "Enter" && !singleField && setConfirm && confirm && onSubmit(),
-          className: "w-full h-11 bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 pr-11 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none focus:border-white/20 transition-colors"
+          onKeyDown: (e) => {
+            if (e.key === "Enter" && confirm !== void 0) onSubmit();
+          },
+          className: "w-full h-11 rounded-xl px-4 pr-11 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none transition-colors",
+          style: { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: toggleShow, className: "absolute right-3 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/50 transition-colors", children: show ? /* @__PURE__ */ jsxRuntimeExports.jsx(EyeOff, { size: 15 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Eye, { size: 15 }) })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: toggleShow, className: "absolute right-3 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/50 transition-colors", children: show ? /* @__PURE__ */ jsxRuntimeExports.jsx(EyeOff, { size: 14 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Eye, { size: 14 }) })
     ] }),
-    !singleField && setConfirm && /* @__PURE__ */ jsxRuntimeExports.jsx(
+    setConfirm && /* @__PURE__ */ jsxRuntimeExports.jsx(
       "input",
       {
         type: "password",
-        value: confirm,
+        value: confirm ?? "",
         onChange: (e) => setConfirm(e.target.value),
         placeholder: "Confirm password",
         onKeyDown: (e) => e.key === "Enter" && onSubmit(),
-        className: "w-full h-11 bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none focus:border-white/20 transition-colors"
+        className: "w-full h-11 rounded-xl px-4 text-[13px] text-white/80 placeholder:text-white/20 focus:outline-none transition-colors",
+        style: { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
       }
     )
   ] });
 }
-function PrimaryBtn({ children, onClick, disabled }) {
+function CTABtn({ children, onClick, disabled }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "button",
     {
       onClick,
       disabled,
-      className: "w-full h-11 flex items-center justify-center gap-2 rounded-xl bg-white text-black text-[13px] font-semibold hover:bg-[#00FF87] transition-colors disabled:opacity-35 disabled:cursor-not-allowed",
+      className: "w-full h-11 rounded-full text-white text-[14px] font-semibold flex items-center justify-center gap-2 transition-all active:scale-[0.97] hover:brightness-110 disabled:opacity-35 disabled:cursor-not-allowed",
+      style: { background: "linear-gradient(135deg, #4F46E5, #7C3AED)" },
       children
     }
   );
 }
-function ErrorMsg({ text }) {
+function ErrMsg({ text }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] text-red-400 text-center", children: text });
 }
 const useSettings = create()(
@@ -42675,11 +42793,15 @@ function Browser({ onOpenDashboard } = {}) {
       if (r.ok) {
         url = r.url;
         type = r.type;
+        if (type === "ens" || type === "ipfs" || type === "ipns") {
+          addLog(`[P2P Routing] Resolved ${input} via ${String(type).toUpperCase()}`);
+        }
       }
     } else {
-      if (input.endsWith(".eth")) {
-        url = `https://${input}.limo`;
+      if (input.endsWith(".eth") || input.includes(".eth/")) {
+        url = `https://${input.split("/")[0]}.limo${input.includes("/") ? input.slice(input.indexOf("/")) : ""}`;
         type = "ens";
+        addLog(`[P2P Routing] Bypassing DNS for ${input.split("/")[0]} via ENS`);
       } else if (input.startsWith("ipfs://")) {
         url = `https://ipfs.io/ipfs/${input.slice(7)}`;
         type = "ipfs";
