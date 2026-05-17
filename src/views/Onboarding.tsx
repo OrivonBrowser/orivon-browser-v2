@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Shield, Key, ArrowRight, Command, Cpu, Layers, Sun, Moon } from 'lucide-react';
+import { Shield, Key, ArrowRight, ArrowUpRight, Command, Cpu, Layers, Sun, Moon } from 'lucide-react';
 import { WalletAddresses } from '../types';
 
 interface OnboardingProps {
@@ -137,8 +137,8 @@ export default function Onboarding({ onFinish, seed }: OnboardingProps) {
                   onClick={() => onFinish(deriveAddresses())}
                   className={`w-full h-16 flex items-center justify-center gap-4 rounded-[1.5rem] transition-all active:scale-[0.98] group shadow-xl cursor-pointer ${isDark ? 'bg-white text-black hover:bg-orivon-accent' : 'bg-black text-white hover:bg-orivon-accent'}`}
                 >
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em]">Launch System</span>
-                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em]">Open Browser</span>
+                  <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </button>
               </div>
 
