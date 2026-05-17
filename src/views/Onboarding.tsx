@@ -9,8 +9,9 @@ interface OnboardingProps {
 }
 
 export default function Onboarding({ onFinish, seed }: OnboardingProps) {
-  const [step, setStep] = useState<'INITIAL' | 'SEED' | 'DERIVED'>('INITIAL');
+  const [step, setStep] = useState<'INITIAL' | 'SEED' | 'IMPORT' | 'DERIVED'>('INITIAL');
   const [password, setPassword] = useState('');
+  const [importPhrase, setImportPhrase] = useState('');
 
   const deriveAddresses = (): WalletAddresses => {
     return {
@@ -29,107 +30,117 @@ export default function Onboarding({ onFinish, seed }: OnboardingProps) {
     setStep('DERIVED');
   };
 
+  const handleImport = () => {
+    if (importPhrase.trim().split(/\s+/).length >= 12 && password.length >= 4) {
+      handleInitialize();
+    }
+  };
+
   return (
     <div className="relative h-full w-full bg-[#050505] flex flex-col items-center justify-center overflow-hidden noise-bg font-sans">
       {/* Browser Chrome Header */}
       <div className="absolute top-0 left-0 w-full z-50">
-        <div className="h-10 bg-[#121212] flex items-center px-4 gap-2 border-b border-white/5">
+        <div className="h-9 bg-[#121212] flex items-center px-4 gap-2 border-b border-white/5">
           <div className="flex gap-1.5 px-2">
-            <div className="w-3 h-3 rounded-full bg-[#ff5f57] border border-black/10"></div>
-            <div className="w-3 h-3 rounded-full bg-[#febc2e] border border-black/10"></div>
-            <div className="w-3 h-3 rounded-full bg-[#28c840] border border-black/10"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]/80 border border-black/10"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e]/80 border border-black/10"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-[#28c840]/80 border border-black/10"></div>
           </div>
-          <div className="flex items-center gap-2 ml-4 h-8 bg-[#1e1e1e] px-4 rounded-t-lg border-x border-t border-white/5 min-w-[140px] shadow-sm">
-            <div className="w-2.5 h-2.5 bg-orivon-accent rounded-sm"></div>
-            <span className="text-[10px] font-bold text-white/60 uppercase tracking-tight">Orivon Shell</span>
+          <div className="flex items-center gap-2 ml-3 h-7 bg-[#1e1e1e] px-4 rounded-t-lg border-x border-t border-white/5 min-w-[120px] shadow-sm">
+            <div className="w-2 h-2 bg-orivon-accent rounded-[1px]"></div>
+            <span className="text-[9px] font-black text-white/40 uppercase tracking-tighter">Orivon Shell</span>
           </div>
-          <div className="w-6 h-6 flex items-center justify-center text-white/10 hover:text-white/30 transition-colors cursor-pointer text-lg font-light">+</div>
         </div>
 
-        <div className="h-11 bg-[#1a1a1a] flex items-center px-6 gap-6 border-b border-white/5">
-          <div className="flex gap-4 text-white/20">
-            <ArrowRight size={14} className="rotate-180 opacity-50" />
-            <ArrowRight size={14} className="opacity-50" />
-            <Layers size={14} className="opacity-30" />
+        <div className="h-10 bg-[#1a1a1a] flex items-center px-5 gap-5 border-b border-white/5">
+          <div className="flex gap-3 text-white/10">
+            <ArrowRight size={12} className="rotate-180" />
+            <ArrowRight size={12} />
+            <Layers size={12} className="opacity-50" />
           </div>
-          <div className="flex-1 h-7 bg-black/40 border border-white/5 rounded-full flex items-center px-4 gap-3">
-             <div className="w-1.5 h-1.5 rounded-full bg-orivon-accent animate-pulse"></div>
-             <span className="text-[10px] text-white/30 font-mono tracking-tight">orivon://gateway/identity_init</span>
+          <div className="flex-1 h-6 bg-black/40 border border-white/5 rounded-full flex items-center px-4 gap-3">
+             <div className="w-1 h-1 rounded-full bg-orivon-accent animate-pulse"></div>
+             <span className="text-[9px] text-white/20 font-mono tracking-tight">orivon://gateway/protocol_initialization</span>
           </div>
           <div className="flex gap-4 items-center">
-             <Shield size={13} className="text-orivon-accent opacity-80" />
-             <div className="w-5 h-5 rounded-full bg-blue-500/20 border border-blue-500/40 flex items-center justify-center">
-               <span className="text-[7px] font-bold text-blue-400">B</span>
+             <Shield size={12} className="text-orivon-accent opacity-50" />
+             <div className="w-4 h-4 rounded-full bg-blue-500/20 border border-blue-500/40 flex items-center justify-center">
+               <span className="text-[6px] font-bold text-blue-400">B</span>
              </div>
           </div>
         </div>
       </div>
 
-      {/* Hero Content Section */}
-      <div className="flex-1 w-full flex flex-col items-center justify-center pt-20 relative px-6">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-orivon-accent/[0.02] blur-[160px] pointer-events-none rounded-full"></div>
+      <div className="flex-1 w-full flex flex-col items-center justify-center pt-16 relative px-6">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-orivon-accent/[0.03] blur-[140px] pointer-events-none rounded-full"></div>
 
         <AnimatePresence mode="wait">
           {step === 'INITIAL' && (
             <motion.div 
               key="initial"
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full flex flex-col items-center space-y-16 z-10"
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="w-full flex flex-col items-center space-y-10 z-10"
             >
-              <div className="space-y-8 text-center max-w-2xl">
+              <div className="space-y-6 text-center max-w-lg">
                 <motion.h1
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 1.5, delay: 0.2 }}
-                  className="text-7xl md:text-9xl font-black text-white tracking-[0.3em] uppercase drop-shadow-2xl"
+                  className="text-6xl md:text-8xl font-black text-white tracking-[0.2em] uppercase"
                 >
                   ORIVON
                 </motion.h1>
-                <div className="space-y-4">
-                  <p className="text-white/70 text-xl font-medium tracking-tight">
-                    Explore the possibilities of Orivon browser.
+                <div className="space-y-3">
+                  <p className="text-white/80 text-base font-medium tracking-tight">
+                    The Decentralized Operating Layer.
                   </p>
-                  <p className="text-white/20 text-[10px] font-mono uppercase tracking-[0.5em] font-bold">
-                    Direct P2P // Zero-Resolution Runtime
+                  <p className="text-white/30 text-[9px] uppercase tracking-[0.4em] font-bold leading-relaxed max-w-sm mx-auto">
+                    Zero middlemen // Peer-to-peer distribution <br/>
+                    Isolated WASM runtime protocols.
                   </p>
                 </div>
               </div>
 
-              {/* Minimal Decentralized Interaction Hub */}
-              <div className="w-full max-w-md bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[2.5rem] p-4 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] flex flex-col gap-2">
-                <div className="grid grid-cols-2 gap-2">
+              {/* Compact Interaction Hub */}
+              <div className="w-full max-w-[320px] bg-white/[0.02] border border-white/5 backdrop-blur-3xl rounded-[2rem] p-3 shadow-2xl flex flex-col gap-1.5">
+                <div className="grid grid-cols-2 gap-1.5">
                   <button 
                     onClick={() => setStep('SEED')}
-                    className="flex flex-col items-center justify-center gap-3 py-10 border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/20 transition-all rounded-[2rem] group"
+                    className="flex flex-col items-center justify-center gap-2 py-8 border border-white/5 bg-white/[0.01] hover:bg-white/[0.04] hover:border-white/10 transition-all rounded-[1.5rem] group cursor-pointer"
                   >
-                    <div className="w-8 h-8 rounded-full border border-white/5 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
-                      <Shield size={16} />
+                    <div className="w-7 h-7 rounded-full border border-white/5 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                      <Shield size={14} />
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50 group-hover:text-white transition-colors">Create Wallet</span>
+                    <span className="text-[8px] font-black uppercase tracking-[0.15em] text-white/40 group-hover:text-white">Create Wallet</span>
                   </button>
 
-                  <button className="flex flex-col items-center justify-center gap-3 py-10 border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/20 transition-all rounded-[2rem] group opacity-30 hover:opacity-100">
-                    <div className="w-8 h-8 rounded-full border border-white/5 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
-                      <Key size={16} />
+                  <button 
+                    onClick={() => setStep('IMPORT')}
+                    className="flex flex-col items-center justify-center gap-2 py-8 border border-white/5 bg-white/[0.01] hover:bg-white/[0.04] hover:border-white/10 transition-all rounded-[1.5rem] group cursor-pointer"
+                  >
+                    <div className="w-7 h-7 rounded-full border border-white/5 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                      <Key size={14} />
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50 group-hover:text-white transition-colors">Import Wallet</span>
+                    <span className="text-[8px] font-black uppercase tracking-[0.15em] text-white/40 group-hover:text-white">Import Wallet</span>
                   </button>
                 </div>
 
                 <button 
                   onClick={() => onFinish(deriveAddresses())}
-                  className="w-full h-20 bg-white text-black flex items-center justify-center gap-5 rounded-[2rem] hover:bg-orivon-accent transition-all active:scale-[0.98] group shadow-xl"
+                  className="w-full h-16 bg-white text-black flex items-center justify-center gap-4 rounded-[1.5rem] hover:bg-orivon-accent transition-all active:scale-[0.98] group shadow-xl cursor-pointer"
                 >
-                  <span className="text-xs font-black uppercase tracking-[0.4em]">Launch Browser</span>
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em]">Launch System</span>
+                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
 
-              <div className="flex gap-10 font-mono text-[8px] font-bold text-white/10 uppercase tracking-[0.4em] pt-4">
-                <div>Kernel_v0.94-Alpha</div>
-                <div>Status: Ready</div>
+              <div className="flex gap-8 font-mono text-[8px] font-bold text-white/10 uppercase tracking-[0.3em]">
+                <div>Build 0.94.1</div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1 h-1 rounded-full bg-orivon-accent animate-pulse"></div>
+                  P2P Node Active
+                </div>
               </div>
             </motion.div>
           )}
@@ -139,49 +150,93 @@ export default function Onboarding({ onFinish, seed }: OnboardingProps) {
               key="seed"
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="max-w-md w-full space-y-8 bg-white/[0.02] border border-white/5 backdrop-blur-3xl p-10 rounded-[2.5rem] z-10"
+              className="max-w-[360px] w-full space-y-6 bg-white/[0.02] border border-white/5 backdrop-blur-3xl p-8 rounded-[2rem] z-10"
             >
-              <div className="space-y-3 text-center">
-                <h2 className="text-2xl font-black tracking-tighter text-white uppercase">Identity Seed</h2>
-                <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">Physical backup recommended.</p>
+              <div className="space-y-2 text-center">
+                <h2 className="text-xl font-black tracking-tighter text-white uppercase">Identity Seed</h2>
+                <p className="text-white/30 text-[8px] uppercase tracking-widest font-bold">Physical backup mandatory</p>
               </div>
               
-              <div className="grid grid-cols-3 gap-1.5 p-6 border border-white/5 bg-black/40 font-mono text-[9px] rounded-2xl shadow-inner">
+              <div className="grid grid-cols-3 gap-1 p-5 border border-white/5 bg-black/40 font-mono text-[8px] rounded-xl">
                 {seed.split(' ').map((word, i) => (
-                  <div key={i} className="flex gap-2 items-center py-2 border-b border-white/5 last:border-0">
-                    <span className="text-white/20">{(i + 1).toString().padStart(2, '0')}</span>
-                    <span className="text-white font-bold">{word}</span>
+                  <div key={i} className="flex gap-2 items-center py-1.5 border-b border-white/5 last:border-0">
+                    <span className="text-white/10 font-bold">{(i + 1).toString().padStart(2, '0')}</span>
+                    <span className="text-white/80">{word}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="space-y-6">
-                <div className="space-y-3">
-                  <input 
+              <div className="space-y-4">
+                <input 
+                  type="password"
+                  autoFocus
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Master Authorization Phrase"
+                  onKeyDown={(e) => e.key === 'Enter' && handleInitialize()}
+                  className="w-full bg-black/40 border border-white/5 px-5 py-4 rounded-xl focus:outline-none focus:border-white/20 transition-all font-mono text-[10px] text-white text-center placeholder:opacity-20"
+                />
+                <button 
+                  onClick={handleInitialize}
+                  disabled={password.length < 4}
+                  className="btn-primary !p-4 rounded-xl w-full !text-[10px] cursor-pointer"
+                >
+                  Bind Identity Node
+                </button>
+                <button 
+                  onClick={() => setStep('INITIAL')}
+                  className="w-full text-[8px] font-bold uppercase tracking-[0.3em] text-white/20 hover:text-white transition-all cursor-pointer"
+                >
+                  Cancel Initialization
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {step === 'IMPORT' && (
+            <motion.div 
+              key="import"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="max-w-[360px] w-full space-y-6 bg-white/[0.02] border border-white/5 backdrop-blur-3xl p-8 rounded-[2rem] z-10"
+            >
+              <div className="space-y-2 text-center">
+                <h2 className="text-xl font-black tracking-tighter text-white uppercase">Import Node</h2>
+                <p className="text-white/30 text-[8px] uppercase tracking-widest font-bold">BIP-39 Mnemonic Phrase</p>
+              </div>
+
+              <div className="space-y-4">
+                <textarea 
+                  autoFocus
+                  value={importPhrase}
+                  onChange={(e) => setImportPhrase(e.target.value)}
+                  placeholder="Enter your recovery phrase..."
+                  className="w-full h-24 bg-black/40 border border-white/5 px-5 py-4 rounded-xl focus:outline-none focus:border-white/20 transition-all font-mono text-[10px] text-white resize-none placeholder:opacity-20 leading-relaxed"
+                />
+                
+                <div className="space-y-2">
+                   <input 
                     type="password"
-                    autoFocus
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter Master Auth Phrase"
-                    onKeyDown={(e) => e.key === 'Enter' && handleInitialize()}
-                    className="w-full bg-black/60 border border-white/10 px-6 py-5 rounded-2xl focus:outline-none focus:border-white transition-all font-mono text-xs text-white text-center shadow-2xl placeholder:opacity-20"
+                    placeholder="New Master Password"
+                    className="w-full bg-black/40 border border-white/5 px-5 py-4 rounded-xl focus:outline-none focus:border-white/20 transition-all font-mono text-[10px] text-white text-center placeholder:opacity-20"
                   />
-                </div>
-                <div className="flex flex-col gap-3">
-                   <button 
-                    onClick={handleInitialize}
-                    disabled={password.length < 4}
-                    className="btn-primary !p-5 rounded-2xl w-full !text-[11px] shadow-lg"
-                  >
-                    Authorize & Bind Node
-                  </button>
                   <button 
-                    onClick={() => setStep('INITIAL')}
-                    className="text-[9px] font-bold uppercase tracking-[0.4em] text-white/20 hover:text-white transition-all py-2"
-                   >
-                     Go Back
-                   </button>
+                    onClick={handleImport}
+                    disabled={importPhrase.trim().split(/\s+/).length < 12 || password.length < 4}
+                    className="btn-primary !p-4 rounded-xl w-full !text-[10px] cursor-pointer"
+                  >
+                    Restore & Sync Node
+                  </button>
                 </div>
+                
+                <button 
+                  onClick={() => setStep('INITIAL')}
+                  className="w-full text-[8px] font-bold uppercase tracking-[0.3em] text-white/20 hover:text-white transition-all cursor-pointer"
+                >
+                  Return to Gateway
+                </button>
               </div>
             </motion.div>
           )}
@@ -189,25 +244,25 @@ export default function Onboarding({ onFinish, seed }: OnboardingProps) {
           {step === 'DERIVED' && addresses && (
             <motion.div 
               key="derived"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="max-w-md w-full space-y-10 bg-white/[0.02] border border-white/5 backdrop-blur-3xl p-10 rounded-[2.5rem] z-10"
+              className="max-w-[360px] w-full space-y-8 bg-white/[0.02] border border-white/5 backdrop-blur-3xl p-8 rounded-[2rem] z-10"
             >
-              <div className="space-y-2 text-center">
-                <h2 className="text-2xl font-black tracking-tighter text-white uppercase">Layer-1 Bindings</h2>
-                <p className="text-white/40 text-[9px] font-bold uppercase tracking-[0.3em]">Protocol Integration Successful</p>
+              <div className="space-y-1.5 text-center">
+                <h2 className="text-xl font-black tracking-tighter text-white uppercase">Node Bindings</h2>
+                <p className="text-white/30 text-[8px] font-bold uppercase tracking-[0.2em]">Synchronization Successful</p>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {[
-                  { label: 'BTC_SEGWIT', val: addresses.btc, color: 'text-orivon-accent' },
+                  { label: 'BTC_CORE', val: addresses.btc, color: 'text-orivon-accent' },
                   { label: 'ETH_EVM', val: addresses.eth, color: 'text-orivon-blue' },
                   { label: 'SOL_NET', val: addresses.sol, color: 'text-white' }
                 ].map(addr => (
-                  <div key={addr.label} className="p-5 border border-white/5 bg-black/40 rounded-2xl flex items-center justify-between group hover:border-white/20 transition-all shadow-inner">
-                    <div className="space-y-1">
-                      <div className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-[0.3em]">{addr.label}</div>
-                      <div className={`text-[10px] break-all font-mono opacity-80 ${addr.color}`}>{addr.val}</div>
+                  <div key={addr.label} className="p-4 border border-white/5 bg-black/40 rounded-xl flex items-center justify-between group hover:border-white/10 transition-all shadow-inner">
+                    <div className="space-y-1 flex-1">
+                      <div className="text-[7px] font-mono font-bold text-white/20 uppercase tracking-[0.2em]">{addr.label}</div>
+                      <div className={`text-[9px] break-all font-mono opacity-60 ${addr.color}`}>{addr.val}</div>
                     </div>
                   </div>
                 ))}
@@ -215,17 +270,17 @@ export default function Onboarding({ onFinish, seed }: OnboardingProps) {
 
               <button 
                 onClick={() => onFinish(addresses)}
-                className="btn-primary w-full !p-6 rounded-2xl shadow-xl !text-[11px]"
+                className="btn-primary w-full !p-5 rounded-xl shadow-xl !text-[10px] cursor-pointer"
               >
-                Establish Runtime Shell
+                Enter Sovereign Shell
               </button>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      <div className="absolute bottom-8 right-10 flex gap-10 opacity-10 pointer-events-none">
-        <div className="text-[8px] font-mono text-white/50 uppercase tracking-[0.5em] font-bold">Encrypted_Runtime: Enabled</div>
+      <div className="absolute bottom-6 right-8 flex gap-8 opacity-20 pointer-events-none">
+        <div className="text-[7px] font-mono text-white/50 uppercase tracking-[0.6em] font-black">Secure_Protocol_Node: v0.94-Active</div>
       </div>
     </div>
   );
