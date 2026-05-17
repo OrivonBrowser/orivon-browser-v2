@@ -1,4 +1,5 @@
 export type ViewState = 'ONBOARDING' | 'DASHBOARD' | 'LOADING' | 'BROWSER_MODE';
+export type WalletStatus = 'GUEST' | 'LOCKED' | 'UNLOCKED';
 
 export interface WalletAddresses {
   btc: string;
@@ -12,6 +13,7 @@ export interface AppState {
     seed: string;
     addresses: WalletAddresses | null;
     isInitialized: boolean;
+    isLocked: boolean;
   };
   navigation: {
     targetUrl: string;

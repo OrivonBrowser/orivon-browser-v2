@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   ArrowLeft, 
@@ -13,317 +13,352 @@ import {
   AlertCircle,
   X,
   Plus,
-  Cpu
+  Cpu,
+  User,
+  LogOut,
+  Settings,
+  Shield,
+  Search
 } from 'lucide-react';
+import { AppState, WalletAddresses } from '../types';
 
 interface BrowserModeProps {
   url: string;
+  identity: AppState['identity'];
   onExit: () => void;
+  onNavigate: (url: string) => void;
+  onUnlock: () => void;
+  onLock: () => void;
+  onInitialize: (addresses: WalletAddresses) => void;
+  seed: string;
 }
 
-export default function BrowserMode({ url, onExit }: BrowserModeProps) {
-  const [showTrustScore, setShowTrustScore] = useState(false);
-  const [showWalletDrawer, setShowWalletDrawer] = useState(false);
+export default function BrowserMode({ 
+  url: initialUrl, 
+  identity, 
+  onExit, 
+  onNavigate, 
+  onUnlock, 
+  onLock,
+  onInitialize,
+  seed
+}: BrowserModeProps) {
+  const [url, setUrl] = useState(initialUrl);
+  const [displayUrl, setDisplayUrl] = useState(initialUrl);
+  const [showWalletMenu, setShowWalletMenu] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [password, setPassword] = useState('');
-  const [walletConnected, setWalletConnected] = useState(false);
   const [isAuthorizing, setIsAuthorizing] = useState(false);
+  const [history, setHistory] = useState<string[]>(initialUrl ? [initialUrl] : []);
+  const [historyIndex, setHistoryIndex] = useState(history.length - 1);
 
-  const handleConnect = () => {
-    if (password.length > 0) {
-      setIsAuthorizing(true);
-      setTimeout(() => {
-        setIsAuthorizing(false);
-        setWalletConnected(true);
-        setShowWalletDrawer(false);
-      }, 1000);
+  const urlInputRef = useRef<HTMLInputElement>(null);
+
+  const getWalletStatus = () => {
+    if (!identity.isInitialized) return 'GUEST';
+    if (identity.isLocked) return 'LOCKED';
+    return 'UNLOCKED';
+  };
+
+  const status = getWalletStatus();
+
+  const handleUrlSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const target = displayUrl.trim().toLowerCase();
+    if (!target) return;
+
+    if (target.endsWith('.eth')) {
+      onNavigate(target);
+    } else {
+      setUrl(target);
+      setHistory(prev => [...prev.slice(0, historyIndex + 1), target]);
+      setHistoryIndex(prev => prev + 1);
     }
   };
 
-  return (
-    <div className="h-full w-full flex flex-col bg-black">
-      {/* OS Bar - Sophisticated Chrome */}
-      <div className="h-10 border-b border-orivon-border px-4 flex items-center justify-between text-[9px] font-bold text-orivon-muted uppercase tracking-widest bg-black">
-        <div className="flex items-center gap-4">
-          <div className="text-white">Orivon Runtime</div>
-          <div className="w-[1px] h-3 bg-orivon-border"></div>
-          <div>Port_3000 // Secured</div>
-        </div>
-        <div className="flex gap-4">
-          <div>Memory: 142MB</div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-orivon-accent"></span>
-            Thread_0 active
-          </div>
-        </div>
-      </div>
+  const handleCreateWallet = () => {
+    if (password.length < 4) return;
+    setIsAuthorizing(true);
+    setTimeout(() => {
+      onInitialize({
+        btc: `bc1q${Math.random().toString(36).substring(2, 12)}`,
+        eth: `0x${Math.random().toString(16).substring(2, 42)}`,
+        sol: `SOL${Math.random().toString(36).substring(2, 22)}`,
+      });
+      setIsAuthorizing(false);
+      setShowCreateModal(false);
+    }, 1500);
+  };
 
-      {/* Browser Chrome */}
-      <div className="h-16 nav-blur flex items-center px-6 gap-6 z-40">
+  const handleUnlock = () => {
+    if (password.length < 4) return;
+    setIsAuthorizing(true);
+    setTimeout(() => {
+      onUnlock();
+      setIsAuthorizing(false);
+      setPassword('');
+      setShowWalletMenu(false);
+    }, 1000);
+  };
+
+  return (
+    <div className="h-full w-full flex flex-col bg-black text-white font-sans overflow-hidden">
+      {/* Universal Browser Chrome */}
+      <div className="h-16 border-b border-white/5 flex items-center px-6 gap-6 bg-[#0a0a0a] z-50">
+        {/* Navigation Controls */}
         <div className="flex items-center gap-2">
           <button 
-            onClick={onExit}
-            className="w-10 h-10 border border-orivon-border flex items-center justify-center hover:border-white transition-all"
+            onClick={() => {
+              if (historyIndex > 0) {
+                const prev = history[historyIndex - 1];
+                setHistoryIndex(historyIndex - 1);
+                setUrl(prev);
+                setDisplayUrl(prev);
+              } else {
+                onExit();
+              }
+            }}
+            className="w-10 h-10 rounded-full border border-white/5 flex items-center justify-center hover:bg-white/5 transition-all text-white/50 hover:text-white"
           >
             <ArrowLeft size={16} />
           </button>
-          <button className="w-10 h-10 border border-orivon-border flex items-center justify-center opacity-20 cursor-not-allowed">
+          <button 
+            disabled={historyIndex >= history.length - 1}
+            onClick={() => {
+              const next = history[historyIndex + 1];
+              setHistoryIndex(historyIndex + 1);
+              setUrl(next);
+              setDisplayUrl(next);
+            }}
+            className="w-10 h-10 rounded-full border border-white/5 flex items-center justify-center hover:bg-white/5 transition-all text-white/50 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed"
+          >
             <ArrowRight size={16} />
           </button>
         </div>
 
-        <div className="flex-1 max-w-4xl relative group">
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-3">
-             <Lock size={12} className="text-orivon-accent" />
-             <div className="text-[9px] font-mono font-bold text-orivon-accent border border-orivon-accent/30 px-1.5 rounded-[1px]">P2P</div>
+        {/* URL Bar */}
+        <form onSubmit={handleUrlSubmit} className="flex-1 max-w-3xl relative group">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-white/40 group-focus-within:text-orivon-accent transition-colors">
+            {url.endsWith('.eth') ? <Lock size={12} className="text-orivon-accent" /> : <Search size={12} />}
           </div>
-          <div className="w-full h-11 bg-white/5 border border-orivon-border px-16 flex items-center text-xs font-mono text-white/80 group-focus-within:border-white/40 transition-all">
-            {url || 'shell:root'}
+          <input 
+            ref={urlInputRef}
+            type="text"
+            value={displayUrl}
+            onChange={(e) => setDisplayUrl(e.target.value)}
+            placeholder="Search or enter decentralized protocol path..."
+            className="w-full h-11 bg-white/[0.03] border border-white/5 rounded-2xl px-12 text-sm font-mono focus:outline-none focus:border-orivon-accent/50 focus:bg-white/[0.05] transition-all placeholder:text-white/10"
+          />
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+            <RotateCcw size={14} className="text-white/20 hover:text-white transition-colors cursor-pointer" onClick={() => setUrl(url)} />
           </div>
-          <div className="absolute right-4 top-1/2 -translate-y-1/2">
-             <RotateCcw size={14} className="text-orivon-muted hover:text-white transition-colors cursor-pointer" />
-          </div>
-        </div>
+        </form>
 
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <button 
-              onClick={() => setShowTrustScore(!showTrustScore)}
-              className="px-4 py-2 border border-orivon-border bg-white/5 flex items-center gap-3 hover:border-white transition-all"
-            >
-              <ShieldCheck size={14} className="text-orivon-accent" />
-              <span className="text-[10px] font-bold uppercase tracking-widest">98% SCR</span>
-              <ChevronDown size={12} className={`transition-transform duration-300 ${showTrustScore ? 'rotate-180' : ''}`} />
-            </button>
-
-            <AnimatePresence>
-              {showTrustScore && (
-                <motion.div 
-                  initial={{ opacity: 0, scaleY: 0 }}
-                  animate={{ opacity: 1, scaleY: 1 }}
-                  exit={{ opacity: 0, scaleY: 0 }}
-                  className="absolute top-full right-0 mt-1 w-64 web3-card p-6 shadow-2xl origin-top z-50 bg-black/95 backdrop-blur-xl"
-                >
-                  <div className="space-y-4">
-                    <div className="text-[10px] font-bold text-orivon-muted uppercase tracking-[0.2em] border-b border-orivon-border pb-2">Verification Registry</div>
-                    {[
-                      { label: 'Origin_Signature', value: 'VALIDATED', color: 'text-orivon-accent' },
-                      { label: 'Contract_Audit', value: 'PASSED', color: 'text-orivon-blue' },
-                      { label: 'Network_Lag', value: '1.2ms', color: 'text-white' }
-                    ].map(m => (
-                      <div key={m.label} className="flex justify-between items-center text-[9px] font-mono">
-                        <span className="text-orivon-muted">{m.label}</span>
-                        <span className={`font-bold ${m.color}`}>{m.value}</span>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          <button className="w-10 h-10 border border-orivon-border flex items-center justify-center hover:border-white transition-all">
-             <Plus size={16} />
-          </button>
+        {/* Identity Widget */}
+        <div className="flex items-center gap-4">
+           <button 
+             onClick={onExit}
+             className="w-10 h-10 rounded-xl bg-gradient-to-br from-orivon-accent to-orivon-blue p-px shadow-lg shadow-orivon-accent/10 hover:scale-105 active:scale-95 transition-all"
+             title="Return to Dashboard"
+           >
+             <div className="w-full h-full bg-[#0c0c0c] rounded-[10px] flex items-center justify-center overflow-hidden">
+                <User size={18} className="text-orivon-accent" />
+             </div>
+           </button>
         </div>
       </div>
 
-      {/* Viewport Frame */}
-      <div className="flex-1 p-8 grid-bg relative overflow-hidden flex flex-col">
-        {/* Connection Success Notification */}
-        <AnimatePresence>
-          {walletConnected && (
+      {/* Main Viewport */}
+      <div className="flex-1 relative overflow-hidden bg-[#050505] flex flex-col">
+        <div className="flex-1 p-6 relative">
+          <AnimatePresence mode="wait">
             <motion.div 
-              initial={{ opacity: 0, y: -20 }}
+              key={url}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="absolute top-10 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
+              exit={{ opacity: 0, y: -10 }}
+              className="w-full h-full rounded-[2rem] border border-white/5 bg-black overflow-hidden flex flex-col relative shadow-2xl"
             >
-              <div className="bg-orivon-accent text-black px-8 py-3 font-bold tracking-widest text-[10px] uppercase shadow-[0_0_40px_rgba(0,255,135,0.3)] flex items-center gap-3">
-                <CheckCircle2 size={16} />
-                Protocol Auth Success: Node_72
+              <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none"></div>
+              
+              {/* Content Mockup */}
+              <div className="flex-1 overflow-y-auto p-12 relative z-10 custom-scrollbar">
+                {url.endsWith('.eth') ? (
+                  <div className="max-w-4xl mx-auto space-y-16">
+                     <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-6">
+                           <div className="w-16 h-16 bg-orivon-accent rounded-3xl flex items-center justify-center text-black">
+                              <Shield size={32} />
+                           </div>
+                           <div className="space-y-1">
+                              <h1 className="text-4xl font-black tracking-tight uppercase">{url.replace('.eth', '').toUpperCase()} PROXY</h1>
+                              <p className="text-orivon-accent text-[10px] font-mono font-bold tracking-[0.3em] uppercase">P2P Kernel Node Enabled</p>
+                           </div>
+                        </div>
+                        <div className="flex gap-4">
+                           <div className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl font-mono text-[10px] text-white/40">v2.4.1_WASM</div>
+                           <div className="px-4 py-2 bg-orivon-accent/10 border border-orivon-accent/30 rounded-xl font-mono text-[10px] text-orivon-accent">SECURE_TUNNEL</div>
+                        </div>
+                     </div>
+
+                     <div className="grid grid-cols-3 gap-6">
+                        {[
+                          { label: 'Total Volume', value: '$142.1M', change: '+2.4%' },
+                          { label: 'Network TVL', value: '$8.4B', change: '+0.8%' },
+                          { label: 'Active Users', value: '7,412', change: '+12.5%' }
+                        ].map(stat => (
+                          <div key={stat.label} className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 space-y-4 hover:border-white/10 transition-all group">
+                             <div className="text-[10px] font-black text-white/30 uppercase tracking-widest">{stat.label}</div>
+                             <div className="flex items-baseline gap-3">
+                                <div className="text-2xl font-black">{stat.value}</div>
+                                <div className="text-[10px] font-bold text-orivon-accent">{stat.change}</div>
+                             </div>
+                             <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                                <motion.div 
+                                  initial={{ width: 0 }}
+                                  animate={{ width: '60%' }}
+                                  className="h-full bg-orivon-accent"
+                                />
+                             </div>
+                          </div>
+                        ))}
+                     </div>
+
+                     <div className="p-12 rounded-[3.5rem] bg-white/[0.01] border border-white/5 flex flex-col items-center justify-center text-center space-y-8">
+                        <div className="w-20 h-20 rounded-full border border-orivon-accent/20 flex items-center justify-center animate-pulse">
+                           <Cpu size={32} className="text-orivon-accent" />
+                        </div>
+                        <div className="space-y-3">
+                           <h3 className="text-2xl font-black uppercase tracking-tight">Decentralized Execution Shell</h3>
+                           <p className="text-white/40 text-sm max-w-sm mx-auto leading-relaxed">
+                             This application is running locally within your kernel-isolated WASM runtime. No external servers are hosting this session.
+                           </p>
+                        </div>
+                        <button className="px-10 py-5 bg-white text-black rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-orivon-accent transition-all active:scale-[0.98]">
+                           Launch Protocol Application
+                        </button>
+                     </div>
+                  </div>
+                ) : (
+                  <div className="max-w-4xl mx-auto py-20 space-y-12">
+                     <div className="flex flex-col items-center text-center space-y-6">
+                        <div className="w-24 h-24 bg-white/5 rounded-[2.5rem] flex items-center justify-center text-white/20 scale-110">
+                           <Search size={40} />
+                        </div>
+                        <div className="space-y-4">
+                           <h2 className="text-5xl font-black tracking-tighter uppercase whitespace-nowrap">Web2 Gateway Simulation</h2>
+                           <p className="text-white/40 text-lg max-w-xl mx-auto leading-relaxed font-medium">
+                             Connected to <span className="text-white font-bold">{url || 'Orivon Index'}</span> via standard HTTP encapsulation. Protocol enforcement active.
+                           </p>
+                        </div>
+                     </div>
+
+                     <div className="grid grid-cols-2 gap-4">
+                        {[1,2,3,4].map(i => (
+                          <div key={i} className="h-48 rounded-3xl bg-white/[0.03] border border-white/5 p-8 flex flex-col justify-end space-y-3 group hover:border-white/10 transition-all cursor-pointer">
+                             <div className="w-10 h-1 bg-white/10 rounded-full group-hover:bg-orivon-accent transition-colors"></div>
+                             <div className="h-4 w-2/3 bg-white/5 rounded-md"></div>
+                             <div className="h-3 w-1/2 bg-white/[0.02] rounded-md"></div>
+                          </div>
+                        ))}
+                     </div>
+                  </div>
+                )}
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
+          </AnimatePresence>
+        </div>
 
-        <div className="flex-1 web3-card bg-black flex flex-col relative overflow-hidden group/viewport">
-          {/* Subtle Frame Overlays */}
-          <div className="absolute top-0 right-0 w-32 h-32 border-t border-r border-white/5 pointer-events-none"></div>
-          <div className="absolute bottom-0 left-0 w-32 h-32 border-b border-l border-white/5 pointer-events-none"></div>
-
-          {/* Uniswap Interaction Mock */}
-          <div className="flex-1 flex flex-col items-center justify-center p-12 bg-[radial-gradient(circle_at_40%_20%,rgba(0,209,255,0.05)_0%,transparent_50%)]">
-            
-            <div className="w-full max-w-lg bg-[#050505] border border-orivon-border overflow-hidden">
-               {/* App Header */}
-               <div className="px-8 py-6 border-b border-orivon-border flex justify-between items-center bg-white/[0.02]">
-                  <div className="text-sm font-bold uppercase tracking-tight">Swap Interface</div>
-                  <div className="flex gap-2">
-                    <div className="w-2 h-2 rounded-full bg-orivon-accent"></div>
-                    <div className="text-[9px] font-mono font-bold text-orivon-muted uppercase">V3_STABLE</div>
-                  </div>
-               </div>
-
-               <div className="p-8 space-y-6">
-                  {/* Swapper */}
-                  <div className="space-y-4">
-                    <div className="p-6 bg-orivon-surface border border-orivon-border hover:border-white/10 transition-colors">
-                      <div className="flex justify-between items-center mb-4 text-[10px] font-bold text-orivon-muted uppercase tracking-widest">
-                        <span>Input</span>
-                        <span className="font-mono">BAL: 1.42 ETH</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <div className="text-4xl font-bold font-mono tracking-tighter">1.00</div>
-                        <div className="flex items-center gap-3 px-4 py-2 border border-orivon-border bg-black font-bold text-xs uppercase">
-                           <div className="w-4 h-4 rounded-full bg-orivon-blue"></div>
-                           ETH
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-center -my-6 z-10 relative">
-                      <div className="w-10 h-10 bg-black border border-orivon-border flex items-center justify-center rotate-45">
-                        <div className="-rotate-45">
-                          <ChevronDown size={14} className="text-orivon-muted" />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="p-6 bg-orivon-surface border border-orivon-border hover:border-white/10 transition-colors">
-                      <div className="flex justify-between items-center mb-4 text-[10px] font-bold text-orivon-muted uppercase tracking-widest">
-                        <span>Output (Est.)</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <div className="text-4xl font-bold font-mono tracking-tighter text-white/50">3,200.41</div>
-                        <div className="flex items-center gap-3 px-4 py-2 border border-orivon-border bg-black font-bold text-xs uppercase">
-                           <div className="w-4 h-4 rounded-full bg-orivon-accent"></div>
-                           ORV
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <button 
-                    onClick={() => !walletConnected && setShowWalletDrawer(true)}
-                    className={`w-full py-6 font-bold uppercase tracking-[0.2em] text-xs transition-all flex items-center justify-center gap-4 ${
-                      walletConnected 
-                        ? 'border border-orivon-accent/40 text-orivon-accent bg-orivon-accent/5' 
-                        : 'bg-white text-black hover:bg-orivon-accent active:scale-[0.99]'
-                    }`}
-                  >
-                    {walletConnected ? (
-                      <>
-                        <ShieldCheck size={18} />
-                        Identity Link Active
-                      </>
-                    ) : (
-                      <>
-                        <Wallet size={18} />
-                        Link Native Shell Identity
-                      </>
-                    )}
-                  </button>
-               </div>
-            </div>
-            
-            <div className="mt-12 flex gap-12 font-mono text-[9px] font-bold text-orivon-muted uppercase tracking-widest">
-               <div>ORACLE: VERIFIED</div>
-               <div>LATENY: 0.8MS</div>
-               <div>ISOLATION: FULL</div>
-            </div>
-          </div>
+        {/* Browser Info Strip */}
+        <div className="h-8 border-t border-white/5 bg-[#050505] flex items-center justify-between px-8 text-[8px] font-mono font-black uppercase tracking-[0.2em] text-white/20">
+           <div className="flex gap-6 items-center">
+              <div className="flex items-center gap-2">
+                 <div className="w-1.5 h-1.5 rounded-full bg-orivon-accent animate-pulse"></div>
+                 Network_Status: High_Integrity
+              </div>
+              <div className="flex items-center gap-2">
+                 <Cpu size={10} />
+                 Isolation_Layer: Level_4
+              </div>
+           </div>
+           <div>Session_Time: 14:22:04 // Orivon_Kernel_Active</div>
         </div>
       </div>
 
-      {/* Wallet Auth Drawer */}
+      {/* Create Wallet Modal */}
       <AnimatePresence>
-        {showWalletDrawer && (
-          <>
+        {showCreateModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setShowWalletDrawer(false)}
-              className="absolute inset-0 bg-black/80 backdrop-blur-sm z-[60]"
+              onClick={() => setShowCreateModal(false)}
+              className="absolute inset-0 bg-black/90 backdrop-blur-md"
             />
             <motion.div 
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="absolute top-0 right-0 h-full w-full max-w-md bg-orivon-surface border-l border-orivon-border z-[70] shadow-2xl flex flex-col"
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-lg bg-[#0a0a0a] border border-white/10 rounded-[3rem] p-10 shadow-2xl overflow-hidden"
             >
-              <div className="h-20 border-b border-orivon-border flex items-center justify-between px-10">
-                <div className="flex items-center gap-4">
-                  <div className="w-8 h-8 border border-white/20 flex items-center justify-center">
-                    <ShieldCheck size={16} className="text-orivon-accent" />
-                  </div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-white">Auth Request</div>
-                </div>
-                <button 
-                  onClick={() => setShowWalletDrawer(false)}
-                  className="w-10 h-10 border border-orivon-border flex items-center justify-center hover:border-white transition-all"
-                >
-                  <X size={16} />
-                </button>
-              </div>
+              <div className="absolute top-0 right-0 w-40 h-40 bg-orivon-accent/5 blur-[80px] pointer-events-none"></div>
+              
+              <div className="space-y-8">
+                 <div className="flex justify-between items-start">
+                    <div className="space-y-3">
+                       <div className="w-12 h-12 bg-orivon-accent/10 rounded-2xl flex items-center justify-center text-orivon-accent">
+                          <ShieldCheck size={24} />
+                       </div>
+                       <h2 className="text-3xl font-black tracking-tight uppercase">Identity Initialization</h2>
+                       <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">Establish your kernel binding</p>
+                    </div>
+                    <button 
+                      onClick={() => setShowCreateModal(false)}
+                      className="w-10 h-10 rounded-full border border-white/5 flex items-center justify-center hover:bg-white/5 transition-all"
+                    >
+                      <X size={16} />
+                    </button>
+                 </div>
 
-              <div className="flex-1 p-10 space-y-12">
-                <div className="space-y-4">
-                   <div className="text-[9px] font-mono font-bold text-orivon-accent uppercase tracking-widest">Identity Bridge</div>
-                   <h3 className="text-3xl font-bold tracking-tighter leading-tight">Authorize Protocol <br />Connection?</h3>
-                   <p className="text-orivon-muted text-xs leading-relaxed max-w-xs font-medium">
-                     You are granting <span className="text-white">uniswap.eth</span> access to your derived address context. Private keys remain in the hyper-isolated shell.
-                   </p>
-                </div>
+                 <div className="space-y-6">
+                    <div className="p-6 bg-white/[0.02] border border-white/5 rounded-2xl space-y-4">
+                       <div className="text-[9px] font-black text-white/20 uppercase tracking-widest">Protocol Recovery Phrase</div>
+                       <div className="grid grid-cols-3 gap-2">
+                          {seed.split(' ').slice(0, 6).map((w, i) => (
+                            <div key={i} className="text-[10px] font-mono text-white/60 bg-black/40 px-3 py-2 border border-white/5 rounded-lg flex gap-2">
+                               <span className="opacity-20">{i+1}</span>
+                               <span className="font-bold">{w}</span>
+                            </div>
+                          ))}
+                       </div>
+                       <p className="text-[8px] text-white/20 font-bold uppercase tracking-widest text-center mt-2 italic">Seed is locally encrypted & transient</p>
+                    </div>
 
-                <div className="space-y-8">
-                   <div className="space-y-4">
-                      <label className="text-[10px] font-mono font-bold text-orivon-muted uppercase tracking-[0.2em]">Verify Master Auth Phrase</label>
-                      <input 
-                        type="password"
-                        autoFocus
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="••••••••"
-                        onKeyDown={(e) => e.key === 'Enter' && handleConnect()}
-                        className="w-full bg-black border border-orivon-border px-6 py-5 focus:outline-none focus:border-white transition-all font-mono text-xs text-white"
-                      />
-                   </div>
-
-                   <button 
-                    onClick={handleConnect}
-                    disabled={isAuthorizing || password.length === 0}
-                    className="w-full btn-primary !py-6 text-xs"
-                   >
-                     {isAuthorizing ? (
-                       <div className="w-4 h-4 border-2 border-black border-t-white rounded-full animate-spin"></div>
-                     ) : (
-                       "Authorize & Bind"
-                     )}
-                   </button>
-                </div>
-
-                <div className="p-6 bg-orivon-accent/5 border border-orivon-accent/10 rounded-[1px] space-y-3">
-                   <div className="flex items-center gap-3">
-                      <AlertCircle size={14} className="text-orivon-accent" />
-                      <div className="text-[10px] font-bold uppercase tracking-widest text-orivon-accent">Sandbox Integrity</div>
-                   </div>
-                   <p className="text-[9px] text-orivon-accent/60 font-mono leading-relaxed uppercase">
-                     Session is running in kernel-isolation-mode. XJ-92 analyzer is monitoring all outbound packet entropy.
-                   </p>
-                </div>
-              </div>
-
-              <div className="p-10 border-t border-orivon-border flex items-center justify-between font-mono text-[8px] text-orivon-muted font-bold uppercase tracking-widest">
-                <div>Kernel: 0.94-B</div>
-                <div className="flex items-center gap-2">
-                   <Cpu size={10} />
-                   Secure_IO
-                </div>
+                    <div className="space-y-4">
+                       <div className="space-y-2">
+                          <label className="text-[9px] font-black text-white/40 uppercase tracking-widest ml-1">Master Access Phrase</label>
+                          <input 
+                            type="password"
+                            autoFocus
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Enter 4+ characters..."
+                            className="w-full bg-black/40 border border-white/10 px-6 py-4 rounded-xl focus:outline-none focus:border-orivon-accent transition-all font-mono text-sm text-center"
+                          />
+                       </div>
+                       <button 
+                         disabled={isAuthorizing || password.length < 4}
+                         onClick={handleCreateWallet}
+                         className="w-full bg-white text-black py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-orivon-accent transition-all active:scale-[0.98] shadow-xl"
+                       >
+                         {isAuthorizing ? 'Binding Node...' : 'Initialize Identity Protocol'}
+                       </button>
+                    </div>
+                 </div>
               </div>
             </motion.div>
-          </>
+          </div>
         )}
       </AnimatePresence>
     </div>

@@ -4,7 +4,7 @@ import { Shield, Key, ArrowRight, ArrowUpRight, Command, Cpu, Layers, Sun, Moon 
 import { WalletAddresses } from '../types';
 
 interface OnboardingProps {
-  onFinish: (addresses: WalletAddresses) => void;
+  onFinish: (addresses: WalletAddresses | null) => void;
   seed: string;
 }
 
@@ -133,7 +133,7 @@ export default function Onboarding({ onFinish, seed }: OnboardingProps) {
 
                 <div className="w-full">
                   <button 
-                    onClick={() => onFinish(deriveAddresses())}
+                    onClick={() => onFinish(null)}
                     className={`w-full h-14 flex items-center justify-center gap-3 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-all active:scale-[0.98] shadow-lg cursor-pointer ${isDark ? 'bg-white/[0.05] text-white hover:bg-white/[0.1] border border-white/10' : 'bg-black/[0.02] text-black hover:bg-black/[0.05] border border-black/5'}`}
                   >
                     Open Browser
@@ -162,46 +162,64 @@ export default function Onboarding({ onFinish, seed }: OnboardingProps) {
           {step === 'SEED' && (
             <motion.div 
               key="seed"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className={`max-w-[360px] w-full space-y-6 backdrop-blur-3xl p-8 rounded-[2rem] z-10 border transition-all duration-500 ${isDark ? 'bg-white/[0.02] border-white/5' : 'bg-black/[0.02] border-black/5'}`}
+              initial={{ opacity: 0, scale: 0.98, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              className={`max-w-[720px] w-full space-y-8 backdrop-blur-3xl p-10 rounded-[3rem] z-10 border transition-all duration-700 ${isDark ? 'bg-white/[0.03] border-white/10 shadow-2xl' : 'bg-white border-black/5 shadow-xl'}`}
             >
-              <div className="space-y-2 text-center">
-                <h2 className={`text-xl font-black tracking-tighter uppercase transition-colors ${isDark ? 'text-white' : 'text-black'}`}>Identity Seed</h2>
-                <p className={`text-[8px] uppercase tracking-widest font-bold transition-colors ${isDark ? 'text-white/30' : 'text-black/30'}`}>Physical backup mandatory</p>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b pb-6 transition-colors duration-500" style={{ borderColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }}>
+                <div className="flex items-center gap-4">
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/5'}`}>
+                    <Shield size={20} className="text-orivon-accent" />
+                  </div>
+                  <div>
+                    <h2 className={`text-2xl font-black tracking-tight uppercase transition-colors ${isDark ? 'text-white' : 'text-black'}`}>Identity Seed</h2>
+                    <p className={`text-[9px] uppercase tracking-[0.2em] font-black transition-colors ${isDark ? 'text-white/30' : 'text-black/30'}`}>Secure physical backup mandatory</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                   <div className="px-3 py-1.5 rounded-full bg-orivon-accent/10 border border-orivon-accent/30 text-orivon-accent text-[8px] font-black uppercase tracking-widest">
+                     Primary Key Generated
+                   </div>
+                </div>
               </div>
               
-              <div className={`grid grid-cols-3 gap-1 p-5 border font-mono text-[8px] rounded-xl transition-all ${isDark ? 'border-white/5 bg-black/40' : 'border-black/5 bg-white/40'}`}>
+              <div className={`grid grid-cols-2 md:grid-cols-4 gap-3 p-6 border font-mono text-[9px] rounded-2xl transition-all ${isDark ? 'border-white/5 bg-black/40' : 'border-black/5 bg-white/40'}`}>
                 {seed.split(' ').map((word, i) => (
-                  <div key={i} className={`flex gap-2 items-center py-1.5 border-b last:border-0 ${isDark ? 'border-white/5' : 'border-black/5'}`}>
-                    <span className={`font-bold ${isDark ? 'text-white/10' : 'text-black/10'}`}>{(i + 1).toString().padStart(2, '0')}</span>
-                    <span className={isDark ? 'text-white/80' : 'text-black/80'}>{word}</span>
+                  <div key={i} className={`flex gap-3 items-center py-2.5 px-3 border border-transparent hover:border-orivon-accent/20 rounded-xl transition-all ${isDark ? 'text-white/80' : 'text-black/80'}`}>
+                    <span className={`font-black opacity-20 w-4`}>{(i + 1).toString().padStart(2, '0')}</span>
+                    <span className="font-bold tracking-wider">{word}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="space-y-4">
-                <input 
-                  type="password"
-                  autoFocus
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Master Authorization Phrase"
-                  onKeyDown={(e) => e.key === 'Enter' && handleInitialize()}
-                  className={`w-full border px-5 py-4 rounded-xl focus:outline-none transition-all font-mono text-[10px] text-center placeholder:opacity-20 ${isDark ? 'bg-black/40 border-white/5 focus:border-white/20 text-white' : 'bg-white/40 border-black/5 focus:border-black/20 text-black'}`}
-                />
+              <div className="flex flex-col md:flex-row gap-4 items-end">
+                <div className="flex-1 space-y-2 w-full">
+                  <label className={`text-[8px] font-black uppercase tracking-widest ml-1 transition-colors ${isDark ? 'text-white/30' : 'text-black/30'}`}>Set Master Access Phrase</label>
+                  <input 
+                    type="password"
+                    autoFocus
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Min. 4 characters..."
+                    onKeyDown={(e) => e.key === 'Enter' && handleInitialize()}
+                    className={`w-full border px-6 py-4 rounded-2xl focus:outline-none transition-all font-mono text-[11px] placeholder:opacity-20 ${isDark ? 'bg-black/40 border-white/10 focus:border-white/30 text-white' : 'bg-white border-black/10 focus:border-black/30 text-black'}`}
+                  />
+                </div>
                 <button 
                   onClick={handleInitialize}
                   disabled={password.length < 4}
-                  className={`btn-primary !p-4 rounded-xl w-full !text-[10px] cursor-pointer ${isDark ? 'bg-white text-black' : 'bg-black text-white'}`}
+                  className={`py-4 px-8 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all active:scale-[0.98] shadow-xl cursor-pointer h-[50px] ${isDark ? 'bg-white text-black hover:bg-white/90' : 'bg-black text-white hover:bg-black/90'}`}
                 >
-                  Bind Identity Node
+                  Bind Protocol
                 </button>
+              </div>
+
+              <div className="text-center">
                 <button 
                   onClick={() => setStep('INITIAL')}
-                  className={`w-full text-[8px] font-bold uppercase tracking-[0.3em] transition-all cursor-pointer ${isDark ? 'text-white/20 hover:text-white' : 'text-black/20 hover:text-black'}`}
+                  className={`text-[9px] font-black uppercase tracking-[0.2em] transition-all cursor-pointer ${isDark ? 'text-white/20 hover:text-white' : 'text-black/20 hover:text-black'}`}
                 >
-                  Cancel Initialization
+                  Return to Gateway
                 </button>
               </div>
             </motion.div>
@@ -210,47 +228,62 @@ export default function Onboarding({ onFinish, seed }: OnboardingProps) {
           {step === 'IMPORT' && (
             <motion.div 
               key="import"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className={`max-w-[360px] w-full space-y-6 backdrop-blur-3xl p-8 rounded-[2rem] z-10 border transition-all duration-500 ${isDark ? 'bg-white/[0.02] border-white/5' : 'bg-black/[0.02] border-black/5'}`}
+              initial={{ opacity: 0, scale: 0.98, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              className={`max-w-[720px] w-full space-y-8 backdrop-blur-3xl p-10 rounded-[3rem] z-10 border transition-all duration-700 ${isDark ? 'bg-white/[0.03] border-white/10 shadow-2xl' : 'bg-white border-black/5 shadow-xl'}`}
             >
-              <div className="space-y-2 text-center">
-                <h2 className={`text-xl font-black tracking-tighter uppercase transition-colors ${isDark ? 'text-white' : 'text-black'}`}>Import Node</h2>
-                <p className={`text-[8px] uppercase tracking-widest font-bold transition-colors ${isDark ? 'text-white/30' : 'text-black/30'}`}>BIP-39 Mnemonic Phrase</p>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b pb-6 transition-colors duration-500" style={{ borderColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }}>
+                <div className="flex items-center gap-4">
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/5'}`}>
+                    <Key size={20} className="text-orivon-accent" />
+                  </div>
+                  <div>
+                    <h2 className={`text-2xl font-black tracking-tight uppercase transition-colors ${isDark ? 'text-white' : 'text-black'}`}>Restore Node</h2>
+                    <p className={`text-[9px] uppercase tracking-[0.2em] font-black transition-colors ${isDark ? 'text-white/30' : 'text-black/30'}`}>Enter BIP-39 mnemonic phrase</p>
+                  </div>
+                </div>
+                <div className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/30 text-[8px] font-black uppercase tracking-widest hidden md:block">
+                  Awaiting Sync...
+                </div>
               </div>
 
-              <div className="space-y-4">
-                <textarea 
-                  autoFocus
-                  value={importPhrase}
-                  onChange={(e) => setImportPhrase(e.target.value)}
-                  placeholder="Enter your recovery phrase..."
-                  className={`w-full h-24 border px-5 py-4 rounded-xl focus:outline-none transition-all font-mono text-[10px] resize-none placeholder:opacity-20 leading-relaxed ${isDark ? 'bg-black/40 border-white/5 focus:border-white/20 text-white' : 'bg-white/40 border-black/5 focus:border-black/20 text-black'}`}
-                />
-                
-                <div className="space-y-2">
-                   <input 
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="New Master Password"
-                    className={`w-full border px-5 py-4 rounded-xl focus:outline-none transition-all font-mono text-[10px] text-center placeholder:opacity-20 ${isDark ? 'bg-black/40 border-white/5 focus:border-white/20 text-white' : 'bg-white/40 border-black/5 focus:border-black/20 text-black'}`}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-3">
+                  <label className={`text-[8px] font-black uppercase tracking-widest ml-1 transition-colors ${isDark ? 'text-white/30' : 'text-black/30'}`}>Recovery Phrase</label>
+                  <textarea 
+                    autoFocus
+                    value={importPhrase}
+                    onChange={(e) => setImportPhrase(e.target.value)}
+                    placeholder="word1 word2 word3..."
+                    className={`w-full h-40 border px-6 py-5 rounded-2xl focus:outline-none transition-all font-mono text-[11px] resize-none placeholder:opacity-20 leading-relaxed ${isDark ? 'bg-black/40 border-white/10 focus:border-white/30 text-white' : 'bg-white border-black/10 focus:border-black/30 text-black'}`}
                   />
+                </div>
+                
+                <div className="flex flex-col justify-end space-y-5">
+                   <div className="space-y-2">
+                      <label className={`text-[8px] font-black uppercase tracking-widest ml-1 transition-colors ${isDark ? 'text-white/30' : 'text-black/30'}`}>New Master Password</label>
+                      <input 
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="••••••••"
+                        className={`w-full border px-6 py-4 rounded-2xl focus:outline-none transition-all font-mono text-[11px] text-center placeholder:opacity-20 ${isDark ? 'bg-black/40 border-white/10 focus:border-white/30 text-white' : 'bg-white border-black/10 focus:border-black/30 text-black'}`}
+                      />
+                   </div>
                   <button 
                     onClick={handleImport}
                     disabled={importPhrase.trim().split(/\s+/).length < 12 || password.length < 4}
-                    className={`btn-primary !p-4 rounded-xl w-full !text-[10px] cursor-pointer ${isDark ? 'bg-white text-black' : 'bg-black text-white'}`}
+                    className={`w-full py-5 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all active:scale-[0.98] shadow-xl cursor-pointer ${isDark ? 'bg-white text-black hover:bg-white/90' : 'bg-black text-white hover:bg-black/90'}`}
                   >
-                    Restore & Sync Node
+                    Resync Identity Core
+                  </button>
+                  <button 
+                    onClick={() => setStep('INITIAL')}
+                    className={`w-full text-[9px] font-black uppercase tracking-[0.2em] transition-all cursor-pointer text-center ${isDark ? 'text-white/20 hover:text-white' : 'text-black/20 hover:text-black'}`}
+                  >
+                    Return to Gateway
                   </button>
                 </div>
-                
-                <button 
-                  onClick={() => setStep('INITIAL')}
-                  className={`w-full text-[8px] font-bold uppercase tracking-[0.3em] transition-all cursor-pointer ${isDark ? 'text-white/20 hover:text-white' : 'text-black/20 hover:text-black'}`}
-                >
-                  Return to Gateway
-                </button>
               </div>
             </motion.div>
           )}
@@ -258,36 +291,48 @@ export default function Onboarding({ onFinish, seed }: OnboardingProps) {
           {step === 'DERIVED' && addresses && (
             <motion.div 
               key="derived"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`max-w-[360px] w-full space-y-8 backdrop-blur-3xl p-8 rounded-[2rem] z-10 border transition-all duration-500 ${isDark ? 'bg-white/[0.02] border-white/5' : 'bg-black/[0.02] border-black/5'}`}
+              initial={{ opacity: 0, scale: 0.98, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              className={`max-w-[720px] w-full space-y-8 backdrop-blur-3xl p-10 rounded-[3rem] z-10 border transition-all duration-700 ${isDark ? 'bg-white/[0.03] border-white/10 shadow-2xl' : 'bg-white border-black/5 shadow-xl'}`}
             >
-              <div className="space-y-1.5 text-center">
-                <h2 className={`text-xl font-black tracking-tighter uppercase transition-colors ${isDark ? 'text-white' : 'text-black'}`}>Node Bindings</h2>
-                <p className={`text-[8px] font-bold uppercase tracking-[0.2em] transition-colors ${isDark ? 'text-white/30' : 'text-black/30'}`}>Synchronization Successful</p>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b pb-6 transition-colors duration-500" style={{ borderColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }}>
+                <div className="flex items-center gap-4">
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/5'}`}>
+                    <Layers size={20} className="text-orivon-blue" />
+                  </div>
+                  <div>
+                    <h2 className={`text-2xl font-black tracking-tight uppercase transition-colors ${isDark ? 'text-white' : 'text-black'}`}>Node Bindings</h2>
+                    <p className={`text-[9px] uppercase tracking-[0.2em] font-black transition-colors ${isDark ? 'text-white/30' : 'text-black/30'}`}>Synchronization Successful</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                   <div className="px-3 py-1.5 rounded-full bg-orivon-blue/10 border border-orivon-blue/30 text-orivon-blue text-[8px] font-black uppercase tracking-widest">
+                     Multichain Bound
+                   </div>
+                </div>
               </div>
 
-              <div className="space-y-1.5">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
                   { label: 'BTC_CORE', val: addresses.btc, color: 'text-orivon-accent' },
                   { label: 'ETH_EVM', val: addresses.eth, color: 'text-orivon-blue' },
                   { label: 'SOL_NET', val: addresses.sol, color: isDark ? 'text-white' : 'text-black' }
                 ].map(addr => (
-                  <div key={addr.label} className={`p-4 border rounded-xl flex items-center justify-between group transition-all shadow-inner ${isDark ? 'border-white/5 bg-black/40 hover:border-white/10' : 'border-black/5 bg-white/40 hover:border-black/10'}`}>
-                    <div className="space-y-1 flex-1">
-                      <div className={`text-[7px] font-mono font-bold uppercase tracking-[0.2em] ${isDark ? 'text-white/20' : 'text-black/20'}`}>{addr.label}</div>
-                      <div className={`text-[9px] break-all font-mono opacity-60 ${addr.color}`}>{addr.val}</div>
-                    </div>
+                  <div key={addr.label} className={`p-6 border rounded-2xl flex flex-col justify-between group transition-all shadow-inner h-32 ${isDark ? 'border-white/5 bg-black/40 hover:border-white/10' : 'border-black/5 bg-white/40 hover:border-black/10'}`}>
+                    <div className={`text-[7px] font-mono font-black uppercase tracking-[0.2em] ${isDark ? 'text-white/20' : 'text-black/20'}`}>{addr.label}</div>
+                    <div className={`text-[10px] break-all font-mono leading-relaxed transition-colors opacity-60 ${addr.color}`}>{addr.val}</div>
                   </div>
                 ))}
               </div>
 
-              <button 
-                onClick={() => onFinish(addresses)}
-                className={`btn-primary w-full !p-5 rounded-xl shadow-xl !text-[10px] cursor-pointer ${isDark ? 'bg-white text-black' : 'bg-black text-white'}`}
-              >
-                Enter Sovereign Shell
-              </button>
+              <div className="flex justify-center">
+                <button 
+                  onClick={() => onFinish(addresses)}
+                  className={`py-5 px-12 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all active:scale-[0.98] shadow-xl cursor-pointer ${isDark ? 'bg-white text-black hover:bg-white/90' : 'bg-black text-white hover:bg-black/90'}`}
+                >
+                  Enter Sovereign Shell
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

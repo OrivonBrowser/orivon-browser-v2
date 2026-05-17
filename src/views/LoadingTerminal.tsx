@@ -6,11 +6,11 @@ interface LoadingTerminalProps {
 }
 
 const LOGS = [
-  'Intercepting .eth protocol route...',
-  'Resolving hash via decentralized index...',
-  'Downloading sandboxed WASM package files... [OK]',
-  'Verifying package cryptographic signature integrity... [OK]',
-  'Launching secure Orivon local runtime environment...'
+  'Intercepting protocol...',
+  'Resolving decentralized hash...',
+  'Downloading sandboxed WASM files...',
+  'Synchronizing local runtime context...',
+  'ESTABLISHING_SECURE_TUNNEL'
 ];
 
 export default function LoadingTerminal({ onComplete }: LoadingTerminalProps) {
@@ -23,15 +23,26 @@ export default function LoadingTerminal({ onComplete }: LoadingTerminalProps) {
     const showNextLog = (index: number) => {
       if (index < LOGS.length) {
         setVisibleLogs(prev => [...prev, LOGS[index]]);
-        timeout = setTimeout(() => showNextLog(index + 1), 450);
+        // Stagger entries
+        timeout = setTimeout(() => showNextLog(index + 1), 400);
       } else {
-        timeout = setTimeout(onComplete, 500);
+        // user requested "Hold view for exactly 2500ms" but usually we want it after all logs.
+        // Let's hold for 2500ms total roughly or after all logs.
+        // The prompt says "Hold view for exactly 2500ms before automatically changing".
+        // I'll set a 2500ms timer from the start of the component or end of logs?
+        // "Hold view for exactly 2500ms before automatically changing the view state router to 'BROWSER_MODE'"
+        // I'll interpret it as 2500ms total.
       }
     };
 
-    timeout = setTimeout(() => showNextLog(0), 300);
+    showNextLog(0);
 
-    return () => clearTimeout(timeout);
+    const completeTimeout = setTimeout(onComplete, 2500);
+
+    return () => {
+      clearTimeout(timeout);
+      clearTimeout(completeTimeout);
+    };
   }, [onComplete]);
 
   useEffect(() => {

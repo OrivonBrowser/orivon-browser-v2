@@ -23,6 +23,7 @@ export default function App() {
       seed: 'alpha bravo charlie delta echo foxtrot golf hotel india juliet kilo lima',
       addresses: null,
       isInitialized: false,
+      isLocked: false,
     },
     navigation: {
       targetUrl: '',
@@ -37,7 +38,21 @@ export default function App() {
   const setIdentity = (addresses: AppState['identity']['addresses']) => {
     setState((prev) => ({
       ...prev,
-      identity: { ...prev.identity, addresses, isInitialized: true },
+      identity: { ...prev.identity, addresses, isInitialized: true, isLocked: false },
+    }));
+  };
+
+  const lockWallet = () => {
+    setState(prev => ({
+      ...prev,
+      identity: { ...prev.identity, isLocked: true }
+    }));
+  };
+
+  const unlockWallet = () => {
+    setState(prev => ({
+      ...prev,
+      identity: { ...prev.identity, isLocked: false }
     }));
   };
 
@@ -61,8 +76,12 @@ export default function App() {
           >
             <Onboarding 
               onFinish={(addresses) => {
-                setIdentity(addresses);
-                setView('DASHBOARD');
+                if (addresses) {
+                  setIdentity(addresses);
+                  setView('DASHBOARD');
+                } else {
+                  setView('BROWSER_MODE');
+                }
               }} 
               seed={state.identity.seed}
             />
@@ -78,6 +97,11 @@ export default function App() {
             className="h-full"
           >
             <Dashboard 
+              identity={state.identity}
+              onLock={() => {
+                lockWallet();
+                setView('BROWSER_MODE'); // Go back to browser when locked
+              }}
               onLaunch={(url) => {
                 setNavigation(url);
                 setView('LOADING');
@@ -110,7 +134,16 @@ export default function App() {
           >
             <BrowserMode 
               url={state.navigation.targetUrl}
+              identity={state.identity}
               onExit={() => setView('DASHBOARD')}
+              onNavigate={(url) => {
+                setNavigation(url);
+                setView('LOADING');
+              }}
+              onUnlock={unlockWallet}
+              onLock={lockWallet}
+              onInitialize={setIdentity}
+              seed={state.identity.seed}
             />
           </motion.div>
         )}
