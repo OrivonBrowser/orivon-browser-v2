@@ -83,22 +83,26 @@ export default function Onboarding({ onFinish, seed }: OnboardingProps) {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="w-full flex flex-col items-center space-y-10 z-10"
             >
-              <div className="space-y-6 text-center max-w-lg">
+              <div className="space-y-8 text-center max-w-lg">
                 <motion.h1
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-6xl md:text-8xl font-black text-white tracking-[0.2em] uppercase"
+                  className="text-7xl md:text-9xl font-black text-white tracking-[0.15em] uppercase drop-shadow-[0_0_30px_rgba(255,255,255,0.05)]"
                 >
                   ORIVON
                 </motion.h1>
-                <div className="space-y-3">
-                  <p className="text-white/80 text-base font-medium tracking-tight">
+                <div className="space-y-5">
+                  <p className="text-white/90 text-xl font-bold tracking-tight">
                     The Decentralized Operating Layer.
                   </p>
-                  <p className="text-white/30 text-[9px] uppercase tracking-[0.4em] font-bold leading-relaxed max-w-sm mx-auto">
-                    Zero middlemen // Peer-to-peer distribution <br/>
-                    Isolated WASM runtime protocols.
-                  </p>
+                  <div className="space-y-1.5">
+                    <p className="text-white/20 text-[9px] uppercase tracking-[0.5em] font-black leading-relaxed">
+                      Zero middlemen <span className="opacity-30 px-1">//</span> Peer-to-peer distribution
+                    </p>
+                    <p className="text-white/20 text-[9px] uppercase tracking-[0.5em] font-black leading-relaxed">
+                      Isolated WASM runtime protocols.
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -135,10 +139,12 @@ export default function Onboarding({ onFinish, seed }: OnboardingProps) {
                 </button>
               </div>
 
-              <div className="flex gap-8 font-mono text-[8px] font-bold text-white/10 uppercase tracking-[0.3em]">
-                <div>Build 0.94.1</div>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-1 h-1 rounded-full bg-orivon-accent animate-pulse"></div>
+              <div className="flex gap-4 font-mono text-[7px] font-bold uppercase tracking-[0.2em]">
+                <div className="px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/5 text-white/30">
+                  Build 0.94.1
+                </div>
+                <div className="px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/5 text-white/40 flex items-center gap-1.5">
+                  <div className="w-1 h-1 rounded-full bg-orivon-accent animate-pulse shadow-[0_0_8px_rgba(255,165,0,0.4)]"></div>
                   P2P Node Active
                 </div>
               </div>
