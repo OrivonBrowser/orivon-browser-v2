@@ -21,10 +21,11 @@ interface TabBarProps {
 export default function TabBar({
   tabs, activeId, onTabClick, onTabClose, onNewTab, isDark, windowControls
 }: TabBarProps) {
-  const isMac = window.electronAPI?.platform === 'darwin';
+  const isMac = window.electronAPI?.platform === 'darwin' ||
+    (typeof navigator !== 'undefined' && /Mac/.test(navigator.platform));
 
-  const tabBg = isDark ? 'bg-[#141414]' : 'bg-[#d5d5d5]';
-  const activeTabBg = isDark ? '#1a1a1a' : '#f0f0f0'; // matches toolbar bg
+  const tabBg = isDark ? 'bg-[#141416]' : 'bg-[#e4e4eb]';     // distinctly darker than toolbar
+  const activeTabBg = isDark ? '#1c1c1e' : '#f2f2f7';         // matches toolbar bg — gives tab "lift"
 
   return (
     <div className={`h-10 flex items-end shrink-0 drag ${tabBg}`}>

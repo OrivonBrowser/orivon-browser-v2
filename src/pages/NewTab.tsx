@@ -1,21 +1,17 @@
 /**
- * NewTab — full-page new tab with rotating background images.
- * Images cycle through /tap1.jpg … /tap10.jpg, never repeating the same
- * image twice in a row. The image is picked once per component mount.
+ * NewTab — two-screen snap-scroll new tab.
+ * Screen 1: hero background + search bar + widget/dApp grid
+ * Screen 2: crypto news feed with sidebar (internal scroll only)
  */
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Shield, Globe, Settings, Cpu } from 'lucide-react';
+import { Shield, Settings } from 'lucide-react';
 import { useSettings } from '../store/settings';
-import { useTabsStore } from '../store/tabs';
-import { useRuntimeStore } from '../store/runtime';
 
 // ─── Image rotation ────────────────────────────────────────────────────────────
 const TOTAL_IMAGES = 10;
 let _lastImageIndex = -1;
-
 function pickNextImage(): number {
-  const choices = Array.from({ length: TOTAL_IMAGES }, (_, i) => i)
-    .filter(i => i !== _lastImageIndex);
+  const choices = Array.from({ length: TOTAL_IMAGES }, (_, i) => i).filter(i => i !== _lastImageIndex);
   const picked = choices[Math.floor(Math.random() * choices.length)];
   _lastImageIndex = picked;
   return picked;
@@ -33,17 +29,35 @@ const DAPPS = [
   { name: 'IPFS',      url: 'https://ipfs.io',            icon: '📦' },
 ];
 
-interface NewTabProps {
-  onNavigate: (url: string) => void;
-}
+// ─── Crypto news ───────────────────────────────────────────────────────────────
+const CRYPTO_NEWS = [
+  { id: 1,  source: 'CoinDesk',     category: 'Bitcoin',    catIcon: '₿', time: '1h ago',  title: 'Bitcoin Surpasses $72,000 as Spot ETF Inflows Reach Record $1.2 Billion in a Single Day', bigImage: true,  imgGrad: 'linear-gradient(135deg,#F7931A 0%,#FFC107 100%)', imgEmoji: '₿' },
+  { id: 2,  source: 'The Block',    category: 'Ethereum',   catIcon: 'Ξ', time: '3h ago',  title: "Ethereum's Pectra Upgrade Set for Mainnet Launch, Bringing Major Staking Improvements", bigImage: false, imgGrad: '', imgEmoji: '' },
+  { id: 3,  source: 'Decrypt',      category: 'DeFi',       catIcon: '🔄', time: '4h ago', title: 'Uniswap v4 Launches with Hook Architecture, Driving $800M in First-Day Trading Volume', bigImage: false, imgGrad: 'linear-gradient(135deg,#FF007A,#FF6B6B)', imgEmoji: '🔄' },
+  { id: 4,  source: 'CryptoSlate',  category: 'Solana',     catIcon: '◎', time: '6h ago',  title: 'Solana DEX Volume Surpasses Ethereum for Third Consecutive Week, Meme Coins Drive Surge', bigImage: true,  imgGrad: 'linear-gradient(135deg,#9945FF,#14F195)', imgEmoji: '◎' },
+  { id: 5,  source: 'Blockworks',   category: 'NFT',        catIcon: '🎨', time: '8h ago', title: 'OpenSea 2.0 Officially Launches With Zero Fees and Enhanced Creator Royalty Framework', bigImage: false, imgGrad: '', imgEmoji: '' },
+  { id: 6,  source: 'The Defiant',  category: 'DeFi',       catIcon: '🔄', time: '10h ago', title: 'Arbitrum DAO Votes to Deploy $45M Treasury Into Blue-Chip DeFi Yield Strategies', bigImage: false, imgGrad: '', imgEmoji: '' },
+  { id: 7,  source: 'CoinTelegraph',category: 'Bitcoin',    catIcon: '₿', time: '12h ago', title: 'MicroStrategy Acquires 5,000 More BTC — Total Holdings Now Exceed 220,000 Coins', bigImage: true,  imgGrad: 'linear-gradient(135deg,#F7931A,#FF8C42)', imgEmoji: '₿' },
+  { id: 8,  source: 'Messari',      category: 'Regulation', catIcon: '⚖️', time: '14h ago', title: 'SEC Greenlights Spot Ethereum ETF Options Trading — Market Responds With 8% Rally', bigImage: false, imgGrad: '', imgEmoji: '' },
+  { id: 9,  source: 'CoinGecko',   category: 'Web3',        catIcon: '🌐', time: '16h ago', title: 'Layer 2 Networks Collectively Process Over 50 Million Transactions in Single Week', bigImage: false, imgGrad: 'linear-gradient(135deg,#6366F1,#8B5CF6)', imgEmoji: '🌐' },
+  { id: 10, source: 'DeFi Pulse',  category: 'DeFi',        catIcon: '🔄', time: '18h ago', title: 'Total Value Locked in DeFi Protocols Reaches $200 Billion Milestone for First Time', bigImage: false, imgGrad: '', imgEmoji: '' },
+  { id: 11, source: 'Nansen',      category: 'Ethereum',    catIcon: 'Ξ', time: '20h ago',  title: 'Ethereum Validators Set New Record — Network Now Secured by Over 1 Million Validators', bigImage: false, imgGrad: '', imgEmoji: '' },
+  { id: 12, source: 'Dune Analytics', category: 'Web3',     catIcon: '🌐', time: '22h ago', title: 'On-Chain Data Shows Retail Wallets Accumulating at Fastest Pace Since 2020 Bull Run', bigImage: false, imgGrad: '', imgEmoji: '' },
+];
+
+const SIDEBAR_MAIN  = ['For You', 'Following'];
+const SIDEBAR_CHANNELS = ['Top Sources', 'Crypto News', 'Bitcoin', 'Ethereum', 'DeFi', 'NFTs', 'Web3', 'Regulation'];
+
+interface NewTabProps { onNavigate: (url: string) => void; }
 
 export default function NewTab({ onNavigate }: NewTabProps) {
-  const { tabs } = useTabsStore();
-  const { nodes } = useRuntimeStore();
+  const { theme } = useSettings();
+  const isDark = theme === 'dark';
+
   const [query, setQuery] = useState('');
+  const [activeChannel, setActiveChannel] = useState('For You');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Pick background image once on mount — never same as previous tab
   const [bgIndex] = useState(() => pickNextImage());
   const bgUrl = `/tap${bgIndex + 1}.jpg`;
 
@@ -55,234 +69,231 @@ export default function NewTab({ onNavigate }: NewTabProps) {
     if (q) onNavigate(q);
   };
 
-  const trackerNodes = nodes.filter(n => n.enabled);
+  // shared dark box style for the grid
+  const boxBase: React.CSSProperties = {
+    background: 'rgba(8,8,20,0.72)',
+    backdropFilter: 'blur(20px)',
+    WebkitBackdropFilter: 'blur(20px)',
+    border: '1px solid rgba(255,255,255,0.09)',
+    borderRadius: 14,
+    padding: '13px 15px',
+    display: 'flex',
+    flexDirection: 'column',
+  };
+
+  const labelStyle: React.CSSProperties = {
+    fontSize: 9, fontWeight: 700, letterSpacing: '0.13em',
+    textTransform: 'uppercase', color: 'rgba(255,255,255,0.38)',
+    margin: '0 0 8px',
+  };
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
+    <div style={{
+      width: '100%', height: '100%',
+      overflowY: 'scroll',
+      scrollSnapType: 'y mandatory',
+      fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif',
+    }}>
 
-      {/* Background image — edge to edge */}
-      <img
-        src={bgUrl}
-        alt=""
-        style={{
-          position: 'absolute', inset: 0, width: '100%', height: '100%',
-          objectFit: 'cover', zIndex: 0,
-          transition: 'opacity 0.4s ease',
-        }}
-        onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
-      />
-
-      {/* Bottom gradient — darkens only the lower portion for bottom bar readability */}
+      {/* ══════════════════════════════════════════════════════════════════════
+          SCREEN 1 — hero + search + grid
+      ══════════════════════════════════════════════════════════════════════ */}
       <div style={{
-        position: 'absolute', inset: 0, zIndex: 1,
-        background: 'linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.70) 100%)',
-      }} />
-
-      {/* Settings gear — top right, minimal */}
-      <button
-        style={{
-          position: 'absolute', top: 18, right: 20, zIndex: 10,
-          background: 'none', border: 'none',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          cursor: 'pointer', color: 'rgba(255,255,255,0.80)',
-          transition: 'color 0.15s',
-        }}
-        onMouseEnter={e => { e.currentTarget.style.color = '#fff'; }}
-        onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.80)'; }}
-      >
-        <Settings size={18} />
-      </button>
-
-      {/* Centered content */}
-      <div style={{
-        position: 'absolute', inset: 0, zIndex: 5,
-        display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center',
-        gap: 0,
+        height: '100%', scrollSnapAlign: 'start',
+        position: 'relative', display: 'flex',
+        flexDirection: 'column', overflow: 'hidden',
       }}>
+        {/* BG image */}
+        <img
+          src={bgUrl} alt=""
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0 }}
+          onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
+        />
+        {/* Gradient overlay — keeps bottom dark for grid readability */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 1, background: 'linear-gradient(to bottom, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.08) 35%, rgba(0,0,0,0.68) 72%, rgba(0,0,0,0.88) 100%)' }} />
 
-        {/* Search bar — white pill, Brave style */}
-        <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: 580, marginBottom: 40 }}>
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 10,
-            background: 'rgba(255,255,255,0.93)',
-            backdropFilter: 'blur(20px)',
-            borderRadius: 9999, padding: '12px 22px',
-            boxShadow: '0 4px 24px rgba(0,0,0,0.20)',
-          }}>
-            <Shield size={20} color="#FB5B22" style={{ flexShrink: 0 }} />
-            <input
-              ref={inputRef}
-              type="text"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              placeholder="Ask anything, find anything..."
-              style={{
-                flex: 1, background: 'transparent', border: 'none', outline: 'none',
-                fontSize: 15, color: '#1a1a2e',
-                fontFamily: 'inherit',
-              }}
-              // @ts-ignore — placeholder color via CSS
-              className="newtab-input"
-            />
-          </div>
-        </form>
+        {/* Settings gear */}
+        <button
+          style={{ position: 'absolute', top: 16, right: 20, zIndex: 10, width: 32, height: 32, borderRadius: '50%', background: 'rgba(0,0,0,0.30)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'rgba(255,255,255,0.78)', transition: 'background 0.15s' }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.52)'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.30)'; }}
+        >
+          <Settings size={15} />
+        </button>
 
-        {/* dApp grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 64px)', gap: 12, marginBottom: 48 }}>
-          {DAPPS.map(app => (
-            <button
-              key={app.name}
-              onClick={() => onNavigate(app.url)}
-              style={{
-                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-                background: 'rgba(20,20,30,0.6)', backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: 16, padding: '10px 4px',
-                cursor: 'pointer', transition: 'background 0.15s, transform 0.1s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(40,40,60,0.8)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(20,20,30,0.6)'; e.currentTarget.style.transform = 'scale(1)'; }}
-            >
-              <span style={{ fontSize: 22, lineHeight: 1 }}>{app.icon}</span>
-              <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.65)', fontWeight: 500, textAlign: 'center', lineHeight: 1.2 }}>{app.name}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Bottom bar — three panels flush to bottom edge */}
-      <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 10,
-        display: 'flex', alignItems: 'stretch',
-      }}>
-
-        {/* STATS panel */}
-        <div style={{
-          background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(18px)',
-          padding: '14px 28px 18px',
-          flex: '0 0 auto',
-        }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.42)', letterSpacing: '0.12em', textTransform: 'uppercase', margin: '0 0 10px' }}>STATS</p>
-          <div style={{ display: 'flex', gap: 36 }}>
-            <StatCol value="12" unit="" desc="Trackers & ads blocked" />
-            <StatCol value={`${trackerNodes.length}`} unit=" KB" desc="Bandwidth saved" />
-            <StatCol value="0" unit=" Seconds" desc="Time saved" />
-          </div>
-        </div>
-
-        {/* NEWS panel */}
-        <div style={{
-          background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(18px)',
-          padding: '14px 24px 18px',
-          flex: 1,
-          borderLeft: '1px solid rgba(255,255,255,0.06)',
-        }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.42)', letterSpacing: '0.12em', textTransform: 'uppercase', margin: '0 0 10px' }}>NEWS</p>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            {/* Thumbnail */}
-            <div style={{
-              width: 44, height: 44, borderRadius: 10, flexShrink: 0,
-              background: 'rgba(255,255,255,0.10)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <span style={{ fontSize: 20 }}>📰</span>
+        {/* Search bar — near top */}
+        <div style={{ position: 'relative', zIndex: 5, display: 'flex', justifyContent: 'center', paddingTop: 26, flexShrink: 0 }}>
+          <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: 580, padding: '0 20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(24px)', borderRadius: 9999, padding: '13px 22px', boxShadow: '0 4px 28px rgba(0,0,0,0.22)' }}>
+              <Shield size={20} color="#FB5B22" style={{ flexShrink: 0 }} />
+              <input
+                ref={inputRef}
+                type="text"
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                placeholder="Ask anything, find anything..."
+                style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', fontSize: 15, color: '#111827', fontFamily: 'inherit' }}
+                className="newtab-input"
+              />
             </div>
-            {/* Headline */}
-            <p style={{ flex: 1, fontSize: 13, fontWeight: 600, color: '#fff', margin: 0, lineHeight: 1.45 }}>
-              Turn on Brave News, and<br />never miss a story
-            </p>
-            {/* CTA */}
-            <button style={{
-              padding: '8px 18px', borderRadius: 9999, flexShrink: 0,
-              background: 'rgba(255,255,255,0.14)', border: 'none',
-              color: '#fff', fontSize: 13, fontWeight: 600,
-              cursor: 'pointer', whiteSpace: 'nowrap',
-              transition: 'background 0.15s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.22)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.14)'; }}
-            >
-              Turn on Brave News
-            </button>
-          </div>
+          </form>
         </div>
 
-        {/* BRAVE VPN panel */}
-        <div style={{
-          background: 'rgba(18,18,18,0.60)', backdropFilter: 'blur(18px)',
-          padding: '14px 24px 18px',
-          minWidth: 370,
-          borderLeft: '1px solid rgba(255,255,255,0.06)',
-        }}>
-          {/* Header row */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-            <Shield size={15} color="#FB5B22" />
-            <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', letterSpacing: '0.04em' }}>BRAVE VPN</span>
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', marginLeft: 4 }}>Powered by Guardian</span>
-          </div>
-          {/* Body row */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            <div style={{ flex: 1 }}>
-              {[
-                'Extra privacy & security online',
-                'Hide your IP & change your location',
-                'Protect every app on your device',
-              ].map((item, i) => (
-                <p key={i} style={{ fontSize: 11, color: 'rgba(255,255,255,0.52)', margin: '3px 0', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span style={{
-                    width: 13, height: 13, borderRadius: '50%',
-                    border: '1px solid rgba(255,255,255,0.28)',
-                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 8, flexShrink: 0,
-                  }}>✓</span>
-                  {item}
+        {/* Vertical spacer — pushes grid to bottom */}
+        <div style={{ flex: 1 }} />
+
+        {/* ── Widget + dApp grid (3 per row) ── */}
+        <div style={{ position: 'relative', zIndex: 5, padding: '0 16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 9 }}>
+
+            {/* 1. STATS */}
+            <div style={boxBase}>
+              <p style={labelStyle}>Stats</p>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                {[
+                  { val: '7',      sub: 'Trackers blocked' },
+                  { val: '465 KB', sub: 'Bandwidth saved'  },
+                  { val: '0 Sec',  sub: 'Time saved'       },
+                ].map((s, i) => (
+                  <div key={i}>
+                    <p style={{ fontSize: 17, fontWeight: 700, color: '#818CF8', margin: '0 0 2px', letterSpacing: '-0.3px' }}>{s.val}</p>
+                    <p style={{ fontSize: 9, color: 'rgba(255,255,255,0.40)', margin: 0, lineHeight: 1.35 }}>{s.sub}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 2. NEWS */}
+            <div style={boxBase}>
+              <p style={labelStyle}>News</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1 }}>
+                <div style={{ width: 34, height: 34, borderRadius: 8, background: 'rgba(255,255,255,0.09)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, flexShrink: 0 }}>📰</div>
+                <div style={{ flex: 1 }}>
+                  <p style={{ fontSize: 12, fontWeight: 600, color: '#fff', margin: '0 0 4px', lineHeight: 1.4 }}>Crypto & world news</p>
+                  <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.38)', margin: 0 }}>Scroll down to read →</p>
+                </div>
+              </div>
+            </div>
+
+            {/* 3. VPN */}
+            <div style={boxBase}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
+                <Shield size={11} color="#FB5B22" />
+                <p style={{ ...labelStyle, margin: 0 }}>Orivon VPN</p>
+              </div>
+              {['Extra privacy online', 'Hide your IP', 'Protect all apps'].map((b, i) => (
+                <p key={i} style={{ fontSize: 10, color: 'rgba(255,255,255,0.48)', margin: '2px 0', display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <span style={{ width: 11, height: 11, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.22)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 7, flexShrink: 0 }}>✓</span>
+                  {b}
                 </p>
               ))}
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
-              <button style={{
-                padding: '8px 18px', borderRadius: 9999,
-                background: '#fff', border: 'none',
-                color: '#111', fontSize: 13, fontWeight: 700,
-                cursor: 'pointer', whiteSpace: 'nowrap',
-                transition: 'opacity 0.15s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.opacity = '0.88'; }}
-              onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
+
+            {/* 4-11. dApp shortcuts */}
+            {DAPPS.map(app => (
+              <div
+                key={app.name}
+                onClick={() => onNavigate(app.url)}
+                style={{ ...boxBase, alignItems: 'center', justifyContent: 'center', gap: 8, cursor: 'pointer', transition: 'background 0.14s, transform 0.12s', minHeight: 82 }}
+                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = 'rgba(30,28,55,0.86)'; (e.currentTarget as HTMLDivElement).style.transform = 'scale(1.04)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = 'rgba(8,8,20,0.72)'; (e.currentTarget as HTMLDivElement).style.transform = 'scale(1)'; }}
               >
-                Start free trial
-              </button>
-              <button style={{
-                background: 'none', border: 'none', padding: 0,
-                fontSize: 11, color: 'rgba(255,255,255,0.38)',
-                cursor: 'pointer',
-                transition: 'color 0.15s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.70)'; }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.38)'; }}
-              >
-                Already purchased?
-              </button>
-            </div>
+                <span style={{ fontSize: 26, lineHeight: 1 }}>{app.icon}</span>
+                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.72)', fontWeight: 500, textAlign: 'center' }}>{app.name}</span>
+              </div>
+            ))}
+
           </div>
         </div>
 
+        <div style={{ height: 10 }} />
+        <style>{`.newtab-input::placeholder { color: rgba(0,0,0,0.36); }`}</style>
       </div>
 
-      {/* Placeholder color for white search bar */}
-      <style>{`.newtab-input::placeholder { color: rgba(0,0,0,0.38); }`}</style>
-    </div>
-  );
-}
+      {/* ══════════════════════════════════════════════════════════════════════
+          SCREEN 2 — crypto news feed (internal scroll only)
+      ══════════════════════════════════════════════════════════════════════ */}
+      <div style={{
+        height: '100%', scrollSnapAlign: 'start',
+        display: 'flex', overflow: 'hidden',
+        background: '#0b0b18',
+      }}>
 
-function StatCol({ value, unit, desc }: { value: string; unit: string; desc: string }) {
-  return (
-    <div>
-      <p style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#6366F1', letterSpacing: '-0.5px' }}>
-        {value}<span style={{ fontSize: 13, fontWeight: 500, color: '#6366F1' }}>{unit}</span>
-      </p>
-      <p style={{ margin: '2px 0 0', fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>{desc}</p>
+        {/* Left sidebar — does NOT scroll */}
+        <div style={{ width: 218, flexShrink: 0, padding: '20px 12px', borderRight: '1px solid rgba(255,255,255,0.06)', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'hidden' }}>
+          {SIDEBAR_MAIN.map(cat => (
+            <button key={cat} onClick={() => setActiveChannel(cat)}
+              style={{ width: '100%', padding: '9px 12px', borderRadius: 10, border: 'none', textAlign: 'left', cursor: 'pointer', fontSize: 14, fontWeight: 600, transition: 'background 0.12s, color 0.12s', background: activeChannel === cat ? 'rgba(99,102,241,0.18)' : 'transparent', color: activeChannel === cat ? '#A5B4FC' : 'rgba(255,255,255,0.58)' }}
+              onMouseEnter={e => { if (activeChannel !== cat) e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+              onMouseLeave={e => { if (activeChannel !== cat) e.currentTarget.style.background = 'transparent'; }}
+            >{cat}</button>
+          ))}
+
+          <div style={{ margin: '12px 12px 6px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.30)', letterSpacing: '0.10em', textTransform: 'uppercase' }}>Channels</span>
+            <span style={{ fontSize: 16, color: 'rgba(255,255,255,0.28)', cursor: 'pointer', lineHeight: 1 }}>+</span>
+          </div>
+
+          {SIDEBAR_CHANNELS.map(ch => (
+            <button key={ch} onClick={() => setActiveChannel(ch)}
+              style={{ width: '100%', padding: '7px 12px', borderRadius: 8, border: 'none', textAlign: 'left', cursor: 'pointer', fontSize: 13, fontWeight: 500, transition: 'background 0.12s, color 0.12s', background: activeChannel === ch ? 'rgba(99,102,241,0.18)' : 'transparent', color: activeChannel === ch ? '#A5B4FC' : 'rgba(255,255,255,0.46)' }}
+              onMouseEnter={e => { if (activeChannel !== ch) e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
+              onMouseLeave={e => { if (activeChannel !== ch) e.currentTarget.style.background = 'transparent'; }}
+            >{ch}</button>
+          ))}
+        </div>
+
+        {/* News feed — only this scrolls */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '20px 28px 32px' }}>
+
+          {/* First article — big hero image */}
+          {CRYPTO_NEWS[0].bigImage && (
+            <>
+              <div style={{ borderRadius: 14, overflow: 'hidden', marginBottom: 12, background: CRYPTO_NEWS[0].imgGrad, height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                <span style={{ fontSize: 72, filter: 'drop-shadow(0 4px 16px rgba(0,0,0,0.4))' }}>{CRYPTO_NEWS[0].imgEmoji}</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 7 }}>
+                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.52)', fontWeight: 500 }}>{CRYPTO_NEWS[0].source}</span>
+                <span style={{ color: 'rgba(255,255,255,0.22)', fontSize: 10 }}>•</span>
+                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.36)' }}>{CRYPTO_NEWS[0].catIcon} {CRYPTO_NEWS[0].category}</span>
+                <span style={{ color: 'rgba(255,255,255,0.22)', fontSize: 10 }}>•</span>
+                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.36)' }}>{CRYPTO_NEWS[0].time}</span>
+              </div>
+              <p style={{ fontSize: 17, fontWeight: 700, color: 'rgba(255,255,255,0.92)', margin: '0 0 6px', lineHeight: 1.45, cursor: 'pointer' }}>{CRYPTO_NEWS[0].title}</p>
+              <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '14px 0' }} />
+            </>
+          )}
+
+          {/* Remaining articles */}
+          {CRYPTO_NEWS.slice(1).map(item => (
+            <div key={item.id} style={{ display: 'flex', gap: 14, padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.05)', cursor: 'pointer', borderRadius: 4, transition: 'background 0.12s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.03)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = 'transparent'; }}
+            >
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.50)', fontWeight: 500 }}>{item.source}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.22)', fontSize: 10 }}>•</span>
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.36)' }}>{item.catIcon} {item.category}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.22)', fontSize: 10 }}>•</span>
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.36)' }}>{item.time}</span>
+                </div>
+                <p style={{ fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.88)', margin: 0, lineHeight: 1.5 }}>{item.title}</p>
+              </div>
+
+              {item.bigImage && item.imgGrad && (
+                <div style={{ width: 82, height: 68, borderRadius: 10, background: item.imgGrad, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>
+                  {item.imgEmoji}
+                </div>
+              )}
+
+              <button style={{ width: 26, height: 26, borderRadius: 7, border: 'none', background: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.28)', flexShrink: 0, alignSelf: 'flex-start', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>···</button>
+            </div>
+          ))}
+
+        </div>
+      </div>
+
     </div>
   );
 }

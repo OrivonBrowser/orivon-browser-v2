@@ -1,12 +1,14 @@
 /**
- * WalletPanel — dropdown panel from the wallet button in the browser toolbar.
- * Contains wallet addresses, settings, and create/import options.
+ * WalletPanel — wallet popup with Portfolio / Connections / Accounts / Explore tabs.
  */
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import {
-  Wallet, Lock, Unlock, Copy, CheckCircle, Sun, Moon, Plus, Key,
-  Shield, Globe, Network, Cpu, AlertCircle, X
+  Lock, Copy, CheckCircle, Plus, Key, Shield, X,
+  ArrowLeft, MoreVertical, ChevronDown,
+  Layers, Link2, Users, Compass,
+  ShoppingCart, Send, RefreshCw, MoreHorizontal,
+  Search, SlidersHorizontal, ArrowUpDown,
 } from 'lucide-react';
 import { useWalletStore } from '../store/wallet';
 import { useSettings } from '../store/settings';
@@ -18,23 +20,53 @@ interface WalletPanelProps {
   onOpenDashboard?: () => void;
 }
 
-type PanelTab = 'wallet' | 'settings' | 'network';
+type BottomTab = 'portfolio' | 'connections' | 'accounts' | 'explore';
+type AssetTab  = 'assets' | 'nfts' | 'activity';
+
+const BOTTOM_NAV = [
+  { id: 'portfolio'   as BottomTab, Icon: Layers,  label: 'Portfolio'    },
+  { id: 'connections' as BottomTab, Icon: Link2,   label: 'Connections'  },
+  { id: 'accounts'    as BottomTab, Icon: Users,   label: 'Accounts'     },
+  { id: 'explore'     as BottomTab, Icon: Compass, label: 'Explore'      },
+];
+
+const TAB_TITLE: Record<BottomTab, string> = {
+  portfolio:   'Portfolio',
+  connections: 'Connections',
+  accounts:    'Accounts',
+  explore:     'Explore',
+};
+
+const EXPLORE_ASSETS = [
+  { symbol: 'BTC',  name: 'Bitcoin',  price: '$67,420.00', change: '0.47%', up: true,  color: '#F7931A', icon: '₿'  },
+  { symbol: 'ETH',  name: 'Ethereum', price: '$2,191.68',  change: '0.71%', up: true,  color: '#627EEA', icon: 'Ξ'  },
+  { symbol: 'SOL',  name: 'Solana',   price: '$142.50',    change: '1.23%', up: true,  color: '#9945FF', icon: '◎'  },
+  { symbol: 'USDT', name: 'Tether',   price: '$0.9995',    change: '0.00%', up: true,  color: '#26A17B', icon: '₮'  },
+  { symbol: 'BNB',  name: 'BNB',      price: '$653.72',    change: '0.15%', up: true,  color: '#F0B90B', icon: 'B'  },
+  { symbol: 'XRP',  name: 'XRP',      price: '$1.42',      change: '0.32%', up: true,  color: '#00AAE4', icon: 'X'  },
+  { symbol: 'USDC', name: 'USD Coin', price: '$0.9998',    change: '0.00%', up: false, color: '#2775CA', icon: '$'  },
+];
 
 export default function WalletPanel({ onClose, onOpenWalletModal, onOpenDashboard }: WalletPanelProps) {
   const { status, addresses, lock, getBalance } = useWalletStore();
-  const { theme, setTheme, blockTrackers, setBlockTrackers, blockAds, setBlockAds, showWeb3Scores, setShowWeb3Scores } = useSettings();
-  const { nodes, toggleNode } = useRuntimeStore();
-  const [tab, setTab] = useState<PanelTab>('wallet');
-  const [copied, setCopied] = useState<string | null>(null);
-  const [balance, setBalance] = useState<string | null>(null);
+  // keep store hooks so nothing downstream breaks
+  const { theme } = useSettings();
+  const { nodes }  = useRuntimeStore();
+
+  const [bottomTab, setBottomTab] = useState<BottomTab>('portfolio');
+  const [assetTab,  setAssetTab]  = useState<AssetTab>('assets');
+  const [copied,    setCopied]    = useState<string | null>(null);
+  const [balance,   setBalance]   = useState<string | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-  const isDark = theme === 'dark';
 
   useEffect(() => {
-    if (status === 'unlocked' && tab === 'wallet') {
-      getBalance().then(b => { const n = parseFloat(b); if (!isNaN(n)) setBalance(n.toFixed(4)); });
+    if (status === 'unlocked') {
+      getBalance().then(b => {
+        const n = parseFloat(b);
+        if (!isNaN(n)) setBalance(n.toFixed(10));
+      });
     }
-  }, [tab, status]);
+  }, [status, getBalance]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -50,186 +82,365 @@ export default function WalletPanel({ onClose, onOpenWalletModal, onOpenDashboar
     setTimeout(() => setCopied(null), 2000);
   };
 
-  const bg    = isDark ? 'bg-[#161616] border-white/10'   : 'bg-white border-black/10';
-  const row   = isDark ? 'hover:bg-white/5 text-white/70' : 'hover:bg-black/4 text-black/70';
-  const muted = isDark ? 'text-white/35'                   : 'text-black/35';
-  const subBg = isDark ? 'bg-white/[0.04]'                 : 'bg-black/[0.03]';
+  const CHAIN_ASSETS = addresses ? [
+    { key: 'eth', symbol: 'ETH', name: 'Ethereum', chain: 'ETH on Ethereum Mainnet', amount: '0 ETH', usd: '$0.00', color: '#627EEA', icon: 'Ξ',  addr: addresses.eth },
+    { key: 'sol', symbol: 'SOL', name: 'Solana',   chain: 'SOL on Solana Mainnet',   amount: '0 SOL', usd: '$0.00', color: '#9945FF', icon: '◎',  addr: addresses.sol },
+    { key: 'btc', symbol: 'BTC', name: 'Bitcoin',  chain: 'BTC on Bitcoin Mainnet',  amount: '0 BTC', usd: '$0.00', color: '#F7931A', icon: '₿',  addr: addresses.btc },
+  ] : [];
+
+  const ACCOUNTS = addresses ? [
+    { name: 'Account 1',         addr: addresses.eth, chain: 'Ethereum + EVM Chains',  grad: 'linear-gradient(135deg,#FF6B6B,#4ECDC4)', usd: '$0.00' },
+    { name: 'Solana Account 1',  addr: addresses.sol, chain: 'Solana + SVM Chains',    grad: 'linear-gradient(135deg,#9945FF,#14F195)', usd: '$0.00' },
+    { name: 'Bitcoin Account 1', addr: addresses.btc, chain: 'Bitcoin Mainnet',         grad: 'linear-gradient(135deg,#F7931A,#FFCB05)', usd: '$0.00' },
+  ] : [];
+
+  // ── styles ──────────────────────────────────────────────────────────────────
+  const s = {
+    divider: { height: 1, background: '#F0F0F0', margin: 0 } as React.CSSProperties,
+    row: { display: 'flex', alignItems: 'center', padding: '10px 16px', cursor: 'pointer', transition: 'background 0.12s' } as React.CSSProperties,
+    iconBtn: { width: 28, height: 28, borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6B7280', transition: 'background 0.12s' } as React.CSSProperties,
+    smallBtn: { width: 28, height: 28, borderRadius: 8, border: '1px solid #E5E7EB', background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6B7280' } as React.CSSProperties,
+  };
 
   return (
     <motion.div
       ref={panelRef}
-      initial={{ opacity: 0, y: -6, scale: 0.97 }}
+      initial={{ opacity: 0, y: -8, scale: 0.97 }}
       animate={{ opacity: 1, y: 0,  scale: 1 }}
-      exit={{ opacity: 0, y: -6, scale: 0.97 }}
+      exit={  { opacity: 0, y: -8,  scale: 0.97 }}
       transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-      className={`absolute top-full right-0 mt-1.5 w-72 rounded-2xl border shadow-2xl overflow-hidden z-50 ${bg}`}
+      style={{
+        position: 'absolute', top: 'calc(100% + 6px)', right: 0,
+        width: 364, height: 580,
+        background: '#fff', borderRadius: 16,
+        boxShadow: '0 12px 48px rgba(0,0,0,0.20), 0 2px 8px rgba(0,0,0,0.08)',
+        zIndex: 200, overflow: 'hidden',
+        display: 'flex', flexDirection: 'column',
+        border: '1px solid rgba(0,0,0,0.07)',
+      }}
     >
-      {/* Tab bar */}
-      <div className={`flex border-b ${isDark ? 'border-white/[0.07]' : 'border-black/[0.07]'}`}>
-        {(['wallet', 'settings', 'network'] as PanelTab[]).map(t => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`flex-1 py-2.5 text-[11px] font-semibold uppercase tracking-widest transition-colors ${
-              tab === t
-                ? isDark ? 'text-white border-b border-white/40 -mb-px' : 'text-black border-b border-black/40 -mb-px'
-                : muted
-            }`}
-          >
-            {t}
-          </button>
-        ))}
+
+      {/* ── Header ────────────────────────────────────────────────────────── */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '13px 14px', borderBottom: '1px solid #F0F0F0', flexShrink: 0 }}>
+        <button style={s.iconBtn}
+          onMouseEnter={e => { e.currentTarget.style.background = '#F3F4F6'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+        >
+          <ArrowLeft size={16} />
+        </button>
+        <span style={{ fontSize: 15, fontWeight: 600, color: '#111827' }}>{TAB_TITLE[bottomTab]}</span>
+        <button style={s.iconBtn}
+          onMouseEnter={e => { e.currentTarget.style.background = '#F3F4F6'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+        >
+          <MoreVertical size={16} />
+        </button>
       </div>
 
-      <div className="p-4 space-y-3 max-h-[420px] overflow-y-auto scrollbar-thin">
+      {/* ── Scrollable content ────────────────────────────────────────────── */}
+      <div style={{ flex: 1, overflowY: 'auto' }}>
 
-        {/* ── Wallet tab ──────────────────────────────────────────────────── */}
-        {tab === 'wallet' && (
+        {/* ══ PORTFOLIO ══════════════════════════════════════════════════════ */}
+        {bottomTab === 'portfolio' && (
           <>
             {status === 'unlocked' && addresses ? (
               <>
-                {[
-                  { key: 'eth', label: 'Ethereum', addr: addresses.eth, color: '#00D1FF', bal: balance ? `${balance} ETH` : undefined },
-                  { key: 'btc', label: 'Bitcoin',  addr: addresses.btc, color: '#00FF87' },
-                  { key: 'sol', label: 'Solana',   addr: addresses.sol, color: '#a78bfa' },
-                ].map(chain => (
-                  <div key={chain.key} className={`p-3 rounded-xl ${subBg} space-y-1.5`}>
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: chain.color }}>{chain.label}</span>
-                      <div className="flex items-center gap-1.5">
-                        {chain.bal && <span className="text-[11px] font-semibold" style={{ color: chain.color }}>{chain.bal}</span>}
-                        <button onClick={() => copy(chain.addr, chain.key)} className={`w-6 h-6 rounded-md flex items-center justify-center ${row} transition-all`}>
-                          {copied === chain.key ? <CheckCircle size={11} className="text-[#00FF87]" /> : <Copy size={11} />}
-                        </button>
+                {/* Balance + actions */}
+                <div style={{ padding: '20px 20px 18px', textAlign: 'center', borderBottom: '1px solid #F5F5F5' }}>
+                  <p style={{ fontSize: 11, color: '#9CA3AF', margin: '0 0 4px', fontWeight: 500 }}>Total Balance</p>
+                  <p style={{ fontSize: 28, fontWeight: 700, color: '#111827', margin: '0 0 20px', letterSpacing: '-0.5px' }}>
+                    ${balance ?? '0.0000000000'}
+                  </p>
+                  <div style={{ display: 'flex', justifyContent: 'center', gap: 24 }}>
+                    {[
+                      { Icon: ShoppingCart, label: 'Buy'  },
+                      { Icon: Send,         label: 'Send' },
+                      { Icon: RefreshCw,    label: 'Swap' },
+                      { Icon: MoreHorizontal, label: 'More' },
+                    ].map(({ Icon, label }) => (
+                      <div key={label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7 }}>
+                        <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#4F46E5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', cursor: 'pointer', transition: 'filter 0.15s' }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.filter = 'brightness(1.12)'; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.filter = 'brightness(1)'; }}
+                        >
+                          <Icon size={18} />
+                        </div>
+                        <span style={{ fontSize: 12, color: '#374151', fontWeight: 500 }}>{label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Asset sub-tabs */}
+                <div style={{ display: 'flex', borderBottom: '1px solid #F0F0F0', padding: '0 16px', flexShrink: 0 }}>
+                  {(['assets', 'nfts', 'activity'] as AssetTab[]).map(t => (
+                    <button key={t} onClick={() => setAssetTab(t)} style={{ flex: 1, padding: '11px 0', border: 'none', background: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 600, color: assetTab === t ? '#4F46E5' : '#9CA3AF', borderBottom: assetTab === t ? '2px solid #4F46E5' : '2px solid transparent', marginBottom: -1, transition: 'color 0.15s' }}>
+                      {t.charAt(0).toUpperCase() + t.slice(1)}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Assets list */}
+                {assetTab === 'assets' && (
+                  <>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 16px 6px' }}>
+                      <span style={{ fontSize: 14, fontWeight: 600, color: '#111827' }}>Assets</span>
+                      <div style={{ display: 'flex', gap: 6 }}>
+                        {([Search, SlidersHorizontal, ArrowUpDown] as React.ElementType[]).map((Icon, i) => (
+                          <button key={i} style={s.smallBtn}><Icon size={13} /></button>
+                        ))}
                       </div>
                     </div>
-                    <p className={`text-[10px] font-mono break-all ${muted}`}>{chain.addr}</p>
+                    {CHAIN_ASSETS.map(asset => (
+                      <div key={asset.key} style={{ ...s.row, gap: 12 }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = '#F9FAFB'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = 'transparent'; }}
+                      >
+                        <div style={{ width: 38, height: 38, borderRadius: '50%', background: asset.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 15, fontWeight: 700, flexShrink: 0 }}>{asset.icon}</div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <p style={{ fontSize: 13, fontWeight: 600, color: '#111827', margin: '0 0 2px' }}>{asset.name}</p>
+                          <p style={{ fontSize: 11, color: '#9CA3AF', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{asset.chain}</p>
+                        </div>
+                        <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                          <p style={{ fontSize: 13, fontWeight: 600, color: '#111827', margin: '0 0 2px' }}>{asset.amount}</p>
+                          <p style={{ fontSize: 11, color: '#9CA3AF', margin: 0 }}>{asset.usd}</p>
+                        </div>
+                        <button style={{ ...s.iconBtn, flexShrink: 0 }} onClick={() => copy(asset.addr, asset.key)}>
+                          {copied === asset.key ? <CheckCircle size={13} color="#10B981" /> : <MoreVertical size={13} />}
+                        </button>
+                      </div>
+                    ))}
+                    <div style={s.divider} />
+                    {onOpenDashboard && (
+                      <div style={{ padding: '12px 16px' }}>
+                        <button onClick={onOpenDashboard} style={{ width: '100%', height: 36, borderRadius: 9999, border: '1px solid #E5E7EB', background: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, color: '#4F46E5' }}>
+                          Open full dashboard
+                        </button>
+                      </div>
+                    )}
+                    <div style={{ padding: '0 16px 12px' }}>
+                      <button onClick={() => { lock(); onClose(); }} style={{ width: '100%', height: 36, borderRadius: 9999, border: '1px solid #FEE2E2', background: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, color: '#EF4444', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                        <Lock size={13} /> Lock wallet
+                      </button>
+                    </div>
+                  </>
+                )}
+                {assetTab === 'nfts' && (
+                  <div style={{ padding: '40px 16px', textAlign: 'center' }}>
+                    <p style={{ fontSize: 14, color: '#9CA3AF', margin: 0 }}>No NFTs found</p>
                   </div>
-                ))}
-                {/* Dashboard + Lock actions */}
-                <div className={`flex gap-2 pt-1 border-t ${isDark ? 'border-white/[0.07]' : 'border-black/[0.07]'}`}>
-                  {onOpenDashboard && (
-                    <button
-                      onClick={onOpenDashboard}
-                      className={`flex-1 flex items-center justify-center gap-1.5 h-9 rounded-xl text-[12px] font-medium border transition-all ${
-                        isDark ? 'border-white/10 bg-white/[0.03] hover:bg-white/[0.07] text-white/60' : 'border-black/10 bg-black/[0.02] hover:bg-black/[0.05] text-black/60'
-                      }`}
-                    >
-                      <Wallet size={12} /> Dashboard
-                    </button>
-                  )}
-                  <button
-                    onClick={() => { lock(); onClose(); }}
-                    className={`flex-1 flex items-center justify-center gap-1.5 h-9 rounded-xl text-[12px] font-medium border transition-all ${
-                      isDark ? 'border-white/10 bg-white/[0.03] hover:bg-red-500/10 hover:border-red-500/20 hover:text-red-400 text-white/60' : 'border-black/10 bg-black/[0.02] hover:bg-red-500/8 hover:border-red-500/20 hover:text-red-500 text-black/60'
-                    }`}
-                  >
-                    <Lock size={12} /> Lock
-                  </button>
-                </div>
+                )}
+                {assetTab === 'activity' && (
+                  <div style={{ padding: '40px 16px', textAlign: 'center' }}>
+                    <p style={{ fontSize: 14, color: '#9CA3AF', margin: 0 }}>No recent activity</p>
+                  </div>
+                )}
               </>
             ) : status === 'locked' ? (
-              <div className="space-y-3">
-                <div className={`p-3 rounded-xl ${subBg} flex items-center gap-3`}>
-                  <Lock size={16} className="text-yellow-500/70" />
+              <div style={{ padding: 20 }}>
+                <div style={{ background: '#F9FAFB', borderRadius: 12, padding: 16, display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                  <Lock size={20} color="#F59E0B" />
                   <div>
-                    <p className={`text-[12px] font-semibold ${isDark ? 'text-white/80' : 'text-black/80'}`}>Wallet locked</p>
-                    <p className={`text-[11px] ${muted}`}>{addresses?.eth.slice(0,8)}…{addresses?.eth.slice(-6)}</p>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: '#111827', margin: '0 0 2px' }}>Wallet locked</p>
+                    <p style={{ fontSize: 11, color: '#9CA3AF', margin: 0, fontFamily: 'monospace' }}>
+                      {addresses?.eth.slice(0, 8)}…{addresses?.eth.slice(-6)}
+                    </p>
                   </div>
                 </div>
-                <button
-                  onClick={() => { onOpenWalletModal('unlock'); onClose(); }}
-                  className="w-full h-9 rounded-xl bg-[#00FF87] text-black text-[12px] font-semibold hover:brightness-105 transition-all"
-                >
+                <button onClick={() => { onOpenWalletModal('unlock'); onClose(); }} style={{ width: '100%', height: 44, borderRadius: 9999, background: '#4F46E5', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>
                   Unlock wallet
                 </button>
               </div>
             ) : (
-              <div className="space-y-2.5">
-                <p className={`text-[12px] ${muted} text-center py-1`}>No wallet connected</p>
-                <button
-                  onClick={() => { onOpenWalletModal('create'); onClose(); }}
-                  className={`flex items-center gap-2.5 w-full h-10 px-3 rounded-xl text-[12px] font-medium border ${isDark ? 'border-white/10 bg-white/[0.03] hover:bg-white/[0.06]' : 'border-black/10 bg-black/[0.02] hover:bg-black/[0.04]'} transition-all`}
-                >
-                  <Plus size={13} className="text-[#00FF87]" /> Create new wallet
+              <div style={{ padding: 20 }}>
+                <p style={{ fontSize: 13, color: '#9CA3AF', textAlign: 'center', marginBottom: 16 }}>No wallet connected</p>
+                <button onClick={() => { onOpenWalletModal('create'); onClose(); }} style={{ width: '100%', height: 44, borderRadius: 12, border: '1px solid #E5E7EB', background: '#F9FAFB', cursor: 'pointer', fontSize: 13, fontWeight: 600, color: '#111827', display: 'flex', alignItems: 'center', gap: 10, padding: '0 16px', marginBottom: 10 }}>
+                  <Plus size={16} color="#4F46E5" /> Create new wallet
                 </button>
-                <button
-                  onClick={() => { onOpenWalletModal('import'); onClose(); }}
-                  className={`flex items-center gap-2.5 w-full h-10 px-3 rounded-xl text-[12px] font-medium border ${isDark ? 'border-white/10 bg-white/[0.03] hover:bg-white/[0.06]' : 'border-black/10 bg-black/[0.02] hover:bg-black/[0.04]'} transition-all`}
-                >
-                  <Key size={13} className={muted} /> Import wallet
+                <button onClick={() => { onOpenWalletModal('import'); onClose(); }} style={{ width: '100%', height: 44, borderRadius: 12, border: '1px solid #E5E7EB', background: '#F9FAFB', cursor: 'pointer', fontSize: 13, fontWeight: 600, color: '#111827', display: 'flex', alignItems: 'center', gap: 10, padding: '0 16px' }}>
+                  <Key size={16} color="#9CA3AF" /> Import wallet
                 </button>
               </div>
             )}
           </>
         )}
 
-        {/* ── Settings tab ────────────────────────────────────────────────── */}
-        {tab === 'settings' && (
-          <div className="space-y-1">
-            {/* Theme */}
-            <div className="flex items-center justify-between h-10 px-1">
-              <span className={`text-[12px] font-medium ${isDark ? 'text-white/70' : 'text-black/70'}`}>Theme</span>
-              <div className={`flex p-0.5 rounded-lg ${isDark ? 'bg-white/[0.06]' : 'bg-black/[0.05]'}`}>
-                {(['dark', 'light'] as const).map(t => (
-                  <button
-                    key={t}
-                    onClick={() => setTheme(t)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] font-medium transition-all ${
-                      theme === t
-                        ? isDark ? 'bg-white/10 text-white' : 'bg-white text-black shadow-sm'
-                        : muted
-                    }`}
-                  >
-                    {t === 'dark' ? <Moon size={11} /> : <Sun size={11} />}
-                    {t === 'dark' ? 'Dark' : 'Light'}
-                  </button>
-                ))}
+        {/* ══ CONNECTIONS ════════════════════════════════════════════════════ */}
+        {bottomTab === 'connections' && (
+          <div style={{ padding: 16 }}>
+            {/* Current page */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '16px 0 22px', gap: 8 }}>
+              <div style={{ width: 52, height: 52, borderRadius: '50%', background: '#FB5B22', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Shield size={28} color="#fff" />
+              </div>
+              <p style={{ fontSize: 13, color: '#9CA3AF', margin: 0 }}>orivon://newtab</p>
+            </div>
+
+            {/* NOT CONNECTED — Ethereum */}
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+                <div style={{ width: 16, height: 16, borderRadius: '50%', background: '#EF4444', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <X size={9} color="#fff" strokeWidth={3} />
+                </div>
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Not Connected</span>
+              </div>
+              <div style={{ border: '1px solid #E5E7EB', borderRadius: 12, overflow: 'hidden', marginBottom: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 14px', borderBottom: '1px solid #F0F0F0' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 28, height: 28, borderRadius: 8, background: 'linear-gradient(135deg,#FF6B6B,#4ECDC4)', flexShrink: 0 }} />
+                    <div>
+                      <p style={{ fontSize: 13, fontWeight: 600, color: '#111827', margin: 0 }}>Account 1</p>
+                      <p style={{ fontSize: 11, color: '#9CA3AF', margin: 0, fontFamily: 'monospace' }}>
+                        {addresses ? `${addresses.eth.slice(0, 6)}***${addresses.eth.slice(-4)}` : '0x000***0000'}
+                      </p>
+                    </div>
+                  </div>
+                  <ChevronDown size={15} color="#9CA3AF" />
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 14px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#627EEA', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#fff', fontWeight: 700 }}>Ξ</div>
+                    <span style={{ fontSize: 13, fontWeight: 500, color: '#111827' }}>Ethereum Mainnet</span>
+                  </div>
+                  <ChevronDown size={15} color="#9CA3AF" />
+                </div>
+              </div>
+              <button style={{ width: '100%', height: 44, borderRadius: 9999, background: '#F3F4F6', border: 'none', cursor: 'not-allowed', fontSize: 14, fontWeight: 600, color: '#9CA3AF' }}>
+                Connect
+              </button>
+            </div>
+
+            {/* NOT CONNECTED — Solana */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+                <div style={{ width: 16, height: 16, borderRadius: '50%', background: '#EF4444', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <X size={9} color="#fff" strokeWidth={3} />
+                </div>
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Not Connected</span>
+              </div>
+              <div style={{ border: '1px solid #E5E7EB', borderRadius: 12, overflow: 'hidden', marginBottom: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 14px', borderBottom: '1px solid #F0F0F0' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 28, height: 28, borderRadius: 8, background: 'linear-gradient(135deg,#9945FF,#14F195)', flexShrink: 0 }} />
+                    <div>
+                      <p style={{ fontSize: 13, fontWeight: 600, color: '#111827', margin: 0 }}>Solana Account 1</p>
+                      <p style={{ fontSize: 11, color: '#9CA3AF', margin: 0, fontFamily: 'monospace' }}>
+                        {addresses ? `${addresses.sol.slice(0, 4)}***${addresses.sol.slice(-4)}` : '4NZN***Qbmm'}
+                      </p>
+                    </div>
+                  </div>
+                  <ChevronDown size={15} color="#9CA3AF" />
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 14px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#9945FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#fff', fontWeight: 700 }}>◎</div>
+                    <span style={{ fontSize: 13, fontWeight: 500, color: '#111827' }}>Solana Mainnet Beta</span>
+                  </div>
+                  <ChevronDown size={15} color="#9CA3AF" />
+                </div>
+              </div>
+              <button style={{ width: '100%', height: 44, borderRadius: 9999, background: '#F3F4F6', border: 'none', cursor: 'not-allowed', fontSize: 14, fontWeight: 600, color: '#9CA3AF' }}>
+                Connect
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ══ ACCOUNTS ═══════════════════════════════════════════════════════ */}
+        {bottomTab === 'accounts' && (
+          <div>
+            <div style={{ padding: '12px 16px 6px' }}>
+              <p style={{ fontSize: 14, fontWeight: 600, color: '#111827', margin: 0 }}>Accounts</p>
+            </div>
+            {ACCOUNTS.length > 0 ? ACCOUNTS.map((acc, i) => (
+              <div key={i} style={{ ...s.row, gap: 12 }}
+                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = '#F9FAFB'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = 'transparent'; }}
+              >
+                <div style={{ width: 38, height: 38, borderRadius: 10, background: acc.grad, flexShrink: 0 }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: '#111827', margin: '0 0 2px' }}>{acc.name}</p>
+                  <p style={{ fontSize: 11, color: '#9CA3AF', margin: '0 0 1px', fontFamily: 'monospace' }}>{acc.addr.slice(0, 6)}***{acc.addr.slice(-4)}</p>
+                  <p style={{ fontSize: 11, color: '#9CA3AF', margin: 0 }}>{acc.chain}</p>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: '#111827' }}>{acc.usd}</span>
+                  <button style={s.iconBtn}><MoreVertical size={14} /></button>
+                </div>
+              </div>
+            )) : (
+              <div style={{ padding: '40px 16px', textAlign: 'center' }}>
+                <p style={{ fontSize: 14, color: '#9CA3AF', margin: 0 }}>No accounts found</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ══ EXPLORE ════════════════════════════════════════════════════════ */}
+        {bottomTab === 'explore' && (
+          <div>
+            {/* Filters */}
+            <div style={{ display: 'flex', gap: 10, padding: '12px 16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 12px', height: 36, borderRadius: 9999, border: '1px solid #E5E7EB', flex: 1, cursor: 'pointer' }}>
+                <span style={{ fontSize: 13, color: '#374151', fontWeight: 500, flex: 1 }}>All Assets</span>
+                <ChevronDown size={14} color="#9CA3AF" />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 12px', height: 36, borderRadius: 9999, border: '1px solid #E5E7EB', flex: 1 }}>
+                <Search size={13} color="#9CA3AF" />
+                <span style={{ fontSize: 13, color: '#9CA3AF' }}>Search</span>
               </div>
             </div>
-            {[
-              { label: 'Block trackers', value: blockTrackers, onChange: setBlockTrackers },
-              { label: 'Block ads',      value: blockAds,      onChange: setBlockAds },
-              { label: 'Web3 scores',    value: showWeb3Scores, onChange: setShowWeb3Scores },
-            ].map(item => (
-              <div key={item.label} className="flex items-center justify-between h-10 px-1">
-                <span className={`text-[12px] font-medium ${isDark ? 'text-white/70' : 'text-black/70'}`}>{item.label}</span>
-                <button onClick={() => item.onChange(!item.value)} className="relative">
-                  <div className={`w-9 h-5 rounded-full transition-colors ${item.value ? 'bg-[#00FF87]' : isDark ? 'bg-white/15' : 'bg-black/15'}`}>
-                    <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-all ${item.value ? 'left-4' : 'left-0.5'}`} />
+            {/* Column labels */}
+            <div style={{ display: 'flex', padding: '4px 16px 8px', borderBottom: '1px solid #F0F0F0' }}>
+              <span style={{ flex: 1, fontSize: 12, fontWeight: 600, color: '#9CA3AF' }}>Assets</span>
+              <span style={{ width: 84, fontSize: 12, fontWeight: 600, color: '#9CA3AF', textAlign: 'right' }}>Price</span>
+              <span style={{ width: 62, fontSize: 12, fontWeight: 600, color: '#9CA3AF', textAlign: 'right' }}>24hr</span>
+            </div>
+            {/* Rows */}
+            {EXPLORE_ASSETS.map(asset => (
+              <div key={asset.symbol} style={{ ...s.row, gap: 0 }}
+                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = '#F9FAFB'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = 'transparent'; }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1 }}>
+                  <div style={{ width: 34, height: 34, borderRadius: '50%', background: asset.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 13, fontWeight: 700, flexShrink: 0 }}>{asset.icon}</div>
+                  <div>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: '#111827', margin: '0 0 2px' }}>{asset.name}</p>
+                    <p style={{ fontSize: 11, color: '#9CA3AF', margin: 0 }}>{asset.symbol}</p>
                   </div>
-                </button>
+                </div>
+                <span style={{ width: 84, fontSize: 13, fontWeight: 600, color: '#111827', textAlign: 'right' }}>{asset.price}</span>
+                <span style={{ width: 62, fontSize: 12, fontWeight: 600, color: asset.up ? '#10B981' : '#EF4444', textAlign: 'right' }}>
+                  {asset.up ? '↑' : '↓'} {asset.change}
+                </span>
               </div>
             ))}
           </div>
         )}
 
-        {/* ── Network tab ─────────────────────────────────────────────────── */}
-        {tab === 'network' && (
-          <div className="space-y-2">
-            {nodes.map(node => (
-              <div key={node.id} className={`flex items-center justify-between p-3 rounded-xl ${subBg}`}>
-                <div className="flex items-center gap-2.5">
-                  <div className={`w-1.5 h-1.5 rounded-full ${
-                    node.status === 'active' ? 'bg-[#00FF87]' :
-                    node.status === 'syncing' ? 'bg-yellow-500 animate-pulse' : 'bg-white/20'
-                  }`} />
-                  <div>
-                    <p className={`text-[12px] font-medium ${isDark ? 'text-white/75' : 'text-black/75'}`}>{node.name}</p>
-                    <p className={`text-[10px] font-mono ${muted}`}>{node.detail}</p>
-                  </div>
-                </div>
-                <button onClick={() => toggleNode(node.id)}>
-                  <div className={`w-8 h-4.5 rounded-full transition-colors flex items-center px-0.5 ${node.enabled ? 'bg-[#00FF87]' : isDark ? 'bg-white/12' : 'bg-black/12'}`}
-                    style={{ height: 18 }}>
-                    <div className={`w-3.5 h-3.5 rounded-full bg-white shadow transition-all ${node.enabled ? 'ml-3' : 'ml-0'}`} />
-                  </div>
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
+
+      {/* ── Bottom nav ────────────────────────────────────────────────────── */}
+      <div style={{ display: 'flex', borderTop: '1px solid #F0F0F0', background: '#fff', flexShrink: 0 }}>
+        {BOTTOM_NAV.map(({ id, Icon, label }) => (
+          <button
+            key={id}
+            onClick={() => setBottomTab(id)}
+            style={{
+              flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
+              padding: '10px 0 8px', border: 'none', background: 'none', cursor: 'pointer',
+              color: bottomTab === id ? '#4F46E5' : '#9CA3AF',
+              borderTop: bottomTab === id ? '2px solid #4F46E5' : '2px solid transparent',
+              marginTop: -1,
+              transition: 'color 0.15s',
+            }}
+          >
+            <Icon size={20} />
+            <span style={{ fontSize: 10, fontWeight: 500 }}>{label}</span>
+          </button>
+        ))}
+      </div>
+
     </motion.div>
   );
 }

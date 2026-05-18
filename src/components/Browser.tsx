@@ -1,12 +1,11 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import {
-  ArrowLeft, ArrowRight, RotateCcw, Search, Lock, Globe,
+  ChevronLeft, ChevronRight, RotateCcw, Lock, Globe,
   Shield, Wallet, X, Star, User, AlignJustify,
   Plus, Square, History, Bookmark, Download, Trash2,
   Printer, FileSearch, LayoutGrid, HelpCircle, Settings,
-  ZoomIn, ZoomOut, Maximize2, ChevronRight, Sun, Moon,
-  Monitor
+  ZoomIn, ZoomOut, Maximize2, Sun, Moon,
 } from 'lucide-react';
 
 import TabBar          from './TabBar';
@@ -124,15 +123,15 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
 
   // ── Colors ────────────────────────────────────────────────────────────────
   const toolbarBg = isDark
-    ? 'bg-[#1a1a1a] border-white/[0.07]'
-    : 'bg-[#f0f0f0] border-black/[0.07]';
+    ? 'bg-[#1c1c1e] border-white/[0.06]'
+    : 'bg-[#f2f2f7] border-black/[0.06]';
   const addrBg = isDark
-    ? 'bg-[#111] hover:bg-[#141414] focus-within:bg-[#0d0d0d]'
-    : 'bg-white/80 hover:bg-white focus-within:bg-white';
+    ? 'bg-[#2c2c2e] hover:bg-[#3a3a3c] focus-within:bg-[#3a3a3c]'
+    : 'bg-white focus-within:bg-white';
   const btn = isDark
-    ? 'text-white/45 hover:text-white/80 hover:bg-white/8'
-    : 'text-black/45 hover:text-black/80 hover:bg-black/7';
-  const sep = isDark ? 'bg-white/12' : 'bg-black/12';
+    ? 'text-white/40 hover:text-white/75 hover:bg-white/[0.07]'
+    : 'text-black/40 hover:text-black/75 hover:bg-black/[0.06]';
+  const sep = isDark ? 'bg-white/[0.10]' : 'bg-black/[0.10]';
 
   return (
     <div className={`h-screen w-screen flex flex-col overflow-hidden ${isDark ? 'bg-[#0f0f0f] text-white' : 'bg-[#e8e8e8] text-black'}`}>
@@ -154,24 +153,35 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
       />
 
       {/* ── Toolbar ──────────────────────────────────────────────────────────── */}
-      <div className={`h-10 flex items-center gap-1 px-2 border-b ${toolbarBg} shrink-0`}>
+      <div className={`h-10 flex items-center border-b ${toolbarBg} shrink-0`} style={{ padding: '0 8px' }}>
 
-        {/* Back / Forward / Reload */}
-        <NavBtn onClick={handleBack}   disabled={!canBack}    isDark={isDark}><ArrowLeft  size={14} /></NavBtn>
-        <NavBtn onClick={handleForward} disabled={!canForward} isDark={isDark}><ArrowRight size={14} /></NavBtn>
-        <NavBtn onClick={activeTab?.isLoading ? () => webviewRefs.current[activeTabId]?.stop() : handleReload} isDark={isDark}>
-          <RotateCcw size={13} className={activeTab?.isLoading ? 'animate-spin' : ''} />
-        </NavBtn>
+        {/* ── Left: nav controls + bookmark ─────────────────────────────── */}
+        <div className="flex items-center shrink-0 no-drag" style={{ gap: 2 }}>
+          <NavBtn onClick={handleBack}    disabled={!canBack}    isDark={isDark}><ChevronLeft  size={18} strokeWidth={2.5} /></NavBtn>
+          <NavBtn onClick={handleForward} disabled={!canForward} isDark={isDark}><ChevronRight size={18} strokeWidth={2.5} /></NavBtn>
+          <NavBtn onClick={activeTab?.isLoading ? () => webviewRefs.current[activeTabId]?.stop() : handleReload} isDark={isDark}>
+            <RotateCcw size={15} className={activeTab?.isLoading ? 'animate-spin' : ''} />
+          </NavBtn>
+          <div className={`w-px h-4 mx-2 ${sep}`} />
+          <NavBtn isDark={isDark} title="Bookmark"><Star size={15} /></NavBtn>
+        </div>
 
-        {/* Address bar */}
-        <form onSubmit={handleAddrSubmit} className="flex-1 mx-2 no-drag">
-          <div className={`relative flex items-center h-8 rounded-2xl transition-all ${addrBg}`}>
-            <div className="absolute left-3 pointer-events-none">
+        {/* ── Address bar — fills space between left and right sections ──── */}
+        <form
+          onSubmit={handleAddrSubmit}
+          className="flex-1 no-drag"
+          style={{ minWidth: 0, padding: '0 8px' }}
+        >
+          <div
+            className={`relative flex items-center h-[28px] rounded-full transition-all ${addrBg}`}
+            style={{ boxShadow: isDark ? 'none' : '0 1px 3px rgba(0,0,0,0.10)' }}
+          >
+            <div className="absolute left-2.5 pointer-events-none">
               {!activeTab || activeTab.url === NEW_TAB
-                ? <Shield size={13} color="#FB5B22" />
+                ? <Shield size={12} color="#FB5B22" />
                 : isSecureURL(activeTab.url)
-                  ? <Lock size={11} className="text-[#00FF87]/70" />
-                  : <Globe size={12} className={isDark ? 'text-white/25' : 'text-black/25'} />
+                  ? <Lock size={10} className="text-[#00FF87]/70" />
+                  : <Globe size={11} className={isDark ? 'text-white/25' : 'text-black/25'} />
               }
             </div>
             <input
@@ -182,34 +192,26 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
               onFocus={() => { setIsEditing(true); setAddrInput(activeTab ? resolveDisplay(activeTab.url) : ''); setTimeout(() => addrRef.current?.select(), 20); }}
               onBlur={() => setIsEditing(false)}
               placeholder="Search or enter URL · .eth · ipfs://"
-              className="w-full h-full bg-transparent pl-8 pr-10 text-[12.5px] font-mono focus:outline-none placeholder:text-current placeholder:opacity-20"
+              className="w-full h-full bg-transparent pl-7 pr-3 text-[12.5px] focus:outline-none placeholder:text-current placeholder:opacity-35"
             />
-            {activeTab?.type === 'ens'                               && !isEditing && <span className="absolute right-3 text-[9px] font-bold text-[#00FF87]/60 tracking-widest pointer-events-none">ENS</span>}
-            {(activeTab?.type === 'ipfs' || activeTab?.type === 'ipns') && !isEditing && <span className="absolute right-3 text-[9px] font-bold text-[#00D1FF]/60 tracking-widest pointer-events-none">IPFS</span>}
+            {activeTab?.type === 'ens'                               && !isEditing && <span className="absolute right-2.5 text-[9px] font-bold text-[#00FF87]/60 tracking-widest pointer-events-none">ENS</span>}
+            {(activeTab?.type === 'ipfs' || activeTab?.type === 'ipns') && !isEditing && <span className="absolute right-2.5 text-[9px] font-bold text-[#00D1FF]/60 tracking-widest pointer-events-none">IPFS</span>}
           </div>
         </form>
 
-        {/* ── Right icons ───────────────────────────────────────────────────── */}
-        <div className="flex items-center gap-0.5 shrink-0 no-drag">
-
-          {/* Bookmark */}
-          <NavBtn isDark={isDark} title="Bookmark"><Star size={15} /></NavBtn>
-
-          {/* Separator */}
-          <div className={`w-px h-5 ${sep} mx-1`} />
+        {/* ── Right: wallet · score · profile · menu ────────────────────── */}
+        <div className="flex items-center shrink-0 no-drag" style={{ gap: 1 }}>
 
           {/* Wallet */}
           <div className="relative">
             <button
               onClick={() => setWalletOpen(p => !p)}
               title="Orivon Wallet"
-              className={`no-drag flex items-center justify-center h-8 w-9 rounded-lg transition-all ${
-                walletOpen
-                  ? isDark ? 'bg-white/12 text-white/90' : 'bg-black/8 text-black/80'
-                  : btn
+              className={`no-drag flex items-center justify-center h-7 w-7 rounded-md transition-all ${
+                walletOpen ? isDark ? 'bg-white/12 text-white/90' : 'bg-black/8 text-black/80' : btn
               }`}
             >
-              <Wallet size={15} />
+              <Wallet size={14} />
             </button>
             <AnimatePresence>
               {walletOpen && (
@@ -227,26 +229,28 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
             <button
               onClick={() => setRightPanelOpen(!rightPanelOpen)}
               title={`Web3 Score: ${score}`}
-              className={`no-drag flex items-center gap-1 h-8 px-2 rounded-lg text-[11px] font-semibold transition-all ${
+              className={`no-drag flex items-center gap-1 h-7 px-2 rounded-md text-[11px] font-semibold transition-all ${
                 rightPanelOpen ? 'bg-[#00FF87]/12 text-[#00FF87]' : btn
               }`}
             >
-              <Shield size={14} />
+              <Shield size={13} />
               <span style={{ color: score >= 90 ? '#00FF87' : score >= 70 ? '#facc15' : '#f87171' }}>{score}</span>
             </button>
           )}
+
+          <div className={`w-px h-4 mx-1.5 ${sep}`} />
 
           {/* Profile circle */}
           <button
             onClick={() => onOpenDashboard?.()}
             title="Dashboard"
-            className={`no-drag w-8 h-8 rounded-full flex items-center justify-center transition-all border ${
+            className={`no-drag w-7 h-7 rounded-full flex items-center justify-center transition-all border ${
               isDark
-                ? 'border-white/20 text-white/50 hover:text-white/80 hover:bg-white/8'
-                : 'border-black/20 text-black/50 hover:text-black/80 hover:bg-black/6'
+                ? 'border-white/15 text-white/45 hover:text-white/75 hover:bg-white/[0.07]'
+                : 'border-black/15 text-black/45 hover:text-black/75 hover:bg-black/[0.05]'
             }`}
           >
-            <User size={14} />
+            <User size={13} />
           </button>
 
           {/* Burger menu */}
@@ -254,13 +258,11 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
             <button
               onClick={() => setMenuOpen(p => !p)}
               title="Menu"
-              className={`no-drag w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
-                menuOpen
-                  ? isDark ? 'bg-white/10 text-white' : 'bg-black/8 text-black'
-                  : btn
+              className={`no-drag w-7 h-7 rounded-md flex items-center justify-center transition-all ${
+                menuOpen ? isDark ? 'bg-white/10 text-white' : 'bg-black/8 text-black' : btn
               }`}
             >
-              <AlignJustify size={16} />
+              <AlignJustify size={14} />
             </button>
 
             <AnimatePresence>
@@ -456,9 +458,9 @@ function NavBtn({ children, onClick, disabled, isDark, title }: {
       onClick={onClick}
       disabled={disabled}
       title={title}
-      className={`no-drag w-8 h-8 rounded-lg flex items-center justify-center transition-all
-        ${isDark ? 'text-white/45 hover:text-white/80 hover:bg-white/8' : 'text-black/45 hover:text-black/80 hover:bg-black/7'}
-        disabled:opacity-20 disabled:cursor-not-allowed`}
+      className={`no-drag w-7 h-7 rounded-md flex items-center justify-center transition-all focus:outline-none
+        ${isDark ? 'text-white/65 hover:text-white/90 hover:bg-white/[0.08]' : 'text-black/55 hover:text-black/85 hover:bg-black/[0.07]'}
+        disabled:opacity-25 disabled:cursor-not-allowed`}
     >
       {children}
     </button>
