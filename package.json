@@ -7,7 +7,7 @@
     "email": "team@orivon.io"
   },
   "private": true,
-  "version": "0.94.1",
+  "version": "0.94.2",
   "type": "module",
   "main": "out/main/index.js",
   "scripts": {
