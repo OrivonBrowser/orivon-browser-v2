@@ -127,10 +127,24 @@ function buildICNS(pngBySize) {
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 if (!hasSips()) {
-  console.error(
-    '✗ `sips` not found. This script requires macOS `sips` (built into every Mac).\n' +
-    '  On Windows/Linux CI: pre-supply build/icon.{png,ico,icns} manually,\n' +
-    '  or add `sharp` as a devDependency and update this script.'
+  // On Windows/Linux CI: use pre-built icons committed to the repo from macOS
+  const iconsExist =
+    existsSync(path.join(BUILD_DIR, 'icon.png'))  &&
+    existsSync(path.join(BUILD_DIR, 'icon.ico'))  &&
+    existsSync(path.join(BUILD_DIR, 'icon.icns')) &&
+    existsSync(path.join(ICONS_DIR, '256x256.png'));
+
+  if (iconsExist) {
+    process.stdout.write(
+      'ℹ  sips not available (non-macOS). Using pre-built icons from build/\n' +
+      '   (generated on macOS and committed to the repo — OK for CI)\n'
+    );
+    process.exit(0);
+  }
+
+  process.stderr.write(
+    '✗  sips not found and no pre-built icons in build/.\n' +
+    '   Fix: run `npm run icons` on macOS, then `git add build/ && git commit`.\n'
   );
   process.exit(1);
 }
