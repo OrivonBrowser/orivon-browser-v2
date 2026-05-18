@@ -38,8 +38,6 @@ function web3Score(url: string) {
   return 60;
 }
 
-// Inline unlock page — renders inside browser tab when orivon://dashboard is
-// visited while the wallet is locked. Browser chrome (tabs + toolbar) stays visible.
 function DashboardUnlockInline({ isDark }: { isDark: boolean }) {
   const { unlock } = useWalletStore();
   const [pw, setPw]         = useState('');
@@ -56,7 +54,6 @@ function DashboardUnlockInline({ isDark }: { isDark: boolean }) {
     const ok = await unlock(pw);
     setLoading(false);
     if (!ok) { setErr('Incorrect password. Please try again.'); setPw(''); inputRef.current?.focus(); }
-    // On success walletStatus flips → 'unlocked', component unmounts automatically
   };
 
   return (
@@ -108,7 +105,6 @@ function LockSVG() {
   );
 }
 
-// Browser props
 interface BrowserProps {
   onOpenDashboard?:  () => void;
   onOpenOnboarding?: () => void;
@@ -197,65 +193,199 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
     onNewWindow:   (url: string)   => { const id = addTab(url); setTimeout(() => navigate(url, id), 10); },
   });
 
-  const toolbarBg = isDark ? 'bg-[#1c1c1e] border-white/[0.06]' : 'bg-[#f2f2f7] border-black/[0.06]';
-  const addrBg    = isDark ? 'bg-[#2c2c2e] hover:bg-[#3a3a3c] focus-within:bg-[#3a3a3c]' : 'bg-white focus-within:bg-white';
-  const btn       = isDark ? 'text-white/40 hover:text-white/75 hover:bg-white/[0.07]' : 'text-black/40 hover:text-black/75 hover:bg-black/[0.06]';
-  const sep       = isDark ? 'bg-white/[0.10]' : 'bg-black/[0.10]';
+  // ─── Brave-style color tokens ───────────────────────────────────────────────
+  const tabBarBg   = isDark ? '#18181a' : '#d9d9e3';
+  const toolbarBg  = isDark ? '#1e1e21' : '#f1f1f5';
+  const toolbarBdr = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.09)';
+  const addrBg     = isDark ? '#28282c' : '#ffffff';
+  const addrHover  = isDark ? '#303036' : '#ffffff';
+  const sepColor   = isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.10)';
+  const btnMuted   = isDark ? 'rgba(255,255,255,0.38)' : 'rgba(0,0,0,0.38)';
+  const btnHoverBg = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+  const btnActive  = isDark ? 'rgba(255,255,255,0.80)' : 'rgba(0,0,0,0.75)';
+  const addrTxt    = isDark ? 'rgba(255,255,255,0.50)' : 'rgba(0,0,0,0.45)';
+
+  // Shared nav button style — matches Brave's compact 28×28 icon buttons
+  const navBtnCls = `
+    no-drag w-7 h-7 rounded flex items-center justify-center
+    transition-colors duration-100 focus:outline-none
+    disabled:opacity-25 disabled:cursor-not-allowed
+  `;
+  const navBtnColors = isDark
+    ? 'text-white/38 hover:text-white/80 hover:bg-white/[0.07] active:bg-white/[0.11]'
+    : 'text-black/38 hover:text-black/75 hover:bg-black/[0.06] active:bg-black/[0.09]';
+
+  const iconBtnCls = `
+    no-drag w-[26px] h-[26px] rounded flex items-center justify-center
+    transition-colors duration-100 focus:outline-none
+  `;
+  const iconBtnColors = isDark
+    ? 'text-white/40 hover:text-white/78 hover:bg-white/[0.07]'
+    : 'text-black/40 hover:text-black/72 hover:bg-black/[0.06]';
 
   return (
-    <div className={`h-screen w-screen flex flex-col overflow-hidden ${isDark ? 'bg-[#0f0f0f] text-white' : 'bg-[#e8e8e8] text-black'}`}>
-
-      <TabBar tabs={tabs} activeId={activeTabId} onTabClick={setActiveTab} onTabClose={handleTabClose} onNewTab={() => addTab()} isDark={isDark}
-        windowControls={!isMac && isElectron ? { onMinimize: () => window.electronAPI?.window.minimize(), onMaximize: () => window.electronAPI?.window.maximize(), onClose: () => window.electronAPI?.window.close() } : undefined}
+    <div
+      className={`h-screen w-screen flex flex-col overflow-hidden select-none ${isDark ? 'text-white' : 'text-black'}`}
+      style={{ background: isDark ? '#0f0f0f' : '#e5e5ec' }}
+    >
+      {/* ── TAB BAR ── */}
+      <TabBar
+        tabs={tabs}
+        activeId={activeTabId}
+        onTabClick={setActiveTab}
+        onTabClose={handleTabClose}
+        onNewTab={() => addTab()}
+        isDark={isDark}
+        windowControls={
+          !isMac && isElectron
+            ? {
+                onMinimize: () => window.electronAPI?.window.minimize(),
+                onMaximize: () => window.electronAPI?.window.maximize(),
+                onClose:    () => window.electronAPI?.window.close(),
+              }
+            : undefined
+        }
       />
 
-      {/* h-9 = 36px — matches Brave's compact toolbar height */}
-      <div className={`h-9 flex items-center border-b ${toolbarBg} shrink-0`} style={{ padding: '0 6px' }}>
-
-        {/* Left: nav + bookmark — small icons, subtle weight */}
-        <div className="flex items-center shrink-0 no-drag" style={{ gap: 1 }}>
-          <NavBtn onClick={handleBack}    disabled={!canBack}    isDark={isDark}><ChevronLeft  size={13} strokeWidth={1.8}/></NavBtn>
-          <NavBtn onClick={handleForward} disabled={!canForward} isDark={isDark}><ChevronRight size={13} strokeWidth={1.8}/></NavBtn>
-          <NavBtn onClick={activeTab?.isLoading ? () => webviewRefs.current[activeTabId]?.stop() : handleReload} isDark={isDark}>
-            <RotateCcw size={12} className={activeTab?.isLoading ? 'animate-spin' : ''}/>
+      {/* ── TOOLBAR ── */}
+      <div
+        className="shrink-0 flex items-center"
+        style={{
+          height: 36,
+          background: toolbarBg,
+          borderBottom: `1px solid ${toolbarBdr}`,
+          padding: '0 6px',
+          gap: 0,
+        }}
+      >
+        {/* Left: back / forward / reload / separator / bookmark */}
+        <div className="flex items-center shrink-0" style={{ gap: 1 }}>
+          <NavBtn
+            onClick={handleBack}
+            disabled={!canBack}
+            isDark={isDark}
+            title="Back"
+          >
+            <ChevronLeft size={15} strokeWidth={2} />
           </NavBtn>
-          <div className={`w-px h-3.5 mx-1.5 ${sep}`}/>
-          <NavBtn isDark={isDark} title="Bookmark"><Star size={13}/></NavBtn>
+          <NavBtn
+            onClick={handleForward}
+            disabled={!canForward}
+            isDark={isDark}
+            title="Forward"
+          >
+            <ChevronRight size={15} strokeWidth={2} />
+          </NavBtn>
+          <NavBtn
+            onClick={activeTab?.isLoading
+              ? () => webviewRefs.current[activeTabId]?.stop()
+              : handleReload}
+            isDark={isDark}
+            title={activeTab?.isLoading ? 'Stop' : 'Reload'}
+          >
+            <RotateCcw
+              size={13}
+              strokeWidth={2.2}
+              className={activeTab?.isLoading ? 'animate-spin' : ''}
+            />
+          </NavBtn>
+
+          {/* Separator */}
+          <div style={{ width: 1, height: 14, background: sepColor, margin: '0 5px' }} />
+
+          <NavBtn isDark={isDark} title="Bookmark this page">
+            <Star size={14} strokeWidth={1.9} />
+          </NavBtn>
         </div>
 
-        {/* Address bar — fills all space between left and right clusters */}
-        <form onSubmit={handleAddrSubmit} className="flex-1 no-drag" style={{ minWidth: 0, padding: '0 6px' }}>
-          <div className={`relative flex items-center h-[26px] rounded-full transition-all w-full ${addrBg}`}
-            style={{ boxShadow: isDark ? 'none' : '0 1px 3px rgba(0,0,0,0.09)' }}>
-            <div className="absolute left-2.5 pointer-events-none">
+        {/* Address bar — fills remaining space */}
+        <form
+          onSubmit={handleAddrSubmit}
+          className="flex-1 no-drag"
+          style={{ minWidth: 0, padding: '0 7px' }}
+        >
+          <div
+            className="relative flex items-center w-full transition-all duration-150"
+            style={{
+              height: 28,
+              background: addrBg,
+              borderRadius: 14,
+              boxShadow: isDark
+                ? 'inset 0 0 0 1px rgba(255,255,255,0.08)'
+                : '0 1px 2px rgba(0,0,0,0.10), inset 0 0 0 0.5px rgba(0,0,0,0.06)',
+            }}
+          >
+            {/* Protocol icon — left of input */}
+            <div
+              className="absolute pointer-events-none flex items-center"
+              style={{ left: 10 }}
+            >
               {!activeTab || activeTab.url === NEW_TAB || activeTab.url === DASHBOARD_URL
-                ? <Shield size={11} color="#FB5B22"/>
-                : isSecureURL(activeTab.url) ? <Lock size={10} className="text-[#00FF87]/70"/>
-                : <Globe size={10} className={isDark ? 'text-white/25' : 'text-black/25'}/>}
+                ? <Shield size={12} color="#FB5B22" />
+                : isSecureURL(activeTab.url)
+                  ? <Lock size={11} className="text-[#00c76a]" />
+                  : <Globe size={11} style={{ color: isDark ? 'rgba(255,255,255,0.30)' : 'rgba(0,0,0,0.28)' }} />
+              }
             </div>
-            <input ref={addrRef} type="text"
+
+            <input
+              ref={addrRef}
+              type="text"
               value={isEditing ? addrInput : (activeTab ? resolveDisplay(activeTab.url) : '')}
               onChange={e => setAddrInput(e.target.value)}
-              onFocus={() => { setIsEditing(true); setAddrInput(activeTab ? resolveDisplay(activeTab.url) : ''); setTimeout(() => addrRef.current?.select(), 20); }}
+              onFocus={() => {
+                setIsEditing(true);
+                setAddrInput(activeTab ? resolveDisplay(activeTab.url) : '');
+                setTimeout(() => addrRef.current?.select(), 20);
+              }}
               onBlur={() => setIsEditing(false)}
-              placeholder="Search or enter URL · .eth · ipfs://"
-              className="w-full h-full bg-transparent pl-7 pr-3 text-[12px] focus:outline-none placeholder:text-current placeholder:opacity-30"
+              placeholder="Search or enter address"
+              className="w-full h-full bg-transparent focus:outline-none"
+              style={{
+                padding: '0 32px 0 28px',
+                fontSize: 12.5,
+                fontWeight: 400,
+                color: isDark ? 'rgba(255,255,255,0.82)' : 'rgba(0,0,0,0.80)',
+                letterSpacing: '0.01em',
+              }}
             />
-            {activeTab?.type === 'ens'                                   && !isEditing && <span className="absolute right-2.5 text-[9px] font-bold text-[#00FF87]/60 tracking-widest pointer-events-none">ENS</span>}
-            {(activeTab?.type === 'ipfs' || activeTab?.type === 'ipns') && !isEditing && <span className="absolute right-2.5 text-[9px] font-bold text-[#00D1FF]/60 tracking-widest pointer-events-none">IPFS</span>}
+
+            {/* ENS / IPFS badge — right of input */}
+            {activeTab?.type === 'ens' && !isEditing && (
+              <span
+                className="absolute pointer-events-none"
+                style={{ right: 10, fontSize: 9, fontWeight: 700, color: '#00c76a', letterSpacing: '0.08em' }}
+              >
+                ENS
+              </span>
+            )}
+            {(activeTab?.type === 'ipfs' || activeTab?.type === 'ipns') && !isEditing && (
+              <span
+                className="absolute pointer-events-none"
+                style={{ right: 10, fontSize: 9, fontWeight: 700, color: '#00d1ff', letterSpacing: '0.08em' }}
+              >
+                IPFS
+              </span>
+            )}
           </div>
         </form>
 
-        {/* Right cluster — all w-6 h-6 to stay compact */}
-        <div className="flex items-center shrink-0 no-drag" style={{ gap: 1 }}>
+        {/* Right cluster */}
+        <div className="flex items-center shrink-0" style={{ gap: 2 }}>
+          {/* Wallet */}
           <div className="relative">
-            <button onClick={() => setWalletOpen(p => !p)} title="Orivon Wallet"
-              className={`no-drag w-6 h-6 rounded flex items-center justify-center transition-all focus:outline-none ${walletOpen ? isDark ? 'bg-white/12 text-white/90' : 'bg-black/8 text-black/80' : btn}`}>
-              <Wallet size={13}/>
+            <button
+              onClick={() => setWalletOpen(p => !p)}
+              title="Orivon Wallet"
+              className={`${iconBtnCls} ${iconBtnColors} no-drag`}
+              style={walletOpen ? { background: isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.07)', color: isDark ? 'rgba(255,255,255,0.88)' : 'rgba(0,0,0,0.78)' } : {}}
+            >
+              <Wallet size={14} strokeWidth={1.9} />
             </button>
             <AnimatePresence>
               {walletOpen && (
-                <WalletPanel onClose={() => setWalletOpen(false)}
+                <WalletPanel
+                  onClose={() => setWalletOpen(false)}
                   onOpenWalletModal={mode => { setWalletModal(mode); setWalletOpen(false); }}
                   onOpenDashboard={() => { navigate(DASHBOARD_URL); setWalletOpen(false); }}
                 />
@@ -263,30 +393,73 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
             </AnimatePresence>
           </div>
 
+          {/* Web3 score badge */}
           {showWeb3Scores && score !== null && (
-            <button onClick={() => setRightPanelOpen(!rightPanelOpen)} title={`Web3 Score: ${score}`}
-              className={`no-drag flex items-center gap-1 h-6 px-1.5 rounded text-[10px] font-semibold transition-all focus:outline-none ${rightPanelOpen ? 'bg-[#00FF87]/12 text-[#00FF87]' : btn}`}>
-              <Shield size={11}/>
-              <span style={{ color: score >= 90 ? '#00FF87' : score >= 70 ? '#facc15' : '#f87171' }}>{score}</span>
+            <button
+              onClick={() => setRightPanelOpen(!rightPanelOpen)}
+              title={`Web3 Score: ${score}`}
+              className={`no-drag flex items-center gap-1 h-[26px] px-1.5 rounded transition-colors duration-100 focus:outline-none`}
+              style={{
+                fontSize: 10,
+                fontWeight: 600,
+                background: rightPanelOpen
+                  ? isDark ? 'rgba(0,255,135,0.10)' : 'rgba(0,180,90,0.09)'
+                  : 'transparent',
+                color: isDark ? 'rgba(255,255,255,0.40)' : 'rgba(0,0,0,0.40)',
+              }}
+            >
+              <Shield size={11} />
+              <span style={{ color: score >= 90 ? '#00c76a' : score >= 70 ? '#f59e0b' : '#f87171' }}>
+                {score}
+              </span>
             </button>
           )}
 
-          <div className={`w-px h-3.5 mx-1 ${sep}`}/>
+          {/* Separator */}
+          <div style={{ width: 1, height: 14, background: sepColor, margin: '0 3px' }} />
 
-          <button onClick={() => navigate(DASHBOARD_URL)} title="Dashboard"
-            className={`no-drag w-6 h-6 rounded-full flex items-center justify-center transition-all focus:outline-none border ${
-              isDark ? 'border-white/15 text-white/45 hover:text-white/75 hover:bg-white/[0.07]' : 'border-black/15 text-black/45 hover:text-black/75 hover:bg-black/[0.05]'}`}>
-            <User size={12}/>
+          {/* Dashboard / profile */}
+          <button
+            onClick={() => navigate(DASHBOARD_URL)}
+            title="Dashboard"
+            className="no-drag flex items-center justify-center focus:outline-none transition-colors duration-100"
+            style={{
+              width: 22,
+              height: 22,
+              borderRadius: '50%',
+              border: `1px solid ${isDark ? 'rgba(255,255,255,0.14)' : 'rgba(0,0,0,0.14)'}`,
+              background: 'transparent',
+              color: isDark ? 'rgba(255,255,255,0.42)' : 'rgba(0,0,0,0.42)',
+              cursor: 'pointer',
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLButtonElement).style.background = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)';
+              (e.currentTarget as HTMLButtonElement).style.color = isDark ? 'rgba(255,255,255,0.78)' : 'rgba(0,0,0,0.72)';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
+              (e.currentTarget as HTMLButtonElement).style.color = isDark ? 'rgba(255,255,255,0.42)' : 'rgba(0,0,0,0.42)';
+            }}
+          >
+            <User size={11} strokeWidth={2} />
           </button>
 
+          {/* Hamburger menu */}
           <div ref={menuRef} className="relative">
-            <button onClick={() => setMenuOpen(p => !p)} title="Menu"
-              className={`no-drag w-6 h-6 rounded flex items-center justify-center transition-all focus:outline-none ${menuOpen ? isDark ? 'bg-white/10 text-white' : 'bg-black/8 text-black' : btn}`}>
-              <AlignJustify size={13}/>
+            <button
+              onClick={() => setMenuOpen(p => !p)}
+              title="Menu"
+              className={`${iconBtnCls} ${iconBtnColors} no-drag`}
+              style={menuOpen ? { background: isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.07)', color: isDark ? 'rgba(255,255,255,0.88)' : 'rgba(0,0,0,0.78)' } : {}}
+            >
+              <AlignJustify size={14} strokeWidth={1.9} />
             </button>
             <AnimatePresence>
               {menuOpen && (
-                <BurgerMenu isDark={isDark} isDarkMode={isDark} zoom={zoom}
+                <BurgerMenu
+                  isDark={isDark}
+                  isDarkMode={isDark}
+                  zoom={zoom}
                   onZoomIn={() => setZoom(z => Math.min(z + 10, 200))}
                   onZoomOut={() => setZoom(z => Math.max(z - 10, 25))}
                   onNewTab={() => { addTab(); setMenuOpen(false); }}
@@ -301,29 +474,55 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
         </div>
       </div>
 
+      {/* ── CONTENT AREA ── */}
       <div className="flex-1 relative overflow-hidden flex">
         <div className="flex-1 relative">
           {tabs.map(tab => (
-            <div key={tab.id} className="absolute inset-0"
-              style={{ zIndex: tab.id === activeTabId ? 1 : 0, pointerEvents: tab.id === activeTabId ? 'auto' : 'none' }}>
+            <div
+              key={tab.id}
+              className="absolute inset-0"
+              style={{
+                zIndex: tab.id === activeTabId ? 1 : 0,
+                pointerEvents: tab.id === activeTabId ? 'auto' : 'none',
+              }}
+            >
               {tab.url === NEW_TAB ? (
-                <NewTab onNavigate={url => navigate(url, tab.id)}/>
+                <NewTab onNavigate={url => navigate(url, tab.id)} />
               ) : tab.url === DASHBOARD_URL ? (
                 walletStatus === 'locked'
-                  ? <DashboardUnlockInline isDark={isDark}/>
-                  : <Dashboard onOpenBrowser={() => navigate(NEW_TAB)}/>
+                  ? <DashboardUnlockInline isDark={isDark} />
+                  : <Dashboard onOpenBrowser={() => navigate(NEW_TAB)} />
               ) : (
-                <WebView ref={el => { webviewRefs.current[tab.id] = el; }} src={tab.url} {...makeCallbacks(tab.id)}/>
+                <WebView
+                  ref={el => { webviewRefs.current[tab.id] = el; }}
+                  src={tab.url}
+                  {...makeCallbacks(tab.id)}
+                />
               )}
             </div>
           ))}
         </div>
 
+        {/* Web3 side panel */}
         <AnimatePresence>
           {rightPanelOpen && showWeb3Scores && (
-            <motion.div initial={{ width: 0, opacity: 0 }} animate={{ width: 260, opacity: 1 }} exit={{ width: 0, opacity: 0 }} transition={{ duration: 0.18 }}
-              className={`shrink-0 overflow-hidden border-l ${isDark ? 'bg-[#111] border-white/[0.07]' : 'bg-white border-black/[0.07]'}`}>
-              <Web3Panel score={score} tab={activeTab} isDark={isDark} onClose={() => setRightPanelOpen(false)}/>
+            <motion.div
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: 260, opacity: 1 }}
+              exit={{ width: 0, opacity: 0 }}
+              transition={{ duration: 0.18 }}
+              className="shrink-0 overflow-hidden"
+              style={{
+                borderLeft: `1px solid ${isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)'}`,
+                background: isDark ? '#111' : '#fff',
+              }}
+            >
+              <Web3Panel
+                score={score}
+                tab={activeTab}
+                isDark={isDark}
+                onClose={() => setRightPanelOpen(false)}
+              />
             </motion.div>
           )}
         </AnimatePresence>
@@ -331,78 +530,199 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
 
       <AnimatePresence>
         {walletModal && (
-          <WalletModal mode={walletModal} onClose={() => setWalletModal(null)} onSuccess={() => setWalletModal(null)}/>
+          <WalletModal
+            mode={walletModal}
+            onClose={() => setWalletModal(null)}
+            onSuccess={() => setWalletModal(null)}
+          />
         )}
       </AnimatePresence>
     </div>
   );
 }
 
-// Burger menu
-interface BurgerMenuProps { isDark: boolean; isDarkMode: boolean; zoom: number; onNewTab: () => void; onDashboard: () => void; onWallet: () => void; onTheme: () => void; onZoomIn: () => void; onZoomOut: () => void; onClose: () => void; }
-
-function BurgerMenu({ isDark, isDarkMode, zoom, onNewTab, onDashboard, onWallet, onTheme, onZoomIn, onZoomOut, onClose }: BurgerMenuProps) {
-  const bg    = isDark ? '#1e1e1e' : '#ffffff';
-  const brd   = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.09)';
-  const txt   = isDark ? 'rgba(255,255,255,0.82)' : 'rgba(0,0,0,0.82)';
-  const short = isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.35)';
-  const hov   = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)';
-  const ico   = { color: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)', width: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 };
-  const row   = { display: 'flex', alignItems: 'center', gap: 12, width: '100%', padding: '9px 16px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' as const, color: txt, fontSize: 13 };
-  const item  = (icon: React.ReactNode, label: string, sc: string, fn: () => void, chev?: boolean) => (
-    <button key={label} onClick={fn} style={row} onMouseEnter={e=>{e.currentTarget.style.background=hov}} onMouseLeave={e=>{e.currentTarget.style.background='none'}}>
-      <span style={ico}>{icon}</span><span style={{ flex: 1 }}>{label}</span>
-      {sc && <span style={{ fontSize: 11, color: short }}>{sc}</span>}
-      {chev && <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: short }}><path d="M9 18l6-6-6-6"/></svg>}
+// ─── NavBtn ─────────────────────────────────────────────────────────────────
+function NavBtn({
+  children, onClick, disabled, isDark, title,
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+  isDark: boolean;
+  title?: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      title={title}
+      className="no-drag focus:outline-none flex items-center justify-center rounded transition-colors duration-100 disabled:opacity-25 disabled:cursor-not-allowed"
+      style={{ width: 28, height: 28 }}
+      onMouseEnter={e => {
+        if (!(e.currentTarget as HTMLButtonElement).disabled) {
+          (e.currentTarget as HTMLButtonElement).style.background = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+          (e.currentTarget as HTMLButtonElement).style.color = isDark ? 'rgba(255,255,255,0.80)' : 'rgba(0,0,0,0.75)';
+        }
+      }}
+      onMouseLeave={e => {
+        (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
+        (e.currentTarget as HTMLButtonElement).style.color = isDark ? 'rgba(255,255,255,0.38)' : 'rgba(0,0,0,0.38)';
+      }}
+      onMouseDown={e => {
+        if (!(e.currentTarget as HTMLButtonElement).disabled)
+          (e.currentTarget as HTMLButtonElement).style.background = isDark ? 'rgba(255,255,255,0.11)' : 'rgba(0,0,0,0.09)';
+      }}
+      onMouseUp={e => {
+        (e.currentTarget as HTMLButtonElement).style.background = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+      }}
+    >
+      <span style={{ color: isDark ? 'rgba(255,255,255,0.38)' : 'rgba(0,0,0,0.38)', display: 'flex', alignItems: 'center' }}>
+        {children}
+      </span>
     </button>
   );
-  const div = () => <div style={{ height: 1, background: brd, margin: '4px 0' }}/>;
+}
+
+// ─── Burger menu ────────────────────────────────────────────────────────────
+interface BurgerMenuProps {
+  isDark: boolean; isDarkMode: boolean; zoom: number;
+  onNewTab: () => void; onDashboard: () => void; onWallet: () => void;
+  onTheme: () => void; onZoomIn: () => void; onZoomOut: () => void; onClose: () => void;
+}
+
+function BurgerMenu({ isDark, isDarkMode, zoom, onNewTab, onDashboard, onWallet, onTheme, onZoomIn, onZoomOut, onClose }: BurgerMenuProps) {
+  const bg    = isDark ? '#1c1c1f' : '#ffffff';
+  const brd   = isDark ? 'rgba(255,255,255,0.09)' : 'rgba(0,0,0,0.09)';
+  const txt   = isDark ? 'rgba(255,255,255,0.82)' : 'rgba(0,0,0,0.82)';
+  const muted = isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.35)';
+  const hov   = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)';
+  const ico   = { color: isDark ? 'rgba(255,255,255,0.50)' : 'rgba(0,0,0,0.45)', width: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 as const };
+  const row   = { display: 'flex', alignItems: 'center', gap: 11, width: '100%', padding: '8px 14px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' as const, color: txt, fontSize: 12.5 };
+
+  const item = (icon: React.ReactNode, label: string, sc: string, fn: () => void, chev?: boolean) => (
+    <button
+      key={label}
+      onClick={fn}
+      style={row}
+      onMouseEnter={e => { e.currentTarget.style.background = hov; }}
+      onMouseLeave={e => { e.currentTarget.style.background = 'none'; }}
+    >
+      <span style={ico}>{icon}</span>
+      <span style={{ flex: 1 }}>{label}</span>
+      {sc && <span style={{ fontSize: 11, color: muted }}>{sc}</span>}
+      {chev && (
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: muted }}>
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      )}
+    </button>
+  );
+
+  const div = () => <div style={{ height: 1, background: brd, margin: '3px 0' }} />;
+
   return (
-    <motion.div initial={{ opacity: 0, y: -8, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -6, scale: 0.97 }} transition={{ duration: 0.15 }}
-      style={{ position: 'absolute', top: 40, right: 0, width: 320, zIndex: 200, background: bg, borderRadius: 14, border: `1px solid ${brd}`, boxShadow: '0 12px 40px rgba(0,0,0,0.25)', overflow: 'hidden', paddingBottom: 4 }}>
-      <div style={{ paddingTop: 4 }}>{item(<Plus size={16}/>,'New Tab','⌘T',onNewTab)}{item(<Square size={15}/>,'New Window','⌘N',()=>onClose())}{item(<Lock size={14}/>,'New Private Window','⇧⌘N',()=>onClose())}</div>
-      {div()}{item(<LayoutGrid size={15}/>,'Dashboard','',onDashboard)}{item(<Wallet size={15}/>,'Orivon Wallet','',onWallet)}{item(isDarkMode?<Sun size={15}/>:<Moon size={15}/>,isDarkMode?'Light mode':'Dark mode','',onTheme)}
-      {div()}{item(<History size={15}/>,'History','⌘Y',()=>onClose(),true)}{item(<Bookmark size={15}/>,'Bookmarks','',()=>onClose(),true)}{item(<Download size={15}/>,'Downloads','⌥⌘L',()=>onClose())}{item(<Trash2 size={14}/>,'Delete Browsing Data…','⇧⌘⌫',()=>onClose())}
+    <motion.div
+      initial={{ opacity: 0, y: -6, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -4, scale: 0.97 }}
+      transition={{ duration: 0.13 }}
+      style={{
+        position: 'absolute', top: 38, right: 0, width: 310, zIndex: 200,
+        background: bg, borderRadius: 12,
+        border: `1px solid ${brd}`,
+        boxShadow: isDark ? '0 12px 48px rgba(0,0,0,0.55)' : '0 8px 32px rgba(0,0,0,0.18)',
+        overflow: 'hidden',
+        paddingBottom: 4,
+      }}
+    >
+      <div style={{ paddingTop: 4 }}>
+        {item(<Plus size={15}/>, 'New Tab', '⌘T', onNewTab)}
+        {item(<Square size={14}/>, 'New Window', '⌘N', () => onClose())}
+        {item(<Lock size={13}/>, 'New Private Window', '⇧⌘N', () => onClose())}
+      </div>
       {div()}
-      <div style={{ display: 'flex', alignItems: 'center', padding: '6px 16px', gap: 12 }}>
-        <ZoomIn size={16} style={{ color: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)' }}/>
-        <span style={{ flex: 1, fontSize: 13, color: txt }}>Zoom</span>
-        <div style={{ display: 'flex', border: `1px solid ${brd}`, borderRadius: 8, overflow: 'hidden' }}>
-          {[{icon:<ZoomOut size={13}/>,fn:onZoomOut},{icon:<span style={{fontSize:12,padding:'0 10px',minWidth:52,textAlign:'center' as const}}>{zoom}%</span>,fn:()=>{}},{icon:<ZoomIn size={13}/>,fn:onZoomIn},{icon:<Maximize2 size={12}/>,fn:()=>{}}].map((b,i)=>(
-            <button key={i} onClick={b.fn} style={{padding:'6px 8px',background:'none',border:'none',cursor:'pointer',color:txt,display:'flex',alignItems:'center',justifyContent:'center',borderLeft:i>0?`1px solid ${brd}`:'none'}} onMouseEnter={e=>{e.currentTarget.style.background=hov}} onMouseLeave={e=>{e.currentTarget.style.background='none'}}>{b.icon}</button>
+      {item(<LayoutGrid size={14}/>, 'Dashboard', '', onDashboard)}
+      {item(<Wallet size={14}/>, 'Orivon Wallet', '', onWallet)}
+      {item(isDarkMode ? <Sun size={14}/> : <Moon size={14}/>, isDarkMode ? 'Light mode' : 'Dark mode', '', onTheme)}
+      {div()}
+      {item(<History size={14}/>, 'History', '⌘Y', () => onClose(), true)}
+      {item(<Bookmark size={14}/>, 'Bookmarks', '', () => onClose(), true)}
+      {item(<Download size={14}/>, 'Downloads', '⌥⌘L', () => onClose())}
+      {item(<Trash2 size={13}/>, 'Delete Browsing Data…', '⇧⌘⌫', () => onClose())}
+      {div()}
+      {/* Zoom row */}
+      <div style={{ display: 'flex', alignItems: 'center', padding: '5px 14px', gap: 11 }}>
+        <span style={ico}><ZoomIn size={15}/></span>
+        <span style={{ flex: 1, fontSize: 12.5, color: txt }}>Zoom</span>
+        <div style={{ display: 'flex', border: `1px solid ${brd}`, borderRadius: 7, overflow: 'hidden' }}>
+          {[
+            { icon: <ZoomOut size={12}/>, fn: onZoomOut },
+            { icon: <span style={{ fontSize: 11, padding: '0 8px', minWidth: 46, textAlign: 'center' as const }}>{zoom}%</span>, fn: () => {} },
+            { icon: <ZoomIn size={12}/>, fn: onZoomIn },
+            { icon: <Maximize2 size={11}/>, fn: () => {} },
+          ].map((b, i) => (
+            <button
+              key={i}
+              onClick={b.fn}
+              style={{ padding: '5px 7px', background: 'none', border: 'none', cursor: 'pointer', color: txt, display: 'flex', alignItems: 'center', justifyContent: 'center', borderLeft: i > 0 ? `1px solid ${brd}` : 'none' }}
+              onMouseEnter={e => { e.currentTarget.style.background = hov; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'none'; }}
+            >
+              {b.icon}
+            </button>
           ))}
         </div>
       </div>
-      {div()}{item(<Printer size={15}/>,'Print…','⌘P',()=>onClose())}{item(<FileSearch size={15}/>,'Find in page','⌘F',()=>onClose())}
-      {div()}{item(<HelpCircle size={15}/>,'Help','',()=>onClose(),true)}{item(<Settings size={15}/>,'Settings','⌘,',()=>onClose())}
+      {div()}
+      {item(<Printer size={14}/>, 'Print…', '⌘P', () => onClose())}
+      {item(<FileSearch size={14}/>, 'Find in page', '⌘F', () => onClose())}
+      {div()}
+      {item(<HelpCircle size={14}/>, 'Help', '', () => onClose(), true)}
+      {item(<Settings size={14}/>, 'Settings', '⌘,', () => onClose())}
     </motion.div>
   );
 }
 
-function NavBtn({ children, onClick, disabled, isDark, title }: { children: React.ReactNode; onClick?: () => void; disabled?: boolean; isDark: boolean; title?: string }) {
-  return (
-    <button onClick={onClick} disabled={disabled} title={title}
-      className={`no-drag w-6 h-6 rounded flex items-center justify-center transition-all focus:outline-none ${isDark ? 'text-white/55 hover:text-white/85 hover:bg-white/[0.07]' : 'text-black/55 hover:text-black/80 hover:bg-black/[0.06]'} disabled:opacity-25 disabled:cursor-not-allowed`}>
-      {children}
-    </button>
-  );
-}
+// ─── Web3 Panel ─────────────────────────────────────────────────────────────
+function Web3Panel({
+  score, tab, isDark, onClose,
+}: {
+  score: number | null;
+  tab?: ReturnType<typeof useTabsStore.getState>['tabs'][0];
+  isDark: boolean;
+  onClose: () => void;
+}) {
+  const muted = isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.35)';
+  const scores = [
+    { label: 'Trust',    value: score ?? 0,                       color: '#00c76a' },
+    { label: 'Security', value: score ? Math.round(score * 0.97) : 0, color: '#00D1FF' },
+    { label: 'Privacy',  value: 96,                                color: '#a78bfa' },
+  ];
 
-function Web3Panel({ score, tab, isDark, onClose }: { score: number | null; tab?: ReturnType<typeof useTabsStore.getState>['tabs'][0]; isDark: boolean; onClose: () => void }) {
-  const muted = isDark ? 'text-white/35' : 'text-black/35';
-  const scores = [{ label: 'Trust', value: score ?? 0, color: '#00FF87' }, { label: 'Security', value: score ? Math.round(score * 0.97) : 0, color: '#00D1FF' }, { label: 'Privacy', value: 96, color: '#a78bfa' }];
   return (
-    <div className="p-4 h-full overflow-y-auto">
-      <div className="flex items-center justify-between mb-4">
-        <span className={`text-[10px] font-semibold uppercase tracking-widest ${muted}`}>Web3 Score</span>
-        <button onClick={onClose} className={`w-6 h-6 rounded flex items-center justify-center ${isDark ? 'hover:bg-white/8 text-white/35' : 'hover:bg-black/6 text-black/35'}`}><X size={12}/></button>
+    <div style={{ padding: 16, height: '100%', overflowY: 'auto' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+        <span style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: muted }}>
+          Web3 Score
+        </span>
+        <button
+          onClick={onClose}
+          style={{ width: 22, height: 22, border: 'none', background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 5, color: muted }}
+          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'none'; }}
+        >
+          <X size={12} />
+        </button>
       </div>
-      <div className="space-y-3.5">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         {scores.map(s => (
-          <div key={s.label} className="space-y-1.5">
-            <div className="flex justify-between text-[11px]"><span className={muted}>{s.label}</span><span className="font-semibold" style={{ color: s.color }}>{s.value}</span></div>
-            <div className={`h-1 rounded-full overflow-hidden ${isDark ? 'bg-white/[0.06]' : 'bg-black/[0.06]'}`}>
-              <div className="h-full rounded-full" style={{ width: `${s.value}%`, backgroundColor: s.color }}/>
+          <div key={s.label}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: 11 }}>
+              <span style={{ color: muted }}>{s.label}</span>
+              <span style={{ fontWeight: 600, color: s.color }}>{s.value}</span>
+            </div>
+            <div style={{ height: 4, borderRadius: 2, background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)', overflow: 'hidden' }}>
+              <div style={{ height: '100%', borderRadius: 2, width: `${s.value}%`, background: s.color }} />
             </div>
           </div>
         ))}

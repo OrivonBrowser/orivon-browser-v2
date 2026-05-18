@@ -859,14 +859,14 @@ export default function Onboarding({ onDone }: OnboardingProps) {
                 />
               </div>
               <GradCard>
-                <h1 style={{ fontSize: 42, fontWeight: 800, color: '#fff', margin: '0 0 16px', letterSpacing: '-0.8px', lineHeight: 1.15 }}>Web3. By Default.</h1>
+                <h1 style={{ fontSize: 42, fontWeight: 800, color: '#fff', margin: '0 0 16px', letterSpacing: '-0.8px', lineHeight: 1.15 }}>Where Web3 Feels Natural.</h1>
                 <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.65)', lineHeight: 1.65, margin: '0 0 44px' }}>
-                  Browse ENS domains and decentralized apps natively.<br />
-                  Your wallet lives inside the browser, not an extension.
+                  Wallets, decentralized apps, ENS domains, and <br />
+                  secure identity built directly into your browser.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }}>
-                  <GradBtn onClick={() => setStep('choose')}>Create / Import Wallet</GradBtn>
-                  <PlainBtn onClick={() => onDone(false)}>Skip</PlainBtn>
+                  <GradBtn onClick={() => setStep('choose')}>Create Wallet</GradBtn>
+                  <PlainBtn onClick={() => onDone(false)}>Explore First</PlainBtn>
                 </div>
               </GradCard>
             </motion.div>
@@ -889,14 +889,14 @@ export default function Onboarding({ onDone }: OnboardingProps) {
                 />
               </div>
               <GradCard>
-                <h1 style={{ fontSize: 40, fontWeight: 800, color: '#fff', margin: '0 0 18px', letterSpacing: '-0.7px', lineHeight: 1.18 }}>Create or restore<br />your wallet.</h1>
-                <p style={{ fontSize: 18, fontWeight: 600, color: 'rgba(255,255,255,0.85)', margin: '0 0 14px', lineHeight: 1.5 }}>Your keys. Your crypto. Your browser.</p>
+                <h1 style={{ fontSize: 40, fontWeight: 800, color: '#fff', margin: '0 0 18px', letterSpacing: '-0.7px', lineHeight: 1.18 }}>Create Your Secure Wallet.</h1>
+                <p style={{ fontSize: 18, fontWeight: 600, color: 'rgba(255,255,255,0.85)', margin: '0 0 14px', lineHeight: 1.5 }}>Your identity, assets, and Web3 access start here.</p>
                 <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.50)', lineHeight: 1.65, margin: '0 0 40px' }}>
-                  Generate a new 12-word seed phrase or restore an existing wallet. Your keys are encrypted and stored only on this device.
+                  Create a new wallet or restore an existing one in seconds. Your keys stay encrypted and stored only on your device.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
                   <GradBtn onClick={() => { setMode('create'); setStep('before-we-begin'); }}>Create Wallet</GradBtn>
-                  <PlainBtn onClick={() => { setMode('import'); setStep('before-we-begin'); }}>Import Wallet</PlainBtn>
+                  <PlainBtn onClick={() => { setMode('import'); setStep('before-we-begin'); }}>Import Existing Wallet</PlainBtn>
                 </div>
               </GradCard>
             </motion.div>
