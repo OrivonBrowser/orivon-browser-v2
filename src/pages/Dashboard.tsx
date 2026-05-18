@@ -31,7 +31,7 @@ const MARKET = [
 ];
 
 const PORTFOLIO_ASSETS = [
-  { name: 'Position',              sym: 'POSI',  sub: 'POSI on BNB Smart Chain',    color: '#1DB954', icon: 'P', bg: '#F0FDF4', bal: '0.0001', usd: '$0.0000001559' },
+  { name: 'Orivon',              sym: 'Ori',  sub: 'Ori on BNB Smart Chain',    color: '#1DB954', icon: 'P', bg: '#F0FDF4', bal: '0.0001', usd: '$0.0000001559' },
   { name: 'Ethereum',              sym: 'ETH',   sub: 'ETH on Ethereum Mainnet',     color: '#627EEA', icon: 'Ξ', bg: '#F0F3FF', bal: '0',      usd: '$0.00' },
   { name: 'Basic Attention Token', sym: 'BAT',   sub: 'BAT on Ethereum Mainnet',     color: '#FF5000', icon: 'B', bg: '#FFF3EE', bal: '0',      usd: '$0.00' },
   { name: 'Ether',                 sym: 'ETH',   sub: 'ETH on Base',                 color: '#0052FF', icon: 'Ξ', bg: '#F0F5FF', bal: '0',      usd: '$0.00' },
