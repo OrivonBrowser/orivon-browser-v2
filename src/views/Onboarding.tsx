@@ -288,47 +288,17 @@ export default function Onboarding({ onDone }: OnboardingProps) {
 
           {/* ── Supported networks ───────────────────────────────────── */}
           {step === 'supported-networks' && (
-            <motion.div key="supported-networks" {...SLIDE}>
-              <LightCard>
-                <button
-                  onClick={() => setStep('before-we-begin')}
-                  style={backBtnInCard}
-                  onMouseEnter={e => { e.currentTarget.style.background = '#EEF2FF'; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
-                >
-                  <ArrowLeft size={18} />
-                </button>
-
-                <h1 style={{ ...titleStyle, textAlign: 'center' }}>Supported Networks</h1>
-                <p style={{ ...subStyle, textAlign: 'center' }}>
-                  Orivon Wallet supports the following networks out of the box.
-                </p>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 40 }}>
-                  {[
-                    { name: 'Ethereum',  sub: 'ETH · EVM Chains · Base · Optimism', color: '#627EEA', icon: 'Ξ' },
-                    { name: 'Solana',    sub: 'SOL · Solana Mainnet',                color: '#9945FF', icon: '◎' },
-                    { name: 'Bitcoin',   sub: 'BTC · Bitcoin Mainnet',               color: '#F7931A', icon: '₿' },
-                    { name: 'Polygon',   sub: 'MATIC · Polygon Mainnet',             color: '#8247E5', icon: 'M' },
-                    { name: 'BNB Chain', sub: 'BNB · BNB Smart Chain',               color: '#F3BA2F', icon: 'B' },
-                    { name: 'Filecoin',  sub: 'FIL · Filecoin Mainnet',              color: '#0090FF', icon: 'F' },
-                  ].map(net => (
-                    <div key={net.name} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderRadius: 12, background: '#F9FAFB', border: '1px solid #F3F4F6' }}>
-                      <div style={{ width: 38, height: 38, borderRadius: '50%', background: net.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 15, fontWeight: 700, flexShrink: 0 }}>
-                        {net.icon}
-                      </div>
-                      <div>
-                        <p style={{ fontSize: 14, fontWeight: 600, color: '#111827', margin: '0 0 2px' }}>{net.name}</p>
-                        <p style={{ fontSize: 11, color: '#9CA3AF', margin: 0 }}>{net.sub}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <CenterBtn onClick={() => setStep('create-password')}>
-                  Continue with 6 Networks
-                </CenterBtn>
-              </LightCard>
+            <motion.div key="supported-networks" {...SLIDE} style={{ width: '100%' }}>
+              <SupportedNetworksCard
+                selectedNets={selectedNets}
+                toggleNet={toggleNet}
+                networkSearch={networkSearch}
+                setNetworkSearch={setNetworkSearch}
+                showTestnets={showTestnets}
+                setShowTestnets={setShowTestnets}
+                onBack={() => setStep('before-we-begin')}
+                onContinue={() => setStep('create-password')}
+              />
             </motion.div>
           )}
 

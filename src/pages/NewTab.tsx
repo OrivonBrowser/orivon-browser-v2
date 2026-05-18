@@ -1,7 +1,7 @@
 /**
  * NewTab — two-screen snap-scroll new tab.
- * Screen 1: hero background + search bar + widget/dApp grid
- * Screen 2: crypto news feed with sidebar (internal scroll only)
+ * Screen 1: hero + search + glass widget/dApp grid
+ * Screen 2: crypto news feed (fully dark, internal scroll only)
  */
 import React, { useState, useRef, useEffect } from 'react';
 import { Shield, Settings } from 'lucide-react';
@@ -19,44 +19,43 @@ function pickNextImage(): number {
 
 // ─── dApp shortcuts ────────────────────────────────────────────────────────────
 const DAPPS = [
-  { name: 'Uniswap',   url: 'https://app.uniswap.org',   icon: '🦄' },
-  { name: 'OpenSea',   url: 'https://opensea.io',         icon: '🌊' },
-  { name: 'Aave',      url: 'https://app.aave.com',       icon: '👻' },
-  { name: 'ENS App',   url: 'https://app.ens.domains',    icon: '🔷' },
-  { name: 'Etherscan', url: 'https://etherscan.io',       icon: '🔍' },
-  { name: 'Mirror',    url: 'https://mirror.xyz',         icon: '🪞' },
-  { name: 'Radicle',   url: 'https://app.radicle.xyz',    icon: '🌱' },
-  { name: 'IPFS',      url: 'https://ipfs.io',            icon: '📦' },
+  { name: 'Uniswap',   url: 'https://app.uniswap.org',   icon: '🦄', accent: '#FF007A' },
+  { name: 'OpenSea',   url: 'https://opensea.io',         icon: '🌊', accent: '#2081E2' },
+  { name: 'Aave',      url: 'https://app.aave.com',       icon: '👻', accent: '#B6509E' },
+  { name: 'ENS App',   url: 'https://app.ens.domains',    icon: '🔷', accent: '#5298FF' },
+  { name: 'Etherscan', url: 'https://etherscan.io',       icon: '🔍', accent: '#21325B' },
+  { name: 'Mirror',    url: 'https://mirror.xyz',         icon: '🪞', accent: '#6E56CF' },
+  { name: 'Radicle',   url: 'https://app.radicle.xyz',    icon: '🌱', accent: '#2BB673' },
+  { name: 'IPFS',      url: 'https://ipfs.io',            icon: '📦', accent: '#469EA2' },
 ];
 
 // ─── Crypto news ───────────────────────────────────────────────────────────────
 const CRYPTO_NEWS = [
-  { id: 1,  source: 'CoinDesk',     category: 'Bitcoin',    catIcon: '₿', time: '1h ago',  title: 'Bitcoin Surpasses $72,000 as Spot ETF Inflows Reach Record $1.2 Billion in a Single Day', bigImage: true,  imgGrad: 'linear-gradient(135deg,#F7931A 0%,#FFC107 100%)', imgEmoji: '₿' },
-  { id: 2,  source: 'The Block',    category: 'Ethereum',   catIcon: 'Ξ', time: '3h ago',  title: "Ethereum's Pectra Upgrade Set for Mainnet Launch, Bringing Major Staking Improvements", bigImage: false, imgGrad: '', imgEmoji: '' },
-  { id: 3,  source: 'Decrypt',      category: 'DeFi',       catIcon: '🔄', time: '4h ago', title: 'Uniswap v4 Launches with Hook Architecture, Driving $800M in First-Day Trading Volume', bigImage: false, imgGrad: 'linear-gradient(135deg,#FF007A,#FF6B6B)', imgEmoji: '🔄' },
-  { id: 4,  source: 'CryptoSlate',  category: 'Solana',     catIcon: '◎', time: '6h ago',  title: 'Solana DEX Volume Surpasses Ethereum for Third Consecutive Week, Meme Coins Drive Surge', bigImage: true,  imgGrad: 'linear-gradient(135deg,#9945FF,#14F195)', imgEmoji: '◎' },
-  { id: 5,  source: 'Blockworks',   category: 'NFT',        catIcon: '🎨', time: '8h ago', title: 'OpenSea 2.0 Officially Launches With Zero Fees and Enhanced Creator Royalty Framework', bigImage: false, imgGrad: '', imgEmoji: '' },
-  { id: 6,  source: 'The Defiant',  category: 'DeFi',       catIcon: '🔄', time: '10h ago', title: 'Arbitrum DAO Votes to Deploy $45M Treasury Into Blue-Chip DeFi Yield Strategies', bigImage: false, imgGrad: '', imgEmoji: '' },
-  { id: 7,  source: 'CoinTelegraph',category: 'Bitcoin',    catIcon: '₿', time: '12h ago', title: 'MicroStrategy Acquires 5,000 More BTC — Total Holdings Now Exceed 220,000 Coins', bigImage: true,  imgGrad: 'linear-gradient(135deg,#F7931A,#FF8C42)', imgEmoji: '₿' },
-  { id: 8,  source: 'Messari',      category: 'Regulation', catIcon: '⚖️', time: '14h ago', title: 'SEC Greenlights Spot Ethereum ETF Options Trading — Market Responds With 8% Rally', bigImage: false, imgGrad: '', imgEmoji: '' },
-  { id: 9,  source: 'CoinGecko',   category: 'Web3',        catIcon: '🌐', time: '16h ago', title: 'Layer 2 Networks Collectively Process Over 50 Million Transactions in Single Week', bigImage: false, imgGrad: 'linear-gradient(135deg,#6366F1,#8B5CF6)', imgEmoji: '🌐' },
-  { id: 10, source: 'DeFi Pulse',  category: 'DeFi',        catIcon: '🔄', time: '18h ago', title: 'Total Value Locked in DeFi Protocols Reaches $200 Billion Milestone for First Time', bigImage: false, imgGrad: '', imgEmoji: '' },
-  { id: 11, source: 'Nansen',      category: 'Ethereum',    catIcon: 'Ξ', time: '20h ago',  title: 'Ethereum Validators Set New Record — Network Now Secured by Over 1 Million Validators', bigImage: false, imgGrad: '', imgEmoji: '' },
-  { id: 12, source: 'Dune Analytics', category: 'Web3',     catIcon: '🌐', time: '22h ago', title: 'On-Chain Data Shows Retail Wallets Accumulating at Fastest Pace Since 2020 Bull Run', bigImage: false, imgGrad: '', imgEmoji: '' },
+  { id: 1,  source: 'CoinDesk',      cat: 'Bitcoin',    catColor: '#F7931A', time: '1h ago',  title: 'Bitcoin Surpasses $72,000 as Spot ETF Inflows Reach Record $1.2B in a Single Day',                    heroGrad: 'linear-gradient(135deg,#F7931A,#FFC107)', heroEmoji: '₿',  hasThumb: false },
+  { id: 2,  source: 'The Block',     cat: 'Ethereum',   catColor: '#627EEA', time: '3h ago',  title: "Ethereum's Pectra Upgrade Set for Mainnet Launch, Bringing Major Staking Improvements",               heroGrad: '',                                       heroEmoji: '',   hasThumb: false },
+  { id: 3,  source: 'Decrypt',       cat: 'DeFi',       catColor: '#10B981', time: '4h ago',  title: 'Uniswap v4 Launches with Hook Architecture, Driving $800M in First-Day Volume',                        heroGrad: 'linear-gradient(135deg,#FF007A,#FF6B6B)', heroEmoji: '🔄', hasThumb: true  },
+  { id: 4,  source: 'CryptoSlate',   cat: 'Solana',     catColor: '#9945FF', time: '6h ago',  title: 'Solana DEX Volume Surpasses Ethereum for Third Consecutive Week as Meme Coins Surge',                  heroGrad: 'linear-gradient(135deg,#9945FF,#14F195)', heroEmoji: '◎',  hasThumb: true  },
+  { id: 5,  source: 'Blockworks',    cat: 'NFT',        catColor: '#EC4899', time: '8h ago',  title: 'OpenSea 2.0 Officially Launches With Zero Fees and Enhanced Creator Royalty Framework',                heroGrad: '',                                       heroEmoji: '',   hasThumb: false },
+  { id: 6,  source: 'The Defiant',   cat: 'DeFi',       catColor: '#10B981', time: '10h ago', title: 'Arbitrum DAO Votes to Deploy $45M Treasury Into Blue-Chip DeFi Yield Strategies',                      heroGrad: '',                                       heroEmoji: '',   hasThumb: false },
+  { id: 7,  source: 'CoinTelegraph', cat: 'Bitcoin',    catColor: '#F7931A', time: '12h ago', title: 'MicroStrategy Acquires 5,000 More BTC — Total Holdings Now Exceed 220,000 Coins',                      heroGrad: 'linear-gradient(135deg,#F7931A,#FF8C42)', heroEmoji: '₿',  hasThumb: true  },
+  { id: 8,  source: 'Messari',       cat: 'Regulation', catColor: '#6366F1', time: '14h ago', title: 'SEC Greenlights Spot Ethereum ETF Options Trading — Market Responds With 8% Rally',                    heroGrad: '',                                       heroEmoji: '',   hasThumb: false },
+  { id: 9,  source: 'CoinGecko',    cat: 'Web3',        catColor: '#06B6D4', time: '16h ago', title: 'Layer 2 Networks Collectively Process Over 50 Million Transactions in a Single Week',                  heroGrad: 'linear-gradient(135deg,#6366F1,#8B5CF6)', heroEmoji: '🌐', hasThumb: true  },
+  { id: 10, source: 'DeFi Pulse',   cat: 'DeFi',        catColor: '#10B981', time: '18h ago', title: 'Total Value Locked in DeFi Protocols Reaches $200 Billion Milestone for the First Time',               heroGrad: '',                                       heroEmoji: '',   hasThumb: false },
+  { id: 11, source: 'Nansen',       cat: 'Ethereum',    catColor: '#627EEA', time: '20h ago', title: 'Ethereum Validators Set Record — Network Now Secured by Over 1 Million Active Validators',             heroGrad: '',                                       heroEmoji: '',   hasThumb: false },
+  { id: 12, source: 'Dune',         cat: 'Web3',        catColor: '#06B6D4', time: '22h ago', title: 'On-Chain Data Shows Retail Wallets Accumulating at Fastest Pace Since 2020 Bull Run',                  heroGrad: '',                                       heroEmoji: '',   hasThumb: false },
 ];
 
 const SIDEBAR_MAIN  = ['For You', 'Following'];
-const SIDEBAR_CHANNELS = ['Top Sources', 'Crypto News', 'Bitcoin', 'Ethereum', 'DeFi', 'NFTs', 'Web3', 'Regulation'];
+const SIDEBAR_CH    = ['Top Sources', 'Crypto News', 'Bitcoin', 'Ethereum', 'DeFi', 'NFTs', 'Web3', 'Regulation'];
 
 interface NewTabProps { onNavigate: (url: string) => void; }
 
+// ─── Component ────────────────────────────────────────────────────────────────
 export default function NewTab({ onNavigate }: NewTabProps) {
-  useSettings(); // theme available via store if needed
-
-  const [query, setQuery] = useState('');
+  useSettings();
+  const [query, setQuery]               = useState('');
   const [activeChannel, setActiveChannel] = useState('For You');
   const inputRef = useRef<HTMLInputElement>(null);
-
   const [bgIndex] = useState(() => pickNextImage());
   const bgUrl = `/tap${bgIndex + 1}.jpg`;
 
@@ -68,23 +67,17 @@ export default function NewTab({ onNavigate }: NewTabProps) {
     if (q) onNavigate(q);
   };
 
-  // shared dark box style for the grid
-  const boxBase: React.CSSProperties = {
-    background: 'rgba(8,8,20,0.72)',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255,255,255,0.09)',
-    borderRadius: 14,
-    padding: '13px 15px',
-    display: 'flex',
-    flexDirection: 'column',
+  /* ── glass box shared style ── */
+  const glass: React.CSSProperties = {
+    background: 'rgba(0,0,0,0.52)',
+    backdropFilter: 'blur(28px)',
+    WebkitBackdropFilter: 'blur(28px)',
+    border: '1px solid rgba(255,255,255,0.11)',
+    borderRadius: 18,
   };
 
-  const labelStyle: React.CSSProperties = {
-    fontSize: 9, fontWeight: 700, letterSpacing: '0.13em',
-    textTransform: 'uppercase', color: 'rgba(255,255,255,0.38)',
-    margin: '0 0 8px',
-  };
+  /* ── Screen 2 dark bg ── */
+  const DARK = '#0d0d16';
 
   return (
     <div style={{
@@ -98,32 +91,37 @@ export default function NewTab({ onNavigate }: NewTabProps) {
           SCREEN 1 — hero + search + grid
       ══════════════════════════════════════════════════════════════════════ */}
       <div style={{
-        height: '100%', scrollSnapAlign: 'start',
-        position: 'relative', display: 'flex',
-        flexDirection: 'column', overflow: 'hidden',
+        height: '100%',
+        scrollSnapAlign: 'start',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
       }}>
-        {/* BG image */}
+
+        {/* Background image */}
         <img
           src={bgUrl} alt=""
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0 }}
           onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
         />
-        {/* Gradient overlay — keeps bottom dark for grid readability */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 1, background: 'linear-gradient(to bottom, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.08) 35%, rgba(0,0,0,0.68) 72%, rgba(0,0,0,0.88) 100%)' }} />
+
+        {/* Gradient — light at top, dark at bottom so grid is readable */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 1, background: 'linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.55) 68%, rgba(0,0,0,0.82) 100%)' }} />
 
         {/* Settings gear */}
         <button
-          style={{ position: 'absolute', top: 16, right: 20, zIndex: 10, width: 32, height: 32, borderRadius: '50%', background: 'rgba(0,0,0,0.30)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'rgba(255,255,255,0.78)', transition: 'background 0.15s' }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.52)'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.30)'; }}
+          style={{ position: 'absolute', top: 14, right: 18, zIndex: 10, width: 34, height: 34, borderRadius: '50%', background: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'rgba(255,255,255,0.80)', transition: 'background 0.15s' }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.58)'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.35)'; }}
         >
           <Settings size={15} />
         </button>
 
-        {/* Search bar — near top */}
-        <div style={{ position: 'relative', zIndex: 5, display: 'flex', justifyContent: 'center', paddingTop: 26, flexShrink: 0 }}>
-          <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: 580, padding: '0 20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(24px)', borderRadius: 9999, padding: '13px 22px', boxShadow: '0 4px 28px rgba(0,0,0,0.22)' }}>
+        {/* ── Search bar ── */}
+        <div style={{ position: 'relative', zIndex: 5, display: 'flex', justifyContent: 'center', paddingTop: 24, flexShrink: 0 }}>
+          <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: 600, padding: '0 20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(255,255,255,0.96)', backdropFilter: 'blur(20px)', borderRadius: 9999, padding: '13px 22px', boxShadow: '0 6px 32px rgba(0,0,0,0.25)' }}>
               <Shield size={20} color="#FB5B22" style={{ flexShrink: 0 }} />
               <input
                 ref={inputRef}
@@ -131,162 +129,179 @@ export default function NewTab({ onNavigate }: NewTabProps) {
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 placeholder="Ask anything, find anything..."
-                style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', fontSize: 15, color: '#111827', fontFamily: 'inherit' }}
+                style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', fontSize: 15, color: '#111', fontFamily: 'inherit' }}
                 className="newtab-input"
               />
             </div>
           </form>
         </div>
 
-        {/* Vertical spacer — pushes grid to bottom */}
+        {/* Spacer — pushes grid to bottom */}
         <div style={{ flex: 1 }} />
 
-        {/* ── Widget + dApp grid (3 per row) ── */}
+        {/* ── Widget + dApp grid ── */}
         <div style={{ position: 'relative', zIndex: 5, padding: '0 16px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 9 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
 
-            {/* 1. STATS */}
-            <div style={boxBase}>
-              <p style={labelStyle}>Stats</p>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            {/* STATS */}
+            <div style={{ ...glass, padding: '14px 18px' }}>
+              <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.36)', textTransform: 'uppercase', margin: '0 0 10px' }}>Stats</p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                 {[
-                  { val: '7',      sub: 'Trackers blocked' },
-                  { val: '465 KB', sub: 'Bandwidth saved'  },
-                  { val: '0 Sec',  sub: 'Time saved'       },
+                  { n: '7',      unit: '',    sub: 'Trackers blocked'  },
+                  { n: '465',    unit: ' KB', sub: 'Bandwidth saved'   },
+                  { n: '0',      unit: ' sec',sub: 'Time saved'        },
                 ].map((s, i) => (
                   <div key={i}>
-                    <p style={{ fontSize: 17, fontWeight: 700, color: '#818CF8', margin: '0 0 2px', letterSpacing: '-0.3px' }}>{s.val}</p>
-                    <p style={{ fontSize: 9, color: 'rgba(255,255,255,0.40)', margin: 0, lineHeight: 1.35 }}>{s.sub}</p>
+                    <p style={{ fontSize: 20, fontWeight: 800, color: '#818CF8', margin: '0 0 3px', letterSpacing: '-0.5px', lineHeight: 1 }}>
+                      {s.n}<span style={{ fontSize: 11, fontWeight: 500 }}>{s.unit}</span>
+                    </p>
+                    <p style={{ fontSize: 9.5, color: 'rgba(255,255,255,0.40)', margin: 0, lineHeight: 1.3 }}>{s.sub}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* 2. NEWS */}
-            <div style={boxBase}>
-              <p style={labelStyle}>News</p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1 }}>
-                <div style={{ width: 34, height: 34, borderRadius: 8, background: 'rgba(255,255,255,0.09)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, flexShrink: 0 }}>📰</div>
-                <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 12, fontWeight: 600, color: '#fff', margin: '0 0 4px', lineHeight: 1.4 }}>Crypto & world news</p>
-                  <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.38)', margin: 0 }}>Scroll down to read →</p>
+            {/* NEWS */}
+            <div style={{ ...glass, padding: '14px 18px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.36)', textTransform: 'uppercase', margin: '0 0 10px' }}>News</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 38, height: 38, borderRadius: 10, background: 'rgba(255,255,255,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>📰</div>
+                <div>
+                  <p style={{ fontSize: 12, fontWeight: 600, color: '#fff', margin: '0 0 3px', lineHeight: 1.35 }}>Crypto & world news</p>
+                  <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.40)', margin: 0 }}>Scroll down to read ↓</p>
                 </div>
               </div>
             </div>
 
-            {/* 3. VPN */}
-            <div style={boxBase}>
+            {/* VPN */}
+            <div style={{ ...glass, padding: '14px 18px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
                 <Shield size={11} color="#FB5B22" />
-                <p style={{ ...labelStyle, margin: 0 }}>Orivon VPN</p>
+                <p style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.36)', textTransform: 'uppercase', margin: 0 }}>Orivon VPN</p>
               </div>
-              {['Extra privacy online', 'Hide your IP', 'Protect all apps'].map((b, i) => (
-                <p key={i} style={{ fontSize: 10, color: 'rgba(255,255,255,0.48)', margin: '2px 0', display: 'flex', alignItems: 'center', gap: 5 }}>
-                  <span style={{ width: 11, height: 11, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.22)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 7, flexShrink: 0 }}>✓</span>
+              {['Extra privacy online', 'Hide your IP & location', 'Protect all your apps'].map((b, i) => (
+                <p key={i} style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', margin: '3px 0', display: 'flex', alignItems: 'center', gap: 6, lineHeight: 1 }}>
+                  <span style={{ width: 13, height: 13, borderRadius: '50%', border: '1.5px solid rgba(255,255,255,0.25)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 7.5, flexShrink: 0 }}>✓</span>
                   {b}
                 </p>
               ))}
             </div>
 
-            {/* 4-11. dApp shortcuts */}
+            {/* dApp shortcut boxes */}
             {DAPPS.map(app => (
               <div
                 key={app.name}
                 onClick={() => onNavigate(app.url)}
-                style={{ ...boxBase, alignItems: 'center', justifyContent: 'center', gap: 8, cursor: 'pointer', transition: 'background 0.14s, transform 0.12s', minHeight: 82 }}
-                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = 'rgba(30,28,55,0.86)'; (e.currentTarget as HTMLDivElement).style.transform = 'scale(1.04)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = 'rgba(8,8,20,0.72)'; (e.currentTarget as HTMLDivElement).style.transform = 'scale(1)'; }}
+                style={{ ...glass, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 9, padding: '18px 10px', cursor: 'pointer', transition: 'background 0.15s, transform 0.12s, border-color 0.15s' }}
+                onMouseEnter={e => {
+                  const el = e.currentTarget as HTMLDivElement;
+                  el.style.background = 'rgba(255,255,255,0.13)';
+                  el.style.transform = 'translateY(-2px) scale(1.02)';
+                  el.style.borderColor = 'rgba(255,255,255,0.22)';
+                }}
+                onMouseLeave={e => {
+                  const el = e.currentTarget as HTMLDivElement;
+                  el.style.background = 'rgba(0,0,0,0.52)';
+                  el.style.transform = 'translateY(0) scale(1)';
+                  el.style.borderColor = 'rgba(255,255,255,0.11)';
+                }}
               >
-                <span style={{ fontSize: 26, lineHeight: 1 }}>{app.icon}</span>
-                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.72)', fontWeight: 500, textAlign: 'center' }}>{app.name}</span>
+                {/* Icon container with subtle accent glow */}
+                <div style={{ width: 52, height: 52, borderRadius: 16, background: `${app.accent}22`, border: `1.5px solid ${app.accent}44`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, boxShadow: `0 4px 16px ${app.accent}33` }}>
+                  {app.icon}
+                </div>
+                <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.82)', letterSpacing: '0.01em' }}>{app.name}</span>
               </div>
             ))}
 
           </div>
         </div>
 
-        <div style={{ height: 10 }} />
+        <div style={{ height: 12 }} />
         <style>{`.newtab-input::placeholder { color: rgba(0,0,0,0.36); }`}</style>
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          SCREEN 2 — crypto news feed (internal scroll only)
+          SCREEN 2 — crypto news feed (dark, internal scroll only)
       ══════════════════════════════════════════════════════════════════════ */}
       <div style={{
-        height: '100%', scrollSnapAlign: 'start',
-        display: 'flex', overflow: 'hidden',
-        background: '#0b0b18',
+        height: '100%',
+        scrollSnapAlign: 'start',
+        display: 'flex',
+        overflow: 'hidden',
+        background: DARK,
       }}>
 
-        {/* Left sidebar — does NOT scroll */}
-        <div style={{ width: 218, flexShrink: 0, padding: '20px 12px', borderRight: '1px solid rgba(255,255,255,0.06)', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'hidden' }}>
+        {/* ── Left sidebar ── */}
+        <div style={{ width: 210, flexShrink: 0, background: DARK, borderRight: '1px solid rgba(255,255,255,0.06)', padding: '22px 10px', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'hidden' }}>
           {SIDEBAR_MAIN.map(cat => (
             <button key={cat} onClick={() => setActiveChannel(cat)}
-              style={{ width: '100%', padding: '9px 12px', borderRadius: 10, border: 'none', textAlign: 'left', cursor: 'pointer', fontSize: 14, fontWeight: 600, transition: 'background 0.12s, color 0.12s', background: activeChannel === cat ? 'rgba(99,102,241,0.18)' : 'transparent', color: activeChannel === cat ? '#A5B4FC' : 'rgba(255,255,255,0.58)' }}
+              style={{ width: '100%', padding: '9px 14px', borderRadius: 10, border: 'none', background: activeChannel === cat ? 'rgba(99,102,241,0.20)' : 'transparent', cursor: 'pointer', textAlign: 'left', fontSize: 14, fontWeight: 600, color: activeChannel === cat ? '#A5B4FC' : 'rgba(255,255,255,0.55)', transition: 'all 0.12s' }}
               onMouseEnter={e => { if (activeChannel !== cat) e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
               onMouseLeave={e => { if (activeChannel !== cat) e.currentTarget.style.background = 'transparent'; }}
             >{cat}</button>
           ))}
 
-          <div style={{ margin: '12px 12px 6px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.30)', letterSpacing: '0.10em', textTransform: 'uppercase' }}>Channels</span>
-            <span style={{ fontSize: 16, color: 'rgba(255,255,255,0.28)', cursor: 'pointer', lineHeight: 1 }}>+</span>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 14px 6px' }}>
+            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)' }}>Channels</span>
+            <span style={{ fontSize: 18, color: 'rgba(255,255,255,0.25)', cursor: 'pointer', lineHeight: 1 }}>+</span>
           </div>
 
-          {SIDEBAR_CHANNELS.map(ch => (
+          {SIDEBAR_CH.map(ch => (
             <button key={ch} onClick={() => setActiveChannel(ch)}
-              style={{ width: '100%', padding: '7px 12px', borderRadius: 8, border: 'none', textAlign: 'left', cursor: 'pointer', fontSize: 13, fontWeight: 500, transition: 'background 0.12s, color 0.12s', background: activeChannel === ch ? 'rgba(99,102,241,0.18)' : 'transparent', color: activeChannel === ch ? '#A5B4FC' : 'rgba(255,255,255,0.46)' }}
+              style={{ width: '100%', padding: '7px 14px', borderRadius: 8, border: 'none', background: activeChannel === ch ? 'rgba(99,102,241,0.20)' : 'transparent', cursor: 'pointer', textAlign: 'left', fontSize: 13, fontWeight: 500, color: activeChannel === ch ? '#A5B4FC' : 'rgba(255,255,255,0.45)', transition: 'all 0.12s' }}
               onMouseEnter={e => { if (activeChannel !== ch) e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
               onMouseLeave={e => { if (activeChannel !== ch) e.currentTarget.style.background = 'transparent'; }}
             >{ch}</button>
           ))}
         </div>
 
-        {/* News feed — only this scrolls */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '20px 28px 32px' }}>
+        {/* ── News feed — only this area scrolls ── */}
+        <div style={{ flex: 1, background: DARK, overflowY: 'auto', padding: '22px 28px 32px' }}>
 
-          {/* First article — big hero image */}
-          {CRYPTO_NEWS[0].bigImage && (
-            <>
-              <div style={{ borderRadius: 14, overflow: 'hidden', marginBottom: 12, background: CRYPTO_NEWS[0].imgGrad, height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                <span style={{ fontSize: 72, filter: 'drop-shadow(0 4px 16px rgba(0,0,0,0.4))' }}>{CRYPTO_NEWS[0].imgEmoji}</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 7 }}>
-                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.52)', fontWeight: 500 }}>{CRYPTO_NEWS[0].source}</span>
-                <span style={{ color: 'rgba(255,255,255,0.22)', fontSize: 10 }}>•</span>
-                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.36)' }}>{CRYPTO_NEWS[0].catIcon} {CRYPTO_NEWS[0].category}</span>
-                <span style={{ color: 'rgba(255,255,255,0.22)', fontSize: 10 }}>•</span>
-                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.36)' }}>{CRYPTO_NEWS[0].time}</span>
-              </div>
-              <p style={{ fontSize: 17, fontWeight: 700, color: 'rgba(255,255,255,0.92)', margin: '0 0 6px', lineHeight: 1.45, cursor: 'pointer' }}>{CRYPTO_NEWS[0].title}</p>
-              <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '14px 0' }} />
-            </>
-          )}
+          {/* Hero image — first article */}
+          <div style={{ borderRadius: 16, overflow: 'hidden', marginBottom: 14, height: 210, background: CRYPTO_NEWS[0].heroGrad, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 8px 32px rgba(0,0,0,0.35)' }}>
+            <span style={{ fontSize: 80, filter: 'drop-shadow(0 4px 20px rgba(0,0,0,0.35))' }}>{CRYPTO_NEWS[0].heroEmoji}</span>
+          </div>
+
+          {/* First article meta + title */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.55)' }}>{CRYPTO_NEWS[0].source}</span>
+            <span style={{ color: 'rgba(255,255,255,0.20)', fontSize: 10 }}>•</span>
+            <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 5, background: `${CRYPTO_NEWS[0].catColor}28`, color: CRYPTO_NEWS[0].catColor }}>{CRYPTO_NEWS[0].cat}</span>
+            <span style={{ color: 'rgba(255,255,255,0.20)', fontSize: 10 }}>•</span>
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{CRYPTO_NEWS[0].time}</span>
+          </div>
+          <p style={{ fontSize: 18, fontWeight: 700, color: 'rgba(255,255,255,0.92)', margin: '0 0 4px', lineHeight: 1.45, cursor: 'pointer' }}>{CRYPTO_NEWS[0].title}</p>
+
+          <div style={{ height: 1, background: 'rgba(255,255,255,0.07)', margin: '18px 0' }} />
 
           {/* Remaining articles */}
           {CRYPTO_NEWS.slice(1).map(item => (
-            <div key={item.id} style={{ display: 'flex', gap: 14, padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.05)', cursor: 'pointer', borderRadius: 4, transition: 'background 0.12s' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.03)'; }}
+            <div key={item.id}
+              style={{ display: 'flex', gap: 14, padding: '13px 12px', borderRadius: 12, cursor: 'pointer', marginBottom: 2, transition: 'background 0.12s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.04)'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = 'transparent'; }}
             >
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.50)', fontWeight: 500 }}>{item.source}</span>
-                  <span style={{ color: 'rgba(255,255,255,0.22)', fontSize: 10 }}>•</span>
-                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.36)' }}>{item.catIcon} {item.category}</span>
-                  <span style={{ color: 'rgba(255,255,255,0.22)', fontSize: 10 }}>•</span>
-                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.36)' }}>{item.time}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 7, flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.50)' }}>{item.source}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: 10 }}>•</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 5, background: `${item.catColor}28`, color: item.catColor }}>{item.cat}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: 10 }}>•</span>
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.30)' }}>{item.time}</span>
                 </div>
-                <p style={{ fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.88)', margin: 0, lineHeight: 1.5 }}>{item.title}</p>
+                <p style={{ fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.85)', margin: 0, lineHeight: 1.5 }}>{item.title}</p>
               </div>
 
-              {item.bigImage && item.imgGrad && (
-                <div style={{ width: 82, height: 68, borderRadius: 10, background: item.imgGrad, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>
-                  {item.imgEmoji}
+              {item.hasThumb && item.heroGrad && (
+                <div style={{ width: 76, height: 64, borderRadius: 10, background: item.heroGrad, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
+                  {item.heroEmoji}
                 </div>
               )}
 
-              <button style={{ width: 26, height: 26, borderRadius: 7, border: 'none', background: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.28)', flexShrink: 0, alignSelf: 'flex-start', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>···</button>
+              <button style={{ width: 24, height: 24, borderRadius: 6, border: 'none', background: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.25)', flexShrink: 0, alignSelf: 'flex-start', fontSize: 16, letterSpacing: 1 }}>···</button>
             </div>
           ))}
 

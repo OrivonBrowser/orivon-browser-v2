@@ -132,7 +132,7 @@ function Tab({ tab, isActive, isDark, activeTabBg, onClick, onClose }: {
       onClick={onClick}
       className={`
         no-drag group relative flex items-center gap-2 h-9 px-3 cursor-pointer
-        rounded-tl-lg rounded-tr-lg flex-1 min-w-0 max-w-[220px] transition-all select-none
+        rounded-tl-lg rounded-tr-lg flex-1 min-w-[44px] max-w-[220px] transition-all select-none overflow-hidden
       `}
       style={{
         background: isActive

@@ -120,12 +120,14 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
   const addrRef     = useRef<HTMLInputElement>(null);
   const menuRef     = useRef<HTMLDivElement>(null);
 
-  const [addrInput, setAddrInput]     = useState('');
-  const [isEditing, setIsEditing]     = useState(false);
-  const [walletOpen, setWalletOpen]   = useState(false);
-  const [walletModal, setWalletModal] = useState<null | 'create' | 'import' | 'unlock'>(null);
-  const [menuOpen, setMenuOpen]       = useState(false);
-  const [zoom, setZoom]               = useState(100);
+  const [addrInput, setAddrInput]       = useState('');
+  const [isEditing, setIsEditing]       = useState(false);
+  const [walletOpen, setWalletOpen]     = useState(false);
+  const [walletModal, setWalletModal]   = useState<null | 'create' | 'import' | 'unlock'>(null);
+  const [menuOpen, setMenuOpen]         = useState(false);
+  const [zoom, setZoom]                 = useState(100);
+  // tracks reload count per new-tab so we can force a remount
+  const [newTabKeys, setNewTabKeys]     = useState<Record<string, number>>({});
 
   const activeTab  = tabs.find(t => t.id === activeTabId) ?? tabs[0];
   const isDark     = theme === 'dark';
@@ -177,7 +179,13 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
 
   const handleBack    = () => { const url = goBack(activeTabId);    if (url) webviewRefs.current[activeTabId]?.goBack(); };
   const handleForward = () => { const url = goForward(activeTabId); if (url) webviewRefs.current[activeTabId]?.goForward(); };
-  const handleReload  = () => webviewRefs.current[activeTabId]?.reload();
+  const handleReload  = () => {
+    if (activeTab?.url === NEW_TAB) {
+      setNewTabKeys(prev => ({ ...prev, [activeTabId]: (prev[activeTabId] ?? 0) + 1 }));
+    } else {
+      webviewRefs.current[activeTabId]?.reload();
+    }
+  };
   const handleAddrSubmit = (e: React.FormEvent) => { e.preventDefault(); navigate(addrInput); };
   const handleTabClose   = (id: string, e: React.MouseEvent) => { e.stopPropagation(); closeTab(id); };
 
@@ -479,7 +487,7 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
         <div className="flex-1 relative">
           {tabs.map(tab => (
             <div
-              key={tab.id}
+              key={tab.url === NEW_TAB ? `${tab.id}-${newTabKeys[tab.id] ?? 0}` : tab.id}
               className="absolute inset-0"
               style={{
                 zIndex: tab.id === activeTabId ? 1 : 0,

@@ -81,6 +81,7 @@ export default function WalletModal({ mode, onClose, onSuccess }: WalletModalPro
   const [checked1, setChecked1]       = useState(false);
   const [checked2, setChecked2]       = useState(false);
   const [unlockFailed, setUnlockFailed] = useState(false);
+  const [flowMode, setFlowMode] = useState<'create' | 'import'>('create'); // which path user chose
 
   // Import word-grid state
   const [importWordCount, setImportWordCount] = useState<12 | 24>(12);
@@ -183,7 +184,7 @@ export default function WalletModal({ mode, onClose, onSuccess }: WalletModalPro
       {/* ── Top bar ───────────────────────────────────────────────────────── */}
       <div style={{ padding: '18px 40px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <img src="/logo.jpg" alt="Orivon" style={{ width: 28, height: 28, borderRadius: 8, objectFit: 'contain' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+          <img src="/logo.png" alt="Orivon" style={{ width: 28, height: 28, borderRadius: 8, objectFit: 'contain' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
           <span style={{ fontSize: 15, fontWeight: 600, color: '#1A1A2E' }}>Orivon Wallet</span>
         </div>
         <button
@@ -202,7 +203,7 @@ export default function WalletModal({ mode, onClose, onSuccess }: WalletModalPro
         {/* ── CHOOSE ────────────────────────────────────────────────────── */}
         {step === 'choose' && (
           <motion.div key="choose" {...SLIDE} style={{ flex: 1 }}>
-            <div style={{ maxWidth: 820, margin: '32px auto', padding: '0 28px 40px' }}>
+            <div style={{ maxWidth: 820, margin: '0 auto', padding: '20px 28px 40px' }}>
               <h1 style={{ fontSize: 36, fontWeight: 800, color: '#111827', marginBottom: 12, lineHeight: 1.15 }}>
                 Browser-native. Self-custody.<br />And multi-chain.
               </h1>
@@ -213,7 +214,7 @@ export default function WalletModal({ mode, onClose, onSuccess }: WalletModalPro
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
                 {/* Create card */}
                 <div
-                  onClick={() => setStep('before-we-begin')}
+                  onClick={() => { setFlowMode('create'); setStep('before-we-begin'); }}
                   style={{ background: '#fff', borderRadius: 18, padding: 32, cursor: 'pointer', border: '1.5px solid #E5E7EB', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', transition: 'border-color 0.15s, box-shadow 0.15s' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = '#4F46E5'; (e.currentTarget as HTMLDivElement).style.boxShadow = '0 4px 20px rgba(79,70,229,0.12)'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = '#E5E7EB'; (e.currentTarget as HTMLDivElement).style.boxShadow = '0 1px 6px rgba(0,0,0,0.06)'; }}
@@ -227,7 +228,7 @@ export default function WalletModal({ mode, onClose, onSuccess }: WalletModalPro
 
                 {/* Import card */}
                 <div
-                  onClick={() => setStep('import')}
+                  onClick={() => { setFlowMode('import'); setStep('before-we-begin'); }}
                   style={{ background: '#fff', borderRadius: 18, padding: 32, cursor: 'pointer', border: '1.5px solid #E5E7EB', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', transition: 'border-color 0.15s, box-shadow 0.15s' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = '#4F46E5'; (e.currentTarget as HTMLDivElement).style.boxShadow = '0 4px 20px rgba(79,70,229,0.12)'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = '#E5E7EB'; (e.currentTarget as HTMLDivElement).style.boxShadow = '0 1px 6px rgba(0,0,0,0.06)'; }}
@@ -283,33 +284,91 @@ export default function WalletModal({ mode, onClose, onSuccess }: WalletModalPro
 
         {/* ── SUPPORTED NETWORKS ────────────────────────────────────────── */}
         {step === 'supported-networks' && (
-          <motion.div key="supported-networks" {...SLIDE}>
-            <Card>
-              <button style={backBtn} onClick={() => setStep('before-we-begin')} onMouseEnter={e => { e.currentTarget.style.background = '#EEF2FF'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}>
-                <ArrowLeft size={18} />
-              </button>
+          <motion.div key="supported-networks" {...SLIDE} style={{ width: '100%', display: 'flex', justifyContent: 'center', padding: '0 28px 24px' }}>
+            {/* Fixed-height card with scrollable network list inside */}
+            <div style={{ maxWidth: 740, width: '100%', background: '#fff', borderRadius: 20, boxShadow: '0 2px 20px rgba(0,0,0,0.08)', display: 'flex', flexDirection: 'column', height: 560, overflow: 'hidden' }}>
 
-              <h1 style={{ ...titleSt, textAlign: 'center' }}>Supported Networks</h1>
-              <p style={{ ...subSt, textAlign: 'center' }}>Orivon Wallet supports the following networks out of the box.</p>
+              {/* Fixed header */}
+              <div style={{ padding: '36px 52px 0', flexShrink: 0 }}>
+                <button style={backBtn} onClick={() => setStep('before-we-begin')} onMouseEnter={e => { e.currentTarget.style.background = '#EEF2FF'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}>
+                  <ArrowLeft size={18} />
+                </button>
+                <h1 style={{ ...titleSt, textAlign: 'center' }}>Supported networks</h1>
+                <p style={{ fontSize: 15, color: '#6B7280', textAlign: 'center', margin: '0 0 20px', lineHeight: 1.5 }}>Choose which blockchains to use in your wallet.</p>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 40 }}>
-                {SUPPORTED_NETWORKS.map(net => (
-                  <div key={net.name} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderRadius: 12, background: '#F9FAFB', border: '1px solid #F3F4F6' }}>
-                    <div style={{ width: 38, height: 38, borderRadius: '50%', background: net.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 15, fontWeight: 700, flexShrink: 0 }}>
-                      {net.icon}
-                    </div>
-                    <div>
-                      <p style={{ fontSize: 14, fontWeight: 600, color: '#111827', margin: '0 0 2px' }}>{net.name}</p>
-                      <p style={{ fontSize: 11, color: '#9CA3AF', margin: 0 }}>{net.sub}</p>
-                    </div>
-                  </div>
-                ))}
+                {/* Search bar */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#F3F4F6', borderRadius: 10, padding: '9px 14px', marginBottom: 8 }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                  <span style={{ fontSize: 14, color: '#9CA3AF' }}>Search networks</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 8 }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#374151', cursor: 'pointer' }}>
+                    <input type="checkbox" style={{ width: 14, height: 14, accentColor: '#4F46E5' }} /> Show testnets
+                  </label>
+                </div>
               </div>
 
-              <CenterBtn onClick={() => setStep('create-password')}>
-                Continue with {SUPPORTED_NETWORKS.length} Networks
-              </CenterBtn>
-            </Card>
+              {/* Scrollable network grid */}
+              <div style={{ flex: 1, overflowY: 'auto', padding: '0 52px' }}>
+                <p style={{ fontSize: 11, fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Featured</p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 20 }}>
+                  {[
+                    { id: 'sol', name: 'Solana Mainnet Beta',  color: '#9945FF', icon: '◎', sel: false },
+                    { id: 'eth', name: 'Ethereum Mainnet',     color: '#627EEA', icon: 'Ξ',  sel: false },
+                    { id: 'fil', name: 'Filecoin Mainnet',     color: '#0090FF', icon: 'F',  sel: true  },
+                    { id: 'btc', name: 'Bitcoin Mainnet',      color: '#F7931A', icon: '₿',  sel: true  },
+                    { id: 'zec', name: 'Zcash Mainnet',        color: '#F4B728', icon: 'Z',  sel: true  },
+                    { id: 'ada', name: 'Cardano Mainnet',      color: '#0033AD', icon: 'A',  sel: true  },
+                  ].map(n => (
+                    <div key={n.id} style={{ position: 'relative', borderRadius: 12, padding: '12px 8px 10px', border: `1.5px solid ${n.sel ? '#4F46E5' : '#E5E7EB'}`, background: n.sel ? '#F5F3FF' : '#fff', cursor: 'pointer', textAlign: 'center' }}>
+                      <div style={{ position: 'absolute', top: 6, right: 6, width: 16, height: 16, borderRadius: 4, background: n.sel ? '#4F46E5' : 'transparent', border: `1.5px solid ${n.sel ? '#4F46E5' : '#D1D5DB'}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {n.sel && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                      </div>
+                      <div style={{ width: 36, height: 36, borderRadius: '50%', background: n.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 15, fontWeight: 700, margin: '0 auto 8px' }}>{n.icon}</div>
+                      <p style={{ fontSize: 10, fontWeight: 600, color: '#111827', margin: 0, lineHeight: 1.3 }}>{n.name}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>Popular</p>
+                  <button style={{ fontSize: 12, color: '#4F46E5', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 500, padding: 0 }}>Deselect all</button>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 16 }}>
+                  {[
+                    { id: 'matic', name: 'Polygon',        color: '#8247E5', icon: 'M', sel: true },
+                    { id: 'op',    name: 'Optimism',       color: '#FF0420', icon: 'O', sel: true },
+                    { id: 'arb',   name: 'Arbitrum',       color: '#28A0F0', icon: 'A', sel: true },
+                    { id: 'avax',  name: 'Avalanche',      color: '#E84142', icon: 'A', sel: true },
+                    { id: 'base',  name: 'Base',           color: '#0052FF', icon: 'B', sel: true },
+                    { id: 'bnb',   name: 'BNB Chain',      color: '#F3BA2F', icon: 'B', sel: true },
+                    { id: 'ftm',   name: 'Fantom',         color: '#1969FF', icon: 'F', sel: true },
+                    { id: 'cro',   name: 'Cronos',         color: '#002D74', icon: 'C', sel: true },
+                  ].map(n => (
+                    <div key={n.id} style={{ position: 'relative', borderRadius: 12, padding: '12px 8px 10px', border: `1.5px solid ${n.sel ? '#4F46E5' : '#E5E7EB'}`, background: n.sel ? '#F5F3FF' : '#fff', cursor: 'pointer', textAlign: 'center' }}>
+                      <div style={{ position: 'absolute', top: 6, right: 6, width: 16, height: 16, borderRadius: 4, background: n.sel ? '#4F46E5' : 'transparent', border: `1.5px solid ${n.sel ? '#4F46E5' : '#D1D5DB'}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {n.sel && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                      </div>
+                      <div style={{ width: 36, height: 36, borderRadius: '50%', background: n.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 15, fontWeight: 700, margin: '0 auto 8px' }}>{n.icon}</div>
+                      <p style={{ fontSize: 10, fontWeight: 600, color: '#111827', margin: 0, lineHeight: 1.3 }}>{n.name}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Fixed bottom */}
+              <div style={{ padding: '14px 52px 32px', borderTop: '1px solid #F3F4F6', flexShrink: 0 }}>
+                <button
+                  onClick={() => setStep(flowMode === 'create' ? 'create-password' : 'import')}
+                  style={{ width: '100%', height: 50, borderRadius: 9999, background: '#4F46E5', color: '#fff', fontSize: 15, fontWeight: 600, border: 'none', cursor: 'pointer', boxShadow: '0 2px 12px rgba(79,70,229,0.3)', marginBottom: 8, transition: 'filter 0.15s' }}
+                  onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.1)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; }}
+                >
+                  Continue with 14 Networks
+                </button>
+                <p style={{ fontSize: 12, color: '#9CA3AF', textAlign: 'center', margin: 0 }}>You can add networks anytime in Settings.</p>
+              </div>
+            </div>
           </motion.div>
         )}
 
