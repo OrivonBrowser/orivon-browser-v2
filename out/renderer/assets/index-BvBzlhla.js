@@ -43620,264 +43620,399 @@ function WalletPanel({ onClose, onOpenWalletModal, onOpenDashboard }) {
   );
 }
 const TOTAL_IMAGES = 10;
-let _lastImageIndex = -1;
-function pickNextImage() {
-  const choices = Array.from({ length: TOTAL_IMAGES }, (_, i) => i).filter((i) => i !== _lastImageIndex);
-  const picked = choices[Math.floor(Math.random() * choices.length)];
-  _lastImageIndex = picked;
-  return picked;
+let _lastImage = -1;
+function pickImage() {
+  const choices = Array.from({ length: TOTAL_IMAGES }, (_, i) => i).filter((i) => i !== _lastImage);
+  const p = choices[Math.floor(Math.random() * choices.length)];
+  _lastImage = p;
+  return p;
 }
-const DAPPS$1 = [
-  { name: "Uniswap", url: "https://app.uniswap.org", icon: "🦄", accent: "#FF007A" },
-  { name: "OpenSea", url: "https://opensea.io", icon: "🌊", accent: "#2081E2" },
-  { name: "Aave", url: "https://app.aave.com", icon: "👻", accent: "#B6509E" },
-  { name: "ENS App", url: "https://app.ens.domains", icon: "🔷", accent: "#5298FF" },
-  { name: "Etherscan", url: "https://etherscan.io", icon: "🔍", accent: "#21325B" },
-  { name: "Mirror", url: "https://mirror.xyz", icon: "🪞", accent: "#6E56CF" },
-  { name: "Radicle", url: "https://app.radicle.xyz", icon: "🌱", accent: "#2BB673" },
-  { name: "IPFS", url: "https://ipfs.io", icon: "📦", accent: "#469EA2" }
+const ALL_DAPPS = [
+  { id: 1, name: "Uniswap", url: "https://app.uniswap.org", emoji: "🦄", iconColor: "#FF007A", iconBg: "#fff0f5", title: "Decentralized Exchange", tags: ["DeFi", "DEX"], stat: "$6.2B TVL", location: "Ethereum · Polygon", daysAgo: "5 days ago", saved: false },
+  { id: 2, name: "OpenSea", url: "https://opensea.io", emoji: "🌊", iconColor: "#2081E2", iconBg: "#f0f5ff", title: "NFT Marketplace", tags: ["NFT", "Multi-chain"], stat: "$2.4B Volume", location: "Ethereum · Solana", daysAgo: "18 days ago", saved: true },
+  { id: 3, name: "Aave", url: "https://app.aave.com", emoji: "👻", iconColor: "#B6509E", iconBg: "#fdf0ff", title: "Lending Protocol", tags: ["Lending", "DeFi"], stat: "$12.8B TVL", location: "Ethereum · Avalanche", daysAgo: "3 days ago", saved: false },
+  { id: 4, name: "ENS Domains", url: "https://app.ens.domains", emoji: "🔷", iconColor: "#4F46E5", iconBg: "#eef2ff", title: "Web3 Name Service", tags: ["Identity", "Ethereum"], stat: "3.2M Names", location: "Ethereum", daysAgo: "12 days ago", saved: true },
+  { id: 5, name: "Mirror.xyz", url: "https://mirror.xyz", emoji: "🪞", iconColor: "#111827", iconBg: "#f9f9f9", title: "Web3 Publishing", tags: ["Content", "Creator"], stat: "45K Writers", location: "Ethereum · Optimism", daysAgo: "7 days ago", saved: false },
+  { id: 6, name: "Radicle", url: "https://app.radicle.xyz", emoji: "🌱", iconColor: "#2BB673", iconBg: "#f0fdf4", title: "P2P Code Collaboration", tags: ["Dev", "IPFS"], stat: "8K Projects", location: "IPFS · Ethereum", daysAgo: "21 days ago", saved: false },
+  { id: 7, name: "Etherscan", url: "https://etherscan.io", emoji: "🔍", iconColor: "#21325B", iconBg: "#f0f4ff", title: "Block Explorer", tags: ["Explorer", "Analytics"], stat: "2.1B Txns", location: "Ethereum", daysAgo: "1 day ago", saved: true },
+  { id: 8, name: "IPFS", url: "https://ipfs.io", emoji: "📦", iconColor: "#469EA2", iconBg: "#f0fafb", title: "Decentralized Storage", tags: ["Storage", "P2P"], stat: "90PB Stored", location: "P2P Network", daysAgo: "30 days ago", saved: false },
+  { id: 9, name: "Lido", url: "https://lido.fi", emoji: "💧", iconColor: "#00A3FF", iconBg: "#f0f9ff", title: "Liquid Staking", tags: ["Staking", "Ethereum"], stat: "$24B Staked", location: "Ethereum · Solana", daysAgo: "4 days ago", saved: false }
 ];
-const CRYPTO_NEWS = [
-  { id: 1, source: "CoinDesk", cat: "Bitcoin", catColor: "#F7931A", time: "1h ago", title: "Bitcoin Surpasses $72,000 as Spot ETF Inflows Reach Record $1.2B in a Single Day", heroGrad: "linear-gradient(135deg,#F7931A,#FFC107)", heroEmoji: "₿", hasThumb: false },
-  { id: 2, source: "The Block", cat: "Ethereum", catColor: "#627EEA", time: "3h ago", title: "Ethereum's Pectra Upgrade Set for Mainnet Launch, Bringing Major Staking Improvements", heroGrad: "", heroEmoji: "", hasThumb: false },
-  { id: 3, source: "Decrypt", cat: "DeFi", catColor: "#10B981", time: "4h ago", title: "Uniswap v4 Launches with Hook Architecture, Driving $800M in First-Day Volume", heroGrad: "linear-gradient(135deg,#FF007A,#FF6B6B)", heroEmoji: "🔄", hasThumb: true },
-  { id: 4, source: "CryptoSlate", cat: "Solana", catColor: "#9945FF", time: "6h ago", title: "Solana DEX Volume Surpasses Ethereum for Third Consecutive Week as Meme Coins Surge", heroGrad: "linear-gradient(135deg,#9945FF,#14F195)", heroEmoji: "◎", hasThumb: true },
-  { id: 5, source: "Blockworks", cat: "NFT", catColor: "#EC4899", time: "8h ago", title: "OpenSea 2.0 Officially Launches With Zero Fees and Enhanced Creator Royalty Framework", heroGrad: "", heroEmoji: "", hasThumb: false },
-  { id: 6, source: "The Defiant", cat: "DeFi", catColor: "#10B981", time: "10h ago", title: "Arbitrum DAO Votes to Deploy $45M Treasury Into Blue-Chip DeFi Yield Strategies", heroGrad: "", heroEmoji: "", hasThumb: false },
-  { id: 7, source: "CoinTelegraph", cat: "Bitcoin", catColor: "#F7931A", time: "12h ago", title: "MicroStrategy Acquires 5,000 More BTC — Total Holdings Now Exceed 220,000 Coins", heroGrad: "linear-gradient(135deg,#F7931A,#FF8C42)", heroEmoji: "₿", hasThumb: true },
-  { id: 8, source: "Messari", cat: "Regulation", catColor: "#6366F1", time: "14h ago", title: "SEC Greenlights Spot Ethereum ETF Options Trading — Market Responds With 8% Rally", heroGrad: "", heroEmoji: "", hasThumb: false },
-  { id: 9, source: "CoinGecko", cat: "Web3", catColor: "#06B6D4", time: "16h ago", title: "Layer 2 Networks Collectively Process Over 50 Million Transactions in a Single Week", heroGrad: "linear-gradient(135deg,#6366F1,#8B5CF6)", heroEmoji: "🌐", hasThumb: true },
-  { id: 10, source: "DeFi Pulse", cat: "DeFi", catColor: "#10B981", time: "18h ago", title: "Total Value Locked in DeFi Protocols Reaches $200 Billion Milestone for the First Time", heroGrad: "", heroEmoji: "", hasThumb: false },
-  { id: 11, source: "Nansen", cat: "Ethereum", catColor: "#627EEA", time: "20h ago", title: "Ethereum Validators Set Record — Network Now Secured by Over 1 Million Active Validators", heroGrad: "", heroEmoji: "", hasThumb: false },
-  { id: 12, source: "Dune", cat: "Web3", catColor: "#06B6D4", time: "22h ago", title: "On-Chain Data Shows Retail Wallets Accumulating at Fastest Pace Since 2020 Bull Run", heroGrad: "", heroEmoji: "", hasThumb: false }
+const NEWS = [
+  { id: 1, title: "Bitcoin Surpasses $72,000 as Spot ETF Inflows Reach Record $1.2B", source: "CoinDesk", cat: "Bitcoin", catColor: "#F7931A", time: "1h ago" },
+  { id: 2, title: "Ethereum Pectra Upgrade Set for Mainnet — Major Staking Improvements", source: "The Block", cat: "Ethereum", catColor: "#627EEA", time: "3h ago" },
+  { id: 3, title: "Uniswap v4 Launches with Hook Architecture, Driving $800M Day-1 Volume", source: "Decrypt", cat: "DeFi", catColor: "#10B981", time: "4h ago" },
+  { id: 4, title: "Solana DEX Volume Surpasses Ethereum for Third Consecutive Week", source: "CryptoSlate", cat: "Solana", catColor: "#9945FF", time: "6h ago" },
+  { id: 5, title: "Total Value Locked in DeFi Protocols Reaches $200 Billion Milestone", source: "DeFi Pulse", cat: "DeFi", catColor: "#10B981", time: "8h ago" },
+  { id: 6, title: "On-Chain Data Shows Retail Wallets Accumulating at Fastest Pace Since 2020", source: "Dune", cat: "Web3", catColor: "#06B6D4", time: "10h ago" }
 ];
-const SIDEBAR_MAIN = ["For You", "Following"];
-const SIDEBAR_CH = ["Top Sources", "Crypto News", "Bitcoin", "Ethereum", "DeFi", "NFTs", "Web3", "Regulation"];
+function DAppCard$1({
+  dapp,
+  delay: delay2,
+  onNavigate,
+  fillHeight
+}) {
+  const [saved, setSaved] = reactExports.useState(dapp.saved);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      onClick: () => onNavigate(dapp.url),
+      className: "dapp-card",
+      style: {
+        background: "#fff",
+        borderRadius: 22,
+        padding: "20px 18px 18px",
+        boxShadow: "0 4px 24px rgba(0,0,0,0.10)",
+        display: "flex",
+        flexDirection: "column",
+        height: fillHeight ? "100%" : "auto",
+        minHeight: 280,
+        cursor: "pointer",
+        animationDelay: `${delay2}s`,
+        opacity: 0,
+        transition: "transform 0.18s ease, box-shadow 0.18s ease",
+        userSelect: "none"
+      },
+      onMouseEnter: (e) => {
+        e.currentTarget.style.transform = "translateY(-3px)";
+        e.currentTarget.style.boxShadow = "0 10px 36px rgba(0,0,0,0.15)";
+      },
+      onMouseLeave: (e) => {
+        e.currentTarget.style.transform = "translateY(0)";
+        e.currentTarget.style.boxShadow = "0 4px 24px rgba(0,0,0,0.10)";
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: {
+            width: 50,
+            height: 50,
+            borderRadius: "50%",
+            background: dapp.iconBg,
+            border: `2px solid ${dapp.iconColor}30`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 24,
+            flexShrink: 0
+          }, children: dapp.emoji }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: (e) => {
+                e.stopPropagation();
+                setSaved((s) => !s);
+              },
+              style: {
+                display: "flex",
+                alignItems: "center",
+                gap: 5,
+                padding: "6px 13px",
+                borderRadius: 20,
+                background: saved ? "#1a1a1a" : "#f3f4f6",
+                color: saved ? "#fff" : "#555",
+                border: "none",
+                cursor: "pointer",
+                fontSize: 12,
+                fontWeight: 600,
+                whiteSpace: "nowrap"
+              },
+              children: saved ? "🔖 Saved" : "☐ Save"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { fontSize: 13, color: "#888", margin: "0 0 5px", lineHeight: 1 }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "#111", fontWeight: 600 }, children: dapp.name }),
+          "  ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: dapp.daysAgo })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { style: {
+          fontSize: 17,
+          fontWeight: 700,
+          color: "#111",
+          margin: "0 0 12px",
+          lineHeight: 1.3
+        }, children: dapp.title }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", gap: 8 }, children: dapp.tags.map((tag) => /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: {
+          padding: "4px 11px",
+          borderRadius: 8,
+          border: "1.5px solid #e5e7eb",
+          color: "#555",
+          fontSize: 12,
+          fontWeight: 500
+        }, children: tag }, tag)) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { flex: 1 } }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: 1, background: "#f0f0f0", margin: "14px 0" } }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between" }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 17, fontWeight: 800, color: "#111", margin: 0 }, children: dapp.stat }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 11, color: "#888", margin: 0, marginTop: 1 }, children: dapp.location })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: (e) => {
+                e.stopPropagation();
+                onNavigate(dapp.url);
+              },
+              style: {
+                padding: "10px 18px",
+                borderRadius: 12,
+                background: "#111",
+                color: "#fff",
+                border: "none",
+                cursor: "pointer",
+                fontSize: 13,
+                fontWeight: 700,
+                boxShadow: "0 2px 8px rgba(0,0,0,0.2)"
+              },
+              onMouseEnter: (e) => {
+                e.currentTarget.style.background = "#333";
+              },
+              onMouseLeave: (e) => {
+                e.currentTarget.style.background = "#111";
+              },
+              children: "Visit"
+            }
+          )
+        ] })
+      ]
+    }
+  );
+}
+function NewsCard({ item, delay: delay2 }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      className: "news-card",
+      style: {
+        background: "#fff",
+        borderRadius: 16,
+        padding: "16px 18px",
+        boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
+        cursor: "pointer",
+        animationDelay: `${delay2}s`,
+        opacity: 0,
+        transition: "box-shadow 0.15s"
+      },
+      onMouseEnter: (e) => {
+        e.currentTarget.style.boxShadow = "0 6px 24px rgba(0,0,0,0.12)";
+      },
+      onMouseLeave: (e) => {
+        e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.07)";
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: {
+            padding: "3px 9px",
+            borderRadius: 6,
+            background: `${item.catColor}18`,
+            color: item.catColor,
+            fontSize: 11,
+            fontWeight: 700
+          }, children: item.cat }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, color: "#888" }, children: item.source }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 11, color: "#bbb", marginLeft: "auto" }, children: item.time })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 14, fontWeight: 600, color: "#111", margin: 0, lineHeight: 1.45 }, children: item.title })
+      ]
+    }
+  );
+}
 function NewTab({ onNavigate }) {
-  useSettings();
   const [query, setQuery] = reactExports.useState("");
-  const [activeChannel, setActiveChannel] = reactExports.useState("For You");
-  const inputRef = reactExports.useRef(null);
-  const [bgIndex] = reactExports.useState(() => pickNextImage());
+  const [bgIndex] = reactExports.useState(() => pickImage());
+  const scrollRef = reactExports.useRef(null);
   const bgUrl = `/tap${bgIndex + 1}.jpg`;
-  reactExports.useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-  const handleSubmit = (e) => {
+  const handleSearch = (e) => {
     e.preventDefault();
     const q = query.trim();
     if (q) onNavigate(q);
   };
-  const glass = {
-    background: "rgba(0,0,0,0.52)",
-    backdropFilter: "blur(28px)",
-    WebkitBackdropFilter: "blur(28px)",
-    border: "1px solid rgba(255,255,255,0.11)",
-    borderRadius: 18
-  };
-  const DARK = "#0d0d16";
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: {
-    width: "100%",
-    height: "100%",
-    overflowY: "scroll",
-    scrollSnapType: "y mandatory",
-    fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
-  }, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: {
-      height: "100%",
-      scrollSnapAlign: "start",
-      position: "relative",
-      display: "flex",
-      flexDirection: "column",
-      overflow: "hidden"
-    }, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "img",
-        {
-          src: bgUrl,
-          alt: "",
-          style: { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 },
-          onError: (e) => {
-            e.target.style.display = "none";
-          }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", width: "100%", height: "100%", overflow: "hidden", fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("style", { children: `
+        @keyframes cardIn {
+          from { opacity: 0; transform: translateY(28px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
-      ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.55) 68%, rgba(0,0,0,0.82) 100%)" } }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "button",
-        {
-          style: { position: "absolute", top: 14, right: 18, zIndex: 10, width: 34, height: 34, borderRadius: "50%", background: "rgba(0,0,0,0.35)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "rgba(255,255,255,0.80)", transition: "background 0.15s" },
-          onMouseEnter: (e) => {
-            e.currentTarget.style.background = "rgba(0,0,0,0.58)";
-          },
-          onMouseLeave: (e) => {
-            e.currentTarget.style.background = "rgba(0,0,0,0.35)";
-          },
-          children: /* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { size: 15 })
+        .dapp-card  { animation: cardIn 0.50s cubic-bezier(0.22,1,0.36,1) forwards; }
+        .news-card  { animation: cardIn 0.45s cubic-bezier(0.22,1,0.36,1) forwards; }
+        .newtab-input::placeholder { color: rgba(30,30,30,0.35); }
+        .scroll-area::-webkit-scrollbar { width: 4px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+        .scroll-area::-webkit-scrollbar-track { background: transparent; }
+      ` }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "img",
+      {
+        src: bgUrl,
+        alt: "",
+        style: { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0 },
+        onError: (e) => {
+          e.target.style.display = "none";
         }
-      ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 5, display: "flex", justifyContent: "center", paddingTop: 24, flexShrink: 0 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("form", { onSubmit: handleSubmit, style: { width: "100%", maxWidth: 600, padding: "0 20px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.96)", backdropFilter: "blur(20px)", borderRadius: 9999, padding: "13px 22px", boxShadow: "0 6px 32px rgba(0,0,0,0.25)" }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 20, color: "#FB5B22", style: { flexShrink: 0 } }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "input",
-          {
-            ref: inputRef,
-            type: "text",
-            value: query,
-            onChange: (e) => setQuery(e.target.value),
-            placeholder: "Ask anything, find anything...",
-            style: { flex: 1, background: "transparent", border: "none", outline: "none", fontSize: 15, color: "#111", fontFamily: "inherit" },
-            className: "newtab-input"
-          }
-        )
-      ] }) }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { flex: 1 } }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 5, padding: "0 16px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { ...glass, padding: "14px 18px" }, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: "rgba(255,255,255,0.36)", textTransform: "uppercase", margin: "0 0 10px" }, children: "Stats" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "flex-end" }, children: [
-            { n: "7", unit: "", sub: "Trackers blocked" },
-            { n: "465", unit: " KB", sub: "Bandwidth saved" },
-            { n: "0", unit: " sec", sub: "Time saved" }
-          ].map((s, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { fontSize: 20, fontWeight: 800, color: "#818CF8", margin: "0 0 3px", letterSpacing: "-0.5px", lineHeight: 1 }, children: [
-              s.n,
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 11, fontWeight: 500 }, children: s.unit })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 9.5, color: "rgba(255,255,255,0.40)", margin: 0, lineHeight: 1.3 }, children: s.sub })
-          ] }, i)) })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { ...glass, padding: "14px 18px", display: "flex", flexDirection: "column", justifyContent: "space-between" }, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: "rgba(255,255,255,0.36)", textTransform: "uppercase", margin: "0 0 10px" }, children: "News" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 10 }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 38, height: 38, borderRadius: 10, background: "rgba(255,255,255,0.10)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }, children: "📰" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 12, fontWeight: 600, color: "#fff", margin: "0 0 3px", lineHeight: 1.35 }, children: "Crypto & world news" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 10, color: "rgba(255,255,255,0.40)", margin: 0 }, children: "Scroll down to read ↓" })
-            ] })
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { ...glass, padding: "14px 18px", display: "flex", flexDirection: "column", justifyContent: "space-between" }, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 11, color: "#FB5B22" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: "rgba(255,255,255,0.36)", textTransform: "uppercase", margin: 0 }, children: "Orivon VPN" })
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", inset: 0, background: "linear-gradient(160deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.30) 100%)", zIndex: 1 } }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        ref: scrollRef,
+        className: "scroll-area",
+        style: { position: "absolute", inset: 0, zIndex: 2, overflowY: "auto", scrollBehavior: "smooth" },
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { style: {
+            height: "100%",
+            // fills the visible viewport exactly
+            display: "flex",
+            flexDirection: "column",
+            padding: "40px 40px 0",
+            boxSizing: "border-box"
+          }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("form", { onSubmit: handleSearch, style: { marginBottom: 24 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: {
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              background: "rgba(255,255,255,0.92)",
+              backdropFilter: "blur(16px)",
+              borderRadius: 9999,
+              padding: "10px 20px",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+              maxWidth: 520
+            }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 15, color: "#888" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "input",
+                {
+                  type: "text",
+                  value: query,
+                  onChange: (e) => setQuery(e.target.value),
+                  placeholder: "Search or enter address · .eth · ipfs://",
+                  className: "newtab-input",
+                  style: {
+                    flex: 1,
+                    border: "none",
+                    outline: "none",
+                    background: "transparent",
+                    fontSize: 14,
+                    color: "#111",
+                    fontFamily: "inherit"
+                  }
+                }
+              )
+            ] }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: {
+              fontSize: 20,
+              fontWeight: 700,
+              color: "#fff",
+              margin: "0 0 16px",
+              letterSpacing: "-0.3px",
+              textShadow: "0 1px 4px rgba(0,0,0,0.3)"
+            }, children: "dApps" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: {
+              flex: 1,
+              minHeight: 0,
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr",
+              gap: 14,
+              paddingBottom: 32
+              // breathing room at bottom (peek hint)
+            }, children: ALL_DAPPS.slice(0, 3).map((dapp, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+              DAppCard$1,
+              {
+                dapp,
+                delay: 0.08 + i * 0.1,
+                onNavigate,
+                fillHeight: true
+              },
+              dapp.id
+            )) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: {
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: 32,
+              paddingBottom: 8
+            }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: {
+              width: 28,
+              height: 28,
+              borderRadius: "50%",
+              background: "rgba(255,255,255,0.2)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              animation: "cardIn 0.6s 0.8s ease forwards",
+              opacity: 0
+            }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M2 4l4 4 4-4", stroke: "#fff", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round" }) }) }) })
           ] }),
-          ["Extra privacy online", "Hide your IP & location", "Protect all your apps"].map((b2, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { fontSize: 11, color: "rgba(255,255,255,0.55)", margin: "3px 0", display: "flex", alignItems: "center", gap: 6, lineHeight: 1 }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { width: 13, height: 13, borderRadius: "50%", border: "1.5px solid rgba(255,255,255,0.25)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 7.5, flexShrink: 0 }, children: "✓" }),
-            b2
-          ] }, i))
-        ] }),
-        DAPPS$1.map((app) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "div",
-          {
-            onClick: () => onNavigate(app.url),
-            style: { ...glass, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 9, padding: "18px 10px", cursor: "pointer", transition: "background 0.15s, transform 0.12s, border-color 0.15s" },
-            onMouseEnter: (e) => {
-              const el = e.currentTarget;
-              el.style.background = "rgba(255,255,255,0.13)";
-              el.style.transform = "translateY(-2px) scale(1.02)";
-              el.style.borderColor = "rgba(255,255,255,0.22)";
-            },
-            onMouseLeave: (e) => {
-              const el = e.currentTarget;
-              el.style.background = "rgba(0,0,0,0.52)";
-              el.style.transform = "translateY(0) scale(1)";
-              el.style.borderColor = "rgba(255,255,255,0.11)";
-            },
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 52, height: 52, borderRadius: 16, background: `${app.accent}22`, border: `1.5px solid ${app.accent}44`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, boxShadow: `0 4px 16px ${app.accent}33` }, children: app.icon }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.82)", letterSpacing: "0.01em" }, children: app.name })
-            ]
-          },
-          app.name
-        ))
-      ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: 12 } }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("style", { children: `.newtab-input::placeholder { color: rgba(0,0,0,0.36); }` })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: {
-      height: "100%",
-      scrollSnapAlign: "start",
-      display: "flex",
-      overflow: "hidden",
-      background: DARK
-    }, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { width: 210, flexShrink: 0, background: DARK, borderRight: "1px solid rgba(255,255,255,0.06)", padding: "22px 10px", display: "flex", flexDirection: "column", gap: 2, overflowY: "hidden" }, children: [
-        SIDEBAR_MAIN.map((cat) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "button",
-          {
-            onClick: () => setActiveChannel(cat),
-            style: { width: "100%", padding: "9px 14px", borderRadius: 10, border: "none", background: activeChannel === cat ? "rgba(99,102,241,0.20)" : "transparent", cursor: "pointer", textAlign: "left", fontSize: 14, fontWeight: 600, color: activeChannel === cat ? "#A5B4FC" : "rgba(255,255,255,0.55)", transition: "all 0.12s" },
-            onMouseEnter: (e) => {
-              if (activeChannel !== cat) e.currentTarget.style.background = "rgba(255,255,255,0.05)";
-            },
-            onMouseLeave: (e) => {
-              if (activeChannel !== cat) e.currentTarget.style.background = "transparent";
-            },
-            children: cat
-          },
-          cat
-        )),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 14px 6px" }, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)" }, children: "Channels" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 18, color: "rgba(255,255,255,0.25)", cursor: "pointer", lineHeight: 1 }, children: "+" })
-        ] }),
-        SIDEBAR_CH.map((ch) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "button",
-          {
-            onClick: () => setActiveChannel(ch),
-            style: { width: "100%", padding: "7px 14px", borderRadius: 8, border: "none", background: activeChannel === ch ? "rgba(99,102,241,0.20)" : "transparent", cursor: "pointer", textAlign: "left", fontSize: 13, fontWeight: 500, color: activeChannel === ch ? "#A5B4FC" : "rgba(255,255,255,0.45)", transition: "all 0.12s" },
-            onMouseEnter: (e) => {
-              if (activeChannel !== ch) e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-            },
-            onMouseLeave: (e) => {
-              if (activeChannel !== ch) e.currentTarget.style.background = "transparent";
-            },
-            children: ch
-          },
-          ch
-        ))
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, background: DARK, overflowY: "auto", padding: "22px 28px 32px" }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { borderRadius: 16, overflow: "hidden", marginBottom: 14, height: 210, background: CRYPTO_NEWS[0].heroGrad, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 8px 32px rgba(0,0,0,0.35)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 80, filter: "drop-shadow(0 4px 20px rgba(0,0,0,0.35))" }, children: CRYPTO_NEWS[0].heroEmoji }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.55)" }, children: CRYPTO_NEWS[0].source }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "rgba(255,255,255,0.20)", fontSize: 10 }, children: "•" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 5, background: `${CRYPTO_NEWS[0].catColor}28`, color: CRYPTO_NEWS[0].catColor }, children: CRYPTO_NEWS[0].cat }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "rgba(255,255,255,0.20)", fontSize: 10 }, children: "•" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 11, color: "rgba(255,255,255,0.35)" }, children: CRYPTO_NEWS[0].time })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 18, fontWeight: 700, color: "rgba(255,255,255,0.92)", margin: "0 0 4px", lineHeight: 1.45, cursor: "pointer" }, children: CRYPTO_NEWS[0].title }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: 1, background: "rgba(255,255,255,0.07)", margin: "18px 0" } }),
-        CRYPTO_NEWS.slice(1).map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "div",
-          {
-            style: { display: "flex", gap: 14, padding: "13px 12px", borderRadius: 12, cursor: "pointer", marginBottom: 2, transition: "background 0.12s" },
-            onMouseEnter: (e) => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-            },
-            onMouseLeave: (e) => {
-              e.currentTarget.style.background = "transparent";
-            },
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, minWidth: 0 }, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 7, marginBottom: 7, flexWrap: "wrap" }, children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.50)" }, children: item.source }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "rgba(255,255,255,0.18)", fontSize: 10 }, children: "•" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 5, background: `${item.catColor}28`, color: item.catColor }, children: item.cat }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "rgba(255,255,255,0.18)", fontSize: 10 }, children: "•" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 11, color: "rgba(255,255,255,0.30)" }, children: item.time })
-                ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.85)", margin: 0, lineHeight: 1.5 }, children: item.title })
-              ] }),
-              item.hasThumb && item.heroGrad && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 76, height: 64, borderRadius: 10, background: item.heroGrad, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, boxShadow: "0 4px 12px rgba(0,0,0,0.3)" }, children: item.heroEmoji }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { width: 24, height: 24, borderRadius: 6, border: "none", background: "none", cursor: "pointer", color: "rgba(255,255,255,0.25)", flexShrink: 0, alignSelf: "flex-start", fontSize: 16, letterSpacing: 1 }, children: "···" })
-            ]
-          },
-          item.id
-        ))
-      ] })
-    ] })
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { style: {
+            padding: "36px 40px 48px",
+            background: "rgba(0,0,0,0.08)",
+            // subtle separation
+            backdropFilter: "blur(4px)"
+          }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: {
+              fontSize: 20,
+              fontWeight: 700,
+              color: "#fff",
+              margin: "0 0 16px",
+              letterSpacing: "-0.3px",
+              textShadow: "0 1px 4px rgba(0,0,0,0.3)"
+            }, children: "All dApps" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: {
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 14,
+              marginBottom: 44
+            }, children: ALL_DAPPS.map((dapp, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+              DAppCard$1,
+              {
+                dapp,
+                delay: 0.05 + i * 0.07,
+                onNavigate
+              },
+              dapp.id
+            )) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: {
+              fontSize: 20,
+              fontWeight: 700,
+              color: "#fff",
+              margin: "0 0 16px",
+              letterSpacing: "-0.3px",
+              textShadow: "0 1px 4px rgba(0,0,0,0.3)"
+            }, children: "News" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }, children: NEWS.map((item, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(NewsCard, { item, delay: 0.05 + i * 0.06 }, item.id)) })
+          ] })
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        style: {
+          position: "absolute",
+          top: 16,
+          right: 18,
+          zIndex: 10,
+          width: 32,
+          height: 32,
+          borderRadius: "50%",
+          background: "rgba(255,255,255,0.2)",
+          border: "none",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          transition: "background 0.15s"
+        },
+        onMouseEnter: (e) => {
+          e.currentTarget.style.background = "rgba(255,255,255,0.35)";
+        },
+        onMouseLeave: (e) => {
+          e.currentTarget.style.background = "rgba(255,255,255,0.20)";
+        },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { size: 15, color: "#fff" })
+      }
+    )
   ] });
 }
 const MARKET = [
