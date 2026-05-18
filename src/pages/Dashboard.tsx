@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   BarChart3, User, Compass, ShoppingCart, Send, RefreshCw,
-  Link as LinkIcon, Download, Globe, MoreVertical, Plus,
+  Link as LinkIcon, Download, MoreVertical, Plus,
   ArrowLeftRight, Search, Lock, Shield,
   Settings, HelpCircle, Copy, CheckCircle, ChevronDown,
   Sparkles, Filter, ListFilter, MoreHorizontal, Eye, EyeOff,
@@ -12,7 +12,8 @@ import { useWalletStore } from '../store/wallet';
 type Section = 'portfolio' | 'accounts' | 'explore' | 'buy' | 'send' | 'swap' | 'bridge' | 'deposit';
 type PortfolioTab = 'assets' | 'nfts' | 'activity';
 
-interface DashboardProps { onOpenBrowser: () => void; }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface DashboardProps { onOpenBrowser?: () => void; }
 
 const MARKET = [
   { name: 'Bitcoin',   sym: 'BTC',  price: '$78,224.00', change:  0.47, cap: '$1,567.7B', vol: '$18.9B', color: '#F7931A', icon: '₿', bg: '#FFF8F0' },
@@ -191,12 +192,6 @@ export default function Dashboard({ onOpenBrowser }: DashboardProps) {
             );
           })}
         </nav>
-        <div style={{ borderTop: '1px solid #f3f4f6' }}>
-          <div onClick={onOpenBrowser} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 20px', cursor: 'pointer', color: '#374151', userSelect: 'none' }}>
-            <Globe size={17} strokeWidth={1.8} color="#6b7280" />
-            <span>Go to browser</span>
-          </div>
-        </div>
       </aside>
 
       {/* ── Main area ── */}
@@ -268,6 +263,9 @@ export default function Dashboard({ onOpenBrowser }: DashboardProps) {
                     ))}
                   </div>
                 </div>
+
+                {/* Portfolio chart */}
+                <PortfolioChart />
 
                 {/* Tabs */}
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 28 }}>
@@ -679,3 +677,79 @@ const selectBtnStyle: React.CSSProperties = {
 const formLabelStyle: React.CSSProperties = {
   fontSize: 11, fontWeight: 500, color: '#9CA3AF', display: 'block', marginBottom: 6,
 };
+
+// ─── Portfolio chart ──────────────────────────────────────────────────────────
+
+function PortfolioChart() {
+  const [timeframe, setTimeframe] = useState('1 Hour');
+  const timeframes = ['1 Hour', '1 Day', '1 Week', '1 Month', '1 Year', 'All'];
+
+  // Fake chart data — slightly varied to look like real portfolio activity
+  const DATA = [
+    0.28, 0.30, 0.34, 0.40, 0.52, 0.61, 0.68, 0.64, 0.59,
+    0.55, 0.51, 0.48, 0.44, 0.42, 0.40, 0.38, 0.36, 0.35,
+    0.34, 0.33, 0.32, 0.31, 0.31, 0.30, 0.30, 0.30, 0.30,
+    0.30, 0.30, 0.30,
+  ];
+
+  const W = 660, H = 110;
+  const minV = Math.min(...DATA), maxV = Math.max(...DATA);
+  const range = maxV - minV || 1;
+
+  const pts = DATA.map((v, i) => ({
+    x: (i / (DATA.length - 1)) * W,
+    y: 8 + (1 - (v - minV) / range) * (H - 16),
+  }));
+
+  const line = pts.reduce((acc, p, i) => {
+    if (i === 0) return `M ${p.x} ${p.y}`;
+    const prev = pts[i - 1];
+    const cx = (prev.x + p.x) / 2;
+    return acc + ` C ${cx} ${prev.y} ${cx} ${p.y} ${p.x} ${p.y}`;
+  }, '');
+
+  const area = `${line} L ${W} ${H} L 0 ${H} Z`;
+  const isFlat = maxV - minV < 0.01;
+
+  return (
+    <div style={{ marginBottom: 24 }}>
+      {/* Change indicators + time selector */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <span style={{ fontSize: 13, color: '#EF4444', fontWeight: 500 }}>-$0.00</span>
+          <span style={{ fontSize: 12, background: '#FEE2E2', color: '#EF4444', fontWeight: 600, padding: '2px 8px', borderRadius: 6 }}>-0.11%</span>
+        </div>
+        {/* Time selector */}
+        <div style={{ position: 'relative' }}>
+          <button
+            style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px', border: '1px solid #E5E7EB', borderRadius: 8, background: '#fff', fontSize: 12, fontWeight: 500, color: '#374151', cursor: 'pointer' }}
+            onClick={() => {
+              const idx = timeframes.indexOf(timeframe);
+              setTimeframe(timeframes[(idx + 1) % timeframes.length]);
+            }}
+          >
+            {timeframe} <ChevronDown size={12} />
+          </button>
+        </div>
+      </div>
+
+      {/* SVG chart */}
+      <div style={{ width: '100%', overflow: 'hidden', borderRadius: 8 }}>
+        <svg
+          width="100%" viewBox={`0 0 ${W} ${H}`}
+          preserveAspectRatio="none"
+          style={{ display: 'block' }}
+        >
+          <defs>
+            <linearGradient id="portfolioGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#4F46E5" stopOpacity={isFlat ? 0.04 : 0.12} />
+              <stop offset="100%" stopColor="#4F46E5" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <path d={area} fill="url(#portfolioGrad)" />
+          <path d={line} stroke="#4F46E5" strokeWidth="2" fill="none" strokeLinecap="round" />
+        </svg>
+      </div>
+    </div>
+  );
+}

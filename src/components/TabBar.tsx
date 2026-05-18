@@ -28,7 +28,7 @@ export default function TabBar({
   const activeTabBg = isDark ? '#1c1c1e' : '#f2f2f7';         // matches toolbar bg — gives tab "lift"
 
   return (
-    <div className={`h-10 flex items-end shrink-0 drag ${tabBg}`}>
+    <div className={`h-9 flex items-end shrink-0 drag ${tabBg}`}>
 
       {/* macOS: leave 80px for native traffic lights (trafficLightPosition x:14 y:12) */}
       {isMac && <div className="shrink-0 h-full" style={{ width: 82 }} />}
@@ -139,20 +139,20 @@ function Tab({ tab, isActive, isDark, activeTabBg, onClick, onClose }: {
           ? activeTabBg
           : 'transparent',
         color: isActive
-          ? isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.9)'
-          : isDark ? 'rgba(255,255,255,0.38)' : 'rgba(0,0,0,0.38)',
+          ? isDark ? 'rgba(255,255,255,0.92)' : 'rgba(0,0,0,0.82)'
+          : isDark ? 'rgba(255,255,255,0.50)' : 'rgba(0,0,0,0.50)',
         zIndex: isActive ? 10 : 0,
       }}
       onMouseEnter={e => {
         if (!isActive) {
-          (e.currentTarget as HTMLDivElement).style.background = isDark ? '#131313' : '#c8c8c8';
-          (e.currentTarget as HTMLDivElement).style.color = isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)';
+          (e.currentTarget as HTMLDivElement).style.background = isDark ? '#202024' : '#d0d0d8';
+          (e.currentTarget as HTMLDivElement).style.color = isDark ? 'rgba(255,255,255,0.72)' : 'rgba(0,0,0,0.72)';
         }
       }}
       onMouseLeave={e => {
         if (!isActive) {
           (e.currentTarget as HTMLDivElement).style.background = 'transparent';
-          (e.currentTarget as HTMLDivElement).style.color = isDark ? 'rgba(255,255,255,0.38)' : 'rgba(0,0,0,0.38)';
+          (e.currentTarget as HTMLDivElement).style.color = isDark ? 'rgba(255,255,255,0.50)' : 'rgba(0,0,0,0.50)';
         }
       }}
     >
@@ -170,7 +170,7 @@ function Tab({ tab, isActive, isDark, activeTabBg, onClick, onClose }: {
         ) : tab.type === 'ipfs' || tab.type === 'ipns' ? (
           <div className="w-2.5 h-2.5 rounded-full bg-[#00D1FF]/30 ring-1 ring-[#00D1FF]/70" />
         ) : tab.url === NEW_TAB ? (
-          <Globe size={12} strokeWidth={1.8} className={isDark ? 'text-white/30' : 'text-black/30'} />
+          <Globe size={12} strokeWidth={1.8} className={isDark ? 'text-white/55' : 'text-black/50'} />
         ) : (
           <Globe size={12} strokeWidth={1.8} />
         )}

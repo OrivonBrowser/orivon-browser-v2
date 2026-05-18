@@ -62,18 +62,6 @@ export default function Onboarding({ onDone }: OnboardingProps) {
   // Before-we-begin checkboxes
   const [checked1, setChecked1]   = useState(false);
   const [checked2, setChecked2]   = useState(false);
-  // Supported networks
-  const [networkSearch, setNetworkSearch] = useState('');
-  const [showTestnets, setShowTestnets]   = useState(false);
-  const [selectedNets, setSelectedNets]   = useState<Set<string>>(
-    () => new Set(['eth','fil','btc','zec','ada','matic','op','arb','avax','base','bnb','ftm','cro'])
-  );
-  const toggleNet = (id: string) => setSelectedNets(prev => {
-    const s = new Set(prev);
-    s.has(id) ? s.delete(id) : s.add(id);
-    return s;
-  });
-
   // Import word-grid state
   const [importWordCount, setImportWordCount] = useState<12 | 24>(12);
   const [importWords, setImportWords]         = useState<string[]>(Array(12).fill(''));
@@ -223,7 +211,7 @@ export default function Onboarding({ onDone }: OnboardingProps) {
                 <CenterBtn
                   onClick={() => {
                     setChecked1(false); setChecked2(false);
-                    setStep(mode === 'create' ? 'create-password' : 'import-type');
+                    setStep(mode === 'create' ? 'supported-networks' : 'import-type');
                   }}
                   disabled={!bothChecked}
                 >
@@ -250,9 +238,9 @@ export default function Onboarding({ onDone }: OnboardingProps) {
                   Which type of wallet would you like to import?
                 </h1>
 
-                {/* Option 1 — Ethereum/Solana/Filecoin → supported-networks */}
+                {/* Option 1 — Ethereum/Solana/Filecoin wallet */}
                 <div
-                  onClick={() => setStep('supported-networks')}
+                  onClick={() => setStep('import')}
                   style={importOptionRow}
                   onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = '#FAFAFA'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = 'transparent'; }}
@@ -300,17 +288,47 @@ export default function Onboarding({ onDone }: OnboardingProps) {
 
           {/* ── Supported networks ───────────────────────────────────── */}
           {step === 'supported-networks' && (
-            <motion.div key="supported-networks" {...SLIDE} style={{ width: '100%' }}>
-              <SupportedNetworksCard
-                selectedNets={selectedNets}
-                toggleNet={toggleNet}
-                networkSearch={networkSearch}
-                setNetworkSearch={setNetworkSearch}
-                showTestnets={showTestnets}
-                setShowTestnets={setShowTestnets}
-                onBack={() => setStep('import-type')}
-                onContinue={() => setStep('import')}
-              />
+            <motion.div key="supported-networks" {...SLIDE}>
+              <LightCard>
+                <button
+                  onClick={() => setStep('before-we-begin')}
+                  style={backBtnInCard}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#EEF2FF'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+                >
+                  <ArrowLeft size={18} />
+                </button>
+
+                <h1 style={{ ...titleStyle, textAlign: 'center' }}>Supported Networks</h1>
+                <p style={{ ...subStyle, textAlign: 'center' }}>
+                  Orivon Wallet supports the following networks out of the box.
+                </p>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 40 }}>
+                  {[
+                    { name: 'Ethereum',  sub: 'ETH · EVM Chains · Base · Optimism', color: '#627EEA', icon: 'Ξ' },
+                    { name: 'Solana',    sub: 'SOL · Solana Mainnet',                color: '#9945FF', icon: '◎' },
+                    { name: 'Bitcoin',   sub: 'BTC · Bitcoin Mainnet',               color: '#F7931A', icon: '₿' },
+                    { name: 'Polygon',   sub: 'MATIC · Polygon Mainnet',             color: '#8247E5', icon: 'M' },
+                    { name: 'BNB Chain', sub: 'BNB · BNB Smart Chain',               color: '#F3BA2F', icon: 'B' },
+                    { name: 'Filecoin',  sub: 'FIL · Filecoin Mainnet',              color: '#0090FF', icon: 'F' },
+                  ].map(net => (
+                    <div key={net.name} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderRadius: 12, background: '#F9FAFB', border: '1px solid #F3F4F6' }}>
+                      <div style={{ width: 38, height: 38, borderRadius: '50%', background: net.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 15, fontWeight: 700, flexShrink: 0 }}>
+                        {net.icon}
+                      </div>
+                      <div>
+                        <p style={{ fontSize: 14, fontWeight: 600, color: '#111827', margin: '0 0 2px' }}>{net.name}</p>
+                        <p style={{ fontSize: 11, color: '#9CA3AF', margin: 0 }}>{net.sub}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <CenterBtn onClick={() => setStep('create-password')}>
+                  Continue with 6 Networks
+                </CenterBtn>
+              </LightCard>
             </motion.div>
           )}
 
@@ -320,14 +338,8 @@ export default function Onboarding({ onDone }: OnboardingProps) {
               <LightCard>
                 {/* Back arrow inside the card — top left */}
                 <button
-                  onClick={() => setStep('choose')}
-                  style={{
-                    width: 40, height: 40, borderRadius: '50%',
-                    border: '1.5px solid #C7D2FE', background: 'transparent',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    cursor: 'pointer', color: '#4F46E5', marginBottom: 20,
-                    transition: 'background 0.12s',
-                  }}
+                  onClick={() => setStep('supported-networks')}
+                  style={backBtnInCard}
                   onMouseEnter={e => { e.currentTarget.style.background = '#EEF2FF'; }}
                   onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
                 >
@@ -997,205 +1009,3 @@ const subStyle:   React.CSSProperties = { fontSize: 15, color: '#6B7280', lineHe
 const inputSt:    React.CSSProperties = { width: '100%', height: 52, borderRadius: 12, padding: '0 48px 0 18px', fontSize: 15, color: '#111827', background: '#F9FAFB', border: '1px solid #E5E7EB', outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box', display: 'block', marginBottom: 8 };
 const skipBtnStyle: React.CSSProperties = { background: 'none', border: 'none', color: '#9CA3AF', fontSize: 15, cursor: 'pointer', padding: '4px 0', transition: 'color 0.15s' };
 
-// ─── Supported Networks Card ──────────────────────────────────────────────────
-
-interface Network { id: string; name: string; color: string; icon: string; section: 'featured' | 'popular'; }
-
-const ALL_NETWORKS: Network[] = [
-  // Featured
-  { id: 'sol',   name: 'Solana Mainnet Beta',    color: '#9945FF', icon: '◎', section: 'featured' },
-  { id: 'eth',   name: 'Ethereum Mainnet',        color: '#627EEA', icon: 'Ξ',  section: 'featured' },
-  { id: 'fil',   name: 'Filecoin Mainnet',        color: '#0090FF', icon: 'F',  section: 'featured' },
-  { id: 'btc',   name: 'Bitcoin Mainnet',         color: '#F7931A', icon: '₿',  section: 'featured' },
-  { id: 'zec',   name: 'Zcash Mainnet',           color: '#F4B728', icon: 'Z',  section: 'featured' },
-  { id: 'ada',   name: 'Cardano Mainnet',         color: '#0033AD', icon: 'A',  section: 'featured' },
-  // Popular
-  { id: 'matic', name: 'Polygon',                 color: '#8247E5', icon: 'M',  section: 'popular' },
-  { id: 'op',    name: 'Optimism',                color: '#FF0420', icon: 'O',  section: 'popular' },
-  { id: 'arb',   name: 'Arbitrum One',            color: '#28A0F0', icon: 'A',  section: 'popular' },
-  { id: 'avax',  name: 'Avalanche',               color: '#E84142', icon: 'A',  section: 'popular' },
-  { id: 'base',  name: 'Base',                    color: '#0052FF', icon: 'B',  section: 'popular' },
-  { id: 'bnb',   name: 'BNB Smart Chain',         color: '#F3BA2F', icon: 'B',  section: 'popular' },
-  { id: 'ftm',   name: 'Fantom',                  color: '#1969FF', icon: 'F',  section: 'popular' },
-  { id: 'cro',   name: 'Cronos',                  color: '#002D74', icon: 'C',  section: 'popular' },
-  { id: 'gnosis',name: 'Gnosis',                  color: '#04795B', icon: 'G',  section: 'popular' },
-  { id: 'celo',  name: 'Celo',                    color: '#FCFF52', icon: 'C',  section: 'popular' },
-  { id: 'aurora',name: 'Aurora',                  color: '#70D44B', icon: 'A',  section: 'popular' },
-  { id: 'moonbeam', name: 'Moonbeam',             color: '#53CBC9', icon: 'M',  section: 'popular' },
-];
-
-function NetworkChip({ net, selected, onToggle }: { net: Network; selected: boolean; onToggle: () => void; key?: string }) {
-  return (
-    <div
-      onClick={onToggle}
-      style={{
-        position: 'relative', borderRadius: 12, padding: '12px 8px 10px',
-        border: `1.5px solid ${selected ? '#4F46E5' : '#E5E7EB'}`,
-        background: selected ? '#F5F3FF' : '#fff',
-        cursor: 'pointer', textAlign: 'center',
-        transition: 'border-color 0.12s, background 0.12s',
-      }}
-    >
-      {/* Checkbox top-right */}
-      <div style={{
-        position: 'absolute', top: 6, right: 6,
-        width: 16, height: 16, borderRadius: 4,
-        background: selected ? '#4F46E5' : 'transparent',
-        border: `1.5px solid ${selected ? '#4F46E5' : '#D1D5DB'}`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
-        {selected && (
-          <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-            <path d="M1 4l2.5 2.5L9 1" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        )}
-      </div>
-      {/* Icon */}
-      <div style={{
-        width: 36, height: 36, borderRadius: '50%', background: net.color,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: '#fff', fontSize: 16, fontWeight: 700, margin: '0 auto 8px',
-      }}>
-        {net.icon}
-      </div>
-      {/* Name */}
-      <p style={{ fontSize: 11, fontWeight: 600, color: '#111827', margin: 0, lineHeight: 1.3 }}>
-        {net.name}
-      </p>
-    </div>
-  );
-}
-
-interface SupportedNetworksCardProps {
-  selectedNets: Set<string>;
-  toggleNet: (id: string) => void;
-  networkSearch: string;
-  setNetworkSearch: (v: string) => void;
-  showTestnets: boolean;
-  setShowTestnets: (v: boolean) => void;
-  onBack: () => void;
-  onContinue: () => void;
-}
-
-function SupportedNetworksCard({
-  selectedNets, toggleNet, networkSearch, setNetworkSearch,
-  showTestnets, setShowTestnets, onBack, onContinue,
-}: SupportedNetworksCardProps) {
-  const filtered = ALL_NETWORKS.filter(n =>
-    n.name.toLowerCase().includes(networkSearch.toLowerCase())
-  );
-  const featured = filtered.filter(n => n.section === 'featured');
-  const popular  = filtered.filter(n => n.section === 'popular');
-  const count    = selectedNets.size;
-
-  const deselectPopular = () => {
-    popular.forEach(n => {
-      if (selectedNets.has(n.id)) toggleNet(n.id);
-    });
-  };
-
-  return (
-    <div style={{ maxWidth: 740, margin: '0 auto', padding: '0 28px 24px', width: '100%' }}>
-      <div style={{
-        background: '#fff', borderRadius: 20,
-        boxShadow: '0 2px 20px rgba(0,0,0,0.08)',
-        display: 'flex', flexDirection: 'column',
-        maxHeight: 'calc(100vh - 140px)', overflow: 'hidden',
-      }}>
-
-        {/* ── Fixed header ───────────────────────────────────────────── */}
-        <div style={{ padding: '36px 52px 0', flexShrink: 0 }}>
-          <button
-            onClick={onBack}
-            style={backBtnInCard}
-            onMouseEnter={e => { e.currentTarget.style.background = '#EEF2FF'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
-          >
-            <ArrowLeft size={18} />
-          </button>
-
-          <h1 style={{ ...titleStyle, textAlign: 'center', marginBottom: 6 }}>Supported networks</h1>
-          <p style={{ ...subStyle, textAlign: 'center', marginBottom: 20 }}>
-            Choose which blockchains to use in your wallet.
-          </p>
-
-          {/* Search + Show testnets */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8, background: '#F3F4F6', borderRadius: 10, padding: '9px 14px' }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-              </svg>
-              <input
-                value={networkSearch}
-                onChange={e => setNetworkSearch(e.target.value)}
-                placeholder="Search networks"
-                style={{ border: 'none', outline: 'none', background: 'transparent', fontSize: 14, color: '#111827', flex: 1, fontFamily: 'inherit' }}
-              />
-            </div>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontSize: 13, color: '#374151', flexShrink: 0, whiteSpace: 'nowrap' }}>
-              <input type="checkbox" checked={showTestnets} onChange={e => setShowTestnets(e.target.checked)} style={{ width: 15, height: 15, accentColor: '#4F46E5', cursor: 'pointer' }} />
-              Show testnets
-            </label>
-          </div>
-        </div>
-
-        {/* ── Scrollable network list ─────────────────────────────────── */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '0 52px' }}>
-
-          {/* Featured */}
-          {featured.length > 0 && (
-            <div style={{ marginBottom: 20 }}>
-              <p style={{ fontSize: 11, fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Featured</p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
-                {featured.map(net => (
-                  <NetworkChip key={net.id} net={net} selected={selectedNets.has(net.id)} onToggle={() => toggleNet(net.id)} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Popular */}
-          {popular.length > 0 && (
-            <div style={{ marginBottom: 20 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                <p style={{ fontSize: 11, fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>Popular</p>
-                <button
-                  onClick={deselectPopular}
-                  style={{ fontSize: 13, color: '#4F46E5', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 500, padding: 0 }}
-                >
-                  Deselect all
-                </button>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
-                {popular.map(net => (
-                  <NetworkChip key={net.id} net={net} selected={selectedNets.has(net.id)} onToggle={() => toggleNet(net.id)} />
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* ── Fixed bottom ────────────────────────────────────────────── */}
-        <div style={{ padding: '16px 52px 36px', borderTop: '1px solid #F3F4F6', flexShrink: 0 }}>
-          <button
-            onClick={onContinue}
-            style={{
-              width: '100%', height: 52, borderRadius: 9999,
-              background: '#4F46E5', color: '#fff',
-              fontSize: 15, fontWeight: 600, border: 'none', cursor: 'pointer',
-              boxShadow: '0 2px 12px rgba(79,70,229,0.30)',
-              transition: 'filter 0.15s', marginBottom: 10,
-            }}
-            onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.1)'; }}
-            onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; }}
-          >
-            Continue with {count} Network{count !== 1 ? 's' : ''}
-          </button>
-          <p style={{ fontSize: 12, color: '#9CA3AF', textAlign: 'center', margin: 0 }}>
-            You can add networks anytime in Settings.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}

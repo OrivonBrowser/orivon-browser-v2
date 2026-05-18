@@ -51,8 +51,7 @@ const SIDEBAR_CHANNELS = ['Top Sources', 'Crypto News', 'Bitcoin', 'Ethereum', '
 interface NewTabProps { onNavigate: (url: string) => void; }
 
 export default function NewTab({ onNavigate }: NewTabProps) {
-  const { theme } = useSettings();
-  const isDark = theme === 'dark';
+  useSettings(); // theme available via store if needed
 
   const [query, setQuery] = useState('');
   const [activeChannel, setActiveChannel] = useState('For You');
