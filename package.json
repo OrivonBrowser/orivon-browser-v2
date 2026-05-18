@@ -48,8 +48,8 @@
     },
     "publish": {
       "provider": "github",
-      "owner": "orivon",
-      "repo": "orivon-browser",
+      "owner": "barnazaka",
+      "repo": "orivon",
       "releaseType": "release"
     },
     "win": {
