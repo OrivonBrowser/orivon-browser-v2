@@ -116,7 +116,9 @@ export const useTabsStore = create<TabsState>()(
         const url = tab.history[tab.historyIndex - 1];
         set(s => ({
           tabs: s.tabs.map(t =>
-            t.id === id ? { ...t, historyIndex: t.historyIndex - 1, url, isLoading: true } : t
+            t.id === id
+              ? { ...t, historyIndex: t.historyIndex - 1, url, isLoading: !url.startsWith('orivon://') }
+              : t
           ),
         }));
         return url;
@@ -128,7 +130,9 @@ export const useTabsStore = create<TabsState>()(
         const url = tab.history[tab.historyIndex + 1];
         set(s => ({
           tabs: s.tabs.map(t =>
-            t.id === id ? { ...t, historyIndex: t.historyIndex + 1, url, isLoading: true } : t
+            t.id === id
+              ? { ...t, historyIndex: t.historyIndex + 1, url, isLoading: !url.startsWith('orivon://') }
+              : t
           ),
         }));
         return url;

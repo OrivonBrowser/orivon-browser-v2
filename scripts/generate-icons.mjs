@@ -1,152 +1,62 @@
 #!/usr/bin/env node
 /**
  * Orivon Browser — Icon Generator
- * Creates all icon assets from pure Node.js (no external dependencies).
+ * Source: public/logo.jpg  (1254×1254 PNG-encoded file)
+ *
+ * macOS: uses built-in `sips` to resize — no extra npm deps needed.
+ * Fallback (Windows/Linux CI): exits with a clear error — install `sharp`
+ * or pre-supply the icon files manually.
  *
  * Produces:
- *   build/icons/{16,32,48,64,128,256,512,1024}x{…}.png  — Linux AppImage
- *   build/icon.png           — 1024×1024 master PNG
- *   build/icon.icns          — macOS (ICNS with embedded PNGs)
- *   build/icon.ico           — Windows (ICO with embedded PNGs)
+ *   build/icons/{16,32,48,64,128,256,512}x{…}.png  — Linux AppImage
+ *   build/icon.png          — 1024×1024 master PNG
+ *   build/icon.icns         — macOS
+ *   build/icon.ico          — Windows
  */
-import { deflateSync } from 'zlib';
-import { writeFileSync } from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+
+import { execSync, spawnSync }    from 'child_process';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
+import { deflateSync }            from 'zlib';
+import os                         from 'os';
+import path                       from 'path';
+import { fileURLToPath }          from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT      = path.resolve(__dirname, '..');
 const ICONS_DIR = path.join(ROOT, 'build', 'icons');
 const BUILD_DIR = path.join(ROOT, 'build');
+const SOURCE    = path.join(ROOT, 'public', 'logo.jpg');
 
-// ─── CRC-32 (required for PNG) ────────────────────────────────────────────────
+// ─── Guards ───────────────────────────────────────────────────────────────────
 
-const crcTable = (() => {
-  const t = new Uint32Array(256);
-  for (let i = 0; i < 256; i++) {
-    let c = i;
-    for (let j = 0; j < 8; j++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
-    t[i] = c >>> 0;
-  }
-  return t;
-})();
-
-function crc32(buf) {
-  let crc = 0xFFFFFFFF;
-  for (const b of buf) crc = (crc >>> 8) ^ crcTable[(crc ^ b) & 0xFF];
-  return ((crc ^ 0xFFFFFFFF) >>> 0);
+if (!existsSync(SOURCE)) {
+  console.error(`✗ Source image not found: ${SOURCE}`);
+  process.exit(1);
 }
 
-// ─── PNG builder ──────────────────────────────────────────────────────────────
+mkdirSync(ICONS_DIR, { recursive: true });
+mkdirSync(BUILD_DIR, { recursive: true });
 
-function pngChunk(type, data) {
-  const typeBytes = Buffer.from(type, 'ascii');
-  const lenBuf    = Buffer.alloc(4); lenBuf.writeUInt32BE(data.length, 0);
-  const crcBuf    = Buffer.alloc(4); crcBuf.writeUInt32BE(crc32(Buffer.concat([typeBytes, data])), 0);
-  return Buffer.concat([lenBuf, typeBytes, data, crcBuf]);
+// ─── sips-based resizer (macOS) ───────────────────────────────────────────────
+
+function hasSips() {
+  return spawnSync('sips', ['--version'], { stdio: 'ignore' }).status === 0;
 }
 
 /**
- * Render one pixel of the Orivon icon at (x,y) for a canvas of `size×size`.
- * Returns [r, g, b, a] 0–255.
+ * Use macOS `sips` to resize SOURCE to `size×size` PNG.
+ * Returns the PNG file contents as a Buffer.
  */
-function orivonPixel(x, y, size) {
-  const cx = (size - 1) / 2;
-  const cy = (size - 1) / 2;
-  const dx = x - cx;
-  const dy = y - cy;
-  const dist = Math.sqrt(dx * dx + dy * dy);
-
-  // Design dimensions (relative to half-size)
-  const R         = size * 0.46;   // outer circle radius
-  const RING_OUT  = size * 0.385;
-  const RING_IN   = size * 0.27;
-  const DOT_R     = size * 0.07;
-  const LINE_H    = size * 0.042;  // horizontal meridian half-height
-  const AA        = Math.max(1, size * 0.008); // anti-alias width
-
-  // Outside the outer circle → transparent
-  if (dist > R + AA) return [0, 0, 0, 0];
-
-  // Background colour
-  const BG   = [15, 15, 15];
-  const GRN  = [0, 255, 135];  // #00FF87
-
-  // Helper: smooth alpha blend at edge
-  const edgeAlpha = (d, edge) => Math.max(0, Math.min(1, (edge - d) / AA));
-
-  // Outer circle boundary alpha
-  const outerA = edgeAlpha(dist, R);
-
-  // Is this pixel inside the green ring?
-  const inRing = dist >= RING_IN && dist <= RING_OUT;
-
-  // Is this pixel inside the center dot?
-  const inDot  = dist <= DOT_R;
-
-  // Is this pixel on the horizontal meridian line?
-  const inLine = Math.abs(dy) <= LINE_H && dist < RING_IN && dist > DOT_R;
-
-  let r, g, b;
-  if (inRing) {
-    [r, g, b] = GRN;
-    // Inner ring edge AA
-    const innerEdge = edgeAlpha(RING_IN - dist, 0) + edgeAlpha(dist - RING_OUT, 0);
-    if (innerEdge < 1) {
-      r = Math.round(BG[0] + (GRN[0] - BG[0]) * (1 - innerEdge * 0.6));
-      g = Math.round(BG[1] + (GRN[1] - BG[1]) * (1 - innerEdge * 0.6));
-      b = Math.round(BG[2] + (GRN[2] - BG[2]) * (1 - innerEdge * 0.6));
-    }
-  } else if (inDot || inLine) {
-    [r, g, b] = GRN;
-  } else {
-    [r, g, b] = BG;
-  }
-
-  const a = Math.round(outerA * 255);
-  return [r, g, b, a];
-}
-
-/**
- * Build a raw RGBA PNG buffer at `size×size` pixels.
- */
-function buildPNG(size) {
-  const signature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
-
-  // IHDR: width, height, bit-depth=8, color-type=6 (RGBA), compress=0, filter=0, interlace=0
-  const ihdr = Buffer.alloc(13);
-  ihdr.writeUInt32BE(size, 0);
-  ihdr.writeUInt32BE(size, 4);
-  ihdr[8]  = 8;  // bit depth
-  ihdr[9]  = 6;  // RGBA
-  ihdr[10] = 0;
-  ihdr[11] = 0;
-  ihdr[12] = 0;
-
-  // Raw pixel data (scanlines: filter_byte + 4_bytes_per_pixel)
-  const rawLen = size * (1 + size * 4);
-  const raw    = Buffer.allocUnsafe(rawLen);
-  let offset   = 0;
-
-  for (let y = 0; y < size; y++) {
-    raw[offset++] = 0; // filter: None
-    for (let x = 0; x < size; x++) {
-      const [r, g, b, a] = orivonPixel(x, y, size);
-      raw[offset++] = r;
-      raw[offset++] = g;
-      raw[offset++] = b;
-      raw[offset++] = a;
-    }
-  }
-
-  const compressed = deflateSync(raw, { level: 9 });
-
-  return Buffer.concat([
-    signature,
-    pngChunk('IHDR', ihdr),
-    pngChunk('IDAT', compressed),
-    pngChunk('IEND', Buffer.alloc(0)),
-  ]);
+function resizeWithSips(size) {
+  const tmp = path.join(os.tmpdir(), `orivon-icon-${size}-${Date.now()}.png`);
+  execSync(
+    `sips -Z ${size} "${SOURCE}" --out "${tmp}" -s format png`,
+    { stdio: 'pipe' }
+  );
+  const buf = readFileSync(tmp);
+  // cleanup temp file (best-effort)
+  try { execSync(`rm -f "${tmp}"`, { stdio: 'ignore' }); } catch {}
+  return buf;
 }
 
 // ─── ICO builder (Windows) — embeds PNGs directly ─────────────────────────────
@@ -159,22 +69,21 @@ function buildICO(pngBySize) {
   const dirSize    = entries.length * 16;
   let   dataOffset = headerSize + dirSize;
 
-  // ICO header
   const header = Buffer.alloc(6);
-  header.writeUInt16LE(0, 0);               // reserved
-  header.writeUInt16LE(1, 2);               // type: ICO
-  header.writeUInt16LE(entries.length, 4);  // image count
+  header.writeUInt16LE(0, 0);
+  header.writeUInt16LE(1, 2);
+  header.writeUInt16LE(entries.length, 4);
 
   const dirs = entries.map(({ size, png }) => {
     const dir = Buffer.alloc(16);
-    dir[0] = size >= 256 ? 0 : size;  // width  (0 = 256)
-    dir[1] = size >= 256 ? 0 : size;  // height (0 = 256)
-    dir[2] = 0;                        // color count
-    dir[3] = 0;                        // reserved
-    dir.writeUInt16LE(1,          4);  // planes
-    dir.writeUInt16LE(32,         6);  // bits per pixel
-    dir.writeUInt32LE(png.length, 8);  // data size
-    dir.writeUInt32LE(dataOffset, 12); // data offset
+    dir[0] = size >= 256 ? 0 : size;
+    dir[1] = size >= 256 ? 0 : size;
+    dir[2] = 0;
+    dir[3] = 0;
+    dir.writeUInt16LE(1,          4);
+    dir.writeUInt16LE(32,         6);
+    dir.writeUInt32LE(png.length, 8);
+    dir.writeUInt32LE(dataOffset, 12);
     dataOffset += png.length;
     return dir;
   });
@@ -185,27 +94,26 @@ function buildICO(pngBySize) {
 // ─── ICNS builder (macOS) — modern format with embedded PNGs ─────────────────
 
 function buildICNS(pngBySize) {
-  // Modern ICNS icon types with embedded PNG (Retina + standard)
   const iconTypes = [
-    { code: 'icp4', size: 16    },
-    { code: 'icp5', size: 32    },
-    { code: 'icp6', size: 64    },
-    { code: 'ic07', size: 128   },
-    { code: 'ic08', size: 256   },
-    { code: 'ic09', size: 512   },
-    { code: 'ic10', size: 1024  },
-    { code: 'ic11', size: 32    }, // 16@2x
-    { code: 'ic12', size: 64    }, // 32@2x
-    { code: 'ic13', size: 256   }, // 128@2x
-    { code: 'ic14', size: 512   }, // 256@2x
+    { code: 'icp4', size: 16   },
+    { code: 'icp5', size: 32   },
+    { code: 'icp6', size: 64   },
+    { code: 'ic07', size: 128  },
+    { code: 'ic08', size: 256  },
+    { code: 'ic09', size: 512  },
+    { code: 'ic10', size: 1024 },
+    { code: 'ic11', size: 32   }, // 16@2x
+    { code: 'ic12', size: 64   }, // 32@2x
+    { code: 'ic13', size: 256  }, // 128@2x
+    { code: 'ic14', size: 512  }, // 256@2x
   ];
 
   const iconEntries = iconTypes.map(({ code, size }) => {
-    const png  = pngBySize.get(size);
+    const png = pngBySize.get(size);
     if (!png) return null;
     const head = Buffer.alloc(8);
     Buffer.from(code, 'ascii').copy(head, 0);
-    head.writeUInt32BE(png.length + 8, 4); // chunk size including 8-byte header
+    head.writeUInt32BE(png.length + 8, 4);
     return Buffer.concat([head, png]);
   }).filter(Boolean);
 
@@ -213,30 +121,41 @@ function buildICNS(pngBySize) {
   const header = Buffer.alloc(8);
   Buffer.from('icns', 'ascii').copy(header, 0);
   header.writeUInt32BE(body.length + 8, 4);
-
   return Buffer.concat([header, body]);
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
+if (!hasSips()) {
+  console.error(
+    '✗ `sips` not found. This script requires macOS `sips` (built into every Mac).\n' +
+    '  On Windows/Linux CI: pre-supply build/icon.{png,ico,icns} manually,\n' +
+    '  or add `sharp` as a devDependency and update this script.'
+  );
+  process.exit(1);
+}
+
 const SIZES_PNG  = [16, 24, 32, 48, 64, 128, 256, 512, 1024];
 const pngBySize  = new Map();
 
-process.stdout.write('Generating icon PNGs…\n');
+process.stdout.write(`Source: ${SOURCE}\n`);
+process.stdout.write('Resizing icon PNGs with sips…\n');
+
 for (const size of SIZES_PNG) {
-  const buf = buildPNG(size);
+  process.stdout.write(`  → ${size}×${size}…`);
+  const buf = resizeWithSips(size);
   pngBySize.set(size, buf);
 
-  // Write individual PNG to build/icons/ (used by Linux AppImage)
+  // Write individual sizes for Linux AppImage
   if ([16, 32, 48, 64, 128, 256, 512].includes(size)) {
     writeFileSync(path.join(ICONS_DIR, `${size}x${size}.png`), buf);
   }
-  process.stdout.write(`  ✓ ${size}x${size}\n`);
+  process.stdout.write(` ✓ (${buf.length} bytes)\n`);
 }
 
-// Master 1024×1024 PNG
+// Master 1024×1024
 writeFileSync(path.join(BUILD_DIR, 'icon.png'), pngBySize.get(1024));
-process.stdout.write('  ✓ build/icon.png (master)\n');
+process.stdout.write('  ✓ build/icon.png (master 1024×1024)\n');
 
 // Windows ICO
 process.stdout.write('Building icon.ico (Windows)…\n');
@@ -248,4 +167,4 @@ process.stdout.write('Building icon.icns (macOS)…\n');
 writeFileSync(path.join(BUILD_DIR, 'icon.icns'), buildICNS(pngBySize));
 process.stdout.write('  ✓ build/icon.icns\n');
 
-process.stdout.write('\nAll icons generated in build/\n');
+process.stdout.write('\nAll icons generated from logo.jpg in build/\n');
