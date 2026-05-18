@@ -148,6 +148,15 @@ export default function Onboarding({ onDone }: OnboardingProps) {
 
   const isGradientStep = step === 'welcome' || step === 'choose';
   const bothChecked = checked1 && checked2;
+  // Supported networks state
+  const [networkSearch, setNetworkSearch] = useState('');
+  const [showTestnets, setShowTestnets]   = useState(false);
+  const [selectedNets, setSelectedNets]   = useState<Set<string>>(
+    () => new Set(['eth','fil','btc','zec','ada','matic','op','arb','avax','base','bnb','ftm','cro'])
+  );
+  const toggleNet = (id: string) => setSelectedNets(prev => {
+    const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s;
+  });
 
   // ── LIGHT THEME (inner steps) ─────────────────────────────────────────────
   if (!isGradientStep) {
@@ -979,3 +988,138 @@ const subStyle:   React.CSSProperties = { fontSize: 15, color: '#6B7280', lineHe
 const inputSt:    React.CSSProperties = { width: '100%', height: 52, borderRadius: 12, padding: '0 48px 0 18px', fontSize: 15, color: '#111827', background: '#F9FAFB', border: '1px solid #E5E7EB', outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box', display: 'block', marginBottom: 8 };
 const skipBtnStyle: React.CSSProperties = { background: 'none', border: 'none', color: '#9CA3AF', fontSize: 15, cursor: 'pointer', padding: '4px 0', transition: 'color 0.15s' };
 
+
+// ─── Supported Networks Card ──────────────────────────────────────────────────
+
+interface Network { id: string; name: string; color: string; icon: string; section: 'featured' | 'popular'; }
+
+const ALL_NETWORKS: Network[] = [
+  { id: 'sol',    name: 'Solana Mainnet Beta', color: '#9945FF', icon: '◎', section: 'featured' },
+  { id: 'eth',    name: 'Ethereum Mainnet',    color: '#627EEA', icon: 'Ξ',  section: 'featured' },
+  { id: 'fil',    name: 'Filecoin Mainnet',    color: '#0090FF', icon: 'F',  section: 'featured' },
+  { id: 'btc',    name: 'Bitcoin Mainnet',     color: '#F7931A', icon: '₿',  section: 'featured' },
+  { id: 'zec',    name: 'Zcash Mainnet',       color: '#F4B728', icon: 'Z',  section: 'featured' },
+  { id: 'ada',    name: 'Cardano Mainnet',     color: '#0033AD', icon: 'A',  section: 'featured' },
+  { id: 'matic',  name: 'Polygon',             color: '#8247E5', icon: 'M',  section: 'popular'  },
+  { id: 'op',     name: 'Optimism',            color: '#FF0420', icon: 'O',  section: 'popular'  },
+  { id: 'arb',    name: 'Arbitrum One',        color: '#28A0F0', icon: 'A',  section: 'popular'  },
+  { id: 'avax',   name: 'Avalanche',           color: '#E84142', icon: 'A',  section: 'popular'  },
+  { id: 'base',   name: 'Base',                color: '#0052FF', icon: 'B',  section: 'popular'  },
+  { id: 'bnb',    name: 'BNB Smart Chain',     color: '#F3BA2F', icon: 'B',  section: 'popular'  },
+  { id: 'ftm',    name: 'Fantom',              color: '#1969FF', icon: 'F',  section: 'popular'  },
+  { id: 'cro',    name: 'Cronos',              color: '#002D74', icon: 'C',  section: 'popular'  },
+];
+
+function NetChip({ net, selected, onToggle }: { net: Network; selected: boolean; onToggle: () => void; key?: string }) {
+  return (
+    <div
+      onClick={onToggle}
+      style={{ position: 'relative', borderRadius: 12, padding: '12px 8px 10px', border: `1.5px solid ${selected ? '#4F46E5' : '#E5E7EB'}`, background: selected ? '#F5F3FF' : '#fff', cursor: 'pointer', textAlign: 'center', transition: 'border-color 0.12s, background 0.12s' }}
+    >
+      <div style={{ position: 'absolute', top: 6, right: 6, width: 16, height: 16, borderRadius: 4, background: selected ? '#4F46E5' : 'transparent', border: `1.5px solid ${selected ? '#4F46E5' : '#D1D5DB'}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {selected && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+      </div>
+      <div style={{ width: 36, height: 36, borderRadius: '50%', background: net.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 15, fontWeight: 700, margin: '0 auto 8px' }}>{net.icon}</div>
+      <p style={{ fontSize: 10, fontWeight: 600, color: '#111827', margin: 0, lineHeight: 1.3 }}>{net.name}</p>
+    </div>
+  );
+}
+
+interface SupportedNetworksCardProps {
+  selectedNets: Set<string>;
+  toggleNet: (id: string) => void;
+  networkSearch: string;
+  setNetworkSearch: (v: string) => void;
+  showTestnets: boolean;
+  setShowTestnets: (v: boolean) => void;
+  onBack: () => void;
+  onContinue: () => void;
+}
+
+export function SupportedNetworksCard({
+  selectedNets, toggleNet, networkSearch, setNetworkSearch,
+  showTestnets, setShowTestnets, onBack, onContinue,
+}: SupportedNetworksCardProps) {
+  const filtered = ALL_NETWORKS.filter(n => n.name.toLowerCase().includes(networkSearch.toLowerCase()));
+  const featured  = filtered.filter(n => n.section === 'featured');
+  const popular   = filtered.filter(n => n.section === 'popular');
+  const count     = selectedNets.size;
+
+  const deselectPopular = () => {
+    popular.forEach(n => { if (selectedNets.has(n.id)) toggleNet(n.id); });
+  };
+
+  return (
+    <div style={{ maxWidth: 740, margin: '0 auto', padding: '0 28px 24px', width: '100%' }}>
+      {/* FIXED HEIGHT card — content inside scrolls, header and footer are fixed */}
+      <div style={{
+        background: '#fff', borderRadius: 20,
+        boxShadow: '0 2px 20px rgba(0,0,0,0.08)',
+        display: 'flex', flexDirection: 'column',
+        height: 560, overflow: 'hidden',
+      }}>
+
+        {/* Fixed header */}
+        <div style={{ padding: '36px 52px 0', flexShrink: 0 }}>
+          <button
+            onClick={onBack}
+            style={backBtnInCard}
+            onMouseEnter={e => { e.currentTarget.style.background = '#EEF2FF'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <h1 style={{ ...titleStyle, textAlign: 'center', marginBottom: 6 }}>Supported networks</h1>
+          <p style={{ fontSize: 14, color: '#6B7280', textAlign: 'center', margin: '0 0 16px', lineHeight: 1.5 }}>
+            Choose which blockchains to use in your wallet.
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#F3F4F6', borderRadius: 10, padding: '9px 14px', marginBottom: 6 }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input value={networkSearch} onChange={e => setNetworkSearch(e.target.value)} placeholder="Search networks" style={{ border: 'none', outline: 'none', background: 'transparent', fontSize: 14, color: '#111827', flex: 1, fontFamily: 'inherit' }} />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 8 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#374151', cursor: 'pointer' }}>
+              <input type="checkbox" checked={showTestnets} onChange={e => setShowTestnets(e.target.checked)} style={{ width: 14, height: 14, accentColor: '#4F46E5', cursor: 'pointer' }} /> Show testnets
+            </label>
+          </div>
+        </div>
+
+        {/* Scrollable content */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '0 52px' }}>
+          {featured.length > 0 && (
+            <div style={{ marginBottom: 16 }}>
+              <p style={{ fontSize: 10, fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Featured</p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+                {featured.map(net => <NetChip key={net.id} net={net} selected={selectedNets.has(net.id)} onToggle={() => toggleNet(net.id)} />)}
+              </div>
+            </div>
+          )}
+          {popular.length > 0 && (
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
+                <p style={{ fontSize: 10, fontWeight: 600, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>Popular</p>
+                <button onClick={deselectPopular} style={{ fontSize: 12, color: '#4F46E5', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 500, padding: 0 }}>Deselect all</button>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+                {popular.map(net => <NetChip key={net.id} net={net} selected={selectedNets.has(net.id)} onToggle={() => toggleNet(net.id)} />)}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Fixed bottom */}
+        <div style={{ padding: '14px 52px 32px', borderTop: '1px solid #F3F4F6', flexShrink: 0 }}>
+          <button
+            onClick={onContinue}
+            style={{ width: '100%', height: 50, borderRadius: 9999, background: '#4F46E5', color: '#fff', fontSize: 15, fontWeight: 600, border: 'none', cursor: 'pointer', boxShadow: '0 2px 14px rgba(79,70,229,0.30)', marginBottom: 8, transition: 'filter 0.15s' }}
+            onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.1)'; }}
+            onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; }}
+          >
+            Continue with {count} Network{count !== 1 ? 's' : ''}
+          </button>
+          <p style={{ fontSize: 11, color: '#9CA3AF', textAlign: 'center', margin: 0 }}>You can add networks anytime in Settings.</p>
+        </div>
+      </div>
+    </div>
+  );
+}

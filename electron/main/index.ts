@@ -1,9 +1,20 @@
 import { app, BrowserWindow, ipcMain, shell, session } from 'electron';
 import updaterPkg from 'electron-updater';
 const { autoUpdater } = updaterPkg;
+import log from 'electron-log';
 import path from 'path';
 import fs from 'fs';
 import { resolveURL } from './resolvers/url-router';
+
+// ─── Logger ───────────────────────────────────────────────────────────────────
+// electron-log writes to:
+//   macOS: ~/Library/Logs/Orivon/main.log
+//   Win:   %USERPROFILE%\AppData\Roaming\Orivon\logs\main.log
+//   Linux: ~/.config/Orivon/logs/main.log
+log.transports.file.level = 'info';
+log.transports.console.level = 'debug';
+log.initialize();                        // hook console.* → electron-log in renderer
+autoUpdater.logger = log;
 
 const isDev = !!process.env['ELECTRON_RENDERER_URL'];
 
@@ -145,8 +156,7 @@ app.whenReady().then(() => {
   });
 
   if (!isDev) {
-    autoUpdater.logger = null;
-    autoUpdater.checkForUpdatesAndNotify().catch(() => {});
+    setupAutoUpdater();
   }
 });
 
@@ -198,9 +208,63 @@ app.on('web-contents-created', (_e, contents) => {
 
 // ─── Auto-updater ─────────────────────────────────────────────────────────────
 
-autoUpdater.on('update-available', () => {
-  BrowserWindow.getAllWindows().forEach(w => w.webContents.send('app:update-available'));
-});
-autoUpdater.on('update-downloaded', () => {
-  BrowserWindow.getAllWindows().forEach(w => w.webContents.send('app:update-downloaded'));
+function broadcast(channel: string, ...args: unknown[]) {
+  BrowserWindow.getAllWindows().forEach(w => {
+    if (!w.isDestroyed()) w.webContents.send(channel, ...args);
+  });
+}
+
+function setupAutoUpdater() {
+  // Download updates silently in background; install on next quit by default.
+  autoUpdater.autoDownload        = true;
+  autoUpdater.autoInstallOnAppQuit = true;
+
+  autoUpdater.on('checking-for-update', () => {
+    log.info('[updater] Checking for update…');
+  });
+
+  autoUpdater.on('update-available', (info) => {
+    log.info(`[updater] Update available: ${info.version}`);
+    broadcast('app:update-available', info.version);
+  });
+
+  autoUpdater.on('update-not-available', (info) => {
+    log.info(`[updater] Already on latest version: ${info.version}`);
+  });
+
+  autoUpdater.on('error', (err) => {
+    log.error('[updater] Error:', err.message ?? err);
+    broadcast('app:update-error', err.message ?? String(err));
+  });
+
+  autoUpdater.on('download-progress', (progress) => {
+    const pct = Math.round(progress.percent);
+    log.info(`[updater] Downloading… ${pct}% (${Math.round(progress.bytesPerSecond / 1024)} KB/s)`);
+    broadcast('app:update-progress', pct);
+  });
+
+  autoUpdater.on('update-downloaded', (info) => {
+    log.info(`[updater] Update downloaded: ${info.version}. Will install on quit.`);
+    broadcast('app:update-downloaded', info.version);
+  });
+
+  // Delay first check 5 s so the window is fully ready before any notification
+  setTimeout(() => {
+    autoUpdater.checkForUpdates().catch((err) => {
+      log.warn('[updater] Check failed:', err.message ?? err);
+    });
+  }, 5_000);
+
+  // Re-check every 4 hours while the app is running
+  setInterval(() => {
+    autoUpdater.checkForUpdates().catch((err) => {
+      log.warn('[updater] Periodic check failed:', err.message ?? err);
+    });
+  }, 4 * 60 * 60 * 1_000);
+}
+
+// Called from renderer when user clicks "Restart now"
+ipcMain.on('app:install-update', () => {
+  log.info('[updater] User requested immediate install — quitting and installing.');
+  autoUpdater.quitAndInstall(false, true); // isSilent=false, isForceRunAfter=true
 });

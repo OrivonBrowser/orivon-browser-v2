@@ -86,6 +86,12 @@ export const useTabsStore = create<TabsState>()(
         })),
 
       navigateTab: (id, url, displayUrl, type) => {
+        // Internal orivon:// pages render as React components — no network request,
+        // so never mark them as loading.
+        const isInternal = url.startsWith('orivon://');
+        const autoTitle  = url === NEW_TAB_URL     ? 'New Tab'
+                         : url.includes('dashboard') ? 'Dashboard'
+                         : displayUrl || url;
         set(s => ({
           tabs: s.tabs.map(t => {
             if (t.id !== id) return t;
@@ -95,10 +101,10 @@ export const useTabsStore = create<TabsState>()(
               url,
               displayUrl,
               type,
-              isLoading: true,
+              isLoading: !isInternal,
+              title: autoTitle,
               history: newHistory,
               historyIndex: newHistory.length - 1,
-              title: url === NEW_TAB_URL ? 'New Tab' : displayUrl || url,
             };
           }),
         }));

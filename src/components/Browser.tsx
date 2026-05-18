@@ -129,6 +129,12 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
   // tracks reload count per new-tab so we can force a remount
   const [newTabKeys, setNewTabKeys]     = useState<Record<string, number>>({});
 
+  // ── Auto-updater state ─────────────────────────────────────────────────────
+  type UpdateState = 'idle' | 'available' | 'downloading' | 'ready';
+  const [updateState,   setUpdateState]   = useState<UpdateState>('idle');
+  const [updateVersion, setUpdateVersion] = useState('');
+  const [updatePct,     setUpdatePct]     = useState(0);
+
   const activeTab  = tabs.find(t => t.id === activeTabId) ?? tabs[0];
   const isDark     = theme === 'dark';
   const isMac      = window.electronAPI?.platform === 'darwin' || /Mac/.test(navigator.platform);
@@ -147,6 +153,17 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
     if (!isEditing) setAddrInput(activeTab ? resolveDisplay(activeTab.url) : '');
   }, [activeTabId, activeTab?.url, isEditing]);
 
+  // ── Register auto-updater IPC listeners (Electron only, once on mount) ─────
+  useEffect(() => {
+    const api = window.electronAPI?.updater;
+    if (!api) return;
+    api.onAvailable(v  => { setUpdateVersion(v); setUpdateState('available'); });
+    api.onProgress(pct => { setUpdatePct(pct);   setUpdateState('downloading'); });
+    api.onDownloaded(v => { setUpdateVersion(v); setUpdateState('ready'); setUpdatePct(100); });
+    api.onError(_msg   => { setUpdateState('idle'); });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const navigate = useCallback(async (raw: string, tabId = activeTabId) => {
     const input = raw.trim();
     if (!input) return;
@@ -154,6 +171,9 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
 
     if (input.startsWith('orivon://')) {
       navigateTab(tabId, input, input, 'https');
+      // No WebView for internal pages — stop the spinner immediately
+      const internalTitle = input === DASHBOARD_URL ? 'Dashboard' : 'New Tab';
+      setTimeout(() => updateTab(tabId, { isLoading: false, title: internalTitle }), 0);
       return;
     }
 
@@ -182,6 +202,9 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
   const handleReload  = () => {
     if (activeTab?.url === NEW_TAB) {
       setNewTabKeys(prev => ({ ...prev, [activeTabId]: (prev[activeTabId] ?? 0) + 1 }));
+    } else if (activeTab?.url === DASHBOARD_URL) {
+      // Dashboard is a local React component — nothing to reload, just clear any stale spinner
+      updateTab(activeTabId, { isLoading: false });
     } else {
       webviewRefs.current[activeTabId]?.reload();
     }
@@ -284,19 +307,64 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
           >
             <ChevronRight size={15} strokeWidth={2} />
           </NavBtn>
-          <NavBtn
+          {/* ── Reload / Stop — premium animated ── */}
+          <button
             onClick={activeTab?.isLoading
               ? () => webviewRefs.current[activeTabId]?.stop()
               : handleReload}
-            isDark={isDark}
-            title={activeTab?.isLoading ? 'Stop' : 'Reload'}
+            title={activeTab?.isLoading ? 'Stop loading' : 'Reload page'}
+            className="no-drag"
+            style={{
+              width: 32, height: 32, borderRadius: 8, border: 'none',
+              background: 'transparent',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer',
+              color: isDark ? 'rgba(255,255,255,0.50)' : 'rgba(0,0,0,0.50)',
+              transition: 'background 0.14s, color 0.14s',
+              flexShrink: 0,
+            }}
+            onMouseEnter={e => {
+              const btn = e.currentTarget as HTMLButtonElement;
+              if (activeTab?.isLoading) {
+                btn.style.background = isDark ? 'rgba(239,68,68,0.14)' : 'rgba(239,68,68,0.09)';
+                btn.style.color = '#EF4444';
+              } else {
+                btn.style.background = isDark ? 'rgba(255,255,255,0.09)' : 'rgba(0,0,0,0.07)';
+                btn.style.color = isDark ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.82)';
+              }
+            }}
+            onMouseLeave={e => {
+              const btn = e.currentTarget as HTMLButtonElement;
+              btn.style.background = 'transparent';
+              btn.style.color = isDark ? 'rgba(255,255,255,0.50)' : 'rgba(0,0,0,0.50)';
+            }}
           >
-            <RotateCcw
-              size={13}
-              strokeWidth={2.2}
-              className={activeTab?.isLoading ? 'animate-spin' : ''}
-            />
-          </NavBtn>
+            <AnimatePresence mode="wait" initial={false}>
+              {activeTab?.isLoading ? (
+                <motion.span
+                  key="stop"
+                  initial={{ opacity: 0, scale: 0.4, rotate: -90 }}
+                  animate={{ opacity: 1, scale: 1,   rotate:   0 }}
+                  exit={{   opacity: 0, scale: 0.4,  rotate:  90 }}
+                  transition={{ duration: 0.13, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  <X size={13} strokeWidth={2.6} />
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="reload"
+                  initial={{ opacity: 0, scale: 0.4, rotate:  90 }}
+                  animate={{ opacity: 1, scale: 1,   rotate:   0 }}
+                  exit={{   opacity: 0, scale: 0.4,  rotate: -90 }}
+                  transition={{ duration: 0.13, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  <RotateCcw size={13} strokeWidth={2.2} />
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </button>
 
           {/* Separator */}
           <div style={{ width: 1, height: 14, background: sepColor, margin: '0 5px' }} />
@@ -482,6 +550,43 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
         </div>
       </div>
 
+      {/* ── Update banner ──────────────────────────────────────────────────── */}
+      {updateState !== 'idle' && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 10,
+          padding: '6px 16px', flexShrink: 0,
+          background: updateState === 'ready'       ? '#4F46E5'
+                    : updateState === 'downloading'  ? '#1D4ED8'
+                    : '#2563EB',
+          color: '#fff', fontSize: 12, fontWeight: 500,
+        }}>
+          {/* Progress bar fill for downloading state */}
+          {updateState === 'downloading' && (
+            <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', background: 'rgba(255,255,255,0.12)', width: `${updatePct}%`, transition: 'width 0.4s ease', pointerEvents: 'none' }} />
+          )}
+          <span style={{ flex: 1, position: 'relative' }}>
+            {updateState === 'available'    && `Orivon ${updateVersion} is available — downloading update…`}
+            {updateState === 'downloading'  && `Downloading update ${updateVersion}… ${updatePct}%`}
+            {updateState === 'ready'        && `Orivon ${updateVersion} is ready to install.`}
+          </span>
+          {updateState === 'ready' && (
+            <button
+              onClick={() => window.electronAPI?.updater.restartAndInstall()}
+              style={{ padding: '3px 12px', borderRadius: 6, background: '#fff', color: '#4F46E5', border: 'none', fontSize: 11, fontWeight: 700, cursor: 'pointer', flexShrink: 0 }}
+            >
+              Restart now
+            </button>
+          )}
+          <button
+            onClick={() => setUpdateState('idle')}
+            style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.7)', cursor: 'pointer', padding: '2px 4px', fontSize: 14, lineHeight: 1, flexShrink: 0 }}
+            title="Dismiss"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       {/* ── CONTENT AREA ── */}
       <div className="flex-1 relative overflow-hidden flex">
         <div className="flex-1 relative">
@@ -497,7 +602,9 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
               {tab.url === NEW_TAB ? (
                 <NewTab onNavigate={url => navigate(url, tab.id)} />
               ) : tab.url === DASHBOARD_URL ? (
-                walletStatus === 'locked'
+                walletStatus === 'none'
+                  ? <WalletSetupPage isDark={isDark} onOpenModal={mode => { setWalletModal(mode); }}/>
+                  : walletStatus === 'locked'
                   ? <DashboardUnlockInline isDark={isDark} />
                   : <Dashboard onOpenBrowser={() => navigate(NEW_TAB)} />
               ) : (
@@ -735,6 +842,81 @@ function Web3Panel({
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+// ─── Wallet Setup Page ────────────────────────────────────────────────────────
+// Shown inside orivon://dashboard when the user has no wallet yet.
+// Matches the Brave "Browser-native. Self-custody. And multi-chain." page.
+
+function WalletSetupPage({ isDark, onOpenModal }: {
+  isDark: boolean;
+  onOpenModal: (mode: 'create' | 'import') => void;
+}) {
+  const bg    = isDark ? '#0f0f0f' : '#F0F2F9';
+  const cardBg = isDark ? 'rgba(255,255,255,0.04)' : '#ffffff';
+  const cardBd = isDark ? 'rgba(255,255,255,0.09)' : '#E5E7EB';
+  const title = isDark ? '#ffffff' : '#111827';
+  const sub   = isDark ? 'rgba(255,255,255,0.55)' : '#6B7280';
+  const hd    = isDark ? 'rgba(255,255,255,0.85)' : '#111827';
+  const hd2   = isDark ? 'rgba(255,255,255,0.55)' : '#6B7280';
+
+  const card = (accent: string, accBg: string, icon: string, head: string, desc: string, extra: React.ReactNode | null, onClick: () => void) => (
+    <div
+      onClick={onClick}
+      style={{ background: cardBg, borderRadius: 18, padding: '28px 28px 24px', cursor: 'pointer', border: `1.5px solid ${cardBd}`, boxShadow: isDark ? 'none' : '0 1px 6px rgba(0,0,0,0.06)', transition: 'border-color 0.15s, box-shadow 0.15s', flex: 1 }}
+      onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = '#4F46E5'; (e.currentTarget as HTMLDivElement).style.boxShadow = '0 4px 20px rgba(79,70,229,0.12)'; }}
+      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = cardBd; (e.currentTarget as HTMLDivElement).style.boxShadow = isDark ? 'none' : '0 1px 6px rgba(0,0,0,0.06)'; }}
+    >
+      <div style={{ width: 46, height: 46, borderRadius: 13, background: accBg, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16, fontSize: 22, color: accent, fontWeight: 700 }}>
+        {icon}
+      </div>
+      <h3 style={{ fontSize: 17, fontWeight: 700, color: hd, margin: '0 0 8px' }}>{head}</h3>
+      <p style={{ fontSize: 13, color: hd2, margin: extra ? '0 0 14px' : '0', lineHeight: 1.55 }}>{desc}</p>
+      {extra}
+    </div>
+  );
+
+  return (
+    <div style={{ height: '100%', background: bg, display: 'flex', flexDirection: 'column', padding: '28px 48px 40px', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', overflowY: 'auto' }}>
+      {/* Brand */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 36 }}>
+        <img src="/logo.png" alt="Orivon" style={{ width: 22, height: 22, borderRadius: 6, objectFit: 'contain' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+        <span style={{ fontSize: 15, fontWeight: 700, color: hd }}>Orivon Wallet</span>
+      </div>
+
+      {/* Heading */}
+      <h1 style={{ fontSize: 36, fontWeight: 800, color: title, margin: '0 0 14px', lineHeight: 1.12, letterSpacing: '-0.5px' }}>
+        Browser-native.<br />Self-custody.<br />And multi-chain.
+      </h1>
+      <p style={{ fontSize: 15, color: sub, margin: '0 0 36px', maxWidth: 560, lineHeight: 1.65 }}>
+        Take control of your crypto and NFTs. Orivon Wallet supports Ethereum, EVM chains, Solana, Filecoin, Bitcoin, and more.
+      </p>
+
+      {/* Two cards */}
+      <div style={{ display: 'flex', gap: 20, marginBottom: 48 }}>
+        {card(
+          '#4F46E5', isDark ? 'rgba(79,70,229,0.15)' : '#EEF2FF',
+          '+', 'Need a new wallet?',
+          'Get started with Orivon Wallet in minutes.',
+          null,
+          () => onOpenModal('create')
+        )}
+        {card(
+          '#0090FF', isDark ? 'rgba(0,144,255,0.12)' : '#E0F2FF',
+          '↓', 'Already have a wallet?',
+          'Import using your existing seed phrase.',
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' as const }}>
+            {['🦁','🟣','🦊','🔵','🔒','🔳'].map((ic, i) => <span key={i} style={{ fontSize: 18 }}>{ic}</span>)}
+          </div>,
+          () => onOpenModal('import')
+        )}
+      </div>
+
+      {/* Footer */}
+      <p style={{ fontSize: 11, color: isDark ? 'rgba(255,255,255,0.25)' : '#9CA3AF', marginTop: 'auto' }}>
+        ©2025 Orivon. All rights reserved. Orivon Wallet is not affiliated with Brave Software.
+      </p>
     </div>
   );
 }

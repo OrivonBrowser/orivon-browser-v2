@@ -23,6 +23,13 @@ interface ElectronAPI {
     close:    () => void;
   };
   openExternal: (url: string) => void;
+  updater: {
+    onAvailable:  (cb: (version: string) => void) => void;
+    onProgress:   (cb: (pct: number)     => void) => void;
+    onDownloaded: (cb: (version: string) => void) => void;
+    onError:      (cb: (msg: string)     => void) => void;
+    restartAndInstall: () => void;
+  };
 }
 
 declare global {
