@@ -223,41 +223,41 @@ function setupAutoUpdater() {
     log.info('[updater] Checking for update…');
   });
 
-  autoUpdater.on('update-available', (info) => {
+  autoUpdater.on('update-available', (info: { version: string }) => {
     log.info(`[updater] Update available: ${info.version}`);
     broadcast('app:update-available', info.version);
   });
 
-  autoUpdater.on('update-not-available', (info) => {
+  autoUpdater.on('update-not-available', (info: { version: string }) => {
     log.info(`[updater] Already on latest version: ${info.version}`);
   });
 
-  autoUpdater.on('error', (err) => {
+  autoUpdater.on('error', (err: Error) => {
     log.error('[updater] Error:', err.message ?? err);
     broadcast('app:update-error', err.message ?? String(err));
   });
 
-  autoUpdater.on('download-progress', (progress) => {
+  autoUpdater.on('download-progress', (progress: { percent: number; bytesPerSecond: number }) => {
     const pct = Math.round(progress.percent);
     log.info(`[updater] Downloading… ${pct}% (${Math.round(progress.bytesPerSecond / 1024)} KB/s)`);
     broadcast('app:update-progress', pct);
   });
 
-  autoUpdater.on('update-downloaded', (info) => {
+  autoUpdater.on('update-downloaded', (info: { version: string }) => {
     log.info(`[updater] Update downloaded: ${info.version}. Will install on quit.`);
     broadcast('app:update-downloaded', info.version);
   });
 
   // Delay first check 5 s so the window is fully ready before any notification
   setTimeout(() => {
-    autoUpdater.checkForUpdates().catch((err) => {
+    autoUpdater.checkForUpdates().catch((err: Error) => {
       log.warn('[updater] Check failed:', err.message ?? err);
     });
   }, 5_000);
 
   // Re-check every 4 hours while the app is running
   setInterval(() => {
-    autoUpdater.checkForUpdates().catch((err) => {
+    autoUpdater.checkForUpdates().catch((err: Error) => {
       log.warn('[updater] Periodic check failed:', err.message ?? err);
     });
   }, 4 * 60 * 60 * 1_000);

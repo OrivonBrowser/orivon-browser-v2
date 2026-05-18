@@ -171,9 +171,7 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
 
     if (input.startsWith('orivon://')) {
       navigateTab(tabId, input, input, 'https');
-      // No WebView for internal pages — stop the spinner immediately
-      const internalTitle = input === DASHBOARD_URL ? 'Dashboard' : 'New Tab';
-      setTimeout(() => updateTab(tabId, { isLoading: false, title: internalTitle }), 0);
+      // isLoading stays false — handled in the store for all orivon:// URLs
       return;
     }
 

@@ -239,7 +239,7 @@ const PROVIDERS = [
 
 // ─── DApp Card ─────────────────────────────────────────────────────────────────
 
-function DAppCard({ dapp, onOpenBrowser }: { dapp: typeof DAPPS[0]; onOpenBrowser?: (url?: string) => void }) {
+function DAppCard({ dapp, onOpenBrowser }: { dapp: typeof DAPPS[0]; onOpenBrowser?: (url?: string) => void; key?: string }) {
   const [hovered, setHovered] = useState(false);
   return (
     <div

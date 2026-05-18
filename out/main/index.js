@@ -1,5 +1,6 @@
 import { app, session, BrowserWindow, ipcMain, shell } from "electron";
 import updaterPkg from "electron-updater";
+import log from "electron-log";
 import path from "path";
 import fs from "fs";
 import __cjs_mod__ from "node:module";
@@ -62,6 +63,10 @@ async function resolveENS(name) {
   }
 }
 const { autoUpdater } = updaterPkg;
+log.transports.file.level = "info";
+log.transports.console.level = "debug";
+log.initialize();
+autoUpdater.logger = log;
 const isDev = !!process.env["ELECTRON_RENDERER_URL"];
 const CHROME_UA = process.platform === "darwin" ? "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" : process.platform === "win32" ? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" : "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
 app.commandLine.appendSwitch("disable-background-timer-throttling");
@@ -154,9 +159,7 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
   if (!isDev) {
-    autoUpdater.logger = null;
-    autoUpdater.checkForUpdatesAndNotify().catch(() => {
-    });
+    setupAutoUpdater();
   }
 });
 app.on("window-all-closed", () => {
@@ -201,9 +204,49 @@ app.on("web-contents-created", (_e, contents) => {
     return { action: "deny" };
   });
 });
-autoUpdater.on("update-available", () => {
-  BrowserWindow.getAllWindows().forEach((w) => w.webContents.send("app:update-available"));
-});
-autoUpdater.on("update-downloaded", () => {
-  BrowserWindow.getAllWindows().forEach((w) => w.webContents.send("app:update-downloaded"));
+function broadcast(channel, ...args) {
+  BrowserWindow.getAllWindows().forEach((w) => {
+    if (!w.isDestroyed()) w.webContents.send(channel, ...args);
+  });
+}
+function setupAutoUpdater() {
+  autoUpdater.autoDownload = true;
+  autoUpdater.autoInstallOnAppQuit = true;
+  autoUpdater.on("checking-for-update", () => {
+    log.info("[updater] Checking for update…");
+  });
+  autoUpdater.on("update-available", (info) => {
+    log.info(`[updater] Update available: ${info.version}`);
+    broadcast("app:update-available", info.version);
+  });
+  autoUpdater.on("update-not-available", (info) => {
+    log.info(`[updater] Already on latest version: ${info.version}`);
+  });
+  autoUpdater.on("error", (err) => {
+    log.error("[updater] Error:", err.message ?? err);
+    broadcast("app:update-error", err.message ?? String(err));
+  });
+  autoUpdater.on("download-progress", (progress) => {
+    const pct = Math.round(progress.percent);
+    log.info(`[updater] Downloading… ${pct}% (${Math.round(progress.bytesPerSecond / 1024)} KB/s)`);
+    broadcast("app:update-progress", pct);
+  });
+  autoUpdater.on("update-downloaded", (info) => {
+    log.info(`[updater] Update downloaded: ${info.version}. Will install on quit.`);
+    broadcast("app:update-downloaded", info.version);
+  });
+  setTimeout(() => {
+    autoUpdater.checkForUpdates().catch((err) => {
+      log.warn("[updater] Check failed:", err.message ?? err);
+    });
+  }, 5e3);
+  setInterval(() => {
+    autoUpdater.checkForUpdates().catch((err) => {
+      log.warn("[updater] Periodic check failed:", err.message ?? err);
+    });
+  }, 4 * 60 * 60 * 1e3);
+}
+ipcMain.on("app:install-update", () => {
+  log.info("[updater] User requested immediate install — quitting and installing.");
+  autoUpdater.quitAndInstall(false, true);
 });

@@ -18,5 +18,13 @@ contextBridge.exposeInMainWorld("electronAPI", {
     close: () => ipcRenderer.send("window:close")
   },
   // ── Shell ──────────────────────────────────────────────────────────────────
-  openExternal: (url) => ipcRenderer.send("shell:open", url)
+  openExternal: (url) => ipcRenderer.send("shell:open", url),
+  // ── Auto-updater events ────────────────────────────────────────────────────
+  updater: {
+    onAvailable: (cb) => ipcRenderer.on("app:update-available", (_e, v) => cb(v)),
+    onProgress: (cb) => ipcRenderer.on("app:update-progress", (_e, p) => cb(p)),
+    onDownloaded: (cb) => ipcRenderer.on("app:update-downloaded", (_e, v) => cb(v)),
+    onError: (cb) => ipcRenderer.on("app:update-error", (_e, m) => cb(m)),
+    restartAndInstall: () => ipcRenderer.send("app:install-update")
+  }
 });

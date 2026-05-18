@@ -20606,11 +20606,24 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$P = [
+const __iconNode$Q = [
   ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
   ["path", { d: "M19 12H5", key: "x3x0zl" }]
 ];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$P);
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$Q);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$P = [
+  ["path", { d: "m21 16-4 4-4-4", key: "f6ql7i" }],
+  ["path", { d: "M17 20V4", key: "1ejh1v" }],
+  ["path", { d: "m3 8 4-4 4 4", key: "11wl7u" }],
+  ["path", { d: "M7 4v16", key: "1glfcx" }]
+];
+const ArrowUpDown = createLucideIcon("arrow-up-down", __iconNode$P);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20618,12 +20631,9 @@ const ArrowLeft = createLucideIcon("arrow-left", __iconNode$P);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$O = [
-  ["path", { d: "m21 16-4 4-4-4", key: "f6ql7i" }],
-  ["path", { d: "M17 20V4", key: "1ejh1v" }],
-  ["path", { d: "m3 8 4-4 4 4", key: "11wl7u" }],
-  ["path", { d: "M7 4v16", key: "1glfcx" }]
+  ["path", { d: "m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z", key: "1fy3hk" }]
 ];
-const ArrowUpDown = createLucideIcon("arrow-up-down", __iconNode$O);
+const Bookmark = createLucideIcon("bookmark", __iconNode$O);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20631,46 +20641,47 @@ const ArrowUpDown = createLucideIcon("arrow-up-down", __iconNode$O);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$N = [
-  ["path", { d: "m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z", key: "1fy3hk" }]
-];
-const Bookmark = createLucideIcon("bookmark", __iconNode$N);
-/**
- * @license lucide-react v0.546.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$M = [
   ["path", { d: "M3 3v16a2 2 0 0 0 2 2h16", key: "c24i48" }],
   ["path", { d: "M18 17V9", key: "2bz60n" }],
   ["path", { d: "M13 17V5", key: "1frdt8" }],
   ["path", { d: "M8 17v-3", key: "17ska0" }]
 ];
-const ChartColumn = createLucideIcon("chart-column", __iconNode$M);
+const ChartColumn = createLucideIcon("chart-column", __iconNode$N);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$L = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$L);
+const __iconNode$M = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$M);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$K = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
-const ChevronLeft = createLucideIcon("chevron-left", __iconNode$K);
+const __iconNode$L = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$L);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$J = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$J);
+const __iconNode$K = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$K);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$J = [
+  ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
+  ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
+];
+const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$J);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20678,10 +20689,11 @@ const ChevronRight = createLucideIcon("chevron-right", __iconNode$J);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$I = [
-  ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
-  ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3", key: "1u773s" }],
+  ["path", { d: "M12 17h.01", key: "p32p05" }]
 ];
-const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$I);
+const CircleQuestionMark = createLucideIcon("circle-question-mark", __iconNode$I);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20689,18 +20701,6 @@ const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$I);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$H = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3", key: "1u773s" }],
-  ["path", { d: "M12 17h.01", key: "p32p05" }]
-];
-const CircleQuestionMark = createLucideIcon("circle-question-mark", __iconNode$H);
-/**
- * @license lucide-react v0.546.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$G = [
   [
     "path",
     {
@@ -20710,7 +20710,18 @@ const __iconNode$G = [
   ],
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]
 ];
-const Compass = createLucideIcon("compass", __iconNode$G);
+const Compass = createLucideIcon("compass", __iconNode$H);
+/**
+ * @license lucide-react v0.546.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$G = [
+  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
+  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
+];
+const Copy = createLucideIcon("copy", __iconNode$G);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20718,10 +20729,11 @@ const Compass = createLucideIcon("compass", __iconNode$G);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$F = [
-  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
-  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
+  ["path", { d: "M12 15V3", key: "m9g1x1" }],
+  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
+  ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
 ];
-const Copy = createLucideIcon("copy", __iconNode$F);
+const Download = createLucideIcon("download", __iconNode$F);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20729,11 +20741,11 @@ const Copy = createLucideIcon("copy", __iconNode$F);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$E = [
-  ["path", { d: "M12 15V3", key: "m9g1x1" }],
-  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
-  ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
+  ["circle", { cx: "12", cy: "12", r: "1", key: "41hilf" }],
+  ["circle", { cx: "12", cy: "5", r: "1", key: "gxeob9" }],
+  ["circle", { cx: "12", cy: "19", r: "1", key: "lyex9k" }]
 ];
-const Download = createLucideIcon("download", __iconNode$E);
+const EllipsisVertical = createLucideIcon("ellipsis-vertical", __iconNode$E);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20742,10 +20754,10 @@ const Download = createLucideIcon("download", __iconNode$E);
  */
 const __iconNode$D = [
   ["circle", { cx: "12", cy: "12", r: "1", key: "41hilf" }],
-  ["circle", { cx: "12", cy: "5", r: "1", key: "gxeob9" }],
-  ["circle", { cx: "12", cy: "19", r: "1", key: "lyex9k" }]
+  ["circle", { cx: "19", cy: "12", r: "1", key: "1wjl8i" }],
+  ["circle", { cx: "5", cy: "12", r: "1", key: "1pcz8c" }]
 ];
-const EllipsisVertical = createLucideIcon("ellipsis-vertical", __iconNode$D);
+const Ellipsis = createLucideIcon("ellipsis", __iconNode$D);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -20753,11 +20765,11 @@ const EllipsisVertical = createLucideIcon("ellipsis-vertical", __iconNode$D);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$C = [
-  ["circle", { cx: "12", cy: "12", r: "1", key: "41hilf" }],
-  ["circle", { cx: "19", cy: "12", r: "1", key: "1wjl8i" }],
-  ["circle", { cx: "5", cy: "12", r: "1", key: "1pcz8c" }]
+  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
+  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
+  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
 ];
-const Ellipsis = createLucideIcon("ellipsis", __iconNode$C);
+const ExternalLink = createLucideIcon("external-link", __iconNode$C);
 /**
  * @license lucide-react v0.546.0 - ISC
  *
@@ -41667,6 +41679,16 @@ function Onboarding({ onDone }) {
   };
   const isGradientStep = step === "welcome" || step === "choose";
   const bothChecked = checked1 && checked2;
+  const [networkSearch, setNetworkSearch] = reactExports.useState("");
+  const [showTestnets, setShowTestnets] = reactExports.useState(false);
+  const [selectedNets, setSelectedNets] = reactExports.useState(
+    () => /* @__PURE__ */ new Set(["eth", "fil", "btc", "zec", "ada", "matic", "op", "arb", "avax", "base", "bnb", "ftm", "cro"])
+  );
+  const toggleNet = (id2) => setSelectedNets((prev) => {
+    const s = new Set(prev);
+    s.has(id2) ? s.delete(id2) : s.add(id2);
+    return s;
+  });
   if (!isGradientStep) {
     return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { height: "100vh", background: "#F5F6FA", display: "flex", flexDirection: "column" }, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { padding: "18px 40px 12px", display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }, children: [
@@ -41791,39 +41813,19 @@ function Onboarding({ onDone }) {
             }
           )
         ] }) }, "import-type"),
-        step === "supported-networks" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE$1, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(LightCard, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "button",
-            {
-              onClick: () => setStep("before-we-begin"),
-              style: backBtnInCard,
-              onMouseEnter: (e) => {
-                e.currentTarget.style.background = "#EEF2FF";
-              },
-              onMouseLeave: (e) => {
-                e.currentTarget.style.background = "transparent";
-              },
-              children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 18 })
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { ...titleStyle, textAlign: "center" }, children: "Supported Networks" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { ...subStyle, textAlign: "center" }, children: "Orivon Wallet supports the following networks out of the box." }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 40 }, children: [
-            { name: "Ethereum", sub: "ETH · EVM Chains · Base · Optimism", color: "#627EEA", icon: "Ξ" },
-            { name: "Solana", sub: "SOL · Solana Mainnet", color: "#9945FF", icon: "◎" },
-            { name: "Bitcoin", sub: "BTC · Bitcoin Mainnet", color: "#F7931A", icon: "₿" },
-            { name: "Polygon", sub: "MATIC · Polygon Mainnet", color: "#8247E5", icon: "M" },
-            { name: "BNB Chain", sub: "BNB · BNB Smart Chain", color: "#F3BA2F", icon: "B" },
-            { name: "Filecoin", sub: "FIL · Filecoin Mainnet", color: "#0090FF", icon: "F" }
-          ].map((net) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 12, padding: "14px 16px", borderRadius: 12, background: "#F9FAFB", border: "1px solid #F3F4F6" }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 38, height: 38, borderRadius: "50%", background: net.color, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 15, fontWeight: 700, flexShrink: 0 }, children: net.icon }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 14, fontWeight: 600, color: "#111827", margin: "0 0 2px" }, children: net.name }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 11, color: "#9CA3AF", margin: 0 }, children: net.sub })
-            ] })
-          ] }, net.name)) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(CenterBtn$1, { onClick: () => setStep("create-password"), children: "Continue with 6 Networks" })
-        ] }) }, "supported-networks"),
+        step === "supported-networks" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE$1, style: { width: "100%" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          SupportedNetworksCard,
+          {
+            selectedNets,
+            toggleNet,
+            networkSearch,
+            setNetworkSearch,
+            showTestnets,
+            setShowTestnets,
+            onBack: () => setStep("before-we-begin"),
+            onContinue: () => setStep("create-password")
+          }
+        ) }, "supported-networks"),
         step === "create-password" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE$1, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(LightCard, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "button",
@@ -42379,15 +42381,15 @@ function Onboarding({ onDone }) {
           }
         ) }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(GradCard, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { fontSize: 42, fontWeight: 800, color: "#fff", margin: "0 0 16px", letterSpacing: "-0.8px", lineHeight: 1.15 }, children: "Web3. By Default." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { fontSize: 42, fontWeight: 800, color: "#fff", margin: "0 0 16px", letterSpacing: "-0.8px", lineHeight: 1.15 }, children: "Where Web3 Feels Natural." }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { fontSize: 18, color: "rgba(255,255,255,0.65)", lineHeight: 1.65, margin: "0 0 44px" }, children: [
-            "Browse ENS domains and decentralized apps natively.",
+            "Wallets, decentralized apps, ENS domains, and ",
             /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
-            "Your wallet lives inside the browser, not an extension."
+            "secure identity built directly into your browser."
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 18 }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(GradBtn, { onClick: () => setStep("choose"), children: "Create / Import Wallet" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(PlainBtn, { onClick: () => onDone(false), children: "Skip" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(GradBtn, { onClick: () => setStep("choose"), children: "Create Wallet" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(PlainBtn, { onClick: () => onDone(false), children: "Explore First" })
           ] })
         ] })
       ] }, "welcome"),
@@ -42408,13 +42410,9 @@ function Onboarding({ onDone }) {
           }
         ) }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(GradCard, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { style: { fontSize: 40, fontWeight: 800, color: "#fff", margin: "0 0 18px", letterSpacing: "-0.7px", lineHeight: 1.18 }, children: [
-            "Create or restore",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
-            "your wallet."
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 18, fontWeight: 600, color: "rgba(255,255,255,0.85)", margin: "0 0 14px", lineHeight: 1.5 }, children: "Your keys. Your crypto. Your browser." }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 14, color: "rgba(255,255,255,0.50)", lineHeight: 1.65, margin: "0 0 40px" }, children: "Generate a new 12-word seed phrase or restore an existing wallet. Your keys are encrypted and stored only on this device." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { fontSize: 40, fontWeight: 800, color: "#fff", margin: "0 0 18px", letterSpacing: "-0.7px", lineHeight: 1.18 }, children: "Create Your Secure Wallet." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 18, fontWeight: 600, color: "rgba(255,255,255,0.85)", margin: "0 0 14px", lineHeight: 1.5 }, children: "Your identity, assets, and Web3 access start here." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 14, color: "rgba(255,255,255,0.50)", lineHeight: 1.65, margin: "0 0 40px" }, children: "Create a new wallet or restore an existing one in seconds. Your keys stay encrypted and stored only on your device." }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }, children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(GradBtn, { onClick: () => {
               setMode("create");
@@ -42423,7 +42421,7 @@ function Onboarding({ onDone }) {
             /* @__PURE__ */ jsxRuntimeExports.jsx(PlainBtn, { onClick: () => {
               setMode("import");
               setStep("before-we-begin");
-            }, children: "Import Wallet" })
+            }, children: "Import Existing Wallet" })
           ] })
         ] })
       ] }, "choose")
@@ -42501,6 +42499,130 @@ const titleStyle = { fontSize: 26, fontWeight: 700, color: "#111827", margin: "0
 const subStyle = { fontSize: 15, color: "#6B7280", lineHeight: 1.6, margin: "0 0 28px" };
 const inputSt = { width: "100%", height: 52, borderRadius: 12, padding: "0 48px 0 18px", fontSize: 15, color: "#111827", background: "#F9FAFB", border: "1px solid #E5E7EB", outline: "none", fontFamily: "inherit", boxSizing: "border-box", display: "block", marginBottom: 8 };
 const skipBtnStyle = { background: "none", border: "none", color: "#9CA3AF", fontSize: 15, cursor: "pointer", padding: "4px 0", transition: "color 0.15s" };
+const ALL_NETWORKS = [
+  { id: "sol", name: "Solana Mainnet Beta", color: "#9945FF", icon: "◎", section: "featured" },
+  { id: "eth", name: "Ethereum Mainnet", color: "#627EEA", icon: "Ξ", section: "featured" },
+  { id: "fil", name: "Filecoin Mainnet", color: "#0090FF", icon: "F", section: "featured" },
+  { id: "btc", name: "Bitcoin Mainnet", color: "#F7931A", icon: "₿", section: "featured" },
+  { id: "zec", name: "Zcash Mainnet", color: "#F4B728", icon: "Z", section: "featured" },
+  { id: "ada", name: "Cardano Mainnet", color: "#0033AD", icon: "A", section: "featured" },
+  { id: "matic", name: "Polygon", color: "#8247E5", icon: "M", section: "popular" },
+  { id: "op", name: "Optimism", color: "#FF0420", icon: "O", section: "popular" },
+  { id: "arb", name: "Arbitrum One", color: "#28A0F0", icon: "A", section: "popular" },
+  { id: "avax", name: "Avalanche", color: "#E84142", icon: "A", section: "popular" },
+  { id: "base", name: "Base", color: "#0052FF", icon: "B", section: "popular" },
+  { id: "bnb", name: "BNB Smart Chain", color: "#F3BA2F", icon: "B", section: "popular" },
+  { id: "ftm", name: "Fantom", color: "#1969FF", icon: "F", section: "popular" },
+  { id: "cro", name: "Cronos", color: "#002D74", icon: "C", section: "popular" }
+];
+function NetChip({ net, selected, onToggle }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      onClick: onToggle,
+      style: { position: "relative", borderRadius: 12, padding: "12px 8px 10px", border: `1.5px solid ${selected ? "#4F46E5" : "#E5E7EB"}`, background: selected ? "#F5F3FF" : "#fff", cursor: "pointer", textAlign: "center", transition: "border-color 0.12s, background 0.12s" },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", top: 6, right: 6, width: 16, height: 16, borderRadius: 4, background: selected ? "#4F46E5" : "transparent", border: `1.5px solid ${selected ? "#4F46E5" : "#D1D5DB"}`, display: "flex", alignItems: "center", justifyContent: "center" }, children: selected && /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: "10", height: "8", viewBox: "0 0 10 8", fill: "none", children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M1 4l2.5 2.5L9 1", stroke: "#fff", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round" }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 36, height: 36, borderRadius: "50%", background: net.color, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 15, fontWeight: 700, margin: "0 auto 8px" }, children: net.icon }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 10, fontWeight: 600, color: "#111827", margin: 0, lineHeight: 1.3 }, children: net.name })
+      ]
+    }
+  );
+}
+function SupportedNetworksCard({
+  selectedNets,
+  toggleNet,
+  networkSearch,
+  setNetworkSearch,
+  showTestnets,
+  setShowTestnets,
+  onBack,
+  onContinue
+}) {
+  const filtered = ALL_NETWORKS.filter((n2) => n2.name.toLowerCase().includes(networkSearch.toLowerCase()));
+  const featured = filtered.filter((n2) => n2.section === "featured");
+  const popular = filtered.filter((n2) => n2.section === "popular");
+  const count = selectedNets.size;
+  const deselectPopular = () => {
+    popular.forEach((n2) => {
+      if (selectedNets.has(n2.id)) toggleNet(n2.id);
+    });
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { maxWidth: 740, margin: "0 auto", padding: "0 28px 24px", width: "100%" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: {
+    background: "#fff",
+    borderRadius: 20,
+    boxShadow: "0 2px 20px rgba(0,0,0,0.08)",
+    display: "flex",
+    flexDirection: "column",
+    height: 560,
+    overflow: "hidden"
+  }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { padding: "36px 52px 0", flexShrink: 0 }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          onClick: onBack,
+          style: backBtnInCard,
+          onMouseEnter: (e) => {
+            e.currentTarget.style.background = "#EEF2FF";
+          },
+          onMouseLeave: (e) => {
+            e.currentTarget.style.background = "transparent";
+          },
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 18 })
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { ...titleStyle, textAlign: "center", marginBottom: 6 }, children: "Supported networks" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 14, color: "#6B7280", textAlign: "center", margin: "0 0 16px", lineHeight: 1.5 }, children: "Choose which blockchains to use in your wallet." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 10, background: "#F3F4F6", borderRadius: 10, padding: "9px 14px", marginBottom: 6 }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "15", height: "15", viewBox: "0 0 24 24", fill: "none", stroke: "#9CA3AF", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "11", cy: "11", r: "8" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M21 21l-4.35-4.35" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("input", { value: networkSearch, onChange: (e) => setNetworkSearch(e.target.value), placeholder: "Search networks", style: { border: "none", outline: "none", background: "transparent", fontSize: 14, color: "#111827", flex: 1, fontFamily: "inherit" } })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "flex-end", marginBottom: 8 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { style: { display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#374151", cursor: "pointer" }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "checkbox", checked: showTestnets, onChange: (e) => setShowTestnets(e.target.checked), style: { width: 14, height: 14, accentColor: "#4F46E5", cursor: "pointer" } }),
+        " Show testnets"
+      ] }) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, overflowY: "auto", padding: "0 52px" }, children: [
+      featured.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { marginBottom: 16 }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 10, fontWeight: 600, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }, children: "Featured" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }, children: featured.map((net) => /* @__PURE__ */ jsxRuntimeExports.jsx(NetChip, { net, selected: selectedNets.has(net.id), onToggle: () => toggleNet(net.id) }, net.id)) })
+      ] }),
+      popular.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { marginBottom: 16 }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", justifyContent: "space-between", marginBottom: 10 }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 10, fontWeight: 600, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.08em", margin: 0 }, children: "Popular" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: deselectPopular, style: { fontSize: 12, color: "#4F46E5", background: "none", border: "none", cursor: "pointer", fontWeight: 500, padding: 0 }, children: "Deselect all" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }, children: popular.map((net) => /* @__PURE__ */ jsxRuntimeExports.jsx(NetChip, { net, selected: selectedNets.has(net.id), onToggle: () => toggleNet(net.id) }, net.id)) })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { padding: "14px 52px 32px", borderTop: "1px solid #F3F4F6", flexShrink: 0 }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          onClick: onContinue,
+          style: { width: "100%", height: 50, borderRadius: 9999, background: "#4F46E5", color: "#fff", fontSize: 15, fontWeight: 600, border: "none", cursor: "pointer", boxShadow: "0 2px 14px rgba(79,70,229,0.30)", marginBottom: 8, transition: "filter 0.15s" },
+          onMouseEnter: (e) => {
+            e.currentTarget.style.filter = "brightness(1.1)";
+          },
+          onMouseLeave: (e) => {
+            e.currentTarget.style.filter = "brightness(1)";
+          },
+          children: [
+            "Continue with ",
+            count,
+            " Network",
+            count !== 1 ? "s" : ""
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 11, color: "#9CA3AF", textAlign: "center", margin: 0 }, children: "You can add networks anytime in Settings." })
+    ] })
+  ] }) });
+}
 const NEW_TAB_URL = "orivon://newtab";
 function makeTab(url = NEW_TAB_URL) {
   return {
@@ -42545,6 +42667,8 @@ const useTabsStore = create()(
         tabs: s.tabs.map((t) => t.id === id2 ? { ...t, ...patch } : t)
       })),
       navigateTab: (id2, url, displayUrl, type) => {
+        const isInternal = url.startsWith("orivon://");
+        const autoTitle = url === NEW_TAB_URL ? "New Tab" : url.includes("dashboard") ? "Dashboard" : displayUrl || url;
         set((s) => ({
           tabs: s.tabs.map((t) => {
             if (t.id !== id2) return t;
@@ -42554,10 +42678,10 @@ const useTabsStore = create()(
               url,
               displayUrl,
               type,
-              isLoading: true,
+              isLoading: !isInternal,
+              title: autoTitle,
               history: newHistory,
-              historyIndex: newHistory.length - 1,
-              title: url === NEW_TAB_URL ? "New Tab" : displayUrl || url
+              historyIndex: newHistory.length - 1
             };
           })
         }));
@@ -42568,7 +42692,7 @@ const useTabsStore = create()(
         const url = tab.history[tab.historyIndex - 1];
         set((s) => ({
           tabs: s.tabs.map(
-            (t) => t.id === id2 ? { ...t, historyIndex: t.historyIndex - 1, url, isLoading: true } : t
+            (t) => t.id === id2 ? { ...t, historyIndex: t.historyIndex - 1, url, isLoading: !url.startsWith("orivon://") } : t
           )
         }));
         return url;
@@ -42579,7 +42703,7 @@ const useTabsStore = create()(
         const url = tab.history[tab.historyIndex + 1];
         set((s) => ({
           tabs: s.tabs.map(
-            (t) => t.id === id2 ? { ...t, historyIndex: t.historyIndex + 1, url, isLoading: true } : t
+            (t) => t.id === id2 ? { ...t, historyIndex: t.historyIndex + 1, url, isLoading: !url.startsWith("orivon://") } : t
           )
         }));
         return url;
@@ -42710,7 +42834,7 @@ function Tab({ tab, isActive, isDark, activeTabBg, onClick, onClose }) {
       onClick,
       className: `
         no-drag group relative flex items-center gap-2 h-9 px-3 cursor-pointer
-        rounded-tl-lg rounded-tr-lg flex-1 min-w-0 max-w-[220px] transition-all select-none
+        rounded-tl-lg rounded-tr-lg flex-1 min-w-[44px] max-w-[220px] transition-all select-none overflow-hidden
       `,
       style: {
         background: isActive ? activeTabBg : "transparent",
@@ -43503,32 +43627,32 @@ function pickNextImage() {
   _lastImageIndex = picked;
   return picked;
 }
-const DAPPS = [
-  { name: "Uniswap", url: "https://app.uniswap.org", icon: "🦄" },
-  { name: "OpenSea", url: "https://opensea.io", icon: "🌊" },
-  { name: "Aave", url: "https://app.aave.com", icon: "👻" },
-  { name: "ENS App", url: "https://app.ens.domains", icon: "🔷" },
-  { name: "Etherscan", url: "https://etherscan.io", icon: "🔍" },
-  { name: "Mirror", url: "https://mirror.xyz", icon: "🪞" },
-  { name: "Radicle", url: "https://app.radicle.xyz", icon: "🌱" },
-  { name: "IPFS", url: "https://ipfs.io", icon: "📦" }
+const DAPPS$1 = [
+  { name: "Uniswap", url: "https://app.uniswap.org", icon: "🦄", accent: "#FF007A" },
+  { name: "OpenSea", url: "https://opensea.io", icon: "🌊", accent: "#2081E2" },
+  { name: "Aave", url: "https://app.aave.com", icon: "👻", accent: "#B6509E" },
+  { name: "ENS App", url: "https://app.ens.domains", icon: "🔷", accent: "#5298FF" },
+  { name: "Etherscan", url: "https://etherscan.io", icon: "🔍", accent: "#21325B" },
+  { name: "Mirror", url: "https://mirror.xyz", icon: "🪞", accent: "#6E56CF" },
+  { name: "Radicle", url: "https://app.radicle.xyz", icon: "🌱", accent: "#2BB673" },
+  { name: "IPFS", url: "https://ipfs.io", icon: "📦", accent: "#469EA2" }
 ];
 const CRYPTO_NEWS = [
-  { id: 1, source: "CoinDesk", category: "Bitcoin", catIcon: "₿", time: "1h ago", title: "Bitcoin Surpasses $72,000 as Spot ETF Inflows Reach Record $1.2 Billion in a Single Day", bigImage: true, imgGrad: "linear-gradient(135deg,#F7931A 0%,#FFC107 100%)", imgEmoji: "₿" },
-  { id: 2, source: "The Block", category: "Ethereum", catIcon: "Ξ", time: "3h ago", title: "Ethereum's Pectra Upgrade Set for Mainnet Launch, Bringing Major Staking Improvements", bigImage: false, imgGrad: "", imgEmoji: "" },
-  { id: 3, source: "Decrypt", category: "DeFi", catIcon: "🔄", time: "4h ago", title: "Uniswap v4 Launches with Hook Architecture, Driving $800M in First-Day Trading Volume", bigImage: false, imgGrad: "linear-gradient(135deg,#FF007A,#FF6B6B)", imgEmoji: "🔄" },
-  { id: 4, source: "CryptoSlate", category: "Solana", catIcon: "◎", time: "6h ago", title: "Solana DEX Volume Surpasses Ethereum for Third Consecutive Week, Meme Coins Drive Surge", bigImage: true, imgGrad: "linear-gradient(135deg,#9945FF,#14F195)", imgEmoji: "◎" },
-  { id: 5, source: "Blockworks", category: "NFT", catIcon: "🎨", time: "8h ago", title: "OpenSea 2.0 Officially Launches With Zero Fees and Enhanced Creator Royalty Framework", bigImage: false, imgGrad: "", imgEmoji: "" },
-  { id: 6, source: "The Defiant", category: "DeFi", catIcon: "🔄", time: "10h ago", title: "Arbitrum DAO Votes to Deploy $45M Treasury Into Blue-Chip DeFi Yield Strategies", bigImage: false, imgGrad: "", imgEmoji: "" },
-  { id: 7, source: "CoinTelegraph", category: "Bitcoin", catIcon: "₿", time: "12h ago", title: "MicroStrategy Acquires 5,000 More BTC — Total Holdings Now Exceed 220,000 Coins", bigImage: true, imgGrad: "linear-gradient(135deg,#F7931A,#FF8C42)", imgEmoji: "₿" },
-  { id: 8, source: "Messari", category: "Regulation", catIcon: "⚖️", time: "14h ago", title: "SEC Greenlights Spot Ethereum ETF Options Trading — Market Responds With 8% Rally", bigImage: false, imgGrad: "", imgEmoji: "" },
-  { id: 9, source: "CoinGecko", category: "Web3", catIcon: "🌐", time: "16h ago", title: "Layer 2 Networks Collectively Process Over 50 Million Transactions in Single Week", bigImage: false, imgGrad: "linear-gradient(135deg,#6366F1,#8B5CF6)", imgEmoji: "🌐" },
-  { id: 10, source: "DeFi Pulse", category: "DeFi", catIcon: "🔄", time: "18h ago", title: "Total Value Locked in DeFi Protocols Reaches $200 Billion Milestone for First Time", bigImage: false, imgGrad: "", imgEmoji: "" },
-  { id: 11, source: "Nansen", category: "Ethereum", catIcon: "Ξ", time: "20h ago", title: "Ethereum Validators Set New Record — Network Now Secured by Over 1 Million Validators", bigImage: false, imgGrad: "", imgEmoji: "" },
-  { id: 12, source: "Dune Analytics", category: "Web3", catIcon: "🌐", time: "22h ago", title: "On-Chain Data Shows Retail Wallets Accumulating at Fastest Pace Since 2020 Bull Run", bigImage: false, imgGrad: "", imgEmoji: "" }
+  { id: 1, source: "CoinDesk", cat: "Bitcoin", catColor: "#F7931A", time: "1h ago", title: "Bitcoin Surpasses $72,000 as Spot ETF Inflows Reach Record $1.2B in a Single Day", heroGrad: "linear-gradient(135deg,#F7931A,#FFC107)", heroEmoji: "₿", hasThumb: false },
+  { id: 2, source: "The Block", cat: "Ethereum", catColor: "#627EEA", time: "3h ago", title: "Ethereum's Pectra Upgrade Set for Mainnet Launch, Bringing Major Staking Improvements", heroGrad: "", heroEmoji: "", hasThumb: false },
+  { id: 3, source: "Decrypt", cat: "DeFi", catColor: "#10B981", time: "4h ago", title: "Uniswap v4 Launches with Hook Architecture, Driving $800M in First-Day Volume", heroGrad: "linear-gradient(135deg,#FF007A,#FF6B6B)", heroEmoji: "🔄", hasThumb: true },
+  { id: 4, source: "CryptoSlate", cat: "Solana", catColor: "#9945FF", time: "6h ago", title: "Solana DEX Volume Surpasses Ethereum for Third Consecutive Week as Meme Coins Surge", heroGrad: "linear-gradient(135deg,#9945FF,#14F195)", heroEmoji: "◎", hasThumb: true },
+  { id: 5, source: "Blockworks", cat: "NFT", catColor: "#EC4899", time: "8h ago", title: "OpenSea 2.0 Officially Launches With Zero Fees and Enhanced Creator Royalty Framework", heroGrad: "", heroEmoji: "", hasThumb: false },
+  { id: 6, source: "The Defiant", cat: "DeFi", catColor: "#10B981", time: "10h ago", title: "Arbitrum DAO Votes to Deploy $45M Treasury Into Blue-Chip DeFi Yield Strategies", heroGrad: "", heroEmoji: "", hasThumb: false },
+  { id: 7, source: "CoinTelegraph", cat: "Bitcoin", catColor: "#F7931A", time: "12h ago", title: "MicroStrategy Acquires 5,000 More BTC — Total Holdings Now Exceed 220,000 Coins", heroGrad: "linear-gradient(135deg,#F7931A,#FF8C42)", heroEmoji: "₿", hasThumb: true },
+  { id: 8, source: "Messari", cat: "Regulation", catColor: "#6366F1", time: "14h ago", title: "SEC Greenlights Spot Ethereum ETF Options Trading — Market Responds With 8% Rally", heroGrad: "", heroEmoji: "", hasThumb: false },
+  { id: 9, source: "CoinGecko", cat: "Web3", catColor: "#06B6D4", time: "16h ago", title: "Layer 2 Networks Collectively Process Over 50 Million Transactions in a Single Week", heroGrad: "linear-gradient(135deg,#6366F1,#8B5CF6)", heroEmoji: "🌐", hasThumb: true },
+  { id: 10, source: "DeFi Pulse", cat: "DeFi", catColor: "#10B981", time: "18h ago", title: "Total Value Locked in DeFi Protocols Reaches $200 Billion Milestone for the First Time", heroGrad: "", heroEmoji: "", hasThumb: false },
+  { id: 11, source: "Nansen", cat: "Ethereum", catColor: "#627EEA", time: "20h ago", title: "Ethereum Validators Set Record — Network Now Secured by Over 1 Million Active Validators", heroGrad: "", heroEmoji: "", hasThumb: false },
+  { id: 12, source: "Dune", cat: "Web3", catColor: "#06B6D4", time: "22h ago", title: "On-Chain Data Shows Retail Wallets Accumulating at Fastest Pace Since 2020 Bull Run", heroGrad: "", heroEmoji: "", hasThumb: false }
 ];
 const SIDEBAR_MAIN = ["For You", "Following"];
-const SIDEBAR_CHANNELS = ["Top Sources", "Crypto News", "Bitcoin", "Ethereum", "DeFi", "NFTs", "Web3", "Regulation"];
+const SIDEBAR_CH = ["Top Sources", "Crypto News", "Bitcoin", "Ethereum", "DeFi", "NFTs", "Web3", "Regulation"];
 function NewTab({ onNavigate }) {
   useSettings();
   const [query, setQuery] = reactExports.useState("");
@@ -43544,24 +43668,14 @@ function NewTab({ onNavigate }) {
     const q = query.trim();
     if (q) onNavigate(q);
   };
-  const boxBase = {
-    background: "rgba(8,8,20,0.72)",
-    backdropFilter: "blur(20px)",
-    WebkitBackdropFilter: "blur(20px)",
-    border: "1px solid rgba(255,255,255,0.09)",
-    borderRadius: 14,
-    padding: "13px 15px",
-    display: "flex",
-    flexDirection: "column"
+  const glass = {
+    background: "rgba(0,0,0,0.52)",
+    backdropFilter: "blur(28px)",
+    WebkitBackdropFilter: "blur(28px)",
+    border: "1px solid rgba(255,255,255,0.11)",
+    borderRadius: 18
   };
-  const labelStyle = {
-    fontSize: 9,
-    fontWeight: 700,
-    letterSpacing: "0.13em",
-    textTransform: "uppercase",
-    color: "rgba(255,255,255,0.38)",
-    margin: "0 0 8px"
-  };
+  const DARK = "#0d0d16";
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: {
     width: "100%",
     height: "100%",
@@ -43588,21 +43702,21 @@ function NewTab({ onNavigate }) {
           }
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(to bottom, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.08) 35%, rgba(0,0,0,0.68) 72%, rgba(0,0,0,0.88) 100%)" } }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", inset: 0, zIndex: 1, background: "linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.55) 68%, rgba(0,0,0,0.82) 100%)" } }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         "button",
         {
-          style: { position: "absolute", top: 16, right: 20, zIndex: 10, width: 32, height: 32, borderRadius: "50%", background: "rgba(0,0,0,0.30)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.10)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "rgba(255,255,255,0.78)", transition: "background 0.15s" },
+          style: { position: "absolute", top: 14, right: 18, zIndex: 10, width: 34, height: 34, borderRadius: "50%", background: "rgba(0,0,0,0.35)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "rgba(255,255,255,0.80)", transition: "background 0.15s" },
           onMouseEnter: (e) => {
-            e.currentTarget.style.background = "rgba(0,0,0,0.52)";
+            e.currentTarget.style.background = "rgba(0,0,0,0.58)";
           },
           onMouseLeave: (e) => {
-            e.currentTarget.style.background = "rgba(0,0,0,0.30)";
+            e.currentTarget.style.background = "rgba(0,0,0,0.35)";
           },
           children: /* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { size: 15 })
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 5, display: "flex", justifyContent: "center", paddingTop: 26, flexShrink: 0 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("form", { onSubmit: handleSubmit, style: { width: "100%", maxWidth: 580, padding: "0 20px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.95)", backdropFilter: "blur(24px)", borderRadius: 9999, padding: "13px 22px", boxShadow: "0 4px 28px rgba(0,0,0,0.22)" }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 5, display: "flex", justifyContent: "center", paddingTop: 24, flexShrink: 0 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("form", { onSubmit: handleSubmit, style: { width: "100%", maxWidth: 600, padding: "0 20px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.96)", backdropFilter: "blur(20px)", borderRadius: 9999, padding: "13px 22px", boxShadow: "0 6px 32px rgba(0,0,0,0.25)" }, children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 20, color: "#FB5B22", style: { flexShrink: 0 } }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           "input",
@@ -43612,66 +43726,73 @@ function NewTab({ onNavigate }) {
             value: query,
             onChange: (e) => setQuery(e.target.value),
             placeholder: "Ask anything, find anything...",
-            style: { flex: 1, background: "transparent", border: "none", outline: "none", fontSize: 15, color: "#111827", fontFamily: "inherit" },
+            style: { flex: 1, background: "transparent", border: "none", outline: "none", fontSize: 15, color: "#111", fontFamily: "inherit" },
             className: "newtab-input"
           }
         )
       ] }) }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { flex: 1 } }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 5, padding: "0 16px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 9 }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: boxBase, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: labelStyle, children: "Stats" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "space-between" }, children: [
-            { val: "7", sub: "Trackers blocked" },
-            { val: "465 KB", sub: "Bandwidth saved" },
-            { val: "0 Sec", sub: "Time saved" }
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative", zIndex: 5, padding: "0 16px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { ...glass, padding: "14px 18px" }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: "rgba(255,255,255,0.36)", textTransform: "uppercase", margin: "0 0 10px" }, children: "Stats" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "flex-end" }, children: [
+            { n: "7", unit: "", sub: "Trackers blocked" },
+            { n: "465", unit: " KB", sub: "Bandwidth saved" },
+            { n: "0", unit: " sec", sub: "Time saved" }
           ].map((s, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 17, fontWeight: 700, color: "#818CF8", margin: "0 0 2px", letterSpacing: "-0.3px" }, children: s.val }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 9, color: "rgba(255,255,255,0.40)", margin: 0, lineHeight: 1.35 }, children: s.sub })
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { fontSize: 20, fontWeight: 800, color: "#818CF8", margin: "0 0 3px", letterSpacing: "-0.5px", lineHeight: 1 }, children: [
+              s.n,
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 11, fontWeight: 500 }, children: s.unit })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 9.5, color: "rgba(255,255,255,0.40)", margin: 0, lineHeight: 1.3 }, children: s.sub })
           ] }, i)) })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: boxBase, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: labelStyle, children: "News" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 10, flex: 1 }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 34, height: 34, borderRadius: 8, background: "rgba(255,255,255,0.09)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17, flexShrink: 0 }, children: "📰" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1 }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 12, fontWeight: 600, color: "#fff", margin: "0 0 4px", lineHeight: 1.4 }, children: "Crypto & world news" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 10, color: "rgba(255,255,255,0.38)", margin: 0 }, children: "Scroll down to read →" })
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { ...glass, padding: "14px 18px", display: "flex", flexDirection: "column", justifyContent: "space-between" }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: "rgba(255,255,255,0.36)", textTransform: "uppercase", margin: "0 0 10px" }, children: "News" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 10 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 38, height: 38, borderRadius: 10, background: "rgba(255,255,255,0.10)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }, children: "📰" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 12, fontWeight: 600, color: "#fff", margin: "0 0 3px", lineHeight: 1.35 }, children: "Crypto & world news" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 10, color: "rgba(255,255,255,0.40)", margin: 0 }, children: "Scroll down to read ↓" })
             ] })
           ] })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: boxBase, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { ...glass, padding: "14px 18px", display: "flex", flexDirection: "column", justifyContent: "space-between" }, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 5, marginBottom: 8 }, children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 11, color: "#FB5B22" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { ...labelStyle, margin: 0 }, children: "Orivon VPN" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: "rgba(255,255,255,0.36)", textTransform: "uppercase", margin: 0 }, children: "Orivon VPN" })
           ] }),
-          ["Extra privacy online", "Hide your IP", "Protect all apps"].map((b2, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { fontSize: 10, color: "rgba(255,255,255,0.48)", margin: "2px 0", display: "flex", alignItems: "center", gap: 5 }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { width: 11, height: 11, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.22)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 7, flexShrink: 0 }, children: "✓" }),
+          ["Extra privacy online", "Hide your IP & location", "Protect all your apps"].map((b2, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { fontSize: 11, color: "rgba(255,255,255,0.55)", margin: "3px 0", display: "flex", alignItems: "center", gap: 6, lineHeight: 1 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { width: 13, height: 13, borderRadius: "50%", border: "1.5px solid rgba(255,255,255,0.25)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 7.5, flexShrink: 0 }, children: "✓" }),
             b2
           ] }, i))
         ] }),
-        DAPPS.map((app) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        DAPPS$1.map((app) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "div",
           {
             onClick: () => onNavigate(app.url),
-            style: { ...boxBase, alignItems: "center", justifyContent: "center", gap: 8, cursor: "pointer", transition: "background 0.14s, transform 0.12s", minHeight: 82 },
+            style: { ...glass, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 9, padding: "18px 10px", cursor: "pointer", transition: "background 0.15s, transform 0.12s, border-color 0.15s" },
             onMouseEnter: (e) => {
-              e.currentTarget.style.background = "rgba(30,28,55,0.86)";
-              e.currentTarget.style.transform = "scale(1.04)";
+              const el = e.currentTarget;
+              el.style.background = "rgba(255,255,255,0.13)";
+              el.style.transform = "translateY(-2px) scale(1.02)";
+              el.style.borderColor = "rgba(255,255,255,0.22)";
             },
             onMouseLeave: (e) => {
-              e.currentTarget.style.background = "rgba(8,8,20,0.72)";
-              e.currentTarget.style.transform = "scale(1)";
+              const el = e.currentTarget;
+              el.style.background = "rgba(0,0,0,0.52)";
+              el.style.transform = "translateY(0) scale(1)";
+              el.style.borderColor = "rgba(255,255,255,0.11)";
             },
             children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 26, lineHeight: 1 }, children: app.icon }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 11, color: "rgba(255,255,255,0.72)", fontWeight: 500, textAlign: "center" }, children: app.name })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 52, height: 52, borderRadius: 16, background: `${app.accent}22`, border: `1.5px solid ${app.accent}44`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, boxShadow: `0 4px 16px ${app.accent}33` }, children: app.icon }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.82)", letterSpacing: "0.01em" }, children: app.name })
             ]
           },
           app.name
         ))
       ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: 10 } }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: 12 } }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("style", { children: `.newtab-input::placeholder { color: rgba(0,0,0,0.36); }` })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: {
@@ -43679,14 +43800,14 @@ function NewTab({ onNavigate }) {
       scrollSnapAlign: "start",
       display: "flex",
       overflow: "hidden",
-      background: "#0b0b18"
+      background: DARK
     }, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { width: 218, flexShrink: 0, padding: "20px 12px", borderRight: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", gap: 2, overflowY: "hidden" }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { width: 210, flexShrink: 0, background: DARK, borderRight: "1px solid rgba(255,255,255,0.06)", padding: "22px 10px", display: "flex", flexDirection: "column", gap: 2, overflowY: "hidden" }, children: [
         SIDEBAR_MAIN.map((cat) => /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
             onClick: () => setActiveChannel(cat),
-            style: { width: "100%", padding: "9px 12px", borderRadius: 10, border: "none", textAlign: "left", cursor: "pointer", fontSize: 14, fontWeight: 600, transition: "background 0.12s, color 0.12s", background: activeChannel === cat ? "rgba(99,102,241,0.18)" : "transparent", color: activeChannel === cat ? "#A5B4FC" : "rgba(255,255,255,0.58)" },
+            style: { width: "100%", padding: "9px 14px", borderRadius: 10, border: "none", background: activeChannel === cat ? "rgba(99,102,241,0.20)" : "transparent", cursor: "pointer", textAlign: "left", fontSize: 14, fontWeight: 600, color: activeChannel === cat ? "#A5B4FC" : "rgba(255,255,255,0.55)", transition: "all 0.12s" },
             onMouseEnter: (e) => {
               if (activeChannel !== cat) e.currentTarget.style.background = "rgba(255,255,255,0.05)";
             },
@@ -43697,15 +43818,15 @@ function NewTab({ onNavigate }) {
           },
           cat
         )),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { margin: "12px 12px 6px", display: "flex", alignItems: "center", justifyContent: "space-between" }, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.30)", letterSpacing: "0.10em", textTransform: "uppercase" }, children: "Channels" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 16, color: "rgba(255,255,255,0.28)", cursor: "pointer", lineHeight: 1 }, children: "+" })
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 14px 6px" }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)" }, children: "Channels" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 18, color: "rgba(255,255,255,0.25)", cursor: "pointer", lineHeight: 1 }, children: "+" })
         ] }),
-        SIDEBAR_CHANNELS.map((ch) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+        SIDEBAR_CH.map((ch) => /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
             onClick: () => setActiveChannel(ch),
-            style: { width: "100%", padding: "7px 12px", borderRadius: 8, border: "none", textAlign: "left", cursor: "pointer", fontSize: 13, fontWeight: 500, transition: "background 0.12s, color 0.12s", background: activeChannel === ch ? "rgba(99,102,241,0.18)" : "transparent", color: activeChannel === ch ? "#A5B4FC" : "rgba(255,255,255,0.46)" },
+            style: { width: "100%", padding: "7px 14px", borderRadius: 8, border: "none", background: activeChannel === ch ? "rgba(99,102,241,0.20)" : "transparent", cursor: "pointer", textAlign: "left", fontSize: 13, fontWeight: 500, color: activeChannel === ch ? "#A5B4FC" : "rgba(255,255,255,0.45)", transition: "all 0.12s" },
             onMouseEnter: (e) => {
               if (activeChannel !== ch) e.currentTarget.style.background = "rgba(255,255,255,0.04)";
             },
@@ -43717,50 +43838,40 @@ function NewTab({ onNavigate }) {
           ch
         ))
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, overflowY: "auto", padding: "20px 28px 32px" }, children: [
-        CRYPTO_NEWS[0].bigImage && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { borderRadius: 14, overflow: "hidden", marginBottom: 12, background: CRYPTO_NEWS[0].imgGrad, height: 200, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 72, filter: "drop-shadow(0 4px 16px rgba(0,0,0,0.4))" }, children: CRYPTO_NEWS[0].imgEmoji }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 6, marginBottom: 7 }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, color: "rgba(255,255,255,0.52)", fontWeight: 500 }, children: CRYPTO_NEWS[0].source }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "rgba(255,255,255,0.22)", fontSize: 10 }, children: "•" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { style: { fontSize: 11, color: "rgba(255,255,255,0.36)" }, children: [
-              CRYPTO_NEWS[0].catIcon,
-              " ",
-              CRYPTO_NEWS[0].category
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "rgba(255,255,255,0.22)", fontSize: 10 }, children: "•" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 11, color: "rgba(255,255,255,0.36)" }, children: CRYPTO_NEWS[0].time })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 17, fontWeight: 700, color: "rgba(255,255,255,0.92)", margin: "0 0 6px", lineHeight: 1.45, cursor: "pointer" }, children: CRYPTO_NEWS[0].title }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: 1, background: "rgba(255,255,255,0.06)", margin: "14px 0" } })
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, background: DARK, overflowY: "auto", padding: "22px 28px 32px" }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { borderRadius: 16, overflow: "hidden", marginBottom: 14, height: 210, background: CRYPTO_NEWS[0].heroGrad, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 8px 32px rgba(0,0,0,0.35)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 80, filter: "drop-shadow(0 4px 20px rgba(0,0,0,0.35))" }, children: CRYPTO_NEWS[0].heroEmoji }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.55)" }, children: CRYPTO_NEWS[0].source }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "rgba(255,255,255,0.20)", fontSize: 10 }, children: "•" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 5, background: `${CRYPTO_NEWS[0].catColor}28`, color: CRYPTO_NEWS[0].catColor }, children: CRYPTO_NEWS[0].cat }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "rgba(255,255,255,0.20)", fontSize: 10 }, children: "•" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 11, color: "rgba(255,255,255,0.35)" }, children: CRYPTO_NEWS[0].time })
         ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 18, fontWeight: 700, color: "rgba(255,255,255,0.92)", margin: "0 0 4px", lineHeight: 1.45, cursor: "pointer" }, children: CRYPTO_NEWS[0].title }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: 1, background: "rgba(255,255,255,0.07)", margin: "18px 0" } }),
         CRYPTO_NEWS.slice(1).map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "div",
           {
-            style: { display: "flex", gap: 14, padding: "14px 0", borderBottom: "1px solid rgba(255,255,255,0.05)", cursor: "pointer", borderRadius: 4, transition: "background 0.12s" },
+            style: { display: "flex", gap: 14, padding: "13px 12px", borderRadius: 12, cursor: "pointer", marginBottom: 2, transition: "background 0.12s" },
             onMouseEnter: (e) => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.03)";
+              e.currentTarget.style.background = "rgba(255,255,255,0.04)";
             },
             onMouseLeave: (e) => {
               e.currentTarget.style.background = "transparent";
             },
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, minWidth: 0 }, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }, children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, color: "rgba(255,255,255,0.50)", fontWeight: 500 }, children: item.source }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "rgba(255,255,255,0.22)", fontSize: 10 }, children: "•" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { style: { fontSize: 11, color: "rgba(255,255,255,0.36)" }, children: [
-                    item.catIcon,
-                    " ",
-                    item.category
-                  ] }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "rgba(255,255,255,0.22)", fontSize: 10 }, children: "•" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 11, color: "rgba(255,255,255,0.36)" }, children: item.time })
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 7, marginBottom: 7, flexWrap: "wrap" }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.50)" }, children: item.source }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "rgba(255,255,255,0.18)", fontSize: 10 }, children: "•" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 5, background: `${item.catColor}28`, color: item.catColor }, children: item.cat }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "rgba(255,255,255,0.18)", fontSize: 10 }, children: "•" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 11, color: "rgba(255,255,255,0.30)" }, children: item.time })
                 ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.88)", margin: 0, lineHeight: 1.5 }, children: item.title })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.85)", margin: 0, lineHeight: 1.5 }, children: item.title })
               ] }),
-              item.bigImage && item.imgGrad && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 82, height: 68, borderRadius: 10, background: item.imgGrad, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26 }, children: item.imgEmoji }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { width: 26, height: 26, borderRadius: 7, border: "none", background: "none", cursor: "pointer", color: "rgba(255,255,255,0.28)", flexShrink: 0, alignSelf: "flex-start", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }, children: "···" })
+              item.hasThumb && item.heroGrad && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 76, height: 64, borderRadius: 10, background: item.heroGrad, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, boxShadow: "0 4px 12px rgba(0,0,0,0.3)" }, children: item.heroEmoji }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { width: 24, height: 24, borderRadius: 6, border: "none", background: "none", cursor: "pointer", color: "rgba(255,255,255,0.25)", flexShrink: 0, alignSelf: "flex-start", fontSize: 16, letterSpacing: 1 }, children: "···" })
             ]
           },
           item.id
@@ -43775,7 +43886,7 @@ const MARKET = [
   { name: "Tether", sym: "USDT", price: "$0.9995", change: 0, cap: "$189.8B", vol: "$31.3B", color: "#26A17B", icon: "₮", bg: "#F0FDF8" },
   { name: "BNB", sym: "BNB", price: "$653.72", change: 0.15, cap: "$88.1B", vol: "$584.2M", color: "#F3BA2F", icon: "B", bg: "#FFFBF0" },
   { name: "XRP", sym: "XRP", price: "$1.42", change: 0.32, cap: "$87.8B", vol: "$1.2B", color: "#00AAE4", icon: "X", bg: "#F0FAFF" },
-  { name: "USDC", sym: "USDC", price: "$0.9998", change: -0, cap: "$77.0B", vol: "$5.0B", color: "#2775CA", icon: "$", bg: "#F0F5FF" },
+  { name: "USDC", sym: "USDC", price: "$0.9998", change: 0, cap: "$77.0B", vol: "$5.0B", color: "#2775CA", icon: "$", bg: "#F0F5FF" },
   { name: "Solana", sym: "SOL", price: "$86.48", change: 0.28, cap: "$50.0B", vol: "$1.7B", color: "#9945FF", icon: "◎", bg: "#F8F0FF" },
   { name: "TRON", sym: "TRX", price: "$0.3565", change: 1.55, cap: "$33.8B", vol: "$430.3M", color: "#EF0027", icon: "T", bg: "#FFF0F2" },
   { name: "Dogecoin", sym: "DOGE", price: "$0.1234", change: 3.4, cap: "$17.2B", vol: "$1.8B", color: "#C2A633", icon: "D", bg: "#FFFCF0" },
@@ -43787,7 +43898,30 @@ const PORTFOLIO_ASSETS = [
   { name: "Basic Attention Token", sym: "BAT", sub: "BAT on Ethereum Mainnet", color: "#FF5000", icon: "B", bg: "#FFF3EE", bal: "0", usd: "$0.00" },
   { name: "Ether", sym: "ETH", sub: "ETH on Base", color: "#0052FF", icon: "Ξ", bg: "#F0F5FF", bal: "0", usd: "$0.00" },
   { name: "MATIC", sym: "MATIC", sub: "MATIC on Polygon Mainnet", color: "#8247E5", icon: "M", bg: "#F5F0FF", bal: "0", usd: "$0.00" },
-  { name: "BNB", sym: "BNB", sub: "BNB on BNB Smart Chain", color: "#F3BA2F", icon: "B", bg: "#FFFBF0", bal: "0", usd: "$0.00" }
+  { name: "BNB", sym: "BNB", sub: "BNB on BNB Smart Chain", color: "#F3BA2F", icon: "B", bg: "#FFFBF0", bal: "0", usd: "$0.00" },
+  { name: "Ether", sym: "ETH", sub: "ETH on Optimism", color: "#FF0420", icon: "Ξ", bg: "#FFF0F2", bal: "0", usd: "$0.00" },
+  { name: "Avalanche", sym: "AVAX", sub: "AVAX on Avalanche C-Chain", color: "#E84142", icon: "A", bg: "#FFF0F0", bal: "0", usd: "$0.00" },
+  { name: "Filecoin", sym: "FIL", sub: "FIL on Filecoin EVM Mainnet", color: "#0090FF", icon: "F", bg: "#F0F8FF", bal: "0", usd: "$0.00" },
+  { name: "Neon", sym: "NEON", sub: "NEON on Neon EVM", color: "#9945FF", icon: "N", bg: "#F5F0FF", bal: "0", usd: "$0.00" },
+  { name: "Solana", sym: "SOL", sub: "SOL on Solana Mainnet Beta", color: "#000000", icon: "◎", bg: "#F3F4F6", bal: "0", usd: "$0.00" },
+  { name: "Filecoin", sym: "FIL", sub: "FIL on Filecoin Mainnet", color: "#0090FF", icon: "F", bg: "#F0F8FF", bal: "0", usd: "$0.00" },
+  { name: "Bitcoin", sym: "BTC", sub: "BTC on Bitcoin Mainnet", color: "#F7931A", icon: "₿", bg: "#FFF8F0", bal: "0", usd: "$0.00" },
+  { name: "Zcash", sym: "ZEC", sub: "ZEC on Zcash Mainnet", color: "#ECB244", icon: "Z", bg: "#FFFDF0", bal: "0", usd: "$0.00" },
+  { name: "Cardano", sym: "ADA", sub: "ADA on Cardano Mainnet", color: "#0033AD", icon: "A", bg: "#F0F4FF", bal: "0", usd: "$0.00" }
+];
+const DAPPS = [
+  { name: "Uniswap", cat: "DEX", chain: "Ethereum · Polygon · Base", color: "#FF007A", bg: "#FFF0F6", icon: "🦄", desc: "The leading decentralised exchange. Swap any ERC-20 token with deep liquidity pools.", url: "https://app.uniswap.org" },
+  { name: "Aave", cat: "Lending", chain: "Ethereum · Avalanche · Polygon", color: "#B6509E", bg: "#F9F0FF", icon: "👻", desc: "Non-custodial liquidity protocol for earning interest and borrowing crypto assets.", url: "https://app.aave.com" },
+  { name: "Compound", cat: "Lending", chain: "Ethereum · Base", color: "#00D395", bg: "#F0FFF9", icon: "⚗️", desc: "Algorithmic, autonomous interest rate protocol built for developers.", url: "https://app.compound.finance" },
+  { name: "OpenSea", cat: "NFT Market", chain: "Ethereum · Solana · Polygon", color: "#2081E2", bg: "#F0F6FF", icon: "🌊", desc: "The world's largest NFT marketplace. Buy, sell and discover rare digital items.", url: "https://opensea.io" },
+  { name: "Lido", cat: "Staking", chain: "Ethereum · Solana · Polygon", color: "#00A3FF", bg: "#F0FAFF", icon: "🔷", desc: "Liquid staking solution for ETH. Stake any amount and receive stETH rewards daily.", url: "https://lido.fi" },
+  { name: "1inch", cat: "Aggregator", chain: "Ethereum · BNB · Polygon", color: "#1B314F", bg: "#F0F3F8", icon: "🔀", desc: "DEX aggregator sourcing the best swap rates across 300+ liquidity sources.", url: "https://app.1inch.io" },
+  { name: "Curve Finance", cat: "DEX", chain: "Ethereum · Arbitrum · Base", color: "#D04000", bg: "#FFF4F0", icon: "📈", desc: "AMM optimised for stablecoin and pegged-asset swaps with ultra-low slippage.", url: "https://curve.fi" },
+  { name: "GMX", cat: "Perps", chain: "Arbitrum · Avalanche", color: "#03D1CF", bg: "#F0FFFE", icon: "📊", desc: "Decentralised perpetual exchange. Trade BTC, ETH and more with up to 50× leverage.", url: "https://app.gmx.io" },
+  { name: "MakerDAO", cat: "Stablecoin", chain: "Ethereum", color: "#1AAB9B", bg: "#F0FDF9", icon: "🏛️", desc: "Mint DAI, the decentralised stablecoin, by locking crypto collateral in Maker Vaults.", url: "https://makerdao.com" },
+  { name: "Blur", cat: "NFT Market", chain: "Ethereum", color: "#FF8700", bg: "#FFF6EE", icon: "💨", desc: "The NFT marketplace built for pro traders. Zero platform fees on most collections.", url: "https://blur.io" },
+  { name: "dYdX", cat: "Perps", chain: "dYdX Chain", color: "#6966FF", bg: "#F3F2FF", icon: "⚡", desc: "Non-custodial perpetuals trading with an on-chain order book and deep liquidity.", url: "https://dydx.exchange" },
+  { name: "Yearn Finance", cat: "Yield", chain: "Ethereum · Fantom", color: "#0657F9", bg: "#F0F4FF", icon: "🏦", desc: "Automated yield optimiser that moves funds to the highest-returning DeFi strategies.", url: "https://yearn.fi" }
 ];
 const DEPOSIT_ASSETS = [
   { name: "Ethereum", sub: "ETH on Ethereum Mainnet", color: "#627EEA", icon: "Ξ", bg: "#F0F3FF", addrKey: "eth" },
@@ -43811,18 +43945,11 @@ function PixelAvatar({ seed, size = 40 }) {
   const hash2 = (s) => s.split("").reduce((a, c) => a * 31 + c.charCodeAt(0) | 0, 0);
   const h1 = Math.abs(hash2(seed)) % 360;
   const h2 = (h1 + 40) % 360;
-  const colors = [
-    `hsl(${h1},70%,55%)`,
-    `hsl(${h2},80%,45%)`,
-    `hsl(${h1},50%,75%)`,
-    "#ffffff",
-    `hsl(${h2},60%,35%)`
-  ];
+  const colors = [`hsl(${h1},70%,55%)`, `hsl(${h2},80%,45%)`, `hsl(${h1},50%,75%)`, "#ffffff", `hsl(${h2},60%,35%)`];
   const cells = [];
   for (let r = 0; r < grid; r++) {
     for (let c = 0; c < Math.ceil(grid / 2); c++) {
-      const idx = Math.abs(hash2(seed + r + c)) % colors.length;
-      const col = colors[idx];
+      const col = colors[Math.abs(hash2(seed + r + c)) % colors.length];
       cells.push({ x: c * cell, y: r * cell, color: col });
       if (c !== grid - 1 - c) cells.push({ x: (grid - 1 - c) * cell, y: r * cell, color: col });
     }
@@ -43837,20 +43964,232 @@ function CoinAvatar({ color: color2, bg, icon, size = 36 }) {
 }
 function QRCodeSVG({ value }) {
   const cells = 25;
-  const hash2 = (s, r, c) => (s.charCodeAt((r * cells + c) % s.length) + r * 7 + c * 13) % 3 === 0;
   const sz = 220;
   const cell = sz / cells;
+  const hash2 = (s, r, c) => (s.charCodeAt((r * cells + c) % s.length) + r * 7 + c * 13) % 3 === 0;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: sz, height: sz, viewBox: `0 0 ${sz} ${sz}`, style: { display: "block" }, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { width: sz, height: sz, fill: "white", rx: "4" }),
     Array.from(
       { length: cells },
       (_, r) => Array.from({ length: cells }, (_2, c) => {
-        const inFinder = r < 7 && c < 7 || r < 7 && c > cells - 8 || r > cells - 8 && c < 7;
-        const on = inFinder || hash2(value, r, c);
+        const on = r < 7 && c < 7 || r < 7 && c > cells - 8 || r > cells - 8 && c < 7 || hash2(value, r, c);
         return on ? /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: c * cell, y: r * cell, width: cell, height: cell, fill: "#111827" }, `${r}-${c}`) : null;
       })
     )
   ] });
+}
+function ToggleRow({ label, icon, value, onChange }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 18px" }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 12 }, children: [
+      icon && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "#9CA3AF" }, children: icon }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 14, color: "#E5E7EB" }, children: label })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onChange(!value), style: { width: 40, height: 22, borderRadius: 11, border: "none", background: value ? "#4F46E5" : "#4B5563", cursor: "pointer", position: "relative", transition: "background 0.15s", flexShrink: 0 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", top: 3, left: value ? 20 : 3, width: 16, height: 16, borderRadius: "50%", background: "#fff", transition: "left 0.15s", boxShadow: "0 1px 3px rgba(0,0,0,0.3)" } }) })
+  ] });
+}
+function PortfolioChart() {
+  const [timeframe, setTimeframe] = reactExports.useState("1 Hour");
+  const [tfOpen, setTfOpen] = reactExports.useState(false);
+  const timeframes = ["1 Hour", "1 Day", "1 Week", "1 Month", "1 Year", "All"];
+  const DATA = [
+    0.62,
+    0.6,
+    0.58,
+    0.55,
+    0.5,
+    0.45,
+    0.42,
+    0.44,
+    0.4,
+    0.36,
+    0.32,
+    0.3,
+    0.28,
+    0.26,
+    0.3,
+    0.34,
+    0.5,
+    0.68,
+    0.72,
+    0.65,
+    0.58,
+    0.5,
+    0.44,
+    0.38,
+    0.34,
+    0.32,
+    0.3,
+    0.29,
+    0.28,
+    0.3
+  ];
+  const W = 700;
+  const H = 120;
+  const minV = Math.min(...DATA);
+  const maxV = Math.max(...DATA);
+  const range = maxV - minV || 1;
+  const pts = DATA.map((v, i) => ({
+    x: i / (DATA.length - 1) * W,
+    y: 8 + (1 - (v - minV) / range) * (H - 16)
+  }));
+  const line = pts.reduce((acc, p, i) => {
+    if (i === 0) return `M ${p.x} ${p.y}`;
+    const prev = pts[i - 1];
+    const cx = (prev.x + p.x) / 2;
+    return acc + ` C ${cx} ${prev.y} ${cx} ${p.y} ${p.x} ${p.y}`;
+  }, "");
+  const area = `${line} L ${W} ${H} L 0 ${H} Z`;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { marginBottom: 28 }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 8, alignItems: "center" }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 13, color: "#EF4444", fontWeight: 500 }, children: "-$0.00" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, background: "#FEE2E2", color: "#EF4444", fontWeight: 600, padding: "2px 8px", borderRadius: 6 }, children: "-0.26%" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative" }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            onClick: () => setTfOpen((o) => !o),
+            style: { display: "flex", alignItems: "center", gap: 5, padding: "5px 12px", border: "1px solid #E5E7EB", borderRadius: 8, background: "#fff", fontSize: 12, fontWeight: 500, color: "#374151", cursor: "pointer", fontFamily: "inherit" },
+            children: [
+              timeframe,
+              " ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 12 })
+            ]
+          }
+        ),
+        tfOpen && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", top: 34, right: 0, background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10, boxShadow: "0 4px 16px rgba(0,0,0,0.1)", overflow: "hidden", zIndex: 20 }, children: timeframes.map((tf) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            onClick: () => {
+              setTimeframe(tf);
+              setTfOpen(false);
+            },
+            style: { display: "block", width: "100%", padding: "8px 20px", background: tf === timeframe ? "#F0F3FF" : "none", border: "none", textAlign: "left", fontSize: 13, color: tf === timeframe ? "#4F46E5" : "#374151", cursor: "pointer", fontWeight: tf === timeframe ? 600 : 400, fontFamily: "inherit" },
+            children: tf
+          },
+          tf
+        )) })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: "100%", overflow: "hidden", borderRadius: 4 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "100%", viewBox: `0 0 ${W} ${H}`, preserveAspectRatio: "none", style: { display: "block", height: 120 }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("defs", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("linearGradient", { id: "pgGrad", x1: "0", y1: "0", x2: "0", y2: "1", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "0%", stopColor: "#4F46E5", stopOpacity: "0.15" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "100%", stopColor: "#4F46E5", stopOpacity: "0" })
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: area, fill: "url(#pgGrad)" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: line, stroke: "#4F46E5", strokeWidth: "2.5", fill: "none", strokeLinecap: "round", strokeLinejoin: "round" })
+    ] }) })
+  ] });
+}
+const PROVIDERS = [
+  {
+    name: "Kryptonim",
+    tag: "Best Option",
+    sub: "$100.00 = ~0.046008 ETH",
+    rate: "≈ 2,173.53 USD / ETH",
+    price: "≈ 96.63 USD",
+    fees: "3.37 USD",
+    total: "$100.00 USD",
+    color: "#111827",
+    letter: "K"
+  },
+  {
+    name: "Topper",
+    tag: "",
+    sub: "$100.00 = ~0.045533 ETH",
+    rate: "≈ 2,196.23 USD / ETH",
+    price: "≈ 100.00 USD",
+    fees: "0.00 USD",
+    total: "$100.00 USD",
+    color: "#16A34A",
+    letter: "T"
+  }
+];
+function DAppCard({ dapp, onOpenBrowser }) {
+  const [hovered, setHovered] = reactExports.useState(false);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      onClick: () => onOpenBrowser ? onOpenBrowser(dapp.url) : window.open(dapp.url, "_blank", "noopener,noreferrer"),
+      onMouseEnter: () => setHovered(true),
+      onMouseLeave: () => setHovered(false),
+      style: {
+        border: `1.5px solid ${hovered ? "#a5b4fc" : "#E5E7EB"}`,
+        borderRadius: 14,
+        padding: "16px",
+        background: "#fff",
+        cursor: "pointer",
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+        transition: "border-color 0.15s, box-shadow 0.15s, transform 0.15s",
+        boxShadow: hovered ? "0 4px 20px rgba(79,70,229,0.10)" : "none",
+        transform: hovered ? "translateY(-2px)" : "none"
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "flex-start", justifyContent: "space-between" }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: {
+            width: 46,
+            height: 46,
+            borderRadius: 12,
+            background: dapp.bg,
+            border: `1.5px solid ${dapp.color}22`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 22
+          }, children: dapp.icon }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: {
+            fontSize: 10,
+            fontWeight: 700,
+            color: dapp.color,
+            background: dapp.bg,
+            border: `1px solid ${dapp.color}44`,
+            borderRadius: 6,
+            padding: "3px 8px",
+            whiteSpace: "nowrap",
+            marginTop: 2,
+            letterSpacing: "0.03em"
+          }, children: dapp.cat })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontWeight: 700, color: "#111827", fontSize: 14 }, children: dapp.name }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: "3px 0 0", fontSize: 11, color: "#9ca3af", lineHeight: 1.4 }, children: dapp.chain })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: {
+          margin: 0,
+          fontSize: 12,
+          color: "#6b7280",
+          lineHeight: 1.55,
+          display: "-webkit-box",
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden",
+          flex: 1
+        }, children: dapp.desc }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end",
+          paddingTop: 8,
+          borderTop: "1px solid #f3f4f6",
+          marginTop: 2
+        }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { style: {
+          fontSize: 11,
+          fontWeight: 700,
+          color: hovered ? "#4f46e5" : "#6b7280",
+          display: "flex",
+          alignItems: "center",
+          gap: 4,
+          transition: "color 0.15s"
+        }, children: [
+          "Open app ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ExternalLink, { size: 11 })
+        ] }) })
+      ]
+    }
+  );
 }
 function Dashboard({ onOpenBrowser }) {
   const { addresses, lock } = useWalletStore();
@@ -43858,11 +44197,14 @@ function Dashboard({ onOpenBrowser }) {
   const [tab, setTab] = reactExports.useState("assets");
   const [menuOpen, setMenuOpen] = reactExports.useState(false);
   const [showBalances, setShowBalances] = reactExports.useState(true);
-  const [showGraph, setShowGraph] = reactExports.useState(false);
+  const [showGraph, setShowGraph] = reactExports.useState(true);
   const [showNFTs, setShowNFTs] = reactExports.useState(true);
   const [depositAsset, setDepositAsset] = reactExports.useState(null);
   const [copied, setCopied] = reactExports.useState(null);
   const [searchExplore, setSearchExplore] = reactExports.useState("");
+  const [searchDapps, setSearchDapps] = reactExports.useState("");
+  const [dappFilter, setDappFilter] = reactExports.useState("All");
+  const [expandedProvider, setExpandedProvider] = reactExports.useState("Kryptonim");
   const menuRef = reactExports.useRef(null);
   reactExports.useEffect(() => {
     const handler = (e) => {
@@ -43883,6 +44225,12 @@ function Dashboard({ onOpenBrowser }) {
   const filteredMarket = MARKET.filter(
     (c) => c.name.toLowerCase().includes(searchExplore.toLowerCase()) || c.sym.toLowerCase().includes(searchExplore.toLowerCase())
   );
+  const dappCategories = ["All", ...Array.from(new Set(DAPPS.map((d) => d.cat)))];
+  const filteredDapps = DAPPS.filter((d) => {
+    const matchesSearch = d.name.toLowerCase().includes(searchDapps.toLowerCase()) || d.cat.toLowerCase().includes(searchDapps.toLowerCase());
+    const matchesCat = dappFilter === "All" || d.cat === dappFilter;
+    return matchesSearch && matchesCat;
+  });
   const NAV = [
     { id: "portfolio", label: "Portfolio", Icon: ChartColumn },
     { id: "accounts", label: "Accounts", Icon: User },
@@ -43893,10 +44241,46 @@ function Dashboard({ onOpenBrowser }) {
     { id: "bridge", label: "Bridge", Icon: Link },
     { id: "deposit", label: "Deposit", Icon: Download }
   ];
+  const bareSection = section === "send" || section === "swap" || section === "bridge";
+  const portfolioTabs = ["assets", "dapps", ...showNFTs ? ["nfts"] : [], "activity"];
+  const renderPinnedHeader = () => {
+    if (section === "portfolio") {
+      return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { padding: "28px 36px 0", flexShrink: 0 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between" }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: { fontSize: 26, fontWeight: 800, color: "#111827", margin: 0 }, children: "Portfolio" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: circleIconBtn, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 16, color: "#6b7280" }) })
+      ] }) });
+    }
+    if (section === "accounts") {
+      return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { padding: "28px 36px 0", flexShrink: 0 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between" }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: { fontSize: 26, fontWeight: 800, color: "#111827", margin: 0 }, children: "Accounts" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: circleIconBtn, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 15, color: "#6b7280" }) })
+      ] }) });
+    }
+    if (section === "explore") {
+      return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { padding: "28px 36px 0", flexShrink: 0 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: { fontSize: 26, fontWeight: 800, color: "#111827", margin: 0 }, children: "Explore" }) });
+    }
+    if (section === "buy") {
+      return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { padding: "28px 36px 0", flexShrink: 0 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: { fontSize: 22, fontWeight: 700, color: "#111827", margin: 0 }, children: "Buy ETH" }) });
+    }
+    if (section === "deposit") {
+      return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { padding: "28px 36px 0", flexShrink: 0 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: { fontSize: 26, fontWeight: 800, color: "#111827", margin: 0 }, children: "Deposit" }) });
+    }
+    return null;
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", height: "100vh", background: "#f3f4f6", fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif", fontSize: 14, overflow: "hidden" }, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("aside", { style: { width: 236, background: "#fff", borderRight: "1px solid #e5e7eb", display: "flex", flexDirection: "column", flexShrink: 0, zIndex: 10 }, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { padding: "20px 20px 16px", display: "flex", alignItems: "center", gap: 10 }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: "28", height: "28", viewBox: "0 0 32 32", fill: "none", children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M28.483 15.143L23.473 11.233L21.758 4.298L16.002 9.533L10.245 4.298L8.53 11.233L3.52 15.143L8.607 19.34L8.747 26.697L16.002 23.363L23.257 26.697L23.396 19.34L28.483 15.143Z", fill: "#fb542b" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { padding: "18px 20px 14px", display: "flex", alignItems: "center", gap: 10 }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "img",
+          {
+            src: "/logo.jpg",
+            alt: "Orivon",
+            style: { width: 28, height: 28, borderRadius: 6, objectFit: "contain" },
+            onError: (e) => {
+              e.currentTarget.style.display = "none";
+            }
+          }
+        ),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 18, fontWeight: 700, color: "#111827", letterSpacing: "-0.3px" }, children: "wallet" })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("nav", { style: { flex: 1, overflowY: "auto" }, children: NAV.map(({ id: id2, label, Icon: Icon2, dividerBefore }) => {
@@ -43919,283 +44303,392 @@ function Dashboard({ onOpenBrowser }) {
             }
           )
         ] }, id2);
-      }) })
+      }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { borderTop: "1px solid #f3f4f6" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { onClick: onOpenBrowser, style: { display: "flex", alignItems: "center", gap: 12, padding: "13px 20px", cursor: "pointer", color: "#374151", userSelect: "none" }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 17, strokeWidth: 1.8, color: "#6b7280" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Go to browser" })
+      ] }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", position: "relative" }, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { ref: menuRef, style: { position: "absolute", top: 16, right: 20, zIndex: 50 }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setMenuOpen((p) => !p), style: { width: 32, height: 32, borderRadius: "50%", border: "none", background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#9ca3af" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(EllipsisVertical, { size: 20 }) }),
-        menuOpen && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "absolute", top: 40, right: 0, width: 240, background: "#fff", borderRadius: 12, boxShadow: "0 8px 32px rgba(0,0,0,0.13)", border: "1px solid #E5E7EB", overflow: "hidden", zIndex: 100 }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { ref: menuRef, style: { position: "absolute", top: 16, right: 20, zIndex: 200 }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            onClick: () => setMenuOpen((p) => !p),
+            style: { width: 36, height: 36, borderRadius: "50%", border: "none", background: menuOpen ? "rgba(255,255,255,0.15)" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#6b7280" },
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(EllipsisVertical, { size: 20 })
+          }
+        ),
+        menuOpen && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "absolute", top: 44, right: 0, width: 280, background: "#1F2937", borderRadius: 14, boxShadow: "0 16px 48px rgba(0,0,0,0.4)", overflow: "hidden", zIndex: 300 }, children: [
           [
             { Icon: Lock, label: "Lock wallet", action: () => {
               lock();
               setMenuOpen(false);
             } },
             { Icon: Shield, label: "Backup wallet", action: () => setMenuOpen(false) },
+            { Icon: Link, label: "Connected sites", action: () => setMenuOpen(false) },
             { Icon: Settings, label: "Settings", action: () => setMenuOpen(false) }
-          ].map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: item.action, style: menuItemStyle, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(item.Icon, { size: 15, color: "#374151" }),
-            " ",
+          ].map((item, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: item.action, style: { display: "flex", alignItems: "center", gap: 14, width: "100%", padding: "14px 18px", background: "none", border: "none", cursor: "pointer", fontSize: 14, color: "#E5E7EB", textAlign: "left", fontFamily: "inherit", borderBottom: i < 3 ? "1px solid #374151" : "none" }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(item.Icon, { size: 17, color: "#9CA3AF" }),
             item.label
           ] }, item.label)),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { borderTop: "1px solid #F3F4F6", padding: "8px 16px 4px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 10, fontWeight: 600, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.07em", margin: "0 0 2px" }, children: "Portfolio Settings" }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ToggleRow, { label: "Balances", value: showBalances, onChange: setShowBalances }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ToggleRow, { label: "Graph", value: showGraph, onChange: setShowGraph }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ToggleRow, { label: "NFTs tab", value: showNFTs, onChange: setShowNFTs }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { borderTop: "1px solid #F3F4F6", marginTop: 4 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: menuItemStyle, onClick: () => setMenuOpen(false), children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(CircleQuestionMark, { size: 15, color: "#374151" }),
-            " Help center"
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { borderTop: "1px solid #374151", padding: "8px 0 4px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 11, fontWeight: 600, color: "#6B7280", textTransform: "uppercase", letterSpacing: "0.07em", margin: "4px 18px 4px" }, children: "Portfolio Settings" }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ToggleRow, { label: "Balances", icon: /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "12", cy: "12", r: "3" })
+          ] }), value: showBalances, onChange: setShowBalances }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ToggleRow, { label: "Graph", icon: /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsxRuntimeExports.jsx("polyline", { points: "22 12 18 12 15 21 9 3 6 12 2 12" }) }), value: showGraph, onChange: setShowGraph }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ToggleRow, { label: "NFTs tab", icon: /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" }) }), value: showNFTs, onChange: setShowNFTs }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { borderTop: "1px solid #374151", margin: "4px 0 0" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => setMenuOpen(false), style: { display: "flex", alignItems: "center", gap: 14, width: "100%", padding: "14px 18px", background: "none", border: "none", cursor: "pointer", fontSize: 14, color: "#E5E7EB", textAlign: "left", fontFamily: "inherit" }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(CircleQuestionMark, { size: 17, color: "#9CA3AF" }),
+            "Help center"
           ] }) })
         ] })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { flex: 1, overflowY: "auto", padding: "24px 28px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { background: "#fff", borderRadius: 16, padding: "32px 36px", minHeight: "calc(100vh - 48px)", boxShadow: "0 2px 12px rgba(0,0,0,0.06)", maxWidth: 820, marginLeft: "auto", marginRight: "auto" }, children: [
-        section === "portfolio" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: { fontSize: 26, fontWeight: 800, color: "#111827", margin: 0 }, children: "Portfolio" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: circleIconBtn, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 17, color: "#4f46e5" }) })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 36 }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: showBalances ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 36, fontWeight: 700, color: "#111827", margin: 0, letterSpacing: "-1px" }, children: "$0.0000001559" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 36, fontWeight: 700, color: "#111827", margin: 0 }, children: "••••••" }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", gap: 20 }, children: [
-              { Icon: ShoppingBag, label: "Buy", action: () => setSection("buy") },
-              { Icon: Send, label: "Send", action: () => setSection("send") },
-              { Icon: RefreshCw, label: "Swap", action: () => setSection("swap") },
-              { Icon: Ellipsis, label: "More", action: () => {
-              } }
-            ].map((btn) => /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: btn.action, style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", padding: 0 }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 48, height: 48, borderRadius: "50%", background: "#4f46e5", display: "flex", alignItems: "center", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(btn.Icon, { size: 20, color: "#fff", strokeWidth: 2 }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, color: "#111827", fontWeight: 500 }, children: btn.label })
-            ] }, btn.label)) })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(PortfolioChart, {}),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "center", marginBottom: 28 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", background: "#f3f4f6", borderRadius: 9999, padding: 4, gap: 2 }, children: ["assets", ...showNFTs ? ["nfts"] : [], "activity"].map((t) => /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setTab(t), style: { padding: "8px 28px", borderRadius: 9999, background: tab === t ? "#fff" : "transparent", border: tab === t ? "1.5px solid #e5e7eb" : "1.5px solid transparent", color: tab === t ? "#4f46e5" : "#6b7280", fontWeight: tab === t ? 700 : 500, fontSize: 14, cursor: "pointer", transition: "all 0.12s" }, children: t.charAt(0).toUpperCase() + t.slice(1) }, t)) }) }),
-          tab === "assets" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 16, fontWeight: 700, color: "#111827" }, children: "Assets" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8 }, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8, background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 9999, padding: "7px 14px", width: 180 }, children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 13, color: "#9ca3af" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("input", { placeholder: "Search", style: { border: "none", outline: "none", fontSize: 13, color: "#111827", background: "transparent", width: "100%" } })
-                ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: circleIconBtn, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ListFilter, { size: 15, color: "#4f46e5" }) }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: circleIconBtn, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Funnel, { size: 15, color: "#4f46e5" }) })
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: PORTFOLIO_ASSETS.map((a, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", padding: "13px 0", borderBottom: i < PORTFOLIO_ASSETS.length - 1 ? "1px solid #f3f4f6" : "none", gap: 12 }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(CoinAvatar, { color: a.color, bg: a.bg, icon: a.icon, size: 38 }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, minWidth: 0 }, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontWeight: 600, color: "#111827", fontSize: 13, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }, children: a.name }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontSize: 11, color: "#6b7280" }, children: a.sub })
+      bareSection ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { flex: 1, overflowY: "auto", padding: "28px 32px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(SendSwapBridge, { mode: section }) }) : (
+        /*
+         * Outer gray gutter — scrollable so the card can be taller than the
+         * viewport on very long sections, but naturally short on short ones.
+         * The card uses height: auto + maxHeight so it shrinks to content and
+         * only grows to a capped maximum before the inner body starts scrolling.
+         */
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: {
+          flex: 1,
+          overflowY: "auto",
+          padding: "28px 32px 40px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center"
+        }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: {
+          position: "relative",
+          width: "100%",
+          maxWidth: 820,
+          height: "auto",
+          maxHeight: "calc(100vh - 96px)",
+          display: "flex",
+          flexDirection: "column",
+          background: "#fff",
+          borderRadius: 18,
+          boxShadow: "0 2px 16px rgba(0,0,0,0.07)",
+          overflow: "hidden"
+        }, children: [
+          renderPinnedHeader(),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, overflowY: "auto", padding: "20px 36px 36px", minHeight: 0 }, children: [
+            section === "portfolio" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 8 }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: showBalances ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 34, fontWeight: 700, color: "#111827", margin: 0, letterSpacing: "-1px" }, children: "$0.0000001559" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 34, fontWeight: 700, color: "#111827", margin: 0 }, children: "••••••" }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", gap: 20 }, children: [
+                  { Icon: ShoppingBag, label: "Buy", action: () => setSection("buy") },
+                  { Icon: Send, label: "Send", action: () => setSection("send") },
+                  { Icon: RefreshCw, label: "Swap", action: () => setSection("swap") },
+                  { Icon: Ellipsis, label: "More", action: () => {
+                  } }
+                ].map((btn) => /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: btn.action, style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", padding: 0 }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 50, height: 50, borderRadius: "50%", background: "#3730a3", display: "flex", alignItems: "center", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(btn.Icon, { size: 20, color: "#fff", strokeWidth: 2 }) }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, color: "#111827", fontWeight: 500 }, children: btn.label })
+                ] }, btn.label)) })
               ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { textAlign: "right", flexShrink: 0 }, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontWeight: 600, color: "#111827", fontSize: 13 }, children: showBalances ? `${a.bal} ${a.sym}` : "•••" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontSize: 11, color: "#6b7280" }, children: showBalances ? a.usd : "•••" })
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { background: "none", border: "none", cursor: "pointer", padding: 4, color: "#9ca3af", flexShrink: 0 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(EllipsisVertical, { size: 15 }) })
-            ] }, a.sym + a.sub)) })
-          ] }),
-          tab === "nfts" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { textAlign: "center", padding: "60px 0", color: "#9CA3AF" }, children: "No NFTs found" }),
-          tab === "activity" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { textAlign: "center", padding: "60px 0", color: "#9CA3AF" }, children: "No recent activity" })
-        ] }),
-        section === "accounts" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: { fontSize: 26, fontWeight: 800, color: "#111827", margin: 0 }, children: "Accounts" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: circleIconBtn, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 15, color: "#6b7280" }) })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { marginBottom: 8 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 12, fontWeight: 600, color: "#6b7280", margin: "0 0 12px", textTransform: "uppercase", letterSpacing: "0.05em" }, children: "Accounts" }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { border: "1px solid #E5E7EB", borderRadius: 12, overflow: "hidden" }, children: ACCOUNTS.map((acc, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 14, padding: "16px 20px", background: "#fff", borderBottom: i < ACCOUNTS.length - 1 ? "1px solid #F3F4F6" : "none" }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(PixelAvatar, { seed: acc.name + acc.sub, size: 42 }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, minWidth: 0 }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontWeight: 600, color: "#111827", fontSize: 14 }, children: acc.name }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { margin: "2px 0 0", fontSize: 11, color: "#9CA3AF", fontFamily: "monospace" }, children: [
-                getAddr(acc.addrKey).slice(0, 8),
-                "***",
-                getAddr(acc.addrKey).slice(-4)
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: "1px 0 0", fontSize: 11, color: "#D1D5DB" }, children: acc.sub })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(CoinAvatar, { color: acc.color, bg: acc.bg, icon: acc.icon, size: 22 }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 13, fontWeight: 600, color: "#111827", minWidth: 60, textAlign: "right" }, children: acc.bal }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { background: "none", border: "none", cursor: "pointer", color: "#9ca3af", padding: 2 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(EllipsisVertical, { size: 15 }) })
-            ] })
-          ] }, acc.name)) })
-        ] }),
-        section === "explore" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: { fontSize: 26, fontWeight: 800, color: "#111827", margin: "0 0 20px" }, children: "Explore" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { display: "flex", alignItems: "center", gap: 6, padding: "9px 16px", border: "1px solid #E5E7EB", borderRadius: 9999, background: "#fff", fontSize: 13, color: "#374151", cursor: "pointer", fontWeight: 500 }, children: [
-              "All Assets ",
-              /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14 })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, display: "flex", alignItems: "center", gap: 8, border: "1px solid #E5E7EB", borderRadius: 9999, padding: "9px 16px", background: "#fff" }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 14, color: "#9CA3AF" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("input", { value: searchExplore, onChange: (e) => setSearchExplore(e.target.value), placeholder: "Search", style: { border: "none", outline: "none", fontSize: 13, color: "#374151", background: "transparent", flex: 1 } })
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { border: "1px solid #E5E7EB", borderRadius: 12, overflow: "hidden" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { style: { width: "100%", borderCollapse: "collapse" }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("tr", { style: { background: "#F9FAFB", borderBottom: "1px solid #E5E7EB" }, children: ["Assets", "Price", "24hr", "Cap", "Volume", "Buy/Deposit"].map((h, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("th", { style: { padding: "10px 14px", textAlign: i === 5 ? "center" : "left", fontSize: 11, fontWeight: 600, color: "#6B7280", whiteSpace: "nowrap" }, children: [
-              h,
-              h === "Cap" && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { marginLeft: 4, color: "#9CA3AF" }, children: "⇅" })
-            ] }, h)) }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: filteredMarket.map((c, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { style: { borderTop: i === 0 ? "none" : "1px solid #F3F4F6" }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { style: { padding: "11px 14px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 10 }, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(CoinAvatar, { color: c.color, bg: c.bg, icon: c.icon, size: 32 }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontWeight: 600, color: "#111827", fontSize: 13 }, children: c.name }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontSize: 10, color: "#9CA3AF" }, children: c.sym })
-                ] })
-              ] }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { style: { padding: "11px 14px", fontSize: 13, color: "#111827", fontWeight: 500 }, children: c.price }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { style: { padding: "11px 14px", fontSize: 12, color: c.change >= 0 ? "#10B981" : "#EF4444", fontWeight: 500, whiteSpace: "nowrap" }, children: [
-                c.change >= 0 ? "▲" : "▼",
-                " ",
-                Math.abs(c.change).toFixed(2),
-                "%"
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { style: { padding: "11px 14px", fontSize: 12, color: "#374151" }, children: c.cap }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { style: { padding: "11px 14px", fontSize: 12, color: "#374151" }, children: c.vol }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { style: { padding: "11px 14px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 6, justifyContent: "center" }, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setSection("buy"), style: outlinePillBtn, children: "Buy" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setSection("deposit"), style: outlinePillBtn, children: "Deposit" })
-              ] }) })
-            ] }, c.sym)) })
-          ] }) })
-        ] }),
-        section === "buy" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: { fontSize: 22, fontWeight: 700, color: "#111827", margin: "0 0 28px" }, children: "Buy ETH" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { maxWidth: 680 }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 16, alignItems: "flex-end", marginBottom: 6 }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("label", { style: formLabelStyle, children: "Asset" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { ...selectBtnStyle, gap: 8, minWidth: 100 }, children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(CoinAvatar, { color: "#627EEA", bg: "#F0F3FF", icon: "Ξ", size: 22 }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontWeight: 600 }, children: "ETH" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 13, color: "#6b7280" })
-                ] })
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1 }, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("label", { style: formLabelStyle, children: "Account" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { ...selectBtnStyle, gap: 8, width: "100%" }, children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(PixelAvatar, { seed: "Account 1Ethereum + EVM Chains", size: 22 }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontWeight: 500, flex: 1, textAlign: "left" }, children: "Account 1" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 13, color: "#6b7280" })
-                ] })
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("label", { style: formLabelStyle, children: "Amount" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8 }, children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 28, fontWeight: 700, color: "#111827", lineHeight: 1 }, children: "100" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { ...selectBtnStyle, padding: "6px 10px", gap: 4 }, children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontWeight: 600, fontSize: 13 }, children: "USD" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 12, color: "#6b7280" })
-                  ] })
-                ] })
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 11, color: "#9CA3AF", fontFamily: "monospace", margin: "8px 0 20px" }, children: eth }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: 1, background: "#F3F4F6", marginBottom: 20 } }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 10, marginBottom: 24 }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, display: "flex", alignItems: "center", gap: 8, border: "1px solid #E5E7EB", borderRadius: 10, padding: "9px 14px", background: "#fff" }, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 14, color: "#9CA3AF" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("input", { placeholder: "Search", style: { border: "none", outline: "none", fontSize: 13, color: "#374151", background: "transparent", flex: 1 } })
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { ...selectBtnStyle, gap: 6 }, children: [
-                "United States ",
-                /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 13 })
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { ...selectBtnStyle, gap: 6 }, children: [
-                "Credit & Debit Card ",
-                /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 13 })
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { textAlign: "center", padding: "32px 0" }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 36, height: 36, margin: "0 auto 12px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "36", height: "36", viewBox: "0 0 36 36", style: { animation: "spin 1s linear infinite" }, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("style", { children: `@keyframes spin { to { transform: rotate(360deg); } }` }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "18", cy: "18", r: "14", stroke: "#E0E7FF", strokeWidth: "2.5", fill: "none" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "18", cy: "18", r: "14", stroke: "#4F46E5", strokeWidth: "2.5", fill: "none", strokeDasharray: "70", strokeDashoffset: "50", strokeLinecap: "round" })
-              ] }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { color: "#6B7280", fontSize: 13, margin: 0 }, children: "Getting best prices…" })
-            ] })
-          ] })
-        ] }),
-        section === "send" && /* @__PURE__ */ jsxRuntimeExports.jsx(SendSwapBridge, { mode: "send" }),
-        section === "swap" && /* @__PURE__ */ jsxRuntimeExports.jsx(SendSwapBridge, { mode: "swap" }),
-        section === "bridge" && /* @__PURE__ */ jsxRuntimeExports.jsx(SendSwapBridge, { mode: "bridge" }),
-        section === "deposit" && !depositAsset && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: { fontSize: 26, fontWeight: 800, color: "#111827", margin: "0 0 24px" }, children: "Deposit" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { maxWidth: 680 }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 10, marginBottom: 16 }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, display: "flex", alignItems: "center", gap: 8, border: "1px solid #E5E7EB", borderRadius: 10, padding: "9px 14px", background: "#fff" }, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 14, color: "#9CA3AF" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("input", { placeholder: "Search", style: { border: "none", outline: "none", fontSize: 13, color: "#374151", background: "transparent", flex: 1 } })
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { ...selectBtnStyle, gap: 6, whiteSpace: "nowrap" }, children: [
-                "All Networks ",
-                /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 13 })
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { border: "1px solid #E5E7EB", borderRadius: 12, overflow: "hidden" }, children: DEPOSIT_ASSETS.map((a, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              "div",
-              {
-                onClick: () => setDepositAsset(a),
-                style: { display: "flex", alignItems: "center", gap: 16, padding: "16px 20px", borderBottom: i < DEPOSIT_ASSETS.length - 1 ? "1px solid #F3F4F6" : "none", cursor: "pointer", background: "#fff", transition: "background 0.1s" },
-                onMouseEnter: (e) => {
-                  e.currentTarget.style.background = "#F9FAFB";
-                },
-                onMouseLeave: (e) => {
-                  e.currentTarget.style.background = "#fff";
-                },
-                children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(CoinAvatar, { color: a.color, bg: a.bg, icon: a.icon, size: 40 }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontWeight: 600, color: "#111827", fontSize: 14 }, children: a.name }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontSize: 12, color: "#9CA3AF" }, children: a.sub })
-                  ] })
-                ]
-              },
-              a.name + a.sub
-            )) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "center", marginTop: 24 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { padding: "12px 48px", borderRadius: 9999, background: "#E5E7EB", color: "#9CA3AF", fontWeight: 600, fontSize: 13, border: "none", cursor: "not-allowed" }, children: "Select an asset" }) })
-          ] })
-        ] }),
-        section === "deposit" && depositAsset && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { style: { fontSize: 26, fontWeight: 800, color: "#111827", margin: "0 0 28px" }, children: "Deposit" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { maxWidth: 560, margin: "0 auto", textAlign: "center" }, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { style: { fontSize: 18, fontWeight: 700, color: "#111827", marginBottom: 8 }, children: [
-              "Deposit ",
-              depositAsset.name
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { fontSize: 13, color: "#6B7280", marginBottom: 24 }, children: [
-              "Only send tokens to this address on ",
-              depositAsset.sub.split(" on ")[1] ?? "this network"
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "inline-flex", alignItems: "center", gap: 8, background: "#F9FAFB", border: "1px solid #E5E7EB", borderRadius: 9999, padding: "6px 14px 6px 8px", marginBottom: 20 }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(PixelAvatar, { seed: "Account 1Ethereum + EVM Chains", size: 28 }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontWeight: 600, color: "#111827", fontSize: 14 }, children: "Account 1" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14, color: "#9ca3af" })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontWeight: 700, color: "#111827", marginBottom: 6, fontSize: 13 }, children: "Address:" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 24 }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontFamily: "monospace", fontSize: 12, color: "#374151", wordBreak: "break-all" }, children: getAddr(depositAsset.addrKey) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
+              showGraph && /* @__PURE__ */ jsxRuntimeExports.jsx(PortfolioChart, {}),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "center", marginBottom: 24 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", background: "#f3f4f6", borderRadius: 9999, padding: 4, gap: 2 }, children: portfolioTabs.map((t) => /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "button",
                 {
-                  onClick: () => copy2(getAddr(depositAsset.addrKey), "dep"),
-                  style: { background: "none", border: "none", cursor: "pointer", color: copied === "dep" ? "#10B981" : "#6B7280", flexShrink: 0 },
-                  children: copied === "dep" ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 15 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Copy, { size: 15 })
-                }
-              )
+                  onClick: () => setTab(t),
+                  style: {
+                    padding: "9px 26px",
+                    borderRadius: 9999,
+                    background: tab === t ? "#fff" : "transparent",
+                    border: tab === t ? "1.5px solid #c7d2fe" : "1.5px solid transparent",
+                    color: tab === t ? "#4f46e5" : "#6b7280",
+                    fontWeight: tab === t ? 700 : 500,
+                    fontSize: 14,
+                    cursor: "pointer",
+                    transition: "all 0.12s",
+                    fontFamily: "inherit"
+                  },
+                  children: t.charAt(0).toUpperCase() + t.slice(1)
+                },
+                t
+              )) }) }),
+              tab === "assets" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 15, fontWeight: 700, color: "#111827" }, children: "Assets" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8 }, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8, background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 9999, padding: "7px 14px", width: 190 }, children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 13, color: "#9ca3af" }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("input", { placeholder: "Search", style: { border: "none", outline: "none", fontSize: 13, color: "#111827", background: "transparent", width: "100%", fontFamily: "inherit" } })
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: circleIconBtn, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ListFilter, { size: 15, color: "#4f46e5" }) }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: circleIconBtn, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Funnel, { size: 15, color: "#4f46e5" }) })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: PORTFOLIO_ASSETS.map((a, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", padding: "12px 0", borderBottom: i < PORTFOLIO_ASSETS.length - 1 ? "1px solid #f3f4f6" : "none", gap: 14 }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(CoinAvatar, { color: a.color, bg: a.bg, icon: a.icon, size: 40 }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, minWidth: 0 }, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontWeight: 600, color: "#111827", fontSize: 14, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }, children: a.name }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: "2px 0 0", fontSize: 12, color: "#6b7280" }, children: a.sub })
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { textAlign: "right", flexShrink: 0 }, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontWeight: 600, color: "#111827", fontSize: 13 }, children: showBalances ? `${a.bal} ${a.sym}` : "•••" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: "2px 0 0", fontSize: 12, color: "#6b7280" }, children: showBalances ? a.usd : "•••" })
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { background: "none", border: "none", cursor: "pointer", padding: "4px 2px", color: "#9ca3af", flexShrink: 0 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(EllipsisVertical, { size: 15 }) })
+                ] }, a.sym + a.sub + i)) })
+              ] }),
+              tab === "dapps" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8 }, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 15, fontWeight: 700, color: "#111827" }, children: "DApps" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 11, fontWeight: 600, color: "#6b7280", background: "#f3f4f6", borderRadius: 9999, padding: "2px 8px" }, children: filteredDapps.length })
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8, background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 9999, padding: "7px 14px", width: 180 }, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 13, color: "#9ca3af" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      "input",
+                      {
+                        placeholder: "Search dapps",
+                        value: searchDapps,
+                        onChange: (e) => setSearchDapps(e.target.value),
+                        style: { border: "none", outline: "none", fontSize: 13, color: "#111827", background: "transparent", width: "100%", fontFamily: "inherit" }
+                      }
+                    )
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 18 }, children: dappCategories.map((cat) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    onClick: () => setDappFilter(cat),
+                    style: {
+                      padding: "5px 14px",
+                      borderRadius: 9999,
+                      fontSize: 12,
+                      fontWeight: 600,
+                      cursor: "pointer",
+                      border: "none",
+                      fontFamily: "inherit",
+                      background: dappFilter === cat ? "#4f46e5" : "#f3f4f6",
+                      color: dappFilter === cat ? "#fff" : "#6b7280",
+                      transition: "all 0.12s"
+                    },
+                    children: cat
+                  },
+                  cat
+                )) }),
+                filteredDapps.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(210px, 1fr))", gap: 14 }, children: filteredDapps.map((dapp) => /* @__PURE__ */ jsxRuntimeExports.jsx(DAppCard, { dapp, onOpenBrowser }, dapp.name)) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(EmptyState, { text: "No dApps match your search" })
+              ] }),
+              tab === "nfts" && /* @__PURE__ */ jsxRuntimeExports.jsx(EmptyState, { text: "No NFTs found" }),
+              tab === "activity" && /* @__PURE__ */ jsxRuntimeExports.jsx(EmptyState, { text: "No recent activity" })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "inline-block", border: "2px solid #E5E7EB", borderRadius: 12, padding: 16, background: "#fff" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(QRCodeSVG, { value: getAddr(depositAsset.addrKey) }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { marginTop: 24 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setDepositAsset(null), style: { padding: "10px 28px", borderRadius: 9999, border: "1.5px solid #E5E7EB", background: "#fff", color: "#374151", fontWeight: 600, fontSize: 13, cursor: "pointer" }, children: "← Back" }) })
+            section === "accounts" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 12, fontWeight: 600, color: "#6b7280", margin: "0 0 12px", textTransform: "uppercase", letterSpacing: "0.05em" }, children: "Accounts" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { border: "1px solid #E5E7EB", borderRadius: 12, overflow: "hidden" }, children: ACCOUNTS.map((acc, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 14, padding: "16px 20px", background: "#fff", borderBottom: i < ACCOUNTS.length - 1 ? "1px solid #F3F4F6" : "none" }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(PixelAvatar, { seed: acc.name + acc.sub, size: 44 }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, minWidth: 0 }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontWeight: 600, color: "#111827", fontSize: 14 }, children: acc.name }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { margin: "2px 0 0", fontSize: 11, color: "#9CA3AF", fontFamily: "monospace" }, children: [
+                    getAddr(acc.addrKey).slice(0, 8),
+                    "***",
+                    getAddr(acc.addrKey).slice(-4)
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: "1px 0 0", fontSize: 11, color: "#D1D5DB" }, children: acc.sub })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(CoinAvatar, { color: acc.color, bg: acc.bg, icon: acc.icon, size: 22 }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 13, fontWeight: 600, color: "#111827", minWidth: 70, textAlign: "right" }, children: acc.bal }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { background: "none", border: "none", cursor: "pointer", color: "#9ca3af", padding: 2 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(EllipsisVertical, { size: 15 }) })
+                ] })
+              ] }, acc.name)) })
+            ] }),
+            section === "explore" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { ...selectBtnStyle, gap: 6, whiteSpace: "nowrap" }, children: [
+                  "All Assets ",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14 })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, display: "flex", alignItems: "center", gap: 8, border: "1px solid #E5E7EB", borderRadius: 9999, padding: "9px 16px", background: "#fff" }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 14, color: "#9CA3AF" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("input", { value: searchExplore, onChange: (e) => setSearchExplore(e.target.value), placeholder: "Search", style: { border: "none", outline: "none", fontSize: 13, color: "#374151", background: "transparent", flex: 1, fontFamily: "inherit" } })
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { border: "1px solid #E5E7EB", borderRadius: 12, overflow: "hidden" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { style: { width: "100%", borderCollapse: "collapse" }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("tr", { style: { background: "#F9FAFB", borderBottom: "1px solid #E5E7EB" }, children: ["Assets", "Price", "24hr", "Cap", "Volume", "Buy/Deposit"].map((h, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("th", { style: { padding: "10px 14px", textAlign: i === 5 ? "center" : "left", fontSize: 11, fontWeight: 600, color: "#6B7280", whiteSpace: "nowrap" }, children: [
+                  h,
+                  h === "Cap" && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { marginLeft: 4, color: "#9CA3AF", fontSize: 10 }, children: "⇅" })
+                ] }, h)) }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: filteredMarket.map((c, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { style: { borderTop: i === 0 ? "none" : "1px solid #F3F4F6" }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("td", { style: { padding: "11px 14px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 10 }, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(CoinAvatar, { color: c.color, bg: c.bg, icon: c.icon, size: 32 }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontWeight: 600, color: "#111827", fontSize: 13 }, children: c.name }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontSize: 10, color: "#9CA3AF" }, children: c.sym })
+                    ] })
+                  ] }) }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("td", { style: { padding: "11px 14px", fontSize: 13, color: "#111827", fontWeight: 500 }, children: c.price }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { style: { padding: "11px 14px", fontSize: 12, color: c.change >= 0 ? "#10B981" : "#EF4444", fontWeight: 500, whiteSpace: "nowrap" }, children: [
+                    c.change >= 0 ? "▲" : "▼",
+                    " ",
+                    Math.abs(c.change).toFixed(2),
+                    "%"
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("td", { style: { padding: "11px 14px", fontSize: 12, color: "#374151" }, children: c.cap }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("td", { style: { padding: "11px 14px", fontSize: 12, color: "#374151" }, children: c.vol }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("td", { style: { padding: "11px 14px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 6, justifyContent: "center" }, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setSection("buy"), style: outlinePillBtn, children: "Buy" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setSection("deposit"), style: outlinePillBtn, children: "Deposit" })
+                  ] }) })
+                ] }, c.sym)) })
+              ] }) })
+            ] }),
+            section === "buy" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { maxWidth: 700 }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 0, alignItems: "flex-end", marginBottom: 4, borderBottom: "1px solid #F3F4F6", paddingBottom: 16 }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { marginRight: 28 }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("label", { style: formLabelStyle, children: "Asset" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { display: "flex", alignItems: "center", gap: 8, background: "none", border: "none", cursor: "pointer", padding: 0, fontFamily: "inherit" }, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(CoinAvatar, { color: "#627EEA", bg: "#F0F3FF", icon: "Ξ", size: 26 }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontWeight: 600, fontSize: 16, color: "#111827" }, children: "ETH" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14, color: "#6b7280" })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, marginRight: 28 }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("label", { style: formLabelStyle, children: "Account" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { display: "flex", alignItems: "center", gap: 8, background: "none", border: "none", cursor: "pointer", padding: 0, fontFamily: "inherit" }, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(PixelAvatar, { seed: "Account 1Ethereum + EVM Chains", size: 26 }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontWeight: 600, fontSize: 16, color: "#111827" }, children: "Account 1" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14, color: "#6b7280" })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("label", { style: formLabelStyle, children: "Amount" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", padding: 0, fontFamily: "inherit" }, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontWeight: 700, fontSize: 22, color: "#111827" }, children: "100 USD" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14, color: "#6b7280" })
+                  ] })
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 11, color: "#9CA3AF", fontFamily: "monospace", margin: "6px 0 20px" }, children: eth }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 10, marginBottom: 20 }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, display: "flex", alignItems: "center", gap: 8, border: "1px solid #E5E7EB", borderRadius: 10, padding: "9px 14px", background: "#fff" }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 14, color: "#9CA3AF" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("input", { placeholder: "Search", style: { border: "none", outline: "none", fontSize: 13, color: "#374151", background: "transparent", flex: 1, fontFamily: "inherit" } })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { ...selectBtnStyle, gap: 6 }, children: [
+                  "United States ",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 13 })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { ...selectBtnStyle, gap: 6, whiteSpace: "nowrap" }, children: [
+                  "Credit & Debit Card ",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 13 })
+                ] })
+              ] }),
+              PROVIDERS.map((prov) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { border: `1.5px solid ${expandedProvider === prov.name ? "#4F46E5" : "#E5E7EB"}`, borderRadius: 12, marginBottom: 12, overflow: "hidden", background: "#fff" }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 12, padding: "14px 16px", cursor: "pointer" }, onClick: () => setExpandedProvider(expandedProvider === prov.name ? null : prov.name), children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 40, height: 40, borderRadius: 10, background: prov.color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "#fff", fontWeight: 800, fontSize: 18 }, children: prov.letter }) }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1 }, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8 }, children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontWeight: 700, fontSize: 15, color: "#111827" }, children: prov.name }),
+                      prov.tag && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { style: { fontSize: 11, fontWeight: 600, color: "#059669", background: "#ECFDF5", border: "1px solid #A7F3D0", borderRadius: 6, padding: "2px 8px", display: "flex", alignItems: "center", gap: 4 }, children: [
+                        "🏆 ",
+                        prov.tag
+                      ] })
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, color: "#6B7280" }, children: prov.sub })
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 6, alignItems: "center" }, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { width: 28, height: 28, borderRadius: 6, border: "1px solid #E5E7EB", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "13", height: "13", viewBox: "0 0 24 24", fill: "none", stroke: "#6B7280", strokeWidth: "2", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "3", y: "3", width: "18", height: "18", rx: "2" }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M3 9h18M9 21V9" })
+                    ] }) }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { width: 28, height: 28, borderRadius: 6, border: "1px solid #E5E7EB", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "13", height: "13", viewBox: "0 0 24 24", fill: "none", stroke: "#6B7280", strokeWidth: "2", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "2", y: "5", width: "20", height: "14", rx: "2" }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M2 10h20" })
+                    ] }) }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { width: 28, height: 28, borderRadius: 6, border: "1px solid #E5E7EB", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14, color: "#6B7280", style: { transform: expandedProvider === prov.name ? "rotate(180deg)" : "none", transition: "transform 0.2s" } }) })
+                  ] })
+                ] }),
+                expandedProvider === prov.name && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { padding: "0 16px 16px", borderTop: "1px solid #F3F4F6" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { paddingTop: 14 }, children: [
+                  [
+                    { label: "Exchange rate with fees", value: prov.rate },
+                    { label: "Price USD", value: prov.price },
+                    { label: "Fees", value: prov.fees }
+                  ].map((row) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", justifyContent: "space-between", marginBottom: 10 }, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 13, color: "#6B7280" }, children: row.label }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 13, color: "#374151" }, children: row.value })
+                  ] }, row.label)),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", justifyContent: "space-between", marginBottom: 16, paddingTop: 10, borderTop: "1px solid #F3F4F6" }, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 13, fontWeight: 700, color: "#111827" }, children: "Total" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 13, fontWeight: 700, color: "#111827" }, children: prov.total })
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { width: "100%", padding: "13px", borderRadius: 10, background: "#1E293B", color: "#fff", fontWeight: 700, fontSize: 14, border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, fontFamily: "inherit" }, children: [
+                    "Buy with ",
+                    prov.name,
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(ExternalLink, { size: 14 })
+                  ] })
+                ] }) })
+              ] }, prov.name))
+            ] }),
+            section === "deposit" && !depositAsset && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { maxWidth: 680 }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 10, marginBottom: 16 }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, display: "flex", alignItems: "center", gap: 8, border: "1px solid #E5E7EB", borderRadius: 10, padding: "9px 14px", background: "#fff" }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 14, color: "#9CA3AF" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("input", { placeholder: "Search", style: { border: "none", outline: "none", fontSize: 13, color: "#374151", background: "transparent", flex: 1, fontFamily: "inherit" } })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { ...selectBtnStyle, gap: 6, whiteSpace: "nowrap" }, children: [
+                  "All Networks ",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 13 })
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { border: "1px solid #E5E7EB", borderRadius: 12, overflow: "hidden" }, children: DEPOSIT_ASSETS.map((a, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "div",
+                {
+                  onClick: () => setDepositAsset(a),
+                  style: { display: "flex", alignItems: "center", gap: 16, padding: "16px 20px", borderBottom: i < DEPOSIT_ASSETS.length - 1 ? "1px solid #F3F4F6" : "none", cursor: "pointer", background: "#fff", transition: "background 0.1s" },
+                  onMouseEnter: (e) => {
+                    e.currentTarget.style.background = "#F9FAFB";
+                  },
+                  onMouseLeave: (e) => {
+                    e.currentTarget.style.background = "#fff";
+                  },
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(CoinAvatar, { color: a.color, bg: a.bg, icon: a.icon, size: 40 }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontWeight: 600, color: "#111827", fontSize: 14 }, children: a.name }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { margin: 0, fontSize: 12, color: "#9CA3AF" }, children: a.sub })
+                    ] })
+                  ]
+                },
+                a.name + a.sub
+              )) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "center", marginTop: 24 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { padding: "12px 48px", borderRadius: 9999, background: "#E5E7EB", color: "#9CA3AF", fontWeight: 600, fontSize: 13, border: "none", cursor: "not-allowed", fontFamily: "inherit" }, children: "Select an asset" }) })
+            ] }),
+            section === "deposit" && depositAsset && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { maxWidth: 560, margin: "0 auto", textAlign: "center" }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { style: { fontSize: 18, fontWeight: 700, color: "#111827", marginBottom: 8, marginTop: 0 }, children: [
+                "Deposit ",
+                depositAsset.name
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { style: { fontSize: 13, color: "#6B7280", marginBottom: 24 }, children: [
+                "Only send tokens to this address on ",
+                depositAsset.sub.split(" on ")[1] ?? "this network"
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "inline-flex", alignItems: "center", gap: 8, background: "#F9FAFB", border: "1px solid #E5E7EB", borderRadius: 9999, padding: "6px 14px 6px 8px", marginBottom: 20 }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(PixelAvatar, { seed: "Account 1Ethereum + EVM Chains", size: 28 }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontWeight: 600, color: "#111827", fontSize: 14 }, children: "Account 1" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14, color: "#9ca3af" })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontWeight: 700, color: "#111827", marginBottom: 6, fontSize: 13 }, children: "Address:" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 24 }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontFamily: "monospace", fontSize: 12, color: "#374151", wordBreak: "break-all" }, children: getAddr(depositAsset.addrKey) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => copy2(getAddr(depositAsset.addrKey), "dep"), style: { background: "none", border: "none", cursor: "pointer", color: copied === "dep" ? "#10B981" : "#6B7280", flexShrink: 0 }, children: copied === "dep" ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 15 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Copy, { size: 15 }) })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "inline-block", border: "2px solid #E5E7EB", borderRadius: 12, padding: 16, background: "#fff" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(QRCodeSVG, { value: getAddr(depositAsset.addrKey) }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { marginTop: 24 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setDepositAsset(null), style: { padding: "10px 28px", borderRadius: 9999, border: "1.5px solid #E5E7EB", background: "#fff", color: "#374151", fontWeight: 600, fontSize: 13, cursor: "pointer", fontFamily: "inherit" }, children: "← Back" }) })
+            ] })
           ] })
-        ] })
-      ] }) })
+        ] }) })
+      )
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "button",
       {
-        style: { position: "fixed", bottom: 22, right: 22, zIndex: 100, display: "flex", alignItems: "center", gap: 8, padding: "11px 18px", borderRadius: 9999, background: "#4f46e5", color: "#fff", border: "none", cursor: "pointer", boxShadow: "0 4px 14px rgba(79,70,229,0.4)" },
+        style: { position: "fixed", bottom: 22, right: 22, zIndex: 200, display: "flex", alignItems: "center", gap: 8, padding: "11px 20px", borderRadius: 9999, background: "#4f46e5", color: "#fff", border: "none", cursor: "pointer", boxShadow: "0 4px 14px rgba(79,70,229,0.4)", transition: "all 0.15s", fontFamily: "inherit" },
         onMouseEnter: (e) => {
           e.currentTarget.style.filter = "brightness(1.1)";
           e.currentTarget.style.transform = "translateY(-2px)";
@@ -44217,54 +44710,49 @@ function SendSwapBridge({ mode }) {
   const toLabel = mode === "send" ? "To" : "Receive (est.)";
   const toBtn = mode === "send" ? "Choose recipient" : "Choose Asset";
   const actionLabel = mode === "send" ? "Review send" : mode === "swap" ? "Review swap" : "Review bridge";
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { maxWidth: 660 }, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { border: "1px solid #E5E7EB", borderRadius: 14, padding: "20px 22px", background: "#fff", marginBottom: 0 }, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 11, fontWeight: 500, color: "#9CA3AF", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.05em" }, children: "From" }),
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { maxWidth: 720, margin: "0 auto" }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { border: "1px solid #E5E7EB", borderRadius: 16, padding: "22px 24px", background: "#fff", marginBottom: 0 }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 11, fontWeight: 500, color: "#9CA3AF", margin: "0 0 12px", letterSpacing: "0.02em" }, children: "From" }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between" }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { background: "none", border: "none", color: "#4F46E5", fontSize: 17, fontWeight: 700, cursor: "pointer", padding: 0, display: "flex", alignItems: "center", gap: 4 }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { background: "none", border: "none", color: "#4F46E5", fontSize: 18, fontWeight: 700, cursor: "pointer", padding: 0, display: "flex", alignItems: "center", gap: 6, fontFamily: "inherit" }, children: [
           "Choose Asset ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 16 }, children: "›" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 18 }, children: "›" })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 28, color: "#D1D5DB", fontWeight: 300 }, children: "0.0" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 32, color: "#D1D5DB", fontWeight: 300 }, children: "0.0" })
       ] })
     ] }),
-    isSwapOrBridge && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "6px 0" }, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { width: 36, height: 36, borderRadius: 10, border: "1px solid #E5E7EB", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#374151" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUpDown, { size: 15 }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 34, height: 34, borderRadius: "50%", background: "#FF5722", display: "flex", alignItems: "center", justifyContent: "center" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: "18", height: "18", viewBox: "0 0 32 32", fill: "none", children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M28.483 15.143L23.473 11.233L21.758 4.298L16.002 9.533L10.245 4.298L8.53 11.233L3.52 15.143L8.607 19.34L8.747 26.697L16.002 23.363L23.257 26.697L23.396 19.34L28.483 15.143Z", fill: "#fff" }) }) })
+    isSwapOrBridge && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 0" }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { width: 38, height: 38, borderRadius: 10, border: "1px solid #E5E7EB", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "#374151" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUpDown, { size: 16 }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 36, height: 36, borderRadius: "50%", background: "#FF5722", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(255,87,34,0.4)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "img",
+        {
+          src: "/logo.jpg",
+          alt: "",
+          style: { width: 22, height: 22, borderRadius: "50%", objectFit: "cover" },
+          onError: (e) => {
+            e.currentTarget.style.display = "none";
+            e.currentTarget.parentElement.innerHTML = `<svg width="18" height="18" viewBox="0 0 32 32" fill="none"><path d="M28.483 15.143L23.473 11.233L21.758 4.298L16.002 9.533L10.245 4.298L8.53 11.233L3.52 15.143L8.607 19.34L8.747 26.697L16.002 23.363L23.257 26.697L23.396 19.34L28.483 15.143Z" fill="#fff"/></svg>`;
+          }
+        }
+      ) })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { border: "1px solid #E5E7EB", borderRadius: 14, padding: "20px 22px", background: "#EEF2FF", marginTop: isSwapOrBridge ? 0 : 2 }, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 11, fontWeight: 500, color: "#9CA3AF", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.05em" }, children: toLabel }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { border: "1px solid #E5E7EB", borderRadius: 16, padding: "22px 24px", background: "#EEF2FF", marginTop: isSwapOrBridge ? 0 : 4 }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 11, fontWeight: 500, color: "#9CA3AF", margin: "0 0 12px", letterSpacing: "0.02em" }, children: toLabel }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between" }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { background: "none", border: "none", color: "#374151", fontSize: 17, fontWeight: 700, cursor: "pointer", padding: 0, display: "flex", alignItems: "center", gap: 4 }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { style: { background: "none", border: "none", color: "#374151", fontSize: 18, fontWeight: 700, cursor: "pointer", padding: 0, display: "flex", alignItems: "center", gap: 6, fontFamily: "inherit" }, children: [
           toBtn,
           " ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 16 }, children: "›" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 18 }, children: "›" })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 28, color: "#D1D5DB", fontWeight: 300 }, children: "0.0" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 32, color: "#D1D5DB", fontWeight: 300 }, children: "0.0" })
       ] })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "center", marginTop: 20 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { padding: "14px 0", width: "100%", maxWidth: 380, borderRadius: 9999, background: "#E5E7EB", color: "#9CA3AF", fontWeight: 600, fontSize: 14, border: "none", cursor: "not-allowed" }, children: actionLabel }) })
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "center", marginTop: 20 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { padding: "14px 0", width: "100%", maxWidth: 440, borderRadius: 9999, background: "#E5E7EB", color: "#9CA3AF", fontWeight: 600, fontSize: 14, border: "none", cursor: "not-allowed", fontFamily: "inherit" }, children: actionLabel }) })
   ] });
 }
-function ToggleRow({ label, value, onChange }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "7px 16px" }, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 13, color: "#374151" }, children: label }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onChange(!value), style: { width: 36, height: 20, borderRadius: 10, border: "none", background: value ? "#4F46E5" : "#D1D5DB", cursor: "pointer", position: "relative", transition: "background 0.15s", flexShrink: 0 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", top: 2, left: value ? 18 : 2, width: 16, height: 16, borderRadius: "50%", background: "#fff", transition: "left 0.15s", boxShadow: "0 1px 3px rgba(0,0,0,0.2)" } }) })
-  ] });
+function EmptyState({ text }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { textAlign: "center", padding: "60px 0", color: "#9CA3AF", fontSize: 14 }, children: text });
 }
-const menuItemStyle = {
-  display: "flex",
-  alignItems: "center",
-  gap: 10,
-  width: "100%",
-  padding: "9px 16px",
-  background: "none",
-  border: "none",
-  cursor: "pointer",
-  fontSize: 13,
-  color: "#374151",
-  textAlign: "left"
-};
 const circleIconBtn = {
   width: 34,
   height: 34,
@@ -44285,7 +44773,8 @@ const outlinePillBtn = {
   fontSize: 12,
   fontWeight: 500,
   cursor: "pointer",
-  color: "#374151"
+  color: "#374151",
+  fontFamily: "inherit"
 };
 const selectBtnStyle = {
   display: "flex",
@@ -44307,110 +44796,11 @@ const formLabelStyle = {
   display: "block",
   marginBottom: 6
 };
-function PortfolioChart() {
-  const [timeframe, setTimeframe] = reactExports.useState("1 Hour");
-  const timeframes = ["1 Hour", "1 Day", "1 Week", "1 Month", "1 Year", "All"];
-  const DATA = [
-    0.28,
-    0.3,
-    0.34,
-    0.4,
-    0.52,
-    0.61,
-    0.68,
-    0.64,
-    0.59,
-    0.55,
-    0.51,
-    0.48,
-    0.44,
-    0.42,
-    0.4,
-    0.38,
-    0.36,
-    0.35,
-    0.34,
-    0.33,
-    0.32,
-    0.31,
-    0.31,
-    0.3,
-    0.3,
-    0.3,
-    0.3,
-    0.3,
-    0.3,
-    0.3
-  ];
-  const W = 660, H = 110;
-  const minV = Math.min(...DATA), maxV = Math.max(...DATA);
-  const range = maxV - minV || 1;
-  const pts = DATA.map((v, i) => ({
-    x: i / (DATA.length - 1) * W,
-    y: 8 + (1 - (v - minV) / range) * (H - 16)
-  }));
-  const line = pts.reduce((acc, p, i) => {
-    if (i === 0) return `M ${p.x} ${p.y}`;
-    const prev = pts[i - 1];
-    const cx = (prev.x + p.x) / 2;
-    return acc + ` C ${cx} ${prev.y} ${cx} ${p.y} ${p.x} ${p.y}`;
-  }, "");
-  const area = `${line} L ${W} ${H} L 0 ${H} Z`;
-  const isFlat = maxV - minV < 0.01;
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { marginBottom: 24 }, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 8, alignItems: "center" }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 13, color: "#EF4444", fontWeight: 500 }, children: "-$0.00" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 12, background: "#FEE2E2", color: "#EF4444", fontWeight: 600, padding: "2px 8px", borderRadius: 6 }, children: "-0.11%" })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "relative" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        "button",
-        {
-          style: { display: "flex", alignItems: "center", gap: 4, padding: "4px 10px", border: "1px solid #E5E7EB", borderRadius: 8, background: "#fff", fontSize: 12, fontWeight: 500, color: "#374151", cursor: "pointer" },
-          onClick: () => {
-            const idx = timeframes.indexOf(timeframe);
-            setTimeframe(timeframes[(idx + 1) % timeframes.length]);
-          },
-          children: [
-            timeframe,
-            " ",
-            /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 12 })
-          ]
-        }
-      ) })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: "100%", overflow: "hidden", borderRadius: 8 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "svg",
-      {
-        width: "100%",
-        viewBox: `0 0 ${W} ${H}`,
-        preserveAspectRatio: "none",
-        style: { display: "block" },
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("defs", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("linearGradient", { id: "portfolioGrad", x1: "0", y1: "0", x2: "0", y2: "1", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "0%", stopColor: "#4F46E5", stopOpacity: isFlat ? 0.04 : 0.12 }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "100%", stopColor: "#4F46E5", stopOpacity: "0" })
-          ] }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: area, fill: "url(#portfolioGrad)" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: line, stroke: "#4F46E5", strokeWidth: "2", fill: "none", strokeLinecap: "round" })
-        ]
-      }
-    ) })
-  ] });
-}
 const SLIDE = {
   initial: { opacity: 0, y: 8 },
   animate: { opacity: 1, y: 0, transition: { duration: 0.26, ease: [0.22, 1, 0.36, 1] } },
   exit: { opacity: 0, y: -6, transition: { duration: 0.15, ease: "easeIn" } }
 };
-const SUPPORTED_NETWORKS = [
-  { name: "Ethereum", sub: "ETH · EVM Chains · Base · Optimism", color: "#627EEA", icon: "Ξ" },
-  { name: "Solana", sub: "SOL · Solana Mainnet", color: "#9945FF", icon: "◎" },
-  { name: "Bitcoin", sub: "BTC · Bitcoin Mainnet", color: "#F7931A", icon: "₿" },
-  { name: "Polygon", sub: "MATIC · Polygon Mainnet", color: "#8247E5", icon: "M" },
-  { name: "BNB Chain", sub: "BNB · BNB Smart Chain", color: "#F3BA2F", icon: "B" },
-  { name: "Filecoin", sub: "FIL · Filecoin Mainnet", color: "#0090FF", icon: "F" }
-];
 function pwStrength(pw) {
   if (!pw) return { score: 0, label: "", color: "#E5E7EB" };
   let s = 0;
@@ -44446,6 +44836,7 @@ function WalletModal({ mode, onClose, onSuccess }) {
   const [checked1, setChecked1] = reactExports.useState(false);
   const [checked2, setChecked2] = reactExports.useState(false);
   const [unlockFailed, setUnlockFailed] = reactExports.useState(false);
+  const [flowMode, setFlowMode] = reactExports.useState("create");
   const [importWordCount, setImportWordCount] = reactExports.useState(12);
   const [importWords, setImportWords] = reactExports.useState(Array(12).fill(""));
   const [showImportWords, setShowImportWords] = reactExports.useState(false);
@@ -44557,7 +44948,7 @@ function WalletModal({ mode, onClose, onSuccess }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "fixed", inset: 0, zIndex: 500, background: "#F5F6FA", display: "flex", flexDirection: "column", overflowY: "auto" }, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { padding: "18px 40px 12px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8 }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: "/logo.jpg", alt: "Orivon", style: { width: 28, height: 28, borderRadius: 8, objectFit: "contain" }, onError: (e) => {
+        /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: "/logo.png", alt: "Orivon", style: { width: 28, height: 28, borderRadius: 8, objectFit: "contain" }, onError: (e) => {
           e.target.style.display = "none";
         } }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 15, fontWeight: 600, color: "#1A1A2E" }, children: "Orivon Wallet" })
@@ -44578,7 +44969,7 @@ function WalletModal({ mode, onClose, onSuccess }) {
       )
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(AnimatePresence, { mode: "wait", children: [
-      step === "choose" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, style: { flex: 1 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { maxWidth: 820, margin: "32px auto", padding: "0 28px 40px" }, children: [
+      step === "choose" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, style: { flex: 1 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { maxWidth: 820, margin: "0 auto", padding: "20px 28px 40px" }, children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { style: { fontSize: 36, fontWeight: 800, color: "#111827", marginBottom: 12, lineHeight: 1.15 }, children: [
           "Browser-native. Self-custody.",
           /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
@@ -44589,7 +44980,10 @@ function WalletModal({ mode, onClose, onSuccess }) {
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "div",
             {
-              onClick: () => setStep("before-we-begin"),
+              onClick: () => {
+                setFlowMode("create");
+                setStep("before-we-begin");
+              },
               style: { background: "#fff", borderRadius: 18, padding: 32, cursor: "pointer", border: "1.5px solid #E5E7EB", boxShadow: "0 1px 6px rgba(0,0,0,0.06)", transition: "border-color 0.15s, box-shadow 0.15s" },
               onMouseEnter: (e) => {
                 e.currentTarget.style.borderColor = "#4F46E5";
@@ -44609,7 +45003,10 @@ function WalletModal({ mode, onClose, onSuccess }) {
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "div",
             {
-              onClick: () => setStep("import"),
+              onClick: () => {
+                setFlowMode("import");
+                setStep("before-we-begin");
+              },
               style: { background: "#fff", borderRadius: 18, padding: 32, cursor: "pointer", border: "1.5px solid #E5E7EB", boxShadow: "0 1px 6px rgba(0,0,0,0.06)", transition: "border-color 0.15s, box-shadow 0.15s" },
               onMouseEnter: (e) => {
                 e.currentTarget.style.borderColor = "#4F46E5";
@@ -44656,25 +45053,76 @@ function WalletModal({ mode, onClose, onSuccess }) {
           setStep("supported-networks");
         }, disabled: !bothChecked, children: "Continue" })
       ] }) }, "before-we-begin"),
-      step === "supported-networks" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: backBtn, onClick: () => setStep("before-we-begin"), onMouseEnter: (e) => {
-          e.currentTarget.style.background = "#EEF2FF";
-        }, onMouseLeave: (e) => {
-          e.currentTarget.style.background = "transparent";
-        }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 18 }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { ...titleSt, textAlign: "center" }, children: "Supported Networks" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { ...subSt, textAlign: "center" }, children: "Orivon Wallet supports the following networks out of the box." }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 40 }, children: SUPPORTED_NETWORKS.map((net) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 12, padding: "14px 16px", borderRadius: 12, background: "#F9FAFB", border: "1px solid #F3F4F6" }, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 38, height: 38, borderRadius: "50%", background: net.color, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 15, fontWeight: 700, flexShrink: 0 }, children: net.icon }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 14, fontWeight: 600, color: "#111827", margin: "0 0 2px" }, children: net.name }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 11, color: "#9CA3AF", margin: 0 }, children: net.sub })
-          ] })
-        ] }, net.name)) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(CenterBtn, { onClick: () => setStep("create-password"), children: [
-          "Continue with ",
-          SUPPORTED_NETWORKS.length,
-          " Networks"
+      step === "supported-networks" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, style: { width: "100%", display: "flex", justifyContent: "center", padding: "0 28px 24px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { maxWidth: 740, width: "100%", background: "#fff", borderRadius: 20, boxShadow: "0 2px 20px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column", height: 560, overflow: "hidden" }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { padding: "36px 52px 0", flexShrink: 0 }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: backBtn, onClick: () => setStep("before-we-begin"), onMouseEnter: (e) => {
+            e.currentTarget.style.background = "#EEF2FF";
+          }, onMouseLeave: (e) => {
+            e.currentTarget.style.background = "transparent";
+          }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 18 }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { ...titleSt, textAlign: "center" }, children: "Supported networks" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 15, color: "#6B7280", textAlign: "center", margin: "0 0 20px", lineHeight: 1.5 }, children: "Choose which blockchains to use in your wallet." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 10, background: "#F3F4F6", borderRadius: 10, padding: "9px 14px", marginBottom: 8 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "#9CA3AF", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "11", cy: "11", r: "8" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M21 21l-4.35-4.35" })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 14, color: "#9CA3AF" }, children: "Search networks" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", justifyContent: "flex-end", marginBottom: 8 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { style: { display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#374151", cursor: "pointer" }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "checkbox", style: { width: 14, height: 14, accentColor: "#4F46E5" } }),
+            " Show testnets"
+          ] }) })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { flex: 1, overflowY: "auto", padding: "0 52px" }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 11, fontWeight: 600, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }, children: "Featured" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 20 }, children: [
+            { id: "sol", name: "Solana Mainnet Beta", color: "#9945FF", icon: "◎", sel: false },
+            { id: "eth", name: "Ethereum Mainnet", color: "#627EEA", icon: "Ξ", sel: false },
+            { id: "fil", name: "Filecoin Mainnet", color: "#0090FF", icon: "F", sel: true },
+            { id: "btc", name: "Bitcoin Mainnet", color: "#F7931A", icon: "₿", sel: true },
+            { id: "zec", name: "Zcash Mainnet", color: "#F4B728", icon: "Z", sel: true },
+            { id: "ada", name: "Cardano Mainnet", color: "#0033AD", icon: "A", sel: true }
+          ].map((n2) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", borderRadius: 12, padding: "12px 8px 10px", border: `1.5px solid ${n2.sel ? "#4F46E5" : "#E5E7EB"}`, background: n2.sel ? "#F5F3FF" : "#fff", cursor: "pointer", textAlign: "center" }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", top: 6, right: 6, width: 16, height: 16, borderRadius: 4, background: n2.sel ? "#4F46E5" : "transparent", border: `1.5px solid ${n2.sel ? "#4F46E5" : "#D1D5DB"}`, display: "flex", alignItems: "center", justifyContent: "center" }, children: n2.sel && /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: "10", height: "8", viewBox: "0 0 10 8", fill: "none", children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M1 4l2.5 2.5L9 1", stroke: "#fff", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round" }) }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 36, height: 36, borderRadius: "50%", background: n2.color, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 15, fontWeight: 700, margin: "0 auto 8px" }, children: n2.icon }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 10, fontWeight: 600, color: "#111827", margin: 0, lineHeight: 1.3 }, children: n2.name })
+          ] }, n2.id)) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", justifyContent: "space-between", marginBottom: 10 }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 11, fontWeight: 600, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.08em", margin: 0 }, children: "Popular" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("button", { style: { fontSize: 12, color: "#4F46E5", background: "none", border: "none", cursor: "pointer", fontWeight: 500, padding: 0 }, children: "Deselect all" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 16 }, children: [
+            { id: "matic", name: "Polygon", color: "#8247E5", icon: "M", sel: true },
+            { id: "op", name: "Optimism", color: "#FF0420", icon: "O", sel: true },
+            { id: "arb", name: "Arbitrum", color: "#28A0F0", icon: "A", sel: true },
+            { id: "avax", name: "Avalanche", color: "#E84142", icon: "A", sel: true },
+            { id: "base", name: "Base", color: "#0052FF", icon: "B", sel: true },
+            { id: "bnb", name: "BNB Chain", color: "#F3BA2F", icon: "B", sel: true },
+            { id: "ftm", name: "Fantom", color: "#1969FF", icon: "F", sel: true },
+            { id: "cro", name: "Cronos", color: "#002D74", icon: "C", sel: true }
+          ].map((n2) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { position: "relative", borderRadius: 12, padding: "12px 8px 10px", border: `1.5px solid ${n2.sel ? "#4F46E5" : "#E5E7EB"}`, background: n2.sel ? "#F5F3FF" : "#fff", cursor: "pointer", textAlign: "center" }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", top: 6, right: 6, width: 16, height: 16, borderRadius: 4, background: n2.sel ? "#4F46E5" : "transparent", border: `1.5px solid ${n2.sel ? "#4F46E5" : "#D1D5DB"}`, display: "flex", alignItems: "center", justifyContent: "center" }, children: n2.sel && /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: "10", height: "8", viewBox: "0 0 10 8", fill: "none", children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M1 4l2.5 2.5L9 1", stroke: "#fff", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round" }) }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 36, height: 36, borderRadius: "50%", background: n2.color, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 15, fontWeight: 700, margin: "0 auto 8px" }, children: n2.icon }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 10, fontWeight: 600, color: "#111827", margin: 0, lineHeight: 1.3 }, children: n2.name })
+          ] }, n2.id)) })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { padding: "14px 52px 32px", borderTop: "1px solid #F3F4F6", flexShrink: 0 }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => setStep(flowMode === "create" ? "create-password" : "import"),
+              style: { width: "100%", height: 50, borderRadius: 9999, background: "#4F46E5", color: "#fff", fontSize: 15, fontWeight: 600, border: "none", cursor: "pointer", boxShadow: "0 2px 12px rgba(79,70,229,0.3)", marginBottom: 8, transition: "filter 0.15s" },
+              onMouseEnter: (e) => {
+                e.currentTarget.style.filter = "brightness(1.1)";
+              },
+              onMouseLeave: (e) => {
+                e.currentTarget.style.filter = "brightness(1)";
+              },
+              children: "Continue with 14 Networks"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 12, color: "#9CA3AF", textAlign: "center", margin: 0 }, children: "You can add networks anytime in Settings." })
         ] })
       ] }) }, "supported-networks"),
       step === "create-password" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { ...SLIDE, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { children: [
@@ -45013,6 +45461,10 @@ function Browser({ onOpenDashboard, onOpenOnboarding } = {}) {
   const [walletModal, setWalletModal] = reactExports.useState(null);
   const [menuOpen, setMenuOpen] = reactExports.useState(false);
   const [zoom, setZoom] = reactExports.useState(100);
+  const [newTabKeys, setNewTabKeys] = reactExports.useState({});
+  const [updateState, setUpdateState] = reactExports.useState("idle");
+  const [updateVersion, setUpdateVersion] = reactExports.useState("");
+  const [updatePct, setUpdatePct] = reactExports.useState(0);
   const activeTab = tabs.find((t) => t.id === activeTabId) ?? tabs[0];
   const isDark = theme === "dark";
   const isMac = window.electronAPI?.platform === "darwin" || /Mac/.test(navigator.platform);
@@ -45028,6 +45480,26 @@ function Browser({ onOpenDashboard, onOpenOnboarding } = {}) {
   reactExports.useEffect(() => {
     if (!isEditing) setAddrInput(activeTab ? resolveDisplay(activeTab.url) : "");
   }, [activeTabId, activeTab?.url, isEditing]);
+  reactExports.useEffect(() => {
+    const api = window.electronAPI?.updater;
+    if (!api) return;
+    api.onAvailable((v) => {
+      setUpdateVersion(v);
+      setUpdateState("available");
+    });
+    api.onProgress((pct) => {
+      setUpdatePct(pct);
+      setUpdateState("downloading");
+    });
+    api.onDownloaded((v) => {
+      setUpdateVersion(v);
+      setUpdateState("ready");
+      setUpdatePct(100);
+    });
+    api.onError((_msg) => {
+      setUpdateState("idle");
+    });
+  }, []);
   const navigate = reactExports.useCallback(async (raw, tabId = activeTabId) => {
     const input = raw.trim();
     if (!input) return;
@@ -45075,7 +45547,15 @@ function Browser({ onOpenDashboard, onOpenOnboarding } = {}) {
     const url = goForward(activeTabId);
     if (url) webviewRefs.current[activeTabId]?.goForward();
   };
-  const handleReload = () => webviewRefs.current[activeTabId]?.reload();
+  const handleReload = () => {
+    if (activeTab?.url === NEW_TAB) {
+      setNewTabKeys((prev) => ({ ...prev, [activeTabId]: (prev[activeTabId] ?? 0) + 1 }));
+    } else if (activeTab?.url === DASHBOARD_URL$1) {
+      updateTab(activeTabId, { isLoading: false });
+    } else {
+      webviewRefs.current[activeTabId]?.reload();
+    }
+  };
   const handleAddrSubmit = (e) => {
     e.preventDefault();
     navigate(addrInput);
@@ -45100,269 +45580,657 @@ function Browser({ onOpenDashboard, onOpenOnboarding } = {}) {
       setTimeout(() => navigate(url, id2), 10);
     }
   });
-  const toolbarBg = isDark ? "bg-[#1c1c1e] border-white/[0.06]" : "bg-[#f2f2f7] border-black/[0.06]";
-  const addrBg = isDark ? "bg-[#2c2c2e] hover:bg-[#3a3a3c] focus-within:bg-[#3a3a3c]" : "bg-white focus-within:bg-white";
-  const btn = isDark ? "text-white/40 hover:text-white/75 hover:bg-white/[0.07]" : "text-black/40 hover:text-black/75 hover:bg-black/[0.06]";
-  const sep = isDark ? "bg-white/[0.10]" : "bg-black/[0.10]";
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `h-screen w-screen flex flex-col overflow-hidden ${isDark ? "bg-[#0f0f0f] text-white" : "bg-[#e8e8e8] text-black"}`, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      TabBar,
-      {
-        tabs,
-        activeId: activeTabId,
-        onTabClick: setActiveTab,
-        onTabClose: handleTabClose,
-        onNewTab: () => addTab(),
-        isDark,
-        windowControls: !isMac && isElectron2 ? { onMinimize: () => window.electronAPI?.window.minimize(), onMaximize: () => window.electronAPI?.window.maximize(), onClose: () => window.electronAPI?.window.close() } : void 0
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `h-9 flex items-center border-b ${toolbarBg} shrink-0`, style: { padding: "0 6px" }, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center shrink-0 no-drag", style: { gap: 1 }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(NavBtn, { onClick: handleBack, disabled: !canBack, isDark, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronLeft, { size: 13, strokeWidth: 1.8 }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(NavBtn, { onClick: handleForward, disabled: !canForward, isDark, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronRight, { size: 13, strokeWidth: 1.8 }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(NavBtn, { onClick: activeTab?.isLoading ? () => webviewRefs.current[activeTabId]?.stop() : handleReload, isDark, children: /* @__PURE__ */ jsxRuntimeExports.jsx(RotateCcw, { size: 12, className: activeTab?.isLoading ? "animate-spin" : "" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-px h-3.5 mx-1.5 ${sep}` }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(NavBtn, { isDark, title: "Bookmark", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Star, { size: 13 }) })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("form", { onSubmit: handleAddrSubmit, className: "flex-1 no-drag", style: { minWidth: 0, padding: "0 6px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        "div",
-        {
-          className: `relative flex items-center h-[26px] rounded-full transition-all w-full ${addrBg}`,
-          style: { boxShadow: isDark ? "none" : "0 1px 3px rgba(0,0,0,0.09)" },
-          children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute left-2.5 pointer-events-none", children: !activeTab || activeTab.url === NEW_TAB || activeTab.url === DASHBOARD_URL$1 ? /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 11, color: "#FB5B22" }) : isSecureURL(activeTab.url) ? /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 10, className: "text-[#00FF87]/70" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 10, className: isDark ? "text-white/25" : "text-black/25" }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "input",
-              {
-                ref: addrRef,
-                type: "text",
-                value: isEditing ? addrInput : activeTab ? resolveDisplay(activeTab.url) : "",
-                onChange: (e) => setAddrInput(e.target.value),
-                onFocus: () => {
-                  setIsEditing(true);
-                  setAddrInput(activeTab ? resolveDisplay(activeTab.url) : "");
-                  setTimeout(() => addrRef.current?.select(), 20);
-                },
-                onBlur: () => setIsEditing(false),
-                placeholder: "Search or enter URL · .eth · ipfs://",
-                className: "w-full h-full bg-transparent pl-7 pr-3 text-[12px] focus:outline-none placeholder:text-current placeholder:opacity-30"
-              }
-            ),
-            activeTab?.type === "ens" && !isEditing && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "absolute right-2.5 text-[9px] font-bold text-[#00FF87]/60 tracking-widest pointer-events-none", children: "ENS" }),
-            (activeTab?.type === "ipfs" || activeTab?.type === "ipns") && !isEditing && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "absolute right-2.5 text-[9px] font-bold text-[#00D1FF]/60 tracking-widest pointer-events-none", children: "IPFS" })
-          ]
-        }
-      ) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center shrink-0 no-drag", style: { gap: 1 }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "button",
-            {
-              onClick: () => setWalletOpen((p) => !p),
-              title: "Orivon Wallet",
-              className: `no-drag w-6 h-6 rounded flex items-center justify-center transition-all focus:outline-none ${walletOpen ? isDark ? "bg-white/12 text-white/90" : "bg-black/8 text-black/80" : btn}`,
-              children: /* @__PURE__ */ jsxRuntimeExports.jsx(Wallet$1, { size: 13 })
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: walletOpen && /* @__PURE__ */ jsxRuntimeExports.jsx(
-            WalletPanel,
-            {
-              onClose: () => setWalletOpen(false),
-              onOpenWalletModal: (mode) => {
-                setWalletModal(mode);
-                setWalletOpen(false);
-              },
-              onOpenDashboard: () => {
-                navigate(DASHBOARD_URL$1);
-                setWalletOpen(false);
-              }
-            }
-          ) })
-        ] }),
-        showWeb3Scores && score !== null && /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "button",
+  const toolbarBg = isDark ? "#1e1e21" : "#f1f1f5";
+  const toolbarBdr = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.09)";
+  const addrBg = isDark ? "#28282c" : "#ffffff";
+  const sepColor = isDark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.10)";
+  const iconBtnCls = `
+    no-drag w-[26px] h-[26px] rounded flex items-center justify-center
+    transition-colors duration-100 focus:outline-none
+  `;
+  const iconBtnColors = isDark ? "text-white/40 hover:text-white/78 hover:bg-white/[0.07]" : "text-black/40 hover:text-black/72 hover:bg-black/[0.06]";
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      className: `h-screen w-screen flex flex-col overflow-hidden select-none ${isDark ? "text-white" : "text-black"}`,
+      style: { background: isDark ? "#0f0f0f" : "#e5e5ec" },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          TabBar,
           {
-            onClick: () => setRightPanelOpen(!rightPanelOpen),
-            title: `Web3 Score: ${score}`,
-            className: `no-drag flex items-center gap-1 h-6 px-1.5 rounded text-[10px] font-semibold transition-all focus:outline-none ${rightPanelOpen ? "bg-[#00FF87]/12 text-[#00FF87]" : btn}`,
+            tabs,
+            activeId: activeTabId,
+            onTabClick: setActiveTab,
+            onTabClose: handleTabClose,
+            onNewTab: () => addTab(),
+            isDark,
+            windowControls: !isMac && isElectron2 ? {
+              onMinimize: () => window.electronAPI?.window.minimize(),
+              onMaximize: () => window.electronAPI?.window.maximize(),
+              onClose: () => window.electronAPI?.window.close()
+            } : void 0
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "div",
+          {
+            className: "shrink-0 flex items-center",
+            style: {
+              height: 36,
+              background: toolbarBg,
+              borderBottom: `1px solid ${toolbarBdr}`,
+              padding: "0 6px",
+              gap: 0
+            },
             children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 11 }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: score >= 90 ? "#00FF87" : score >= 70 ? "#facc15" : "#f87171" }, children: score })
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center shrink-0", style: { gap: 1 }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  NavBtn,
+                  {
+                    onClick: handleBack,
+                    disabled: !canBack,
+                    isDark,
+                    title: "Back",
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronLeft, { size: 15, strokeWidth: 2 })
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  NavBtn,
+                  {
+                    onClick: handleForward,
+                    disabled: !canForward,
+                    isDark,
+                    title: "Forward",
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronRight, { size: 15, strokeWidth: 2 })
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    onClick: activeTab?.isLoading ? () => webviewRefs.current[activeTabId]?.stop() : handleReload,
+                    title: activeTab?.isLoading ? "Stop loading" : "Reload page",
+                    className: "no-drag",
+                    style: {
+                      width: 32,
+                      height: 32,
+                      borderRadius: 8,
+                      border: "none",
+                      background: "transparent",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                      color: isDark ? "rgba(255,255,255,0.50)" : "rgba(0,0,0,0.50)",
+                      transition: "background 0.14s, color 0.14s",
+                      flexShrink: 0
+                    },
+                    onMouseEnter: (e) => {
+                      const btn = e.currentTarget;
+                      if (activeTab?.isLoading) {
+                        btn.style.background = isDark ? "rgba(239,68,68,0.14)" : "rgba(239,68,68,0.09)";
+                        btn.style.color = "#EF4444";
+                      } else {
+                        btn.style.background = isDark ? "rgba(255,255,255,0.09)" : "rgba(0,0,0,0.07)";
+                        btn.style.color = isDark ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.82)";
+                      }
+                    },
+                    onMouseLeave: (e) => {
+                      const btn = e.currentTarget;
+                      btn.style.background = "transparent";
+                      btn.style.color = isDark ? "rgba(255,255,255,0.50)" : "rgba(0,0,0,0.50)";
+                    },
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { mode: "wait", initial: false, children: activeTab?.isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      motion.span,
+                      {
+                        initial: { opacity: 0, scale: 0.4, rotate: -90 },
+                        animate: { opacity: 1, scale: 1, rotate: 0 },
+                        exit: { opacity: 0, scale: 0.4, rotate: 90 },
+                        transition: { duration: 0.13, ease: [0.22, 1, 0.36, 1] },
+                        style: { display: "flex", alignItems: "center", justifyContent: "center" },
+                        children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 13, strokeWidth: 2.6 })
+                      },
+                      "stop"
+                    ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      motion.span,
+                      {
+                        initial: { opacity: 0, scale: 0.4, rotate: 90 },
+                        animate: { opacity: 1, scale: 1, rotate: 0 },
+                        exit: { opacity: 0, scale: 0.4, rotate: -90 },
+                        transition: { duration: 0.13, ease: [0.22, 1, 0.36, 1] },
+                        style: { display: "flex", alignItems: "center", justifyContent: "center" },
+                        children: /* @__PURE__ */ jsxRuntimeExports.jsx(RotateCcw, { size: 13, strokeWidth: 2.2 })
+                      },
+                      "reload"
+                    ) })
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 1, height: 14, background: sepColor, margin: "0 5px" } }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(NavBtn, { isDark, title: "Bookmark this page", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Star, { size: 14, strokeWidth: 1.9 }) })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "form",
+                {
+                  onSubmit: handleAddrSubmit,
+                  className: "flex-1 no-drag",
+                  style: { minWidth: 0, padding: "0 7px" },
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "div",
+                    {
+                      className: "relative flex items-center w-full transition-all duration-150",
+                      style: {
+                        height: 28,
+                        background: addrBg,
+                        borderRadius: 14,
+                        boxShadow: isDark ? "inset 0 0 0 1px rgba(255,255,255,0.08)" : "0 1px 2px rgba(0,0,0,0.10), inset 0 0 0 0.5px rgba(0,0,0,0.06)"
+                      },
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "div",
+                          {
+                            className: "absolute pointer-events-none flex items-center",
+                            style: { left: 10 },
+                            children: !activeTab || activeTab.url === NEW_TAB || activeTab.url === DASHBOARD_URL$1 ? /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 12, color: "#FB5B22" }) : isSecureURL(activeTab.url) ? /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 11, className: "text-[#00c76a]" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 11, style: { color: isDark ? "rgba(255,255,255,0.30)" : "rgba(0,0,0,0.28)" } })
+                          }
+                        ),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "input",
+                          {
+                            ref: addrRef,
+                            type: "text",
+                            value: isEditing ? addrInput : activeTab ? resolveDisplay(activeTab.url) : "",
+                            onChange: (e) => setAddrInput(e.target.value),
+                            onFocus: () => {
+                              setIsEditing(true);
+                              setAddrInput(activeTab ? resolveDisplay(activeTab.url) : "");
+                              setTimeout(() => addrRef.current?.select(), 20);
+                            },
+                            onBlur: () => setIsEditing(false),
+                            placeholder: "Search or enter address",
+                            className: "w-full h-full bg-transparent focus:outline-none",
+                            style: {
+                              padding: "0 32px 0 28px",
+                              fontSize: 12.5,
+                              fontWeight: 400,
+                              color: isDark ? "rgba(255,255,255,0.82)" : "rgba(0,0,0,0.80)",
+                              letterSpacing: "0.01em"
+                            }
+                          }
+                        ),
+                        activeTab?.type === "ens" && !isEditing && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "span",
+                          {
+                            className: "absolute pointer-events-none",
+                            style: { right: 10, fontSize: 9, fontWeight: 700, color: "#00c76a", letterSpacing: "0.08em" },
+                            children: "ENS"
+                          }
+                        ),
+                        (activeTab?.type === "ipfs" || activeTab?.type === "ipns") && !isEditing && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "span",
+                          {
+                            className: "absolute pointer-events-none",
+                            style: { right: 10, fontSize: 9, fontWeight: 700, color: "#00d1ff", letterSpacing: "0.08em" },
+                            children: "IPFS"
+                          }
+                        )
+                      ]
+                    }
+                  )
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center shrink-0", style: { gap: 2 }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "button",
+                    {
+                      onClick: () => setWalletOpen((p) => !p),
+                      title: "Orivon Wallet",
+                      className: `${iconBtnCls} ${iconBtnColors} no-drag`,
+                      style: walletOpen ? { background: isDark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.07)", color: isDark ? "rgba(255,255,255,0.88)" : "rgba(0,0,0,0.78)" } : {},
+                      children: /* @__PURE__ */ jsxRuntimeExports.jsx(Wallet$1, { size: 14, strokeWidth: 1.9 })
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: walletOpen && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    WalletPanel,
+                    {
+                      onClose: () => setWalletOpen(false),
+                      onOpenWalletModal: (mode) => {
+                        setWalletModal(mode);
+                        setWalletOpen(false);
+                      },
+                      onOpenDashboard: () => {
+                        navigate(DASHBOARD_URL$1);
+                        setWalletOpen(false);
+                      }
+                    }
+                  ) })
+                ] }),
+                showWeb3Scores && score !== null && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "button",
+                  {
+                    onClick: () => setRightPanelOpen(!rightPanelOpen),
+                    title: `Web3 Score: ${score}`,
+                    className: `no-drag flex items-center gap-1 h-[26px] px-1.5 rounded transition-colors duration-100 focus:outline-none`,
+                    style: {
+                      fontSize: 10,
+                      fontWeight: 600,
+                      background: rightPanelOpen ? isDark ? "rgba(0,255,135,0.10)" : "rgba(0,180,90,0.09)" : "transparent",
+                      color: isDark ? "rgba(255,255,255,0.40)" : "rgba(0,0,0,0.40)"
+                    },
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 11 }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: score >= 90 ? "#00c76a" : score >= 70 ? "#f59e0b" : "#f87171" }, children: score })
+                    ]
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 1, height: 14, background: sepColor, margin: "0 3px" } }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    onClick: () => navigate(DASHBOARD_URL$1),
+                    title: "Dashboard",
+                    className: "no-drag flex items-center justify-center focus:outline-none transition-colors duration-100",
+                    style: {
+                      width: 22,
+                      height: 22,
+                      borderRadius: "50%",
+                      border: `1px solid ${isDark ? "rgba(255,255,255,0.14)" : "rgba(0,0,0,0.14)"}`,
+                      background: "transparent",
+                      color: isDark ? "rgba(255,255,255,0.42)" : "rgba(0,0,0,0.42)",
+                      cursor: "pointer"
+                    },
+                    onMouseEnter: (e) => {
+                      e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.05)";
+                      e.currentTarget.style.color = isDark ? "rgba(255,255,255,0.78)" : "rgba(0,0,0,0.72)";
+                    },
+                    onMouseLeave: (e) => {
+                      e.currentTarget.style.background = "transparent";
+                      e.currentTarget.style.color = isDark ? "rgba(255,255,255,0.42)" : "rgba(0,0,0,0.42)";
+                    },
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(User, { size: 11, strokeWidth: 2 })
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { ref: menuRef, className: "relative", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "button",
+                    {
+                      onClick: () => setMenuOpen((p) => !p),
+                      title: "Menu",
+                      className: `${iconBtnCls} ${iconBtnColors} no-drag`,
+                      style: menuOpen ? { background: isDark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.07)", color: isDark ? "rgba(255,255,255,0.88)" : "rgba(0,0,0,0.78)" } : {},
+                      children: /* @__PURE__ */ jsxRuntimeExports.jsx(TextAlignJustify, { size: 14, strokeWidth: 1.9 })
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: menuOpen && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    BurgerMenu,
+                    {
+                      isDark,
+                      isDarkMode: isDark,
+                      zoom,
+                      onZoomIn: () => setZoom((z) => Math.min(z + 10, 200)),
+                      onZoomOut: () => setZoom((z) => Math.max(z - 10, 25)),
+                      onNewTab: () => {
+                        addTab();
+                        setMenuOpen(false);
+                      },
+                      onDashboard: () => {
+                        navigate(DASHBOARD_URL$1);
+                        setMenuOpen(false);
+                      },
+                      onWallet: () => {
+                        setWalletOpen(true);
+                        setMenuOpen(false);
+                      },
+                      onTheme: () => {
+                        setTheme(isDark ? "light" : "dark");
+                        setMenuOpen(false);
+                      },
+                      onClose: () => setMenuOpen(false)
+                    }
+                  ) })
+                ] })
+              ] })
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-px h-3.5 mx-1 ${sep}` }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "button",
-          {
-            onClick: () => navigate(DASHBOARD_URL$1),
-            title: "Dashboard",
-            className: `no-drag w-6 h-6 rounded-full flex items-center justify-center transition-all focus:outline-none border ${isDark ? "border-white/15 text-white/45 hover:text-white/75 hover:bg-white/[0.07]" : "border-black/15 text-black/45 hover:text-black/75 hover:bg-black/[0.05]"}`,
-            children: /* @__PURE__ */ jsxRuntimeExports.jsx(User, { size: 12 })
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { ref: menuRef, className: "relative", children: [
+        updateState !== "idle" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          padding: "6px 16px",
+          flexShrink: 0,
+          background: updateState === "ready" ? "#4F46E5" : updateState === "downloading" ? "#1D4ED8" : "#2563EB",
+          color: "#fff",
+          fontSize: 12,
+          fontWeight: 500
+        }, children: [
+          updateState === "downloading" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { position: "absolute", left: 0, top: 0, height: "100%", background: "rgba(255,255,255,0.12)", width: `${updatePct}%`, transition: "width 0.4s ease", pointerEvents: "none" } }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { style: { flex: 1, position: "relative" }, children: [
+            updateState === "available" && `Orivon ${updateVersion} is available — downloading update…`,
+            updateState === "downloading" && `Downloading update ${updateVersion}… ${updatePct}%`,
+            updateState === "ready" && `Orivon ${updateVersion} is ready to install.`
+          ] }),
+          updateState === "ready" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => window.electronAPI?.updater.restartAndInstall(),
+              style: { padding: "3px 12px", borderRadius: 6, background: "#fff", color: "#4F46E5", border: "none", fontSize: 11, fontWeight: 700, cursor: "pointer", flexShrink: 0 },
+              children: "Restart now"
+            }
+          ),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "button",
             {
-              onClick: () => setMenuOpen((p) => !p),
-              title: "Menu",
-              className: `no-drag w-6 h-6 rounded flex items-center justify-center transition-all focus:outline-none ${menuOpen ? isDark ? "bg-white/10 text-white" : "bg-black/8 text-black" : btn}`,
-              children: /* @__PURE__ */ jsxRuntimeExports.jsx(TextAlignJustify, { size: 13 })
+              onClick: () => setUpdateState("idle"),
+              style: { background: "none", border: "none", color: "rgba(255,255,255,0.7)", cursor: "pointer", padding: "2px 4px", fontSize: 14, lineHeight: 1, flexShrink: 0 },
+              title: "Dismiss",
+              children: "×"
             }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: menuOpen && /* @__PURE__ */ jsxRuntimeExports.jsx(
-            BurgerMenu,
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 relative overflow-hidden flex", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 relative", children: tabs.map((tab) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "div",
             {
-              isDark,
-              isDarkMode: isDark,
-              zoom,
-              onZoomIn: () => setZoom((z) => Math.min(z + 10, 200)),
-              onZoomOut: () => setZoom((z) => Math.max(z - 10, 25)),
-              onNewTab: () => {
-                addTab();
-                setMenuOpen(false);
+              className: "absolute inset-0",
+              style: {
+                zIndex: tab.id === activeTabId ? 1 : 0,
+                pointerEvents: tab.id === activeTabId ? "auto" : "none"
               },
-              onDashboard: () => {
-                navigate(DASHBOARD_URL$1);
-                setMenuOpen(false);
+              children: tab.url === NEW_TAB ? /* @__PURE__ */ jsxRuntimeExports.jsx(NewTab, { onNavigate: (url) => navigate(url, tab.id) }) : tab.url === DASHBOARD_URL$1 ? walletStatus === "none" ? /* @__PURE__ */ jsxRuntimeExports.jsx(WalletSetupPage, { isDark, onOpenModal: (mode) => {
+                setWalletModal(mode);
+              } }) : walletStatus === "locked" ? /* @__PURE__ */ jsxRuntimeExports.jsx(DashboardUnlockInline, { isDark }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Dashboard, { onOpenBrowser: () => navigate(NEW_TAB) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+                WebView,
+                {
+                  ref: (el) => {
+                    webviewRefs.current[tab.id] = el;
+                  },
+                  src: tab.url,
+                  ...makeCallbacks(tab.id)
+                }
+              )
+            },
+            tab.url === NEW_TAB ? `${tab.id}-${newTabKeys[tab.id] ?? 0}` : tab.id
+          )) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: rightPanelOpen && showWeb3Scores && /* @__PURE__ */ jsxRuntimeExports.jsx(
+            motion.div,
+            {
+              initial: { width: 0, opacity: 0 },
+              animate: { width: 260, opacity: 1 },
+              exit: { width: 0, opacity: 0 },
+              transition: { duration: 0.18 },
+              className: "shrink-0 overflow-hidden",
+              style: {
+                borderLeft: `1px solid ${isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)"}`,
+                background: isDark ? "#111" : "#fff"
               },
-              onWallet: () => {
-                setWalletOpen(true);
-                setMenuOpen(false);
-              },
-              onTheme: () => {
-                setTheme(isDark ? "light" : "dark");
-                setMenuOpen(false);
-              },
-              onClose: () => setMenuOpen(false)
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Web3Panel,
+                {
+                  score,
+                  tab: activeTab,
+                  isDark,
+                  onClose: () => setRightPanelOpen(false)
+                }
+              )
             }
           ) })
-        ] })
-      ] })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 relative overflow-hidden flex", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 relative", children: tabs.map((tab) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "div",
-        {
-          className: "absolute inset-0",
-          style: { zIndex: tab.id === activeTabId ? 1 : 0, pointerEvents: tab.id === activeTabId ? "auto" : "none" },
-          children: tab.url === NEW_TAB ? /* @__PURE__ */ jsxRuntimeExports.jsx(NewTab, { onNavigate: (url) => navigate(url, tab.id) }) : tab.url === DASHBOARD_URL$1 ? walletStatus === "locked" ? /* @__PURE__ */ jsxRuntimeExports.jsx(DashboardUnlockInline, { isDark }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Dashboard, { onOpenBrowser: () => navigate(NEW_TAB) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(WebView, { ref: (el) => {
-            webviewRefs.current[tab.id] = el;
-          }, src: tab.url, ...makeCallbacks(tab.id) })
-        },
-        tab.id
-      )) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: rightPanelOpen && showWeb3Scores && /* @__PURE__ */ jsxRuntimeExports.jsx(
-        motion.div,
-        {
-          initial: { width: 0, opacity: 0 },
-          animate: { width: 260, opacity: 1 },
-          exit: { width: 0, opacity: 0 },
-          transition: { duration: 0.18 },
-          className: `shrink-0 overflow-hidden border-l ${isDark ? "bg-[#111] border-white/[0.07]" : "bg-white border-black/[0.07]"}`,
-          children: /* @__PURE__ */ jsxRuntimeExports.jsx(Web3Panel, { score, tab: activeTab, isDark, onClose: () => setRightPanelOpen(false) })
-        }
-      ) })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: walletModal && /* @__PURE__ */ jsxRuntimeExports.jsx(WalletModal, { mode: walletModal, onClose: () => setWalletModal(null), onSuccess: () => setWalletModal(null) }) })
-  ] });
-}
-function BurgerMenu({ isDark, isDarkMode, zoom, onNewTab, onDashboard, onWallet, onTheme, onZoomIn, onZoomOut, onClose }) {
-  const bg = isDark ? "#1e1e1e" : "#ffffff";
-  const brd = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.09)";
-  const txt = isDark ? "rgba(255,255,255,0.82)" : "rgba(0,0,0,0.82)";
-  const short = isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)";
-  const hov = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.05)";
-  const ico = { color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)", width: 18, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 };
-  const row = { display: "flex", alignItems: "center", gap: 12, width: "100%", padding: "9px 16px", background: "none", border: "none", cursor: "pointer", textAlign: "left", color: txt, fontSize: 13 };
-  const item = (icon, label, sc, fn, chev) => /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: fn, style: row, onMouseEnter: (e) => {
-    e.currentTarget.style.background = hov;
-  }, onMouseLeave: (e) => {
-    e.currentTarget.style.background = "none";
-  }, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: ico, children: icon }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { flex: 1 }, children: label }),
-    sc && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 11, color: short }, children: sc }),
-    chev && /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: "13", height: "13", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", style: { color: short }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M9 18l6-6-6-6" }) })
-  ] }, label);
-  const div = () => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: 1, background: brd, margin: "4px 0" } });
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    motion.div,
-    {
-      initial: { opacity: 0, y: -8, scale: 0.97 },
-      animate: { opacity: 1, y: 0, scale: 1 },
-      exit: { opacity: 0, y: -6, scale: 0.97 },
-      transition: { duration: 0.15 },
-      style: { position: "absolute", top: 40, right: 0, width: 320, zIndex: 200, background: bg, borderRadius: 14, border: `1px solid ${brd}`, boxShadow: "0 12px 40px rgba(0,0,0,0.25)", overflow: "hidden", paddingBottom: 4 },
-      children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { paddingTop: 4 }, children: [
-          item(/* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 16 }), "New Tab", "⌘T", onNewTab),
-          item(/* @__PURE__ */ jsxRuntimeExports.jsx(Square, { size: 15 }), "New Window", "⌘N", () => onClose()),
-          item(/* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 14 }), "New Private Window", "⇧⌘N", () => onClose())
         ] }),
-        div(),
-        item(/* @__PURE__ */ jsxRuntimeExports.jsx(LayoutGrid, { size: 15 }), "Dashboard", "", onDashboard),
-        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Wallet$1, { size: 15 }), "Orivon Wallet", "", onWallet),
-        item(isDarkMode ? /* @__PURE__ */ jsxRuntimeExports.jsx(Sun, { size: 15 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Moon, { size: 15 }), isDarkMode ? "Light mode" : "Dark mode", "", onTheme),
-        div(),
-        item(/* @__PURE__ */ jsxRuntimeExports.jsx(History, { size: 15 }), "History", "⌘Y", () => onClose(), true),
-        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Bookmark, { size: 15 }), "Bookmarks", "", () => onClose(), true),
-        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Download, { size: 15 }), "Downloads", "⌥⌘L", () => onClose()),
-        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 14 }), "Delete Browsing Data…", "⇧⌘⌫", () => onClose()),
-        div(),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", padding: "6px 16px", gap: 12 }, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ZoomIn, { size: 16, style: { color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)" } }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { flex: 1, fontSize: 13, color: txt }, children: "Zoom" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", border: `1px solid ${brd}`, borderRadius: 8, overflow: "hidden" }, children: [{ icon: /* @__PURE__ */ jsxRuntimeExports.jsx(ZoomOut, { size: 13 }), fn: onZoomOut }, { icon: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { style: { fontSize: 12, padding: "0 10px", minWidth: 52, textAlign: "center" }, children: [
-            zoom,
-            "%"
-          ] }), fn: () => {
-          } }, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(ZoomIn, { size: 13 }), fn: onZoomIn }, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Maximize2, { size: 12 }), fn: () => {
-          } }].map((b2, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: b2.fn, style: { padding: "6px 8px", background: "none", border: "none", cursor: "pointer", color: txt, display: "flex", alignItems: "center", justifyContent: "center", borderLeft: i > 0 ? `1px solid ${brd}` : "none" }, onMouseEnter: (e) => {
-            e.currentTarget.style.background = hov;
-          }, onMouseLeave: (e) => {
-            e.currentTarget.style.background = "none";
-          }, children: b2.icon }, i)) })
-        ] }),
-        div(),
-        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Printer, { size: 15 }), "Print…", "⌘P", () => onClose()),
-        item(/* @__PURE__ */ jsxRuntimeExports.jsx(FileSearch, { size: 15 }), "Find in page", "⌘F", () => onClose()),
-        div(),
-        item(/* @__PURE__ */ jsxRuntimeExports.jsx(CircleQuestionMark, { size: 15 }), "Help", "", () => onClose(), true),
-        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { size: 15 }), "Settings", "⌘,", () => onClose())
+        /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: walletModal && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          WalletModal,
+          {
+            mode: walletModal,
+            onClose: () => setWalletModal(null),
+            onSuccess: () => setWalletModal(null)
+          }
+        ) })
       ]
     }
   );
 }
-function NavBtn({ children, onClick, disabled, isDark, title }) {
+function NavBtn({
+  children,
+  onClick,
+  disabled,
+  isDark,
+  title
+}) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "button",
     {
       onClick,
       disabled,
       title,
-      className: `no-drag w-6 h-6 rounded flex items-center justify-center transition-all focus:outline-none ${isDark ? "text-white/55 hover:text-white/85 hover:bg-white/[0.07]" : "text-black/55 hover:text-black/80 hover:bg-black/[0.06]"} disabled:opacity-25 disabled:cursor-not-allowed`,
-      children
+      className: "no-drag focus:outline-none flex items-center justify-center rounded transition-colors duration-100 disabled:opacity-25 disabled:cursor-not-allowed",
+      style: { width: 28, height: 28 },
+      onMouseEnter: (e) => {
+        if (!e.currentTarget.disabled) {
+          e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)";
+          e.currentTarget.style.color = isDark ? "rgba(255,255,255,0.80)" : "rgba(0,0,0,0.75)";
+        }
+      },
+      onMouseLeave: (e) => {
+        e.currentTarget.style.background = "transparent";
+        e.currentTarget.style.color = isDark ? "rgba(255,255,255,0.38)" : "rgba(0,0,0,0.38)";
+      },
+      onMouseDown: (e) => {
+        if (!e.currentTarget.disabled)
+          e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.11)" : "rgba(0,0,0,0.09)";
+      },
+      onMouseUp: (e) => {
+        e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)";
+      },
+      children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: isDark ? "rgba(255,255,255,0.38)" : "rgba(0,0,0,0.38)", display: "flex", alignItems: "center" }, children })
     }
   );
 }
-function Web3Panel({ score, tab, isDark, onClose }) {
-  const muted = isDark ? "text-white/35" : "text-black/35";
-  const scores = [{ label: "Trust", value: score ?? 0, color: "#00FF87" }, { label: "Security", value: score ? Math.round(score * 0.97) : 0, color: "#00D1FF" }, { label: "Privacy", value: 96, color: "#a78bfa" }];
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 h-full overflow-y-auto", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-4", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `text-[10px] font-semibold uppercase tracking-widest ${muted}`, children: "Web3 Score" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: onClose, className: `w-6 h-6 rounded flex items-center justify-center ${isDark ? "hover:bg-white/8 text-white/35" : "hover:bg-black/6 text-black/35"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 12 }) })
+function BurgerMenu({ isDark, isDarkMode, zoom, onNewTab, onDashboard, onWallet, onTheme, onZoomIn, onZoomOut, onClose }) {
+  const bg = isDark ? "#1c1c1f" : "#ffffff";
+  const brd = isDark ? "rgba(255,255,255,0.09)" : "rgba(0,0,0,0.09)";
+  const txt = isDark ? "rgba(255,255,255,0.82)" : "rgba(0,0,0,0.82)";
+  const muted = isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)";
+  const hov = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.05)";
+  const ico = { color: isDark ? "rgba(255,255,255,0.50)" : "rgba(0,0,0,0.45)", width: 18, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 };
+  const row = { display: "flex", alignItems: "center", gap: 11, width: "100%", padding: "8px 14px", background: "none", border: "none", cursor: "pointer", textAlign: "left", color: txt, fontSize: 12.5 };
+  const item = (icon, label, sc, fn, chev) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "button",
+    {
+      onClick: fn,
+      style: row,
+      onMouseEnter: (e) => {
+        e.currentTarget.style.background = hov;
+      },
+      onMouseLeave: (e) => {
+        e.currentTarget.style.background = "none";
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: ico, children: icon }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { flex: 1 }, children: label }),
+        sc && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 11, color: muted }, children: sc }),
+        chev && /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", style: { color: muted }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M9 18l6-6-6-6" }) })
+      ]
+    },
+    label
+  );
+  const div = () => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: 1, background: brd, margin: "3px 0" } });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    motion.div,
+    {
+      initial: { opacity: 0, y: -6, scale: 0.97 },
+      animate: { opacity: 1, y: 0, scale: 1 },
+      exit: { opacity: 0, y: -4, scale: 0.97 },
+      transition: { duration: 0.13 },
+      style: {
+        position: "absolute",
+        top: 38,
+        right: 0,
+        width: 310,
+        zIndex: 200,
+        background: bg,
+        borderRadius: 12,
+        border: `1px solid ${brd}`,
+        boxShadow: isDark ? "0 12px 48px rgba(0,0,0,0.55)" : "0 8px 32px rgba(0,0,0,0.18)",
+        overflow: "hidden",
+        paddingBottom: 4
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { paddingTop: 4 }, children: [
+          item(/* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 15 }), "New Tab", "⌘T", onNewTab),
+          item(/* @__PURE__ */ jsxRuntimeExports.jsx(Square, { size: 14 }), "New Window", "⌘N", () => onClose()),
+          item(/* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 13 }), "New Private Window", "⇧⌘N", () => onClose())
+        ] }),
+        div(),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(LayoutGrid, { size: 14 }), "Dashboard", "", onDashboard),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Wallet$1, { size: 14 }), "Orivon Wallet", "", onWallet),
+        item(isDarkMode ? /* @__PURE__ */ jsxRuntimeExports.jsx(Sun, { size: 14 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Moon, { size: 14 }), isDarkMode ? "Light mode" : "Dark mode", "", onTheme),
+        div(),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(History, { size: 14 }), "History", "⌘Y", () => onClose(), true),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Bookmark, { size: 14 }), "Bookmarks", "", () => onClose(), true),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Download, { size: 14 }), "Downloads", "⌥⌘L", () => onClose()),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 13 }), "Delete Browsing Data…", "⇧⌘⌫", () => onClose()),
+        div(),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", padding: "5px 14px", gap: 11 }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: ico, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ZoomIn, { size: 15 }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { flex: 1, fontSize: 12.5, color: txt }, children: "Zoom" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", border: `1px solid ${brd}`, borderRadius: 7, overflow: "hidden" }, children: [
+            { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(ZoomOut, { size: 12 }), fn: onZoomOut },
+            { icon: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { style: { fontSize: 11, padding: "0 8px", minWidth: 46, textAlign: "center" }, children: [
+              zoom,
+              "%"
+            ] }), fn: () => {
+            } },
+            { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(ZoomIn, { size: 12 }), fn: onZoomIn },
+            { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Maximize2, { size: 11 }), fn: () => {
+            } }
+          ].map((b2, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: b2.fn,
+              style: { padding: "5px 7px", background: "none", border: "none", cursor: "pointer", color: txt, display: "flex", alignItems: "center", justifyContent: "center", borderLeft: i > 0 ? `1px solid ${brd}` : "none" },
+              onMouseEnter: (e) => {
+                e.currentTarget.style.background = hov;
+              },
+              onMouseLeave: (e) => {
+                e.currentTarget.style.background = "none";
+              },
+              children: b2.icon
+            },
+            i
+          )) })
+        ] }),
+        div(),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Printer, { size: 14 }), "Print…", "⌘P", () => onClose()),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(FileSearch, { size: 14 }), "Find in page", "⌘F", () => onClose()),
+        div(),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(CircleQuestionMark, { size: 14 }), "Help", "", () => onClose(), true),
+        item(/* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { size: 14 }), "Settings", "⌘,", () => onClose())
+      ]
+    }
+  );
+}
+function Web3Panel({
+  score,
+  tab,
+  isDark,
+  onClose
+}) {
+  const muted = isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)";
+  const scores = [
+    { label: "Trust", value: score ?? 0, color: "#00c76a" },
+    { label: "Security", value: score ? Math.round(score * 0.97) : 0, color: "#00D1FF" },
+    { label: "Privacy", value: 96, color: "#a78bfa" }
+  ];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { padding: 16, height: "100%", overflowY: "auto" }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: muted }, children: "Web3 Score" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          onClick: onClose,
+          style: { width: 22, height: 22, border: "none", background: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 5, color: muted },
+          onMouseEnter: (e) => {
+            e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)";
+          },
+          onMouseLeave: (e) => {
+            e.currentTarget.style.background = "none";
+          },
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 12 })
+        }
+      )
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-3.5", children: scores.map((s) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between text-[11px]", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: muted, children: s.label }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-semibold", style: { color: s.color }, children: s.value })
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", flexDirection: "column", gap: 14 }, children: scores.map((s) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", justifyContent: "space-between", marginBottom: 6, fontSize: 11 }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: muted }, children: s.label }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontWeight: 600, color: s.color }, children: s.value })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `h-1 rounded-full overflow-hidden ${isDark ? "bg-white/[0.06]" : "bg-black/[0.06]"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-full rounded-full", style: { width: `${s.value}%`, backgroundColor: s.color } }) })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: 4, borderRadius: 2, background: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)", overflow: "hidden" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { height: "100%", borderRadius: 2, width: `${s.value}%`, background: s.color } }) })
     ] }, s.label)) })
+  ] });
+}
+function WalletSetupPage({ isDark, onOpenModal }) {
+  const bg = isDark ? "#0f0f0f" : "#F0F2F9";
+  const cardBg = isDark ? "rgba(255,255,255,0.04)" : "#ffffff";
+  const cardBd = isDark ? "rgba(255,255,255,0.09)" : "#E5E7EB";
+  const title = isDark ? "#ffffff" : "#111827";
+  const sub = isDark ? "rgba(255,255,255,0.55)" : "#6B7280";
+  const hd = isDark ? "rgba(255,255,255,0.85)" : "#111827";
+  const hd2 = isDark ? "rgba(255,255,255,0.55)" : "#6B7280";
+  const card = (accent, accBg, icon, head, desc, extra, onClick) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      onClick,
+      style: { background: cardBg, borderRadius: 18, padding: "28px 28px 24px", cursor: "pointer", border: `1.5px solid ${cardBd}`, boxShadow: isDark ? "none" : "0 1px 6px rgba(0,0,0,0.06)", transition: "border-color 0.15s, box-shadow 0.15s", flex: 1 },
+      onMouseEnter: (e) => {
+        e.currentTarget.style.borderColor = "#4F46E5";
+        e.currentTarget.style.boxShadow = "0 4px 20px rgba(79,70,229,0.12)";
+      },
+      onMouseLeave: (e) => {
+        e.currentTarget.style.borderColor = cardBd;
+        e.currentTarget.style.boxShadow = isDark ? "none" : "0 1px 6px rgba(0,0,0,0.06)";
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 46, height: 46, borderRadius: 13, background: accBg, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16, fontSize: 22, color: accent, fontWeight: 700 }, children: icon }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { style: { fontSize: 17, fontWeight: 700, color: hd, margin: "0 0 8px" }, children: head }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 13, color: hd2, margin: extra ? "0 0 14px" : "0", lineHeight: 1.55 }, children: desc }),
+        extra
+      ]
+    }
+  );
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { height: "100%", background: bg, display: "flex", flexDirection: "column", padding: "28px 48px 40px", fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif", overflowY: "auto" }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 36 }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: "/logo.png", alt: "Orivon", style: { width: 22, height: 22, borderRadius: 6, objectFit: "contain" }, onError: (e) => {
+        e.target.style.display = "none";
+      } }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 15, fontWeight: 700, color: hd }, children: "Orivon Wallet" })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { style: { fontSize: 36, fontWeight: 800, color: title, margin: "0 0 14px", lineHeight: 1.12, letterSpacing: "-0.5px" }, children: [
+      "Browser-native.",
+      /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+      "Self-custody.",
+      /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+      "And multi-chain."
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 15, color: sub, margin: "0 0 36px", maxWidth: 560, lineHeight: 1.65 }, children: "Take control of your crypto and NFTs. Orivon Wallet supports Ethereum, EVM chains, Solana, Filecoin, Bitcoin, and more." }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 20, marginBottom: 48 }, children: [
+      card(
+        "#4F46E5",
+        isDark ? "rgba(79,70,229,0.15)" : "#EEF2FF",
+        "+",
+        "Need a new wallet?",
+        "Get started with Orivon Wallet in minutes.",
+        null,
+        () => onOpenModal("create")
+      ),
+      card(
+        "#0090FF",
+        isDark ? "rgba(0,144,255,0.12)" : "#E0F2FF",
+        "↓",
+        "Already have a wallet?",
+        "Import using your existing seed phrase.",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { display: "flex", gap: 8, flexWrap: "wrap" }, children: ["🦁", "🟣", "🦊", "🔵", "🔒", "🔳"].map((ic, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontSize: 18 }, children: ic }, i)) }),
+        () => onOpenModal("import")
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { style: { fontSize: 11, color: isDark ? "rgba(255,255,255,0.25)" : "#9CA3AF", marginTop: "auto" }, children: "©2025 Orivon. All rights reserved. Orivon Wallet is not affiliated with Brave Software." })
   ] });
 }
 function clearSession() {
