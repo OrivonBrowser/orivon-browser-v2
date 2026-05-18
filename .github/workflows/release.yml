@@ -1,13 +1,19 @@
-name: Release
+name: Build & Release
 
+# Runs when you push a version tag:  git tag v0.94.2 && git push --tags
 on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch:
+  workflow_dispatch:   # allows manual trigger from GitHub Actions UI
+
+# Give every job permission to create releases and upload assets
+permissions:
+  contents: write
 
 jobs:
-  # ── macOS (x64 + arm64 DMG + ZIP) ─────────────────────────────────────────────
+
+  # ── macOS (x64 + arm64  →  DMG + ZIP + latest-mac.yml) ───────────────────────
   build-mac:
     runs-on: macos-latest
     steps:
@@ -23,14 +29,10 @@ jobs:
 
       - name: Build + package macOS
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Code signing: add CSC_LINK / CSC_KEY_PASSWORD secrets to enable
-          # CSC_LINK: ${{ secrets.MAC_CERTIFICATE }}
-          # CSC_KEY_PASSWORD: ${{ secrets.MAC_CERTIFICATE_PASSWORD }}
-          # APPLE_ID: ${{ secrets.APPLE_ID }}
-          # APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: npm run build:mac
 
+      # ⚠️  latest-mac.yml MUST be included — it's what electron-updater reads
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -38,8 +40,9 @@ jobs:
           path: |
             release/*.dmg
             release/*-mac.zip
+            release/latest-mac.yml
 
-  # ── Windows (NSIS .exe installer) ────────────────────────────────────────────
+  # ── Windows (x64  →  NSIS .exe + latest.yml) ─────────────────────────────────
   build-win:
     runs-on: windows-latest
     steps:
@@ -53,18 +56,22 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Icons were pre-built on macOS and committed to build/ — script skips on Windows
       - name: Build + package Windows
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: npm run build:win
 
+      # ⚠️  latest.yml MUST be included — Windows auto-updater reads this file
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:
           name: orivon-win
-          path: release/*.exe
+          path: |
+            release/*.exe
+            release/latest.yml
 
-  # ── Linux (AppImage) ──────────────────────────────────────────────────────────
+  # ── Linux (x64  →  AppImage + latest-linux.yml) ──────────────────────────────
   build-linux:
     runs-on: ubuntu-latest
     steps:
@@ -78,26 +85,31 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Linux system deps (needed by electron-builder)
+        run: sudo apt-get update && sudo apt-get install -y rpm fakeroot dpkg
+
+      # Icons were pre-built on macOS and committed to build/ — script skips on Linux
       - name: Build + package Linux
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: npm run build:linux
 
+      # ⚠️  latest-linux.yml MUST be included — Linux auto-updater reads this file
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4
         with:
           name: orivon-linux
-          path: release/*.AppImage
+          path: |
+            release/*.AppImage
+            release/latest-linux.yml
 
-  # ── Publish to GitHub Release ─────────────────────────────────────────────────
+  # ── Publish to GitHub Releases (waits for all 3 builds) ──────────────────────
   publish:
     needs: [build-mac, build-win, build-linux]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
-    permissions:
-      contents: write
     steps:
-      - name: Download all artifacts
+      - name: Download all build artifacts
         uses: actions/download-artifact@v4
         with:
           merge-multiple: true
@@ -105,6 +117,8 @@ jobs:
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           draft: false
           prerelease: ${{ contains(github.ref_name, '-beta') || contains(github.ref_name, '-rc') }}
@@ -114,10 +128,12 @@ jobs:
 
             Download the installer for your platform below.
 
-            | Platform | File |
-            |----------|------|
+            | Platform | Download |
+            |----------|----------|
             | macOS (Apple Silicon) | `Orivon-*-arm64.dmg` |
-            | macOS (Intel)         | `Orivon-*.dmg`        |
-            | Windows               | `Orivon-*-Setup.exe`  |
-            | Linux                 | `Orivon-*.AppImage`   |
+            | macOS (Intel)         | `Orivon-*-x64.dmg` |
+            | Windows               | `Orivon-*-Setup.exe` |
+            | Linux                 | `Orivon-*.AppImage` |
+
+            The app will automatically check for future updates on startup.
           files: release/*
