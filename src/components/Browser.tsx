@@ -16,6 +16,7 @@ import Dashboard   from '../pages/Dashboard';
 import WalletModal from './modals/WalletModal';
 import IntroOverlay from './IntroOverlay';
 import logo from '@/assets/logo.png';
+import Spinner from './Spinner';
 
 import { useTabsStore, NEW_TAB } from '../store/tabs';
 import { useSettings }           from '../store/settings';
@@ -40,20 +41,39 @@ function web3Score(url: string) {
   return 60;
 }
 
-function getWeb3Color(url: string): string | null {
+function getWeb3Color(url: string, type?: string): string | null {
   if (!url || url === NEW_TAB || url.startsWith(DASHBOARD_URL)) return null;
-  try {
-    const parsed = new URL(url);
-    const host = parsed.hostname.toLowerCase();
-    if (host.endsWith('.eth')) return '#00c76a'; // Green
-    if (host.endsWith('.com')) return '#f87171'; // Red
-    return '#9CA3AF'; // Gray
-  } catch (e) {
-    // Fallback for non-standard URLs or partial inputs
-    if (url.endsWith('.eth')) return '#00c76a';
-    if (url.includes('.com')) return '#f87171';
-    return '#9CA3AF';
+
+  // .onion domain: purple dot
+  if (url.includes('.onion')) return '#a855f7';
+
+  // .eth domain resolving to IPFS: deep green dot
+  if (url.endsWith('.eth') && type === 'ens') return '#059669';
+
+  // .eth domain resolving to HTTP: amber dot
+  if (url.endsWith('.eth') && type !== 'ens') return '#f59e0b';
+
+  // Regular .com .net .org over HTTPS: red dot
+  if (url.startsWith('https://')) {
+    try {
+      const parsed = new URL(url);
+      const host = parsed.hostname.toLowerCase();
+      if (host.endsWith('.com') || host.endsWith('.net') || host.endsWith('.org')) {
+        return '#ef4444';
+      }
+    } catch(e) {}
   }
+
+  // Unknown or new page loading: gray dot
+  return '#9CA3AF';
+}
+
+function getWeb3ScoreInfo(url: string, type?: string) {
+  if (url.includes('.onion')) return { name: 'Private', color: '#a855f7', desc: 'Fully private and trustless connection via Tor.' };
+  if (url.endsWith('.eth') && type === 'ens') return { name: 'Trustless', color: '#059669', desc: 'Decentralized .eth domain resolving directly via IPFS.' };
+  if (url.endsWith('.eth')) return { name: 'Partial', color: '#f59e0b', desc: 'Decentralized .eth domain but resolving via a centralized HTTP gateway.' };
+  if (url.startsWith('https://')) return { name: 'Centralized', color: '#ef4444', desc: 'Standard web domain resolving via traditional centralized DNS.' };
+  return { name: 'Unknown', color: '#9CA3AF', desc: 'The trust level of this page is unknown or still loading.' };
 }
 
 function DashboardUnlockInline({ isDark }: { isDark: boolean }) {
@@ -145,6 +165,7 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
 
   const [addrInput, setAddrInput]       = useState('');
   const [isEditing, setIsEditing]       = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
   const [walletOpen, setWalletOpen]     = useState(false);
   const [walletModal, setWalletModal]   = useState<null | 'create' | 'import' | 'unlock'>(null);
   const [showIntro, setShowIntro]       = useState(!hasSeenIntro);
@@ -164,6 +185,7 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
   const isMac      = window.electronAPI?.platform === 'darwin' || /Mac/.test(navigator.platform);
   const isElectron = !!window.electronAPI?.isElectron;
   const score      = activeTab?.url ? web3Score(activeTab.url) : null;
+  const [scorePanelOpen, setScorePanelOpen] = useState(false);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -199,10 +221,17 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
     const input = raw.trim();
     if (!input) return;
     setIsEditing(false);
+    setIsNavigating(true);
 
     if (input.startsWith('orivon://')) {
+      if (input === DASHBOARD_URL || input.startsWith(DASHBOARD_URL)) {
+        // Open dashboard in new tab always if not already on it or even if on it as per FIX 6
+        const newId = addTab(input);
+        setTimeout(() => setIsNavigating(false), 500);
+        return;
+      }
       navigateTab(tabId, input, input, 'https');
-      // isLoading stays false — handled in the store for all orivon:// URLs
+      setTimeout(() => setIsNavigating(false), 500);
       return;
     }
 
@@ -213,18 +242,39 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
       const r = await window.electronAPI.resolveURL(input);
       if (r.ok) { url = r.url; type = r.type as typeof type; }
     } else {
-      if (input.endsWith('.eth'))                                                { url = `https://${input}.limo`; type = 'ens'; }
-      else if (input.startsWith('ipfs://'))                                      { url = `https://ipfs.io/ipfs/${input.slice(7)}`; type = 'ipfs'; }
-      else if (input.startsWith('http://') || input.startsWith('https://'))     { url = input; type = input.startsWith('https') ? 'https' : 'http'; }
-      else if (input.includes('.') && !input.includes(' '))                     { url = `https://${input}`; type = 'https'; }
-      else                                                                       { url = `https://www.google.com/search?q=${encodeURIComponent(input)}`; type = 'search'; }
+      const isUrl = input.includes('.') && !input.includes(' ');
+      const hasProtocol = input.startsWith('http://') || input.startsWith('https://') || input.startsWith('ipfs://') || input.startsWith('ipns://');
+
+      if (input.endsWith('.eth')) {
+        url = `https://${input}.limo`; type = 'ens';
+      } else if (input.startsWith('ipfs://')) {
+        url = `https://ipfs.io/ipfs/${input.slice(7)}`; type = 'ipfs';
+      } else if (hasProtocol) {
+        url = input; type = input.startsWith('https') ? 'https' : 'http';
+      } else if (isUrl) {
+        url = `https://${input}`; type = 'https';
+      } else {
+        // Search Engine Integration (FIX 7)
+        const engine = useSettings.getState().searchEngine;
+        if (engine === 'web3compass') {
+          url = `https://www.web3compass.net/search?q=${encodeURIComponent(input)}`;
+        } else if (engine === 'duckduckgo') {
+          url = `https://duckduckgo.com/?q=${encodeURIComponent(input)}`;
+        } else if (engine === 'brave') {
+          url = `https://search.brave.com/search?q=${encodeURIComponent(input)}`;
+        } else {
+          url = `https://www.google.com/search?q=${encodeURIComponent(input)}`;
+        }
+        type = 'search';
+      }
     }
 
     navigateTab(tabId, url, input, type);
     setAddrInput(input);
     webviewRefs.current[tabId]?.loadURL(url);
     addLog(`→ ${url}`);
-  }, [activeTabId, navigateTab, addLog]);
+    setTimeout(() => setIsNavigating(false), 500);
+  }, [activeTabId, navigateTab, addTab, addLog]);
 
   const handleBack    = () => { const url = goBack(activeTabId);    if (url) webviewRefs.current[activeTabId]?.goBack(); };
   const handleForward = () => { const url = goForward(activeTabId); if (url) webviewRefs.current[activeTabId]?.goForward(); };
@@ -268,8 +318,9 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
   // Shared nav button style — matches Brave's compact 28×28 icon buttons
   const navBtnCls = `
     no-drag w-7 h-7 rounded flex items-center justify-center
-    transition-colors duration-100 focus:outline-none
+    transition-all duration-150 focus:outline-none
     disabled:opacity-25 disabled:cursor-not-allowed
+    active:scale-90
   `;
   const navBtnColors = isDark
     ? 'text-white/38 hover:text-white/80 hover:bg-white/[0.07] active:bg-white/[0.11]'
@@ -311,7 +362,7 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
       <div
         className="shrink-0 flex items-center"
         style={{
-          height: 36,
+          height: 40,
           background: toolbarBg,
           borderBottom: `1px solid ${toolbarBdr}`,
           padding: '0 6px',
@@ -434,41 +485,76 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
             </div>
 
             {/* Web3 Score Dot Indicator */}
-            {activeTab?.url && getWeb3Color(activeTab.url) && (
-              <div
-                className="absolute pointer-events-none"
+            {activeTab?.url && getWeb3Color(activeTab.url, activeTab.type) && (
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setScorePanelOpen(!scorePanelOpen); }}
+                className="absolute no-drag flex items-center justify-center"
                 style={{
-                  left: 26,
-                  width: 6,
-                  height: 6,
-                  borderRadius: '50%',
-                  background: getWeb3Color(activeTab.url)!,
-                  boxShadow: `0 0 4px ${getWeb3Color(activeTab.url)}88`,
+                  left: 20,
+                  width: 20,
+                  height: 20,
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  zIndex: 10,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}
-              />
+              >
+                <div
+                  className={activeTab?.isLoading ? "animate-pulse" : ""}
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: '50%',
+                    background: activeTab?.isLoading ? '#9CA3AF' : getWeb3Color(activeTab.url, activeTab.type)!,
+                    boxShadow: `0 0 6px ${activeTab?.isLoading ? '#9CA3AF' : getWeb3Color(activeTab.url, activeTab.type)}88`,
+                    transition: 'all 0.5s ease-in-out'
+                  }}
+                />
+              </button>
             )}
 
-            <input
-              ref={addrRef}
-              type="text"
-              value={isEditing ? addrInput : (activeTab ? resolveDisplay(activeTab.url) : '')}
-              onChange={e => setAddrInput(e.target.value)}
-              onFocus={() => {
-                setIsEditing(true);
-                setAddrInput(activeTab ? resolveDisplay(activeTab.url) : '');
-                setTimeout(() => addrRef.current?.select(), 20);
-              }}
-              onBlur={() => setIsEditing(false)}
-              placeholder="Search or enter address"
-              className="w-full h-full bg-transparent focus:outline-none"
-              style={{
-                padding: `0 32px 0 ${activeTab?.url && getWeb3Color(activeTab.url) ? 38 : 28}px`,
-                fontSize: 12.5,
-                fontWeight: 400,
-                color: isDark ? 'rgba(255,255,255,0.82)' : 'rgba(0,0,0,0.80)',
-                letterSpacing: '0.01em',
-              }}
-            />
+            <AnimatePresence>
+              {scorePanelOpen && activeTab?.url && (
+                <Web3ScoreDropdown
+                  info={getWeb3ScoreInfo(activeTab.url, activeTab.type)}
+                  onClose={() => setScorePanelOpen(false)}
+                  isDark={isDark}
+                />
+              )}
+            </AnimatePresence>
+
+            <div className="flex-1 relative h-full flex items-center">
+              <input
+                ref={addrRef}
+                type="text"
+                value={isEditing ? addrInput : (activeTab ? resolveDisplay(activeTab.url) : '')}
+                onChange={e => setAddrInput(e.target.value)}
+                onFocus={() => {
+                  setIsEditing(true);
+                  setAddrInput(activeTab ? resolveDisplay(activeTab.url) : '');
+                  setTimeout(() => addrRef.current?.select(), 20);
+                }}
+                onBlur={() => setIsEditing(false)}
+                placeholder="Search or enter address"
+                className="w-full h-full bg-transparent focus:outline-none"
+                style={{
+                  padding: `0 32px 0 ${activeTab?.url && getWeb3Color(activeTab.url, activeTab.type) ? 44 : 28}px`,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  color: isDark ? 'rgba(255,255,255,0.95)' : 'rgba(0,0,0,0.90)',
+                  letterSpacing: '0.01em',
+                }}
+              />
+              {isNavigating && (
+                <div className="absolute right-3">
+                  <Spinner size={14} color="#4f46e5" />
+                </div>
+              )}
+            </div>
 
             {/* ENS / IPFS badge — right of input */}
             {activeTab?.type === 'ens' && !isEditing && (
@@ -540,7 +626,7 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
 
           {/* Dashboard / profile */}
           <button
-            onClick={() => navigate(DASHBOARD_URL)}
+            onClick={() => navigate(DASHBOARD_URL + '?view=full')}
             title="Dashboard"
             className="no-drag flex items-center justify-center focus:outline-none transition-colors duration-100"
             style={{
@@ -584,7 +670,6 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
                   onZoomOut={() => setZoom(z => Math.max(z - 10, 25))}
                   onNewTab={() => { addTab(); setMenuOpen(false); }}
                   onDashboard={() => { navigate(DASHBOARD_URL + '?view=full'); setMenuOpen(false); }}
-                  onWallet={() => { setWalletOpen(true); setMenuOpen(false); }}
                   onTheme={() => { setTheme(isDark ? 'light' : 'dark'); setMenuOpen(false); }}
                   onClose={() => setMenuOpen(false)}
                 />
@@ -632,8 +717,8 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
       )}
 
       {/* ── CONTENT AREA ── */}
-      <div className="flex-1 relative overflow-hidden flex">
-        <div className="flex-1 relative">
+      <div className="flex-1 relative overflow-y-auto flex">
+        <div className="flex-1 relative min-h-full">
           {tabs.map(tab => (
             <div
               key={tab.url === NEW_TAB ? `${tab.id}-${newTabKeys[tab.id] ?? 0}` : tab.id}
@@ -643,14 +728,15 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
                 pointerEvents: tab.id === activeTabId ? 'auto' : 'none',
               }}
             >
-              {tab.url.startsWith(DASHBOARD_URL) || tab.url === NEW_TAB ? (
+              {tab.url === NEW_TAB ? (
+                <NewTab onNavigate={(url) => navigate(url, tab.id)} />
+              ) : tab.url.startsWith(DASHBOARD_URL) ? (
                 walletStatus === 'none'
                   ? <WalletSetupPage isDark={isDark} onOpenModal={mode => { setWalletModal(mode); }}/>
                   : walletStatus === 'locked'
                   ? <DashboardUnlockInline isDark={isDark} />
                   : <Dashboard
                       onOpenBrowser={(url) => navigate(url, tab.id)}
-                      isMinimal={!tab.url.includes('view=full')}
                     />
               ) : (
                 <WebView
@@ -699,7 +785,7 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
       </AnimatePresence>
 
       <AnimatePresence>
-        {showIntro && activeTab?.url === DASHBOARD_URL && (
+        {showIntro && activeTab?.url === NEW_TAB && (
           <IntroOverlay
             onClose={() => setShowIntro(false)}
             onCustomAccount={() => { setWalletModal('create'); setShowIntro(false); }}
@@ -755,11 +841,11 @@ function NavBtn({
 // ─── Burger menu ────────────────────────────────────────────────────────────
 interface BurgerMenuProps {
   isDark: boolean; isDarkMode: boolean; zoom: number;
-  onNewTab: () => void; onDashboard: () => void; onWallet: () => void;
+  onNewTab: () => void; onDashboard: () => void;
   onTheme: () => void; onZoomIn: () => void; onZoomOut: () => void; onClose: () => void;
 }
 
-function BurgerMenu({ isDark, isDarkMode, zoom, onNewTab, onDashboard, onWallet, onTheme, onZoomIn, onZoomOut, onClose }: BurgerMenuProps) {
+function BurgerMenu({ isDark, isDarkMode, zoom, onNewTab, onDashboard, onTheme, onZoomIn, onZoomOut, onClose }: BurgerMenuProps) {
   const bg    = isDark ? '#1c1c1f' : '#ffffff';
   const brd   = isDark ? 'rgba(255,255,255,0.09)' : 'rgba(0,0,0,0.09)';
   const txt   = isDark ? 'rgba(255,255,255,0.82)' : 'rgba(0,0,0,0.82)';
@@ -811,12 +897,14 @@ function BurgerMenu({ isDark, isDarkMode, zoom, onNewTab, onDashboard, onWallet,
       </div>
       {div()}
       {item(<LayoutGrid size={14}/>, 'Dashboard', '', onDashboard)}
-      {item(<Wallet size={14}/>, 'Orivon Wallet', '', onWallet)}
+      {item(<Settings size={14}/>, 'Settings', '⌘,', () => onClose())}
+      {item(<Globe size={14}/>, 'Extensions', '', () => onClose())}
+      {item(<History size={14}/>, 'History', '⌘Y', () => onClose())}
+      {item(<Bookmark size={14}/>, 'Bookmarks', '', () => onClose())}
+      {item(<Download size={14}/>, 'Downloads', '⌥⌘L', () => onClose())}
+      {div()}
       {item(isDarkMode ? <Sun size={14}/> : <Moon size={14}/>, isDarkMode ? 'Light mode' : 'Dark mode', '', onTheme)}
       {div()}
-      {item(<History size={14}/>, 'History', '⌘Y', () => onClose(), true)}
-      {item(<Bookmark size={14}/>, 'Bookmarks', '', () => onClose(), true)}
-      {item(<Download size={14}/>, 'Downloads', '⌥⌘L', () => onClose())}
       {item(<Trash2 size={13}/>, 'Delete Browsing Data…', '⇧⌘⌫', () => onClose())}
       {div()}
       {/* Zoom row */}
@@ -847,7 +935,47 @@ function BurgerMenu({ isDark, isDarkMode, zoom, onNewTab, onDashboard, onWallet,
       {item(<FileSearch size={14}/>, 'Find in page', '⌘F', () => onClose())}
       {div()}
       {item(<HelpCircle size={14}/>, 'Help', '', () => onClose(), true)}
-      {item(<Settings size={14}/>, 'Settings', '⌘,', () => onClose())}
+    </motion.div>
+  );
+}
+
+function Web3ScoreDropdown({ info, onClose, isDark }: {
+  info: { name: string, color: string, desc: string },
+  onClose: () => void,
+  isDark: boolean
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 10 }}
+      style={{
+        position: 'absolute',
+        top: 32,
+        left: 20,
+        width: 240,
+        background: isDark ? '#1c1c1f' : '#ffffff',
+        borderRadius: 12,
+        padding: 16,
+        boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+        border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+        zIndex: 100
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+        <div style={{ width: 8, height: 8, borderRadius: '50%', background: info.color }} />
+        <span style={{ fontWeight: 700, fontSize: 14, color: isDark ? '#fff' : '#111' }}>{info.name}</span>
+      </div>
+      <p style={{ fontSize: 12, color: isDark ? '#9ca3af' : '#4b5563', lineHeight: 1.5, marginBottom: 12 }}>
+        {info.desc}
+      </p>
+      <a
+        href="#"
+        onClick={(e) => { e.preventDefault(); }}
+        style={{ fontSize: 11, color: '#4f46e5', fontWeight: 600, textDecoration: 'none' }}
+      >
+        Learn more about Web3 Scores
+      </a>
     </motion.div>
   );
 }

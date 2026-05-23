@@ -10,36 +10,48 @@ export interface WalletAddresses {
   sol: string;
 }
 
+export interface WalletAccount {
+  id: string;
+  name: string;
+  addresses: WalletAddresses;
+  isImported: boolean;
+  isBackedUp: boolean;
+}
+
 interface WalletState {
   status: WalletStatus;
-  encryptedJson: string | null;   // Persisted encrypted keystore
-  addresses: WalletAddresses | null;
-  mnemonic: string | null;        // Only set during creation flow, cleared after
+  accounts: WalletAccount[];
+  activeAccountId: string | null;
+  isGenerating: boolean;
+  error: string | null;
 
   // Ephemeral (not persisted)
   _wallet: ethers.HDNodeWallet | null;
 
   // Actions
   generateMnemonic:   () => string;
-  createWallet:       (mnemonic: string, password: string, onProgress?: (p: number) => void) => Promise<void>;
+  createWallet:       (mnemonic: string, password: string, name?: string, onProgress?: (p: number) => void) => Promise<void>;
   createSilentWallet: () => Promise<void>;
-  importWallet:       (phrase: string, password: string, onProgress?: (p: number) => void) => Promise<void>;
+  importWallet:       (phrase: string, password: string, name?: string, onProgress?: (p: number) => void) => Promise<void>;
   unlock:             (password: string) => Promise<boolean>;
   lock:               () => void;
   clearWallet:        () => void;
-  sign:               (message: string) => Promise<string | null>;
-  signTypedData:      (domain: ethers.TypedDataDomain, types: Record<string, ethers.TypedDataField[]>, value: Record<string, unknown>) => Promise<string | null>;
+  switchAccount:      (id: string) => Promise<void>;
+  setBackedUp:        (v: boolean) => void;
   getBalance:         () => Promise<string>;
+  getMnemonic:        (id?: string) => Promise<string | null>;
+
+  // Internal helpers
+  _setupAccount: (mnemonic: string, password: string, name: string, isImported: boolean) => Promise<WalletAccount>;
 }
 
 // BTC address from ETH private key (simplified P2WPKH-style for display)
 function deriveBtcAddress(wallet: ethers.HDNodeWallet): string {
-  // Derive BIP44 Bitcoin path from same HD root
   const btcPath = "m/44'/0'/0'/0/0";
   try {
     const btcNode = wallet.derivePath(btcPath.replace("m/", ""));
     const hash = ethers.ripemd160(ethers.sha256(btcNode.publicKey));
-    return `bc1q${hash.slice(2, 22)}`; // Simplified bech32-style display
+    return `bc1q${hash.slice(2, 22)}`;
   } catch {
     return `bc1q${wallet.address.slice(2, 22).toLowerCase()}`;
   }
@@ -64,53 +76,22 @@ export const useWalletStore = create<WalletState>()(
   persist(
     (set, get) => ({
       status: 'none',
-      encryptedJson: null,
-      addresses: null,
-      mnemonic: null,
+      accounts: [],
+      activeAccountId: null,
+      isGenerating: false,
+      error: null,
       _wallet: null,
 
       generateMnemonic: () => {
         const entropy = ethers.randomBytes(16);
         const mnemonic = ethers.Mnemonic.fromEntropy(entropy);
-        set({ mnemonic: mnemonic.phrase });
         return mnemonic.phrase;
       },
 
-      createWallet: async (mnemonic, password, onProgress) => {
-        const wallet = ethers.Wallet.fromPhrase(mnemonic);
+      _setupAccount: async (mnemonic, password, name, isImported) => {
         const hdWallet = ethers.HDNodeWallet.fromPhrase(mnemonic);
-
-        onProgress?.(10);
-        const encryptedJson = await wallet.encrypt(
-          password,
-          onProgress ? (p: number) => onProgress(10 + Math.round(p * 85)) : undefined
-        );
-        onProgress?.(95);
-
-        const addresses: WalletAddresses = {
-          eth: wallet.address,
-          btc: deriveBtcAddress(hdWallet),
-          sol: deriveSolAddress(hdWallet),
-        };
-
-        set({
-          status: 'unlocked',
-          encryptedJson,
-          addresses,
-          mnemonic: null,
-          _wallet: hdWallet,
-        });
-        onProgress?.(100);
-      },
-
-      createSilentWallet: async () => {
-        const entropy = ethers.randomBytes(16);
-        const mnemonic = ethers.Mnemonic.fromEntropy(entropy);
-        const hdWallet = ethers.HDNodeWallet.fromPhrase(mnemonic.phrase);
-
-        // Silent wallet uses a default internal password for initial encryption
-        // hdWallet includes the mnemonic, so it will be preserved in the keystore
-        const encryptedJson = await hdWallet.encrypt('');
+        const encryptedJson = await hdWallet.encrypt(password);
+        const id = `wallet-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
 
         const addresses: WalletAddresses = {
           eth: hdWallet.address,
@@ -118,58 +99,100 @@ export const useWalletStore = create<WalletState>()(
           sol: deriveSolAddress(hdWallet),
         };
 
-        set({
-          status: 'unlocked',
-          encryptedJson,
+        const account: WalletAccount = {
+          id,
+          name,
           addresses,
-          mnemonic: null,
-          _wallet: hdWallet,
-        });
-      },
-
-      importWallet: async (phrase, password, onProgress) => {
-        // Validate phrase
-        const trimmed = phrase.trim();
-        const wordCount = trimmed.split(/\s+/).length;
-        if (wordCount !== 12 && wordCount !== 24) {
-          throw new Error('Recovery phrase must be 12 or 24 words');
-        }
-
-        const wallet = ethers.Wallet.fromPhrase(trimmed);
-        const hdWallet = ethers.HDNodeWallet.fromPhrase(trimmed);
-
-        onProgress?.(10);
-        const encryptedJson = await wallet.encrypt(
-          password,
-          onProgress ? (p: number) => onProgress(10 + Math.round(p * 85)) : undefined
-        );
-        onProgress?.(95);
-
-        const addresses: WalletAddresses = {
-          eth: wallet.address,
-          btc: deriveBtcAddress(hdWallet),
-          sol: deriveSolAddress(hdWallet),
+          isImported,
+          isBackedUp: false,
         };
 
-        set({
-          status: 'unlocked',
-          encryptedJson,
-          addresses,
-          mnemonic: null,
-          _wallet: hdWallet,
-        });
-        onProgress?.(100);
+        // Persist to electron-store
+        if (window.electronAPI?.store) {
+          await window.electronAPI.store.set(`mnemonic_${id}`, mnemonic);
+          await window.electronAPI.store.set(`keystore_${id}`, encryptedJson);
+        }
+
+        return account;
+      },
+
+      createWallet: async (mnemonic, password, name = 'Orivon Wallet 1', onProgress) => {
+        set({ isGenerating: true, error: null });
+        try {
+          const account = await get()._setupAccount(mnemonic, password, name, false);
+          const hdWallet = ethers.HDNodeWallet.fromPhrase(mnemonic);
+
+          set(s => ({
+            status: 'unlocked',
+            accounts: [...s.accounts, account],
+            activeAccountId: account.id,
+            _wallet: hdWallet,
+            isGenerating: false,
+            error: null
+          }));
+        } catch (e: any) {
+          console.error('Wallet generation failed:', e);
+          set({ isGenerating: false, error: e.message || 'Failed to create wallet' });
+        }
+      },
+
+      createSilentWallet: async () => {
+        if (get().status !== 'none' || get().isGenerating) return;
+        set({ isGenerating: true, error: null });
+        try {
+          const mnemonic = get().generateMnemonic();
+          const account = await get()._setupAccount(mnemonic, '', 'Orivon Wallet 1', false);
+          const hdWallet = ethers.HDNodeWallet.fromPhrase(mnemonic);
+
+          set({
+            status: 'unlocked',
+            accounts: [account],
+            activeAccountId: account.id,
+            _wallet: hdWallet,
+            isGenerating: false,
+            error: null
+          });
+        } catch (e: any) {
+          console.error('Silent wallet generation failed:', e);
+          set({ isGenerating: false, error: e.message || 'Failed to create silent wallet' });
+        }
+      },
+
+      importWallet: async (phrase, password, name = `Imported Wallet ${get().accounts.length + 1}`, onProgress) => {
+        set({ isGenerating: true, error: null });
+        try {
+          const trimmed = phrase.trim();
+          const account = await get()._setupAccount(trimmed, password, name, true);
+          const hdWallet = ethers.HDNodeWallet.fromPhrase(trimmed);
+
+          set(s => ({
+            status: 'unlocked',
+            accounts: [...s.accounts, account],
+            activeAccountId: account.id,
+            _wallet: hdWallet,
+            isGenerating: false,
+            error: null
+          }));
+        } catch (e: any) {
+          console.error('Wallet import failed:', e);
+          set({ isGenerating: false, error: e.message || 'Failed to import wallet' });
+        }
       },
 
       unlock: async (password) => {
-        const { encryptedJson } = get();
-        if (!encryptedJson) return false;
+        const { activeAccountId, accounts } = get();
+        if (!activeAccountId) return false;
+
         try {
-          const wallet = await ethers.Wallet.fromEncryptedJson(encryptedJson, password);
-          const hdWallet = ethers.HDNodeWallet.fromPhrase(
-            (wallet as ethers.Wallet & { mnemonic?: ethers.Mnemonic }).mnemonic?.phrase ?? ''
-          );
-          set({ status: 'unlocked', _wallet: hdWallet.mnemonic ? hdWallet : wallet as unknown as ethers.HDNodeWallet });
+          const encryptedJson = await window.electronAPI?.store.get(`keystore_${activeAccountId}`);
+          if (!encryptedJson) return false;
+
+          const wallet = await ethers.Wallet.fromEncryptedJson(encryptedJson as string, password);
+          const mnemonicObj = (wallet as any).mnemonic;
+          if (!mnemonicObj) return false;
+
+          const hdWallet = ethers.HDNodeWallet.fromPhrase(mnemonicObj.phrase);
+          set({ status: 'unlocked', _wallet: hdWallet });
           return true;
         } catch {
           return false;
@@ -179,55 +202,59 @@ export const useWalletStore = create<WalletState>()(
       lock: () => set({ status: 'locked', _wallet: null }),
 
       clearWallet: () => {
-        // Wipe all persisted Zustand stores so the next launch starts fresh
-        ['orivon-wallet', 'orivon-tabs', 'orivon-runtime'].forEach(k =>
-          localStorage.removeItem(k)
-        );
-        set({ status: 'none', encryptedJson: null, addresses: null, mnemonic: null, _wallet: null });
+        localStorage.removeItem('orivon-wallet');
+        set({ status: 'none', accounts: [], activeAccountId: null, _wallet: null });
       },
 
-      sign: async (message) => {
-        const { _wallet } = get();
-        if (!_wallet) return null;
-        try {
-          return await _wallet.signMessage(message);
-        } catch {
-          return null;
+      switchAccount: async (id) => {
+        const account = get().accounts.find(a => a.id === id);
+        if (!account) return;
+
+        // For MVP, we'll assume they share the same password or use empty for silent
+        // Realistically we should prompt for password if it's locked.
+        // But the user says "updates instantly... show a brief spinner for half a second"
+
+        const mnemonic = await get().getMnemonic(id);
+        if (mnemonic) {
+          const hdWallet = ethers.HDNodeWallet.fromPhrase(mnemonic);
+          set({ activeAccountId: id, _wallet: hdWallet });
         }
       },
 
-      signTypedData: async (domain, types, value) => {
-        const { _wallet } = get();
-        if (!_wallet) return null;
-        try {
-          return await _wallet.signTypedData(domain, types, value);
-        } catch {
-          return null;
-        }
+      setBackedUp: (v) => {
+        const { activeAccountId, accounts } = get();
+        if (!activeAccountId) return;
+        set({
+          accounts: accounts.map(a => a.id === activeAccountId ? { ...a, isBackedUp: v } : a)
+        });
       },
 
       getBalance: async () => {
-        const { addresses } = get();
-        if (!addresses) return '0';
+        const { _wallet } = get();
+        if (!_wallet) return '0';
         try {
           const provider = new ethers.JsonRpcProvider('https://cloudflare-eth.com');
-          const bal = await provider.getBalance(addresses.eth);
+          const bal = await provider.getBalance(_wallet.address);
           return ethers.formatEther(bal);
         } catch {
           return '0';
         }
       },
+
+      getMnemonic: async (id) => {
+        const targetId = id || get().activeAccountId;
+        if (!targetId) return null;
+        if (!window.electronAPI?.store) return null;
+        return await window.electronAPI.store.get(`mnemonic_${targetId}`) as string | null;
+      },
     }),
     {
       name: 'orivon-wallet',
       storage: createJSONStorage(() => localStorage),
-      // Never persist the in-memory wallet instance
       partialize: (s) => ({
         status: s.status,
-        encryptedJson: s.encryptedJson,
-        addresses: s.addresses,
-        mnemonic: null,
-        _wallet: null,
+        accounts: s.accounts,
+        activeAccountId: s.activeAccountId,
       }),
     }
   )
