@@ -15,6 +15,7 @@ interface WalletState {
   encryptedJson: string | null;   // Persisted encrypted keystore
   addresses: WalletAddresses | null;
   mnemonic: string | null;        // Only set during creation flow, cleared after
+  isBackedUp: boolean;
 
   // Ephemeral (not persisted)
   _wallet: ethers.HDNodeWallet | null;
@@ -30,6 +31,7 @@ interface WalletState {
   sign:               (message: string) => Promise<string | null>;
   signTypedData:      (domain: ethers.TypedDataDomain, types: Record<string, ethers.TypedDataField[]>, value: Record<string, unknown>) => Promise<string | null>;
   getBalance:         () => Promise<string>;
+  setBackedUp:        (v: boolean) => void;
 }
 
 // BTC address from ETH private key (simplified P2WPKH-style for display)
@@ -67,6 +69,7 @@ export const useWalletStore = create<WalletState>()(
       encryptedJson: null,
       addresses: null,
       mnemonic: null,
+      isBackedUp: false,
       _wallet: null,
 
       generateMnemonic: () => {
@@ -217,6 +220,7 @@ export const useWalletStore = create<WalletState>()(
           return '0';
         }
       },
+      setBackedUp: (v) => set({ isBackedUp: v }),
     }),
     {
       name: 'orivon-wallet',
@@ -226,6 +230,7 @@ export const useWalletStore = create<WalletState>()(
         status: s.status,
         encryptedJson: s.encryptedJson,
         addresses: s.addresses,
+        isBackedUp: s.isBackedUp,
         mnemonic: null,
         _wallet: null,
       }),
