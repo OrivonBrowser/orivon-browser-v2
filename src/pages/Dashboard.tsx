@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { useWalletStore } from '../store/wallet';
 
-type Section = 'portfolio' | 'accounts' | 'explore' | 'buy' | 'send' | 'swap' | 'bridge' | 'deposit';
+type Section = 'dashboard' | 'accounts' | 'explore' | 'buy' | 'send' | 'swap' | 'bridge' | 'deposit';
 type PortfolioTab = 'assets' | 'dapps' | 'nfts' | 'activity';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -319,7 +319,7 @@ function DAppCard({ dapp, onOpenBrowser }: { dapp: typeof DAPPS[0]; onOpenBrowse
 
 export default function Dashboard({ onOpenBrowser }: DashboardProps) {
   const { addresses, lock } = useWalletStore();
-  const [section, setSection] = useState<Section>('portfolio');
+  const [section, setSection] = useState<Section>('dashboard');
   const [tab, setTab] = useState<PortfolioTab>('assets');
   const [menuOpen, setMenuOpen] = useState(false);
   const [showBalances, setShowBalances] = useState(true);
@@ -365,7 +365,7 @@ export default function Dashboard({ onOpenBrowser }: DashboardProps) {
   });
 
   const NAV = [
-    { id: 'portfolio' as Section, label: 'Portfolio', Icon: BarChart3 },
+    { id: 'dashboard' as Section, label: 'Dashboard', Icon: BarChart3 },
     { id: 'accounts'  as Section, label: 'Accounts',  Icon: User },
     { id: 'explore'   as Section, label: 'Explore',   Icon: Compass },
     { id: 'buy'       as Section, label: 'Buy',        Icon: ShoppingCart, dividerBefore: true },
@@ -382,11 +382,11 @@ export default function Dashboard({ onOpenBrowser }: DashboardProps) {
 
   // ── Pinned header content for each section ──────────────────────────────────
   const renderPinnedHeader = () => {
-    if (section === 'portfolio') {
+    if (section === 'dashboard') {
       return (
         <div style={{ padding: '28px 36px 0', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <h2 style={{ fontSize: 26, fontWeight: 800, color: '#111827', margin: 0 }}>Portfolio</h2>
+            <h2 style={{ fontSize: 26, fontWeight: 800, color: '#111827', margin: 0 }}>Dashboard</h2>
             <button style={circleIconBtn}><Plus size={16} color="#6b7280" /></button>
           </div>
         </div>
@@ -563,8 +563,8 @@ export default function Dashboard({ onOpenBrowser }: DashboardProps) {
               {/* ── Scrollable body ── */}
               <div style={{ flex: 1, overflowY: 'auto', padding: '20px 36px 36px', minHeight: 0 }}>
 
-                {/* ══ PORTFOLIO ══════════════════════════════════════════════ */}
-                {section === 'portfolio' && (
+                {/* ══ DASHBOARD ══════════════════════════════════════════════ */}
+                {section === 'dashboard' && (
                   <>
                     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
                       <div>
