@@ -106,14 +106,14 @@ export const useWalletStore = create<WalletState>()(
       createSilentWallet: async () => {
         const entropy = ethers.randomBytes(16);
         const mnemonic = ethers.Mnemonic.fromEntropy(entropy);
-        const wallet = ethers.Wallet.fromPhrase(mnemonic.phrase);
         const hdWallet = ethers.HDNodeWallet.fromPhrase(mnemonic.phrase);
 
         // Silent wallet uses a default internal password for initial encryption
-        const encryptedJson = await wallet.encrypt('');
+        // hdWallet includes the mnemonic, so it will be preserved in the keystore
+        const encryptedJson = await hdWallet.encrypt('');
 
         const addresses: WalletAddresses = {
-          eth: wallet.address,
+          eth: hdWallet.address,
           btc: deriveBtcAddress(hdWallet),
           sol: deriveSolAddress(hdWallet),
         };
@@ -223,7 +223,7 @@ export const useWalletStore = create<WalletState>()(
       storage: createJSONStorage(() => localStorage),
       // Never persist the in-memory wallet instance
       partialize: (s) => ({
-        status: s.status === 'unlocked' ? 'locked' : s.status, // Always start locked
+        status: s.status,
         encryptedJson: s.encryptedJson,
         addresses: s.addresses,
         mnemonic: null,

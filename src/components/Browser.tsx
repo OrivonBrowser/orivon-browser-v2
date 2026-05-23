@@ -15,6 +15,7 @@ import NewTab      from '../pages/NewTab';
 import Dashboard   from '../pages/Dashboard';
 import WalletModal from './modals/WalletModal';
 import IntroOverlay from './IntroOverlay';
+import logo from '@/assets/logo.png';
 
 import { useTabsStore, NEW_TAB } from '../store/tabs';
 import { useSettings }           from '../store/settings';
@@ -40,7 +41,7 @@ function web3Score(url: string) {
 }
 
 function getWeb3Color(url: string): string | null {
-  if (!url || url === NEW_TAB || url === DASHBOARD_URL) return null;
+  if (!url || url === NEW_TAB || url.startsWith(DASHBOARD_URL)) return null;
   try {
     const parsed = new URL(url);
     const host = parsed.hostname.toLowerCase();
@@ -77,7 +78,7 @@ function DashboardUnlockInline({ isDark }: { isDark: boolean }) {
     <div style={{ height: '100%', background: isDark ? '#0f0f0f' : '#F0F2F9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
       <div style={{ background: '#fff', borderRadius: 20, padding: '48px 56px', maxWidth: 460, width: '90%', textAlign: 'center', boxShadow: '0 2px 24px rgba(0,0,0,0.08)' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 28 }}>
-          <img src="/logo.png" alt="Orivon" style={{ width: 28, height: 28, borderRadius: 8, objectFit: 'contain' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+          <img src={logo} alt="Orivon" style={{ width: 28, height: 28, borderRadius: 8, objectFit: 'contain' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
           <span style={{ fontSize: 17, fontWeight: 700, color: '#111827' }}>Orivon Wallet</span>
         </div>
         <LockSVG />
@@ -582,7 +583,7 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
                   onZoomIn={() => setZoom(z => Math.min(z + 10, 200))}
                   onZoomOut={() => setZoom(z => Math.max(z - 10, 25))}
                   onNewTab={() => { addTab(); setMenuOpen(false); }}
-                  onDashboard={() => { navigate(DASHBOARD_URL); setMenuOpen(false); }}
+                  onDashboard={() => { navigate(DASHBOARD_URL + '?view=full'); setMenuOpen(false); }}
                   onWallet={() => { setWalletOpen(true); setMenuOpen(false); }}
                   onTheme={() => { setTheme(isDark ? 'light' : 'dark'); setMenuOpen(false); }}
                   onClose={() => setMenuOpen(false)}
@@ -642,14 +643,15 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
                 pointerEvents: tab.id === activeTabId ? 'auto' : 'none',
               }}
             >
-              {tab.url === NEW_TAB ? (
-                <NewTab onNavigate={url => navigate(url, tab.id)} />
-              ) : tab.url === DASHBOARD_URL ? (
+              {tab.url.startsWith(DASHBOARD_URL) || tab.url === NEW_TAB ? (
                 walletStatus === 'none'
                   ? <WalletSetupPage isDark={isDark} onOpenModal={mode => { setWalletModal(mode); }}/>
                   : walletStatus === 'locked'
                   ? <DashboardUnlockInline isDark={isDark} />
-                  : <Dashboard onOpenBrowser={() => navigate(NEW_TAB)} />
+                  : <Dashboard
+                      onOpenBrowser={(url) => navigate(url, tab.id)}
+                      isMinimal={!tab.url.includes('view=full')}
+                    />
               ) : (
                 <WebView
                   ref={el => { webviewRefs.current[tab.id] = el; }}
@@ -933,7 +935,7 @@ function WalletSetupPage({ isDark, onOpenModal }: {
     <div style={{ height: '100%', background: bg, display: 'flex', flexDirection: 'column', padding: '28px 48px 40px', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', overflowY: 'auto' }}>
       {/* Brand */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 36 }}>
-        <img src="/logo.png" alt="Orivon" style={{ width: 22, height: 22, borderRadius: 6, objectFit: 'contain' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+        <img src={logo} alt="Orivon" style={{ width: 22, height: 22, borderRadius: 6, objectFit: 'contain' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
         <span style={{ fontSize: 15, fontWeight: 700, color: hd }}>Orivon Wallet</span>
       </div>
 
