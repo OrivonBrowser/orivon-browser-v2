@@ -101,22 +101,62 @@ interface CompactWalletCardProps {
 }
 
 export function CompactWalletCard({ onSend, onReceive, onBuy, onSwap, onImport }: CompactWalletCardProps) {
-  const { accounts, activeAccountId, getBalance, isGenerating } = useWalletStore();
+  const { accounts, activeAccountId, getBalance, isGenerating, error, createSilentWallet } = useWalletStore();
   const [balance, setBalance] = useState('0');
+  const [loading, setLoading] = useState(true);
 
   const activeAccount = accounts.find(a => a.id === activeAccountId) || accounts[0];
 
   React.useEffect(() => {
     if (activeAccountId) {
       getBalance().then(setBalance);
+      setLoading(false);
     }
   }, [activeAccountId, getBalance]);
 
-  if (isGenerating || !activeAccount) {
+  // Safety timeout: stop spinner after 3 seconds
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (loading) {
+        setLoading(false);
+      }
+    }, 3000);
+    return () => clearTimeout(timeout);
+  }, [loading]);
+
+  if ((isGenerating || loading) && !activeAccount && !error) {
     return (
       <div className="w-full max-w-[640px] bg-white/5 border border-white/10 rounded-3xl p-6 flex flex-col items-center justify-center gap-3 min-h-[160px]">
         <Spinner size={24} color="#4f46e5" />
         <span className="text-sm text-gray-400">Setting up your wallet</span>
+      </div>
+    );
+  }
+
+  if (error || (!activeAccount && !loading)) {
+    return (
+      <div className="w-full max-w-[640px] bg-white/5 border border-red-500/30 rounded-3xl p-8 flex flex-col items-center text-center gap-4 min-h-[200px]">
+        <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 mb-2">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div>
+          <h3 className="text-lg font-bold text-white mb-1">Something went wrong loading your wallet</h3>
+          <p className="text-sm text-gray-400 max-w-[300px]">{error || "Could not find or create a wallet."}</p>
+        </div>
+        <div className="flex gap-3 mt-2">
+          <button
+            onClick={() => createSilentWallet()}
+            className="px-5 h-10 rounded-xl bg-white/10 text-white text-sm font-semibold hover:bg-white/15 transition-colors"
+          >
+            Retry
+          </button>
+          <button
+            onClick={() => window.location.href = 'orivon://dashboard'}
+            className="px-5 h-10 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-500 transition-colors"
+          >
+            Open Dashboard
+          </button>
+        </div>
       </div>
     );
   }

@@ -23,6 +23,7 @@ interface WalletState {
   accounts: WalletAccount[];
   activeAccountId: string | null;
   isGenerating: boolean;
+  error: string | null;
 
   // Ephemeral (not persisted)
   _wallet: ethers.HDNodeWallet | null;
@@ -78,6 +79,7 @@ export const useWalletStore = create<WalletState>()(
       accounts: [],
       activeAccountId: null,
       isGenerating: false,
+      error: null,
       _wallet: null,
 
       generateMnemonic: () => {
@@ -115,7 +117,7 @@ export const useWalletStore = create<WalletState>()(
       },
 
       createWallet: async (mnemonic, password, name = 'Orivon Wallet 1', onProgress) => {
-        set({ isGenerating: true });
+        set({ isGenerating: true, error: null });
         try {
           const account = await get()._setupAccount(mnemonic, password, name, false);
           const hdWallet = ethers.HDNodeWallet.fromPhrase(mnemonic);
@@ -126,16 +128,17 @@ export const useWalletStore = create<WalletState>()(
             activeAccountId: account.id,
             _wallet: hdWallet,
             isGenerating: false,
+            error: null
           }));
-        } catch (e) {
-          set({ isGenerating: false });
-          throw e;
+        } catch (e: any) {
+          console.error('Wallet generation failed:', e);
+          set({ isGenerating: false, error: e.message || 'Failed to create wallet' });
         }
       },
 
       createSilentWallet: async () => {
-        if (get().status !== 'none') return;
-        set({ isGenerating: true });
+        if (get().status !== 'none' || get().isGenerating) return;
+        set({ isGenerating: true, error: null });
         try {
           const mnemonic = get().generateMnemonic();
           const account = await get()._setupAccount(mnemonic, '', 'Orivon Wallet 1', false);
@@ -147,15 +150,16 @@ export const useWalletStore = create<WalletState>()(
             activeAccountId: account.id,
             _wallet: hdWallet,
             isGenerating: false,
+            error: null
           });
-        } catch (e) {
-          set({ isGenerating: false });
-          throw e;
+        } catch (e: any) {
+          console.error('Silent wallet generation failed:', e);
+          set({ isGenerating: false, error: e.message || 'Failed to create silent wallet' });
         }
       },
 
       importWallet: async (phrase, password, name = `Imported Wallet ${get().accounts.length + 1}`, onProgress) => {
-        set({ isGenerating: true });
+        set({ isGenerating: true, error: null });
         try {
           const trimmed = phrase.trim();
           const account = await get()._setupAccount(trimmed, password, name, true);
@@ -167,10 +171,11 @@ export const useWalletStore = create<WalletState>()(
             activeAccountId: account.id,
             _wallet: hdWallet,
             isGenerating: false,
+            error: null
           }));
-        } catch (e) {
-          set({ isGenerating: false });
-          throw e;
+        } catch (e: any) {
+          console.error('Wallet import failed:', e);
+          set({ isGenerating: false, error: e.message || 'Failed to import wallet' });
         }
       },
 
