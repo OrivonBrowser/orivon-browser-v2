@@ -33,7 +33,7 @@ interface TabsState {
   closeAllTabs: () => void;
 }
 
-const NEW_TAB_URL = 'orivon://newtab';
+const NEW_TAB_URL = 'orivon://dashboard';
 
 function makeTab(url = NEW_TAB_URL): TabEntry {
   return {
