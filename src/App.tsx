@@ -13,14 +13,6 @@ import { useTabsStore }  from './store/tabs';
 
 type View = 'ONBOARDING' | 'BROWSER';
 
-// Clear all persisted session data every time the app starts.
-function clearSession() {
-  ['orivon-wallet', 'orivon-tabs', 'orivon-runtime'].forEach(k =>
-    localStorage.removeItem(k)
-  );
-}
-clearSession();
-
 export const DASHBOARD_URL = 'orivon://dashboard';
 
 export default function App() {
