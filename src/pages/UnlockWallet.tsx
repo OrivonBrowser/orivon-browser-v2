@@ -7,7 +7,7 @@ interface UnlockWalletProps {
 }
 
 export default function UnlockWallet({ onRestore }: UnlockWalletProps) {
-  const { unlock, addresses } = useWalletStore();
+  const { unlock } = useWalletStore();
   const [password, setPassword]   = useState('');
   const [showPw, setShowPw]       = useState(false);
   const [error, setError]         = useState('');

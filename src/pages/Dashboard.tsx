@@ -6,12 +6,17 @@ import {
   ChevronRight, Circle, MoreHorizontal,
   Copy, Check, ArrowRight, Shield, Settings,
   Moon, Sun, Eye, EyeOff, AlertTriangle, ArrowLeft,
-  ShoppingCart, RefreshCw
+  ShoppingCart, RefreshCw, X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useWalletStore } from '../store/wallet';
+import { useWalletStore, WalletAccount } from '../store/wallet';
 import { useSettings } from '../store/settings';
 import logo from '@/assets/logo.png';
+import { ethers } from 'ethers';
+import Spinner from '../components/Spinner';
+
+// I decided to put switcher and compact card into src/components/WalletComponents.tsx
+import * as WalletComps from '../components/WalletComponents';
 
 interface DashboardProps {
   onOpenBrowser?: (url: string) => void;
@@ -33,19 +38,40 @@ const FEATURED_SITES = [
 ];
 
 export default function Dashboard({ onOpenBrowser, isMinimal = false }: DashboardProps) {
-  const { addresses, getBalance, isBackedUp, setBackedUp, _wallet } = useWalletStore();
+  const { accounts, activeAccountId, getBalance, setBackedUp, _wallet } = useWalletStore();
   const { searchEngine, setSearchEngine, web3ScoreProvider, setWeb3ScoreProvider, theme, setTheme } = useSettings();
   const [balance, setBalance] = useState('0');
   const [activeTab, setActiveTab] = useState<'tokens' | 'nfts' | 'activity'>('tokens');
-  const [view, setView] = useState<'main' | 'backup' | 'send' | 'receive'>('main');
+  const [view, setView] = useState<'main' | 'backup' | 'send' | 'receive' | 'import'>('main');
   const [copied, setCopied] = useState(false);
   const [walletMenuOpen, setWalletMenuOpen] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
+
+  const activeAccount = accounts.find(a => a.id === activeAccountId) || accounts[0];
 
   useEffect(() => {
-    getBalance().then(setBalance);
-  }, [getBalance]);
+    // Initial loading simulation
+    const timer = setTimeout(() => setInitialLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const [nodes, setNodes] = useState({
+  useEffect(() => {
+    if (activeAccountId) {
+      getBalance().then(setBalance);
+    }
+  }, [activeAccountId, getBalance]);
+
+  // Handle direct view navigation via URL query
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const v = params.get('view');
+    if (v === 'send') setView('send');
+    else if (v === 'receive') setView('receive');
+    else if (v === 'import') setView('import');
+    else if (v === 'backup') setView('backup');
+  }, []);
+
+  const [nodes, setNodes] = useState<Record<string, 'Online' | 'Offline' | 'Starting'>>({
     ipfs: 'Online',
     bittorrent: 'Offline',
     bitcoin: 'Starting'
@@ -70,131 +96,109 @@ export default function Dashboard({ onOpenBrowser, isMinimal = false }: Dashboar
     return '#6b7280';
   };
 
+  const startNode = (id: string) => {
+    setNodes(prev => ({ ...prev, [id]: 'Starting' }));
+    setTimeout(() => {
+      setNodes(prev => ({ ...prev, [id]: 'Online' }));
+    }, 2000 + Math.random() * 1000);
+  };
+
+  const stopNode = (id: string) => {
+    setNodes(prev => ({ ...prev, [id]: 'Offline' }));
+  };
+
+  if (initialLoading) {
+    return (
+      <div className="h-full w-full bg-[#0a0a0f] flex flex-col items-center justify-center gap-6">
+        <img src={logo} alt="Orivon" className="w-16 h-16 rounded-2xl animate-pulse" />
+        <Spinner size={32} color="#4f46e5" />
+      </div>
+    );
+  }
+
   if (view === 'backup') return <BackupView onBack={() => setView('main')} />;
   if (view === 'send') return <SendView onBack={() => setView('main')} onGoToBackup={() => setView('backup')} />;
-  if (view === 'receive') return <ReceiveView onBack={() => setView('main')} address={addresses?.eth || ''} />;
+  if (view === 'receive') return <ReceiveView onBack={() => setView('main')} address={activeAccount?.addresses.eth || ''} />;
+  if (view === 'import') return <ImportView onBack={() => setView('main')} />;
 
   return (
-    <div style={{
-      backgroundColor: '#0a0a0f',
-      color: '#fff',
-      minHeight: '100%',
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      padding: '40px 20px 80px',
-      fontFamily: 'Inter, system-ui, sans-serif',
-      overflowY: 'auto'
-    }}>
+    <div className="bg-[#0a0a0f] text-white min-h-full w-full flex flex-col items-center px-5 py-10 pb-20 font-inter overflow-y-auto">
       {/* Search Section */}
-      <div style={{ width: '100%', maxWidth: '640px', marginBottom: '48px', textAlign: 'center' }}>
-        <img src={logo} alt="Orivon" style={{ width: '48px', height: '48px', borderRadius: '12px', marginBottom: '24px' }} />
+      <div className="w-full max-w-[640px] mb-12 text-center">
+        <img src={logo} alt="Orivon" className="w-12 h-12 rounded-xl mb-6 mx-auto" />
         <form onSubmit={handleSearch}>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <Search style={{ position: 'absolute', left: '20px', color: '#6b7280' }} size={20} />
+          <div className="relative flex items-center group">
+            <Search className="absolute left-5 text-gray-500 group-focus-within:text-indigo-500 transition-colors" size={20} />
             <input
               name="search"
               placeholder="Search Web3 or type a .eth address"
-              style={{
-                width: '100%',
-                height: '56px',
-                borderRadius: '28px',
-                background: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                padding: '0 32px 0 60px',
-                fontSize: '16px',
-                color: '#fff',
-                outline: 'none',
-                transition: 'all 0.2s',
-              }}
+              className="w-full h-14 rounded-full bg-white/5 border border-white/10 pl-14 pr-12 text-base text-white outline-none transition-all duration-200 focus:bg-white/[0.08] focus:border-indigo-500/50"
             />
           </div>
         </form>
       </div>
 
-      <div style={{ width: '100%', maxWidth: '900px' }}>
+      <div className="w-full max-w-[900px]">
         {/* Wallet Box */}
-        <div style={{
-          background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(15, 15, 25, 0.5) 100%)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          borderRadius: '24px',
-          padding: '32px',
-          marginBottom: '32px',
-          position: 'relative'
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
-            <div>
-              <div style={{ fontSize: '14px', fontWeight: '600', color: '#9ca3af', marginBottom: '4px' }}>Orivon Wallet 1</div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '13px', color: '#6b7280', fontFamily: 'monospace' }}>
-                  {addresses?.eth ? `${addresses.eth.slice(0, 6)}...${addresses.eth.slice(-4)}` : '0x000...0000'}
-                </span>
-                <button
-                  onClick={() => handleCopy(addresses?.eth || '')}
-                  style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
-                >
-                  {copied ? <Check size={14} color="#00c76a" /> : <Copy size={14} />}
-                </button>
-              </div>
-            </div>
+        <div className="bg-gradient-to-br from-indigo-500/10 to-[#0f0f19]/50 border border-white/10 rounded-[32px] p-8 mb-8 relative shadow-2xl">
+          <div className="flex justify-between items-start mb-8">
+            <WalletComps.default onImport={() => setView('import')} />
 
-            <div style={{ position: 'relative' }}>
+            <div className="relative">
               <button
                 onClick={() => setWalletMenuOpen(!walletMenuOpen)}
-                style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-white cursor-pointer hover:bg-white/10 transition-colors"
               >
                 <MoreHorizontal size={20} />
               </button>
 
               <AnimatePresence>
                 {walletMenuOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    style={{
-                      position: 'absolute', top: '44px', right: 0, width: '220px',
-                      background: '#1a1a24', border: '1px solid rgba(255,255,255,0.1)',
-                      borderRadius: '12px', padding: '8px', zIndex: 100, boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
-                    }}
-                  >
-                    {[
-                      { label: 'View Seed Phrase', icon: <Eye size={16}/>, onClick: () => { setView('backup'); setWalletMenuOpen(false); } },
-                      { label: 'Copy Wallet Address', icon: <Copy size={16}/>, onClick: () => { handleCopy(addresses?.eth || ''); setWalletMenuOpen(false); } },
-                      { label: 'Rename Account', icon: <ExternalLink size={16}/>, onClick: () => setWalletMenuOpen(false) },
-                      { label: 'Add New Account', icon: <ExternalLink size={16}/>, onClick: () => setWalletMenuOpen(false) },
-                      { label: 'Import Account', icon: <ExternalLink size={16}/>, onClick: () => setWalletMenuOpen(false) },
-                      { label: 'Remove Account', icon: <ExternalLink size={16}/>, onClick: () => setWalletMenuOpen(false) },
-                    ].map(item => (
-                      <button
-                        key={item.label}
-                        onClick={item.onClick}
-                        style={{
-                          width: '100%', padding: '10px 12px', display: 'flex', alignItems: 'center', gap: '10px',
-                          background: 'none', border: 'none', color: '#9ca3af', fontSize: '13px', cursor: 'pointer',
-                          borderRadius: '8px', textAlign: 'left'
-                        }}
-                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#fff'; }}
-                        onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = '#9ca3af'; }}
-                      >
-                        {item.icon} {item.label}
-                      </button>
-                    ))}
-                  </motion.div>
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setWalletMenuOpen(false)} />
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute top-12 right-0 w-56 bg-[#1a1a24] border border-white/10 rounded-2xl p-2 z-50 shadow-2xl overflow-hidden"
+                    >
+                      {[
+                        { label: 'View Seed Phrase', icon: <Eye size={16}/>, onClick: () => { setView('backup'); setWalletMenuOpen(false); } },
+                        { label: 'Copy Wallet Address', icon: <Copy size={16}/>, onClick: () => { handleCopy(activeAccount?.addresses.eth || ''); setWalletMenuOpen(false); } },
+                        { label: 'Rename Account', icon: <ExternalLink size={16}/>, onClick: () => setWalletMenuOpen(false) },
+                        { label: 'Add New Account', icon: <ExternalLink size={16}/>, onClick: () => setWalletMenuOpen(false) },
+                        { label: 'Import Account', icon: <ExternalLink size={16}/>, onClick: () => { setView('import'); setWalletMenuOpen(false); } },
+                        { label: 'Remove Account', icon: <ExternalLink size={16}/>, onClick: () => setWalletMenuOpen(false) },
+                      ].map(item => (
+                        <button
+                          key={item.label}
+                          onClick={item.onClick}
+                          className="w-full px-4 py-3 flex items-center gap-3 bg-transparent border-none text-gray-400 text-[13px] font-medium cursor-pointer rounded-xl text-left hover:bg-white/5 hover:text-white transition-all"
+                        >
+                          {item.icon} {item.label}
+                        </button>
+                      ))}
+                    </motion.div>
+                  </>
                 )}
               </AnimatePresence>
             </div>
           </div>
 
-          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-            <div style={{ fontSize: '48px', fontWeight: '800', letterSpacing: '-1px' }}>
+          <div className="text-center mb-10">
+            <div className="text-5xl font-black tracking-tight text-white mb-2">
               ${(parseFloat(balance) * 2450.50).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
-            <div style={{ fontSize: '16px', color: '#6b7280', marginTop: '4px' }}>{balance} ETH</div>
+            <div className="flex items-center justify-center gap-2 text-gray-500 font-mono text-sm">
+              <span>{activeAccount?.addresses.eth.slice(0, 6)}...{activeAccount?.addresses.eth.slice(-4)}</span>
+              <button onClick={() => handleCopy(activeAccount?.addresses.eth || '')} className="bg-transparent border-none text-gray-600 hover:text-gray-300 cursor-pointer p-0">
+                {copied ? <Check size={14} color="#00c76a" /> : <Copy size={14} />}
+              </button>
+            </div>
+            <div className="text-gray-600 text-sm mt-1 font-medium">{balance} ETH</div>
           </div>
 
-          <div style={{ display: 'flex', gap: '16px', marginBottom: '32px' }}>
+          <div className="flex gap-4 mb-10">
             {[
               { label: 'Send', icon: <Send size={18}/>, onClick: () => setView('send'), primary: true },
               { label: 'Receive', icon: <Download size={18}/>, onClick: () => setView('receive') },
@@ -204,15 +208,11 @@ export default function Dashboard({ onOpenBrowser, isMinimal = false }: Dashboar
               <button
                 key={btn.label}
                 onClick={btn.onClick}
-                style={{
-                  flex: 1, height: '48px', borderRadius: '14px',
-                  background: btn.primary ? '#4f46e5' : 'rgba(255,255,255,0.05)',
-                  color: '#fff', border: btn.primary ? 'none' : '1px solid rgba(255,255,255,0.1)',
-                  fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-                  cursor: 'pointer', transition: 'all 0.2s'
-                }}
-                onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.1)'}
-                onMouseLeave={e => e.currentTarget.style.filter = 'brightness(1)'}
+                className={`flex-1 h-12 rounded-2xl flex items-center justify-center gap-2 font-bold text-sm transition-all duration-200 active:scale-95 ${
+                  btn.primary
+                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20 hover:bg-indigo-500'
+                    : 'bg-white/5 text-gray-200 border border-white/10 hover:bg-white/10'
+                }`}
               >
                 {btn.icon} {btn.label}
               </button>
@@ -220,87 +220,96 @@ export default function Dashboard({ onOpenBrowser, isMinimal = false }: Dashboar
           </div>
 
           <div>
-            <div style={{ display: 'flex', gap: '24px', borderBottom: '1px solid rgba(255,255,255,0.08)', marginBottom: '20px' }}>
+            <div className="flex gap-6 border-b border-white/5 mb-6">
               {(['tokens', 'nfts', 'activity'] as const).map(tab => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  style={{
-                    padding: '0 4px 12px', background: 'none', border: 'none',
-                    color: activeTab === tab ? '#4f46e5' : '#6b7280',
-                    fontSize: '14px', fontWeight: '600', cursor: 'pointer',
-                    position: 'relative'
-                  }}
+                  className={`px-1 pb-4 bg-transparent border-none text-sm font-bold cursor-pointer relative transition-colors ${
+                    activeTab === tab ? 'text-indigo-500' : 'text-gray-500 hover:text-gray-300'
+                  }`}
                 >
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
                   {activeTab === tab && (
-                    <motion.div layoutId="activeTab" style={{ position: 'absolute', bottom: -1, left: 0, right: 0, height: '2px', background: '#4f46e5' }} />
+                    <motion.div layoutId="activeTab" className="absolute bottom-[-1px] left-0 right-0 h-0.5 bg-indigo-500" />
                   )}
                 </button>
               ))}
             </div>
 
-            <div style={{ padding: '20px 0', textAlign: 'center', color: '#6b7280' }}>
+            <div className="py-10 text-center text-gray-500 font-medium">
               {activeTab === 'tokens' && (
                 <div>
                   {balance === '0' ? (
-                    <p style={{ fontSize: '14px' }}>No tokens yet. Start by receiving crypto.</p>
+                    <p className="text-sm">No tokens yet. Start by receiving crypto.</p>
                   ) : (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(255,255,255,0.03)', borderRadius: '12px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#627eea', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '14px' }}>Ξ</div>
-                        <div style={{ textAlign: 'left' }}>
-                          <div style={{ fontWeight: '600', color: '#fff' }}>Ethereum</div>
-                          <div style={{ fontSize: '12px' }}>ETH</div>
+                    <div className="flex justify-between items-center p-4 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/[0.08] transition-colors">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-[#627eea] flex items-center justify-center font-bold text-base text-white">Ξ</div>
+                        <div className="text-left">
+                          <div className="font-bold text-white">Ethereum</div>
+                          <div className="text-xs text-gray-500">ETH</div>
                         </div>
                       </div>
-                      <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontWeight: '600', color: '#fff' }}>{balance} ETH</div>
-                        <div style={{ fontSize: '12px' }}>${(parseFloat(balance) * 2450.50).toLocaleString()}</div>
+                      <div className="text-right">
+                        <div className="font-bold text-white">{balance} ETH</div>
+                        <div className="text-xs text-gray-500">${(parseFloat(balance) * 2450.50).toLocaleString()}</div>
                       </div>
                     </div>
                   )}
                 </div>
               )}
-              {activeTab === 'nfts' && <p style={{ fontSize: '14px' }}>No NFTs yet.</p>}
-              {activeTab === 'activity' && <p style={{ fontSize: '14px' }}>No transactions yet.</p>}
+              {activeTab === 'nfts' && (
+                 <div className="flex flex-col items-center gap-4">
+                    <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center text-gray-700">
+                       <Layers size={32} />
+                    </div>
+                    <p className="text-sm">No NFTs yet.</p>
+                 </div>
+              )}
+              {activeTab === 'activity' && (
+                 <div className="flex flex-col items-center gap-4">
+                    <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center text-gray-700">
+                       <Activity size={32} />
+                    </div>
+                    <p className="text-sm">No transactions yet.</p>
+                 </div>
+              )}
             </div>
           </div>
         </div>
 
         {/* Nodes Widget */}
-        <div style={{
-          background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)',
-          borderRadius: '24px', padding: '24px', marginBottom: '32px'
-        }}>
-          <div style={{ fontSize: '18px', fontWeight: '700', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Cpu size={20} color="#4f46e5" /> Web3 Nodes
+        <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 mb-8 shadow-xl">
+          <div className="text-xl font-bold mb-8 flex items-center gap-3">
+            <Cpu size={24} className="text-indigo-500" /> Web3 Nodes
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="flex flex-col gap-6">
             {[
               { id: 'ipfs', name: 'IPFS Node' },
               { id: 'bittorrent', name: 'BitTorrent Node' },
               { id: 'bitcoin', name: 'Bitcoin Node (Pruned)', sub: 'Uses a pre-synced snapshot. Quick sync.' }
             ].map(node => (
-              <div key={node.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div key={node.id} className="flex justify-between items-center">
                 <div>
-                  <div style={{ fontSize: '15px', fontWeight: '500' }}>{node.name}</div>
-                  {node.sub && <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>{node.sub}</div>}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
-                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: getStatusColor(nodes[node.id as keyof typeof nodes]) }} />
-                    <span style={{ fontSize: '12px', color: '#9ca3af' }}>{nodes[node.id as keyof typeof nodes]}</span>
+                  <div className="text-[15px] font-semibold text-gray-200">{node.name}</div>
+                  {node.sub && <div className="text-xs text-gray-600 mt-1">{node.sub}</div>}
+                  <div className="flex items-center gap-2 mt-2">
+                    <div className={`w-2 h-2 rounded-full ${nodes[node.id] === 'Online' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : nodes[node.id] === 'Starting' ? 'bg-amber-500' : 'bg-gray-700'}`} />
+                    <span className="text-xs text-gray-500 font-medium">{nodes[node.id]}</span>
+                    {nodes[node.id] === 'Starting' && <Spinner size={10} color="#f59e0b" className="ml-1" />}
                   </div>
                 </div>
                 <button
-                  onClick={() => setNodes(prev => ({ ...prev, [node.id]: prev[node.id as keyof typeof nodes] === 'Online' ? 'Offline' : 'Online' }))}
-                  style={{
-                    padding: '8px 16px', borderRadius: '10px',
-                    background: nodes[node.id as keyof typeof nodes] === 'Online' ? 'rgba(0, 199, 106, 0.1)' : 'rgba(255, 255, 255, 0.05)',
-                    color: nodes[node.id as keyof typeof nodes] === 'Online' ? '#00c76a' : '#9ca3af',
-                    border: 'none', fontSize: '13px', fontWeight: '600', cursor: 'pointer'
-                  }}
+                  onClick={() => nodes[node.id] === 'Online' ? stopNode(node.id) : startNode(node.id)}
+                  disabled={nodes[node.id] === 'Starting'}
+                  className={`px-5 py-2.5 rounded-xl font-bold text-[13px] transition-all duration-200 cursor-pointer ${
+                    nodes[node.id] === 'Online'
+                      ? 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20'
+                      : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                  }`}
                 >
-                  {nodes[node.id as keyof typeof nodes] === 'Online' ? 'Stop' : 'Start'}
+                  {nodes[node.id] === 'Online' ? 'Stop' : nodes[node.id] === 'Starting' ? 'Starting' : 'Start'}
                 </button>
               </div>
             ))}
@@ -308,38 +317,35 @@ export default function Dashboard({ onOpenBrowser, isMinimal = false }: Dashboar
         </div>
 
         {/* Widget Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+        <div className="grid grid-cols-2 gap-8">
           {/* Featured Web3 Sites */}
-          <div style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '24px', padding: '24px' }}>
-            <div style={{ fontSize: '16px', fontWeight: '700', marginBottom: '16px' }}>Explore Web3</div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+          <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 shadow-xl">
+            <div className="text-lg font-bold mb-6">Explore Web3</div>
+            <div className="grid grid-cols-2 gap-4">
               {FEATURED_SITES.map(site => (
-                <button key={site.name} onClick={() => onOpenBrowser?.(site.url)} style={{
-                  padding: '16px', borderRadius: '16px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.05)',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', cursor: 'pointer', transition: 'all 0.2s'
-                }}>
-                  <span style={{ fontSize: '24px' }}>{site.icon}</span>
-                  <span style={{ fontSize: '13px', fontWeight: '500', color: '#fff' }}>{site.name}</span>
+                <button key={site.name} onClick={() => onOpenBrowser?.(site.url)} className="p-5 rounded-2xl bg-white/5 border border-white/5 flex flex-col items-center gap-3 cursor-pointer transition-all duration-200 hover:bg-white/10 hover:-translate-y-1">
+                  <span className="text-3xl">{site.icon}</span>
+                  <span className="text-[13px] font-bold text-white">{site.name}</span>
                 </button>
               ))}
             </div>
           </div>
 
           {/* Network Status */}
-          <div style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '24px', padding: '24px' }}>
-            <div style={{ fontSize: '16px', fontWeight: '700', marginBottom: '16px' }}>Network</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 shadow-xl">
+            <div className="text-lg font-bold mb-6">Network</div>
+            <div className="flex flex-col gap-5">
               {[
                 { name: 'ENS Resolver', active: true },
                 { name: 'IPFS Gateway', active: true },
                 { name: 'Search Engine', val: 'Web3 Compass', active: true },
                 { name: 'Web3 Score', val: web3ScoreProvider, active: true },
               ].map(item => (
-                <div key={item.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '13px', color: '#9ca3af' }}>{item.name}</span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    {item.val && <span style={{ fontSize: '12px', fontWeight: '500' }}>{item.val}</span>}
-                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: item.active ? '#00c76a' : '#6b7280' }} />
+                <div key={item.name} className="flex justify-between items-center">
+                  <span className="text-[13px] text-gray-500 font-medium">{item.name}</span>
+                  <div className="flex items-center gap-2">
+                    {item.val && <span className="text-xs font-bold text-gray-300">{item.val}</span>}
+                    <div className={`w-2 h-2 rounded-full ${item.active ? 'bg-emerald-500' : 'bg-gray-700'}`} />
                   </div>
                 </div>
               ))}
@@ -347,39 +353,39 @@ export default function Dashboard({ onOpenBrowser, isMinimal = false }: Dashboar
           </div>
 
           {/* Recent Sites */}
-          <div style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '24px', padding: '24px' }}>
-            <div style={{ fontSize: '16px', fontWeight: '700', marginBottom: '16px' }}>Recent Sites</div>
-            <div style={{ height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280', fontSize: '13px', textAlign: 'center' }}>
+          <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 shadow-xl">
+            <div className="text-lg font-bold mb-6">Recent Sites</div>
+            <div className="h-24 flex items-center justify-center text-gray-600 text-[13px] font-medium text-center">
               Your visited Web3 sites will appear here
             </div>
           </div>
 
           {/* Quick Settings */}
-          <div style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '24px', padding: '24px' }}>
-            <div style={{ fontSize: '16px', fontWeight: '700', marginBottom: '16px' }}>Quick Settings</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 shadow-xl">
+            <div className="text-lg font-bold mb-6">Quick Settings</div>
+            <div className="flex flex-col gap-6">
                <div>
-                  <div style={{ fontSize: '11px', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', marginBottom: '8px' }}>Search Engine</div>
+                  <div className="text-[11px] font-black text-gray-600 uppercase mb-2 tracking-wider">Search Engine</div>
                   <select
                     value={searchEngine}
                     onChange={(e) => setSearchEngine(e.target.value as any)}
-                    style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '8px', color: '#fff', outline: 'none' }}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white outline-none cursor-pointer hover:bg-white/[0.08]"
                   >
                     <option value="web3compass">Web3 Compass</option>
                     <option value="google">Google</option>
                     <option value="duckduckgo">DuckDuckGo</option>
                   </select>
                </div>
-               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '13px' }}>Dark Mode</span>
+               <div className="flex justify-between items-center">
+                  <span className="text-sm font-bold text-gray-300">Dark Mode</span>
                   <button
                     onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                    style={{ width: '40px', height: '20px', borderRadius: '10px', background: theme === 'dark' ? '#4f46e5' : '#374151', border: 'none', position: 'relative', cursor: 'pointer' }}
+                    className={`w-12 h-6 rounded-full relative transition-colors duration-200 cursor-pointer border-none ${theme === 'dark' ? 'bg-indigo-600' : 'bg-gray-700'}`}
                   >
-                    <div style={{ position: 'absolute', top: '2px', left: theme === 'dark' ? '22px' : '2px', width: '16px', height: '16px', borderRadius: '50%', background: '#fff', transition: 'all 0.2s' }} />
+                    <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all duration-200 ${theme === 'dark' ? 'left-7' : 'left-1'}`} />
                   </button>
                </div>
-               <button style={{ color: '#4f46e5', background: 'none', border: 'none', padding: 0, fontSize: '13px', fontWeight: '600', cursor: 'pointer', textAlign: 'left' }}>More settings</button>
+               <button className="text-indigo-500 bg-transparent border-none p-0 text-sm font-bold cursor-pointer text-left hover:text-indigo-400">More settings</button>
             </div>
           </div>
         </div>
@@ -389,65 +395,97 @@ export default function Dashboard({ onOpenBrowser, isMinimal = false }: Dashboar
 }
 
 function BackupView({ onBack }: { onBack: () => void }) {
-  const { _wallet, setBackedUp } = useWalletStore();
+  const { getMnemonic, setBackedUp } = useWalletStore();
   const [revealed, setRevealed] = useState(false);
-  const mnemonic = _wallet?.mnemonic?.phrase || '';
-  const words = mnemonic.split(' ');
+  const [mnemonic, setMnemonic] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    getMnemonic().then(m => {
+      if (m) setMnemonic(m);
+      else setError("Unable to retrieve seed phrase. Please contact support.");
+    });
+  }, [getMnemonic]);
+
+  const words = mnemonic ? mnemonic.split(' ') : [];
+
+  const handleCopyAll = () => {
+    if (!mnemonic) return;
+    navigator.clipboard.writeText(mnemonic);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
-    <div style={{ backgroundColor: '#0a0a0f', color: '#fff', minHeight: '100%', width: '100%', padding: '60px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <div style={{ width: '100%', maxWidth: '600px' }}>
-        <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', marginBottom: '32px' }}>
-          <ArrowLeft size={20} /> Back to Dashboard
+    <div className="bg-[#0a0a0f] text-white min-h-full w-full py-20 px-5 flex flex-col items-center font-inter">
+      <div className="w-full max-w-[640px]">
+        <button onClick={onBack} className="flex items-center gap-2 bg-transparent border-none text-gray-500 hover:text-white cursor-pointer mb-10 transition-colors font-bold text-sm">
+          <ArrowLeft size={18} /> Back to Dashboard
         </button>
 
-        <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '16px', padding: '20px', marginBottom: '32px', display: 'flex', gap: '16px' }}>
-          <AlertTriangle size={24} color="#ef4444" style={{ flexShrink: 0 }} />
+        <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-6 mb-10 flex gap-5">
+          <AlertTriangle size={24} className="text-rose-500 shrink-0" />
           <div>
-            <div style={{ fontWeight: '700', color: '#ef4444', marginBottom: '4px' }}>Never share your seed phrase!</div>
-            <div style={{ fontSize: '14px', color: '#ef4444', lineHeight: '1.5' }}>Anyone who has your 12-word seed phrase has full access to your wallet and funds. Orivon will never ask for this.</div>
+            <div className="font-black text-rose-500 mb-1 uppercase text-xs tracking-wider">Never share your seed phrase!</div>
+            <div className="text-sm text-rose-400 leading-relaxed font-medium">Anyone who has your 12-word seed phrase has full access to your wallet and funds. Orivon will never ask for this.</div>
           </div>
         </div>
 
-        <h1 style={{ fontSize: '28px', fontWeight: '800', marginBottom: '12px' }}>Backup your wallet</h1>
-        <p style={{ color: '#9ca3af', marginBottom: '40px', lineHeight: '1.6' }}>Write down these 12 words in order and keep them somewhere safe offline.</p>
+        <h1 className="text-3xl font-black mb-3 tracking-tight">Backup your wallet</h1>
+        <p className="text-gray-500 mb-10 leading-relaxed font-medium">Write down these 12 words in order and keep them somewhere safe offline.</p>
 
-        <div style={{ position: 'relative', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '24px', padding: '32px', marginBottom: '32px' }}>
-          <div style={{
-            display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px',
-            filter: revealed ? 'none' : 'blur(8px)', transition: 'filter 0.3s'
-          }}>
-            {words.map((word, i) => (
-              <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'center', background: 'rgba(255,255,255,0.05)', padding: '12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                <span style={{ fontSize: '12px', color: '#6b7280', width: '16px' }}>{i + 1}</span>
-                <span style={{ fontWeight: '600' }}>{word}</span>
-              </div>
-            ))}
-          </div>
-
-          {!revealed && (
-            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
-              <button
-                onClick={() => setRevealed(true)}
-                style={{ padding: '12px 24px', borderRadius: '12px', background: '#4f46e5', color: '#fff', border: 'none', fontWeight: '700', cursor: 'pointer', boxShadow: '0 4px 20px rgba(79, 70, 229, 0.4)' }}
-              >
-                Reveal Seed Phrase
-              </button>
+        {error ? (
+          <div className="bg-white/5 border border-white/10 rounded-3xl p-10 text-center text-rose-500 font-bold">{error}</div>
+        ) : (
+          <div className="relative bg-white/5 border border-white/10 rounded-[32px] p-8 mb-10 overflow-hidden shadow-2xl">
+            <div className={`grid grid-cols-3 gap-4 transition-all duration-500 ${revealed ? 'blur-0' : 'blur-xl scale-105'}`}>
+              {words.map((word, i) => (
+                <div key={i} className="flex flex-col bg-white/5 p-4 rounded-xl border border-white/5 relative">
+                  <span className="text-[10px] font-black text-gray-700 absolute top-2 left-2 uppercase">{i + 1}</span>
+                  <span className="font-bold text-white text-center mt-2">{word}</span>
+                </div>
+              ))}
             </div>
-          )}
-        </div>
+
+            {!revealed && (
+              <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/20">
+                <button
+                  onClick={() => setRevealed(true)}
+                  className="px-8 py-4 rounded-2xl bg-indigo-600 text-white border-none font-black cursor-pointer shadow-2xl shadow-indigo-500/40 hover:bg-indigo-500 transition-all active:scale-95"
+                >
+                  Reveal Seed Phrase
+                </button>
+              </div>
+            )}
+          </div>
+        )}
 
         {revealed && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <button
-              onClick={() => { navigator.clipboard.writeText(mnemonic); }}
-              style={{ width: '100%', height: '52px', borderRadius: '14px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontWeight: '600', cursor: 'pointer' }}
-            >
-              Copy to Clipboard
-            </button>
+          <div className="flex flex-col gap-4">
+            <div className="relative">
+              <button
+                onClick={handleCopyAll}
+                className="w-full h-14 rounded-2xl bg-white/5 border border-white/10 text-white font-bold cursor-pointer hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+              >
+                <Copy size={18} /> Copy All
+              </button>
+              <AnimatePresence>
+                {copied && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-emerald-500 text-white text-xs font-bold rounded-lg shadow-xl"
+                  >
+                    Copied!
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
             <button
               onClick={() => { setBackedUp(true); onBack(); }}
-              style={{ width: '100%', height: '56px', borderRadius: '16px', background: '#4f46e5', color: '#fff', border: 'none', fontWeight: '700', cursor: 'pointer' }}
+              className="w-full h-16 rounded-2xl bg-indigo-600 text-white border-none font-black text-lg cursor-pointer hover:bg-indigo-500 shadow-xl shadow-indigo-500/20"
             >
               Done
             </button>
@@ -458,31 +496,187 @@ function BackupView({ onBack }: { onBack: () => void }) {
   );
 }
 
+function ImportView({ onBack }: { onBack: () => void }) {
+  const { importWallet } = useWalletStore();
+  const [pasteMode, setPasteMode] = useState(false);
+  const [words, setWords] = useState<string[]>(Array(12).fill(''));
+  const [pastedText, setPastedText] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  const handleWordChange = (idx: number, val: string) => {
+    const newWords = [...words];
+    newWords[idx] = val.trim().toLowerCase();
+    setWords(newWords);
+    setError(null);
+  };
+
+  const handlePasteChange = (text: string) => {
+    setPastedText(text);
+    const splitWords = text.trim().split(/\s+/).slice(0, 12);
+    if (splitWords.length === 12) {
+       setWords(splitWords.map(w => w.toLowerCase()));
+    }
+    setError(null);
+  };
+
+  const isComplete = words.every(w => w.length > 0);
+
+  const handleImport = async () => {
+    const mnemonic = words.join(' ');
+    if (!ethers.Mnemonic.isValidMnemonic(mnemonic)) {
+      setError("Invalid seed phrase. Please check your words and try again.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await importWallet(mnemonic, ''); // Default empty password for MVP
+      setSuccess(true);
+      setTimeout(() => {
+        onBack();
+      }, 1500);
+    } catch (e) {
+      setError("Failed to import wallet. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (success) {
+    return (
+      <div className="h-full w-full bg-[#0a0a0f] flex flex-col items-center justify-center text-center p-10">
+        <div className="w-20 h-20 rounded-full bg-emerald-500 flex items-center justify-center mb-6 shadow-2xl shadow-emerald-500/20">
+          <Check size={40} className="text-white" />
+        </div>
+        <h1 className="text-3xl font-black text-white mb-2">Wallet Imported</h1>
+        <p className="text-gray-500 font-medium">Redirecting you back to dashboard...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-[#0a0a0f] text-white min-h-full w-full py-20 px-5 flex flex-col items-center font-inter">
+      <div className="w-full max-w-[600px]">
+        <button onClick={onBack} className="flex items-center gap-2 bg-transparent border-none text-gray-500 hover:text-white cursor-pointer mb-10 transition-colors font-bold text-sm">
+          <ArrowLeft size={18} /> Back
+        </button>
+
+        <h1 className="text-3xl font-black mb-2 tracking-tight">Import Wallet</h1>
+        <p className="text-gray-500 mb-12 font-medium">Enter your 12 word seed phrase to import an existing wallet</p>
+
+        {pasteMode ? (
+          <div className="mb-10">
+            <textarea
+              autoFocus
+              placeholder="Paste your 12 words here separated by spaces..."
+              className="w-full h-40 bg-white/5 border border-white/10 rounded-3xl p-6 text-white font-bold outline-none focus:border-indigo-500/50 resize-none transition-all"
+              value={pastedText}
+              onChange={(e) => handlePasteChange(e.target.value)}
+            />
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-4 mb-10">
+            {words.map((word, i) => (
+              <div key={i} className="flex flex-col bg-white/5 rounded-2xl border border-white/10 p-3 group focus-within:border-indigo-500/50 transition-all">
+                <span className="text-[10px] font-black text-gray-700 uppercase mb-1">{i + 1}</span>
+                <input
+                  type="text"
+                  className="bg-transparent border-none text-white font-bold outline-none text-center"
+                  value={word}
+                  onChange={(e) => handleWordChange(i, e.target.value)}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+        <button
+          onClick={() => setPasteMode(!pasteMode)}
+          className="bg-transparent border-none text-indigo-500 font-black text-sm cursor-pointer mb-12 hover:text-indigo-400 transition-colors"
+        >
+          {pasteMode ? "Use grid input instead" : "Paste as text instead"}
+        </button>
+
+        {error && <div className="text-rose-500 font-bold text-sm mb-6 text-center">{error}</div>}
+
+        <button
+          onClick={handleImport}
+          disabled={!isComplete || loading}
+          className={`w-full h-16 rounded-2xl font-black text-lg transition-all duration-200 flex items-center justify-center gap-3 ${
+            isComplete && !loading
+              ? 'bg-indigo-600 text-white cursor-pointer hover:bg-indigo-500 shadow-xl shadow-indigo-500/20'
+              : 'bg-white/5 text-gray-600 cursor-not-allowed border border-white/5'
+          }`}
+        >
+          {loading ? <Spinner size={20} /> : "Verify and Import"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function SendView({ onBack, onGoToBackup }: { onBack: () => void, onGoToBackup: () => void }) {
-  const { isBackedUp } = useWalletStore();
+  const { accounts, activeAccountId } = useWalletStore();
+  const activeAccount = accounts.find(a => a.id === activeAccountId) || accounts[0];
+  const isBackedUp = activeAccount?.isBackedUp;
   const [step, setStep] = useState(isBackedUp ? 'form' : 'warning');
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const handleSend = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setSuccess(true);
+      setTimeout(() => onBack(), 1500);
+    }, 2000);
+  };
+
+  if (loading) {
+    return (
+      <div className="h-full w-full bg-black/80 fixed inset-0 z-[1000] flex flex-col items-center justify-center text-center">
+        <Spinner size={48} color="#4f46e5" className="mb-6" />
+        <h2 className="text-2xl font-black text-white mb-2">Broadcasting transaction</h2>
+        <p className="text-gray-400 font-medium">Please wait while your transaction is being processed on the network.</p>
+      </div>
+    );
+  }
+
+  if (success) {
+    return (
+      <div className="h-full w-full bg-[#0a0a0f] flex flex-col items-center justify-center text-center p-10">
+        <div className="w-20 h-20 rounded-full bg-emerald-500 flex items-center justify-center mb-6 shadow-2xl shadow-emerald-500/20">
+          <Check size={40} className="text-white" />
+        </div>
+        <h1 className="text-3xl font-black text-white mb-2">Transaction Sent</h1>
+        <p className="text-gray-500 font-medium">Your funds are on the way!</p>
+      </div>
+    );
+  }
 
   if (step === 'warning') {
     return (
-      <div style={{ backgroundColor: '#0a0a0f', color: '#fff', height: '100%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-        <div style={{ maxWidth: '480px', textAlign: 'center' }}>
-          <div style={{ width: '80px', height: '80px', borderRadius: '24px', background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
+      <div className="bg-[#0a0a0f] text-white h-full w-full flex items-center justify-center p-5 font-inter">
+        <div className="max-w-[480px] text-center">
+          <div className="w-20 h-20 rounded-[28px] bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-amber-500/5">
             <AlertTriangle size={40} />
           </div>
-          <h1 style={{ fontSize: '28px', fontWeight: '800', marginBottom: '16px' }}>Back up your wallet first</h1>
-          <p style={{ color: '#9ca3af', lineHeight: '1.6', marginBottom: '40px' }}>
+          <h1 className="text-3xl font-black mb-4 tracking-tight">Back up your wallet first</h1>
+          <p className="text-gray-500 leading-relaxed font-medium mb-12">
             Before you send funds, make sure your wallet is backed up. If you lose access to this device without a backup you will lose your funds permanently.
           </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div className="flex flex-col gap-4">
             <button
               onClick={onGoToBackup}
-              style={{ height: '56px', borderRadius: '16px', background: '#4f46e5', color: '#fff', border: 'none', fontWeight: '700', cursor: 'pointer' }}
+              className="h-16 rounded-2xl bg-indigo-600 text-white border-none font-black text-lg cursor-pointer hover:bg-indigo-500 shadow-xl shadow-indigo-500/20 active:scale-95 transition-all"
             >
               Back Up Now
             </button>
             <button
               onClick={() => setStep('form')}
-              style={{ height: '56px', borderRadius: '16px', background: 'none', border: 'none', color: '#6b7280', fontWeight: '600', cursor: 'pointer' }}
+              className="h-16 rounded-2xl bg-transparent border-none text-gray-500 font-black text-base cursor-pointer hover:text-white transition-colors"
             >
               Skip for Now
             </button>
@@ -493,69 +687,72 @@ function SendView({ onBack, onGoToBackup }: { onBack: () => void, onGoToBackup: 
   }
 
   return (
-    <div style={{ backgroundColor: '#0a0a0f', color: '#fff', minHeight: '100%', width: '100%', padding: '60px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <div style={{ width: '100%', maxWidth: '540px' }}>
-        <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', marginBottom: '32px' }}>
-          <ArrowLeft size={20} /> Back
+    <div className="bg-[#0a0a0f] text-white min-h-full w-full py-20 px-5 flex flex-col items-center font-inter">
+      <div className="w-full max-w-[540px]">
+        <button onClick={onBack} className="flex items-center gap-2 bg-transparent border-none text-gray-500 hover:text-white cursor-pointer mb-10 transition-colors font-bold text-sm">
+          <ArrowLeft size={18} /> Back
         </button>
 
         {!isBackedUp && (
-          <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.2)', borderRadius: '12px', padding: '12px 16px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <AlertTriangle size={18} color="#f59e0b" />
-            <span style={{ fontSize: '13px', color: '#f59e0b', fontWeight: '500' }}>Wallet not backed up. Risk of permanent fund loss.</span>
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 mb-8 flex items-center gap-4">
+            <AlertTriangle size={20} className="text-amber-500 shrink-0" />
+            <span className="text-[13px] text-amber-500 font-bold">Wallet not backed up. Risk of permanent fund loss.</span>
           </div>
         )}
 
-        <h1 style={{ fontSize: '28px', fontWeight: '800', marginBottom: '32px' }}>Send Crypto</h1>
+        <h1 className="text-3xl font-black mb-10 tracking-tight">Send Crypto</h1>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div className="flex flex-col gap-8">
           <div>
-            <label style={{ fontSize: '13px', fontWeight: '600', color: '#9ca3af', display: 'block', marginBottom: '8px' }}>Network</label>
-            <div style={{ height: '52px', borderRadius: '14px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', padding: '0 16px', gap: '12px' }}>
-              <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#627eea', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700' }}>Ξ</div>
-              <span style={{ flex: 1, fontWeight: '500' }}>Ethereum Mainnet</span>
-              <ChevronRight size={18} color="#6b7280" />
+            <label className="text-[11px] font-black text-gray-600 uppercase mb-3 block tracking-wider">Network</label>
+            <div className="h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center px-4 gap-4 hover:bg-white/[0.08] transition-colors cursor-pointer group">
+              <div className="w-6 h-6 rounded-full bg-[#627eea] flex items-center justify-center text-[10px] font-black">Ξ</div>
+              <span className="flex-1 font-bold text-sm">Ethereum Mainnet</span>
+              <ChevronRight size={18} className="text-gray-700 group-hover:text-gray-400 transition-colors" />
             </div>
           </div>
 
           <div>
-            <label style={{ fontSize: '13px', fontWeight: '600', color: '#9ca3af', display: 'block', marginBottom: '8px' }}>Recipient Address</label>
+            <label className="text-[11px] font-black text-gray-600 uppercase mb-3 block tracking-wider">Recipient Address</label>
             <input
               placeholder="0x... or .eth name"
-              style={{ width: '100%', height: '52px', borderRadius: '14px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '0 16px', color: '#fff', fontSize: '15px', outline: 'none' }}
+              className="w-full h-14 rounded-2xl bg-white/5 border border-white/10 px-4 text-white font-bold outline-none focus:border-indigo-500/50 transition-all"
             />
           </div>
 
           <div>
-            <label style={{ fontSize: '13px', fontWeight: '600', color: '#9ca3af', display: 'block', marginBottom: '8px' }}>Amount</label>
-            <div style={{ position: 'relative' }}>
+            <label className="text-[11px] font-black text-gray-600 uppercase mb-3 block tracking-wider">Amount</label>
+            <div className="relative">
               <input
                 placeholder="0.0"
-                style={{ width: '100%', height: '52px', borderRadius: '14px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '0 80px 0 16px', color: '#fff', fontSize: '18px', fontWeight: '600', outline: 'none' }}
+                className="w-full h-14 rounded-2xl bg-white/5 border border-white/10 pl-4 pr-20 text-white font-black text-xl outline-none focus:border-indigo-500/50 transition-all"
               />
-              <div style={{ position: 'absolute', right: '16px', top: '14px', fontWeight: '700', color: '#4f46e5' }}>ETH</div>
+              <div className="absolute right-4 top-4 font-black text-indigo-500">ETH</div>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px', fontSize: '12px', color: '#6b7280' }}>
+            <div className="flex justify-between mt-2 text-xs font-bold text-gray-600 px-1">
               <span>Balance: 0 ETH</span>
               <span>≈ $0.00</span>
             </div>
           </div>
 
-          <div style={{ padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
-             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                <span style={{ fontSize: '13px', color: '#9ca3af' }}>Network Fee</span>
-                <span style={{ fontSize: '13px', fontWeight: '500' }}>0.00042 ETH ($1.03)</span>
+          <div className="p-6 bg-white/5 border border-white/5 rounded-2xl space-y-4">
+             <div className="flex justify-between items-center">
+                <span className="text-xs font-bold text-gray-500">Network Fee</span>
+                <span className="text-xs font-black text-white">0.00042 ETH ($1.03)</span>
              </div>
-             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '13px', color: '#9ca3af' }}>Destination Score</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                   <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#00c76a' }} />
-                   <span style={{ fontSize: '13px', fontWeight: '600', color: '#00c76a' }}>Trustless</span>
+             <div className="flex justify-between items-center">
+                <span className="text-xs font-bold text-gray-500">Destination Score</span>
+                <div className="flex items-center gap-2">
+                   <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                   <span className="text-xs font-black text-emerald-500">Trustless</span>
                 </div>
              </div>
           </div>
 
-          <button style={{ height: '60px', borderRadius: '18px', background: '#4f46e5', color: '#fff', border: 'none', fontWeight: '700', fontSize: '16px', cursor: 'pointer', marginTop: '12px' }}>
+          <button
+            onClick={handleSend}
+            className="h-16 rounded-2xl bg-indigo-600 text-white border-none font-black text-lg cursor-pointer hover:bg-indigo-500 shadow-xl shadow-indigo-500/20 active:scale-95 transition-all mt-4"
+          >
             Confirm Send
           </button>
         </div>
@@ -566,6 +763,13 @@ function SendView({ onBack, onGoToBackup }: { onBack: () => void, onGoToBackup: 
 
 function ReceiveView({ onBack, address }: { onBack: () => void, address: string }) {
   const [copied, setCopied] = useState(false);
+  const [generating, setGenerating] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setGenerating(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleCopy = () => {
     navigator.clipboard.writeText(address);
     setCopied(true);
@@ -573,34 +777,39 @@ function ReceiveView({ onBack, address }: { onBack: () => void, address: string 
   };
 
   return (
-    <div style={{ backgroundColor: '#0a0a0f', color: '#fff', minHeight: '100%', width: '100%', padding: '60px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <div style={{ width: '100%', maxWidth: '440px', textAlign: 'center' }}>
-        <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', marginBottom: '32px' }}>
-          <ArrowLeft size={20} /> Back
+    <div className="bg-[#0a0a0f] text-white min-h-full w-full py-20 px-5 flex flex-col items-center font-inter text-center">
+      <div className="w-full max-w-[440px]">
+        <button onClick={onBack} className="flex items-center gap-2 bg-transparent border-none text-gray-500 hover:text-white cursor-pointer mb-10 transition-colors font-bold text-sm mx-auto">
+          <ArrowLeft size={18} /> Back
         </button>
 
-        <h1 style={{ fontSize: '28px', fontWeight: '800', marginBottom: '12px' }}>Receive Crypto</h1>
-        <p style={{ color: '#9ca3af', marginBottom: '40px' }}>Your Ethereum wallet address</p>
+        <h1 className="text-3xl font-black mb-3 tracking-tight">Receive Crypto</h1>
+        <p className="text-gray-500 mb-12 font-medium">Your Ethereum wallet address</p>
 
-        <div style={{ background: '#fff', padding: '24px', borderRadius: '24px', display: 'inline-block', marginBottom: '32px' }}>
-          {/* Simple mock QR code */}
-          <div style={{ width: '200px', height: '200px', background: '#000', display: 'flex', flexWrap: 'wrap', padding: '4px' }}>
-            {Array.from({ length: 400 }).map((_, i) => (
-              <div key={i} style={{ width: '10px', height: '10px', background: Math.random() > 0.5 ? '#fff' : '#000' }} />
-            ))}
-          </div>
+        <div className="bg-white p-8 rounded-[40px] inline-block mb-10 shadow-2xl shadow-indigo-500/5 relative min-w-[260px] min-h-[260px]">
+          {generating ? (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Spinner size={32} color="#4f46e5" />
+            </div>
+          ) : (
+            <div className="w-48 h-48 bg-black flex flex-wrap p-1">
+              {Array.from({ length: 400 }).map((_, i) => (
+                <div key={i} className="w-[12px] h-[12px]" style={{ background: Math.random() > 0.5 ? '#fff' : '#000' }} />
+              ))}
+            </div>
+          )}
         </div>
 
-        <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '16px', display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
-           <span style={{ flex: 1, fontSize: '13px', color: '#fff', fontFamily: 'monospace', overflow: 'hidden', textOverflow: 'ellipsis' }}>{address}</span>
-           <button onClick={handleCopy} style={{ background: '#4f46e5', border: 'none', borderRadius: '8px', padding: '8px 12px', color: '#fff', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}>
+        <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center gap-4 mb-8 shadow-xl">
+           <span className="flex-1 text-[13px] text-white font-mono truncate">{address}</span>
+           <button onClick={handleCopy} className="bg-indigo-600 border-none rounded-xl px-4 py-2 text-white text-xs font-black cursor-pointer hover:bg-indigo-500 transition-all active:scale-95">
              {copied ? 'Copied' : 'Copy'}
            </button>
         </div>
 
-        <div style={{ background: 'rgba(79, 70, 229, 0.1)', borderRadius: '12px', padding: '12px 16px', display: 'flex', gap: '12px', alignItems: 'flex-start', textAlign: 'left' }}>
-           <AlertTriangle size={18} color="#4f46e5" style={{ flexShrink: 0 }} />
-           <p style={{ fontSize: '12px', color: '#9ca3af', margin: 0, lineHeight: '1.5' }}>Only send compatible tokens to this address. Sending unsupported tokens may result in permanent loss.</p>
+        <div className="bg-indigo-500/10 rounded-2xl p-4 flex gap-4 text-left items-start border border-indigo-500/10">
+           <AlertTriangle size={20} className="text-indigo-500 shrink-0 mt-0.5" />
+           <p className="text-xs text-gray-500 font-medium leading-relaxed m-0">Only send compatible tokens to this address. Sending unsupported tokens may result in permanent loss.</p>
         </div>
       </div>
     </div>

@@ -60,7 +60,9 @@ const FLOATING_COINS = [
 ];
 
 export default function WalletPanel({ onClose, onOpenWalletModal, onOpenDashboard }: WalletPanelProps) {
-  const { status, addresses, lock, unlock, getBalance } = useWalletStore();
+  const { status, accounts, activeAccountId, lock, unlock, getBalance } = useWalletStore();
+  const activeAccount = accounts.find(a => a.id === activeAccountId) || accounts[0];
+  const addresses = activeAccount?.addresses;
   // Unlock panel state
   const [unlockPw,   setUnlockPw]   = useState('');
   const [unlockShow, setUnlockShow] = useState(false);

@@ -28,7 +28,7 @@ export default function TabBar({
   const activeTabBg = isDark ? '#1c1c1e' : '#f2f2f7';         // matches toolbar bg — gives tab "lift"
 
   return (
-    <div className={`h-9 flex items-end shrink-0 drag ${tabBg}`}>
+    <div className={`h-[36px] flex items-end shrink-0 drag ${tabBg}`}>
 
       {/* macOS: leave 80px for native traffic lights (trafficLightPosition x:14 y:12) */}
       {isMac && <div className="shrink-0 h-full" style={{ width: 82 }} />}
@@ -131,7 +131,7 @@ function Tab({ tab, isActive, isDark, activeTabBg, onClick, onClose }: {
     <div
       onClick={onClick}
       className={`
-        no-drag group relative flex items-center gap-2 h-9 px-3 cursor-pointer
+        no-drag group relative flex items-center gap-2 h-[36px] px-3 cursor-pointer
         rounded-tl-lg rounded-tr-lg flex-1 min-w-[44px] max-w-[220px] transition-all select-none overflow-hidden
       `}
       style={{

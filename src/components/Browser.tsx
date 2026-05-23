@@ -16,6 +16,7 @@ import Dashboard   from '../pages/Dashboard';
 import WalletModal from './modals/WalletModal';
 import IntroOverlay from './IntroOverlay';
 import logo from '@/assets/logo.png';
+import Spinner from './Spinner';
 
 import { useTabsStore, NEW_TAB } from '../store/tabs';
 import { useSettings }           from '../store/settings';
@@ -164,6 +165,7 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
 
   const [addrInput, setAddrInput]       = useState('');
   const [isEditing, setIsEditing]       = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
   const [walletOpen, setWalletOpen]     = useState(false);
   const [walletModal, setWalletModal]   = useState<null | 'create' | 'import' | 'unlock'>(null);
   const [showIntro, setShowIntro]       = useState(!hasSeenIntro);
@@ -219,10 +221,17 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
     const input = raw.trim();
     if (!input) return;
     setIsEditing(false);
+    setIsNavigating(true);
 
     if (input.startsWith('orivon://')) {
+      if (input === DASHBOARD_URL || input.startsWith(DASHBOARD_URL)) {
+        // Open dashboard in new tab always if not already on it or even if on it as per FIX 6
+        const newId = addTab(input);
+        setTimeout(() => setIsNavigating(false), 500);
+        return;
+      }
       navigateTab(tabId, input, input, 'https');
-      // isLoading stays false — handled in the store for all orivon:// URLs
+      setTimeout(() => setIsNavigating(false), 500);
       return;
     }
 
@@ -233,18 +242,39 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
       const r = await window.electronAPI.resolveURL(input);
       if (r.ok) { url = r.url; type = r.type as typeof type; }
     } else {
-      if (input.endsWith('.eth'))                                                { url = `https://${input}.limo`; type = 'ens'; }
-      else if (input.startsWith('ipfs://'))                                      { url = `https://ipfs.io/ipfs/${input.slice(7)}`; type = 'ipfs'; }
-      else if (input.startsWith('http://') || input.startsWith('https://'))     { url = input; type = input.startsWith('https') ? 'https' : 'http'; }
-      else if (input.includes('.') && !input.includes(' '))                     { url = `https://${input}`; type = 'https'; }
-      else                                                                       { url = `https://www.google.com/search?q=${encodeURIComponent(input)}`; type = 'search'; }
+      const isUrl = input.includes('.') && !input.includes(' ');
+      const hasProtocol = input.startsWith('http://') || input.startsWith('https://') || input.startsWith('ipfs://') || input.startsWith('ipns://');
+
+      if (input.endsWith('.eth')) {
+        url = `https://${input}.limo`; type = 'ens';
+      } else if (input.startsWith('ipfs://')) {
+        url = `https://ipfs.io/ipfs/${input.slice(7)}`; type = 'ipfs';
+      } else if (hasProtocol) {
+        url = input; type = input.startsWith('https') ? 'https' : 'http';
+      } else if (isUrl) {
+        url = `https://${input}`; type = 'https';
+      } else {
+        // Search Engine Integration (FIX 7)
+        const engine = useSettings.getState().searchEngine;
+        if (engine === 'web3compass') {
+          url = `https://www.web3compass.net/search?q=${encodeURIComponent(input)}`;
+        } else if (engine === 'duckduckgo') {
+          url = `https://duckduckgo.com/?q=${encodeURIComponent(input)}`;
+        } else if (engine === 'brave') {
+          url = `https://search.brave.com/search?q=${encodeURIComponent(input)}`;
+        } else {
+          url = `https://www.google.com/search?q=${encodeURIComponent(input)}`;
+        }
+        type = 'search';
+      }
     }
 
     navigateTab(tabId, url, input, type);
     setAddrInput(input);
     webviewRefs.current[tabId]?.loadURL(url);
     addLog(`→ ${url}`);
-  }, [activeTabId, navigateTab, addLog]);
+    setTimeout(() => setIsNavigating(false), 500);
+  }, [activeTabId, navigateTab, addTab, addLog]);
 
   const handleBack    = () => { const url = goBack(activeTabId);    if (url) webviewRefs.current[activeTabId]?.goBack(); };
   const handleForward = () => { const url = goForward(activeTabId); if (url) webviewRefs.current[activeTabId]?.goForward(); };
@@ -288,8 +318,9 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
   // Shared nav button style — matches Brave's compact 28×28 icon buttons
   const navBtnCls = `
     no-drag w-7 h-7 rounded flex items-center justify-center
-    transition-colors duration-100 focus:outline-none
+    transition-all duration-150 focus:outline-none
     disabled:opacity-25 disabled:cursor-not-allowed
+    active:scale-90
   `;
   const navBtnColors = isDark
     ? 'text-white/38 hover:text-white/80 hover:bg-white/[0.07] active:bg-white/[0.11]'
@@ -331,7 +362,7 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
       <div
         className="shrink-0 flex items-center"
         style={{
-          height: 36,
+          height: 40,
           background: toolbarBg,
           borderBottom: `1px solid ${toolbarBdr}`,
           padding: '0 6px',
@@ -460,22 +491,27 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
                 onClick={(e) => { e.stopPropagation(); setScorePanelOpen(!scorePanelOpen); }}
                 className="absolute no-drag flex items-center justify-center"
                 style={{
-                  left: 26,
-                  width: 12,
-                  height: 12,
+                  left: 20,
+                  width: 20,
+                  height: 20,
                   background: 'transparent',
                   border: 'none',
                   cursor: 'pointer',
-                  zIndex: 10
+                  zIndex: 10,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}
               >
                 <div
+                  className={activeTab?.isLoading ? "animate-pulse" : ""}
                   style={{
-                    width: 6,
-                    height: 6,
+                    width: 10,
+                    height: 10,
                     borderRadius: '50%',
-                    background: getWeb3Color(activeTab.url, activeTab.type)!,
-                    boxShadow: `0 0 4px ${getWeb3Color(activeTab.url, activeTab.type)}88`,
+                    background: activeTab?.isLoading ? '#9CA3AF' : getWeb3Color(activeTab.url, activeTab.type)!,
+                    boxShadow: `0 0 6px ${activeTab?.isLoading ? '#9CA3AF' : getWeb3Color(activeTab.url, activeTab.type)}88`,
+                    transition: 'all 0.5s ease-in-out'
                   }}
                 />
               </button>
@@ -491,27 +527,34 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
               )}
             </AnimatePresence>
 
-            <input
-              ref={addrRef}
-              type="text"
-              value={isEditing ? addrInput : (activeTab ? resolveDisplay(activeTab.url) : '')}
-              onChange={e => setAddrInput(e.target.value)}
-              onFocus={() => {
-                setIsEditing(true);
-                setAddrInput(activeTab ? resolveDisplay(activeTab.url) : '');
-                setTimeout(() => addrRef.current?.select(), 20);
-              }}
-              onBlur={() => setIsEditing(false)}
-              placeholder="Search or enter address"
-              className="w-full h-full bg-transparent focus:outline-none"
-              style={{
-                padding: `0 32px 0 ${activeTab?.url && getWeb3Color(activeTab.url, activeTab.type) ? 38 : 28}px`,
-                fontSize: 12.5,
-                fontWeight: 400,
-                color: isDark ? 'rgba(255,255,255,0.82)' : 'rgba(0,0,0,0.80)',
-                letterSpacing: '0.01em',
-              }}
-            />
+            <div className="flex-1 relative h-full flex items-center">
+              <input
+                ref={addrRef}
+                type="text"
+                value={isEditing ? addrInput : (activeTab ? resolveDisplay(activeTab.url) : '')}
+                onChange={e => setAddrInput(e.target.value)}
+                onFocus={() => {
+                  setIsEditing(true);
+                  setAddrInput(activeTab ? resolveDisplay(activeTab.url) : '');
+                  setTimeout(() => addrRef.current?.select(), 20);
+                }}
+                onBlur={() => setIsEditing(false)}
+                placeholder="Search or enter address"
+                className="w-full h-full bg-transparent focus:outline-none"
+                style={{
+                  padding: `0 32px 0 ${activeTab?.url && getWeb3Color(activeTab.url, activeTab.type) ? 44 : 28}px`,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  color: isDark ? 'rgba(255,255,255,0.95)' : 'rgba(0,0,0,0.90)',
+                  letterSpacing: '0.01em',
+                }}
+              />
+              {isNavigating && (
+                <div className="absolute right-3">
+                  <Spinner size={14} color="#4f46e5" />
+                </div>
+              )}
+            </div>
 
             {/* ENS / IPFS badge — right of input */}
             {activeTab?.type === 'ens' && !isEditing && (
@@ -583,7 +626,7 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
 
           {/* Dashboard / profile */}
           <button
-            onClick={() => navigate(DASHBOARD_URL)}
+            onClick={() => navigate(DASHBOARD_URL + '?view=full')}
             title="Dashboard"
             className="no-drag flex items-center justify-center focus:outline-none transition-colors duration-100"
             style={{
