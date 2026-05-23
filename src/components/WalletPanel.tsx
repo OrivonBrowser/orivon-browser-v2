@@ -297,13 +297,11 @@ export default function WalletPanel({ onClose, onOpenWalletModal, onOpenDashboar
                           </div>
                         ))}
                         <div style={s.divider} />
-                        {onOpenDashboard && (
-                          <div style={{ padding: '12px 16px' }}>
-                            <button onClick={onOpenDashboard} style={{ width: '100%', height: 36, borderRadius: 9999, border: '1px solid #E5E7EB', background: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, color: '#4F46E5' }}>
-                              Open full dashboard
-                            </button>
-                          </div>
-                        )}
+                        <div style={{ padding: '12px 16px' }}>
+                          <button onClick={onOpenDashboard} style={{ width: '100%', height: 36, borderRadius: 9999, border: '1px solid #E5E7EB', background: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, color: '#4F46E5' }}>
+                            Open Dashboard
+                          </button>
+                        </div>
                         <div style={{ padding: '0 16px 12px' }}>
                           <button onClick={() => { lock(); onClose(); }} style={{ width: '100%', height: 36, borderRadius: 9999, border: '1px solid #FEE2E2', background: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, color: '#EF4444', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                             <Lock size={13} /> Lock wallet

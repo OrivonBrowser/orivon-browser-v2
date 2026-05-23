@@ -8,7 +8,7 @@ interface SettingsState {
   sidebarOpen: boolean;
   rightPanelOpen: boolean;
   homepage: string;
-  searchEngine: 'google' | 'duckduckgo' | 'brave';
+  searchEngine: 'google' | 'duckduckgo' | 'brave' | 'web3compass';
   hasSeenIntro: boolean;
   web3ScoreProvider: string;
   blockTrackers: boolean;
@@ -39,7 +39,7 @@ export const useSettings = create<SettingsState>()(
       sidebarOpen: true,
       rightPanelOpen: false,
       homepage: 'orivon://newtab',
-      searchEngine: 'google',
+      searchEngine: 'web3compass',
       hasSeenIntro: false,
       web3ScoreProvider: 'Orivon Native',
       blockTrackers: true,
