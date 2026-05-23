@@ -1,4 +1,4 @@
-# Orivon Browser
+# Orivon Browser 
 
 A native Web3 desktop browser built on Electron and Chromium.  
 Browse ENS domains, IPFS apps, and the open web with a built-in multi-chain wallet.
