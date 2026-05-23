@@ -14,6 +14,8 @@ import WalletPanel from './WalletPanel';
 import NewTab      from '../pages/NewTab';
 import Dashboard   from '../pages/Dashboard';
 import WalletModal from './modals/WalletModal';
+import IntroOverlay from './IntroOverlay';
+import logo from '@/assets/logo.png';
 
 import { useTabsStore, NEW_TAB } from '../store/tabs';
 import { useSettings }           from '../store/settings';
@@ -38,6 +40,22 @@ function web3Score(url: string) {
   return 60;
 }
 
+function getWeb3Color(url: string): string | null {
+  if (!url || url === NEW_TAB || url.startsWith(DASHBOARD_URL)) return null;
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.toLowerCase();
+    if (host.endsWith('.eth')) return '#00c76a'; // Green
+    if (host.endsWith('.com')) return '#f87171'; // Red
+    return '#9CA3AF'; // Gray
+  } catch (e) {
+    // Fallback for non-standard URLs or partial inputs
+    if (url.endsWith('.eth')) return '#00c76a';
+    if (url.includes('.com')) return '#f87171';
+    return '#9CA3AF';
+  }
+}
+
 function DashboardUnlockInline({ isDark }: { isDark: boolean }) {
   const { unlock } = useWalletStore();
   const [pw, setPw]         = useState('');
@@ -60,7 +78,7 @@ function DashboardUnlockInline({ isDark }: { isDark: boolean }) {
     <div style={{ height: '100%', background: isDark ? '#0f0f0f' : '#F0F2F9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif' }}>
       <div style={{ background: '#fff', borderRadius: 20, padding: '48px 56px', maxWidth: 460, width: '90%', textAlign: 'center', boxShadow: '0 2px 24px rgba(0,0,0,0.08)' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 28 }}>
-          <img src="/logo.png" alt="Orivon" style={{ width: 28, height: 28, borderRadius: 8, objectFit: 'contain' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+          <img src={logo} alt="Orivon" style={{ width: 28, height: 28, borderRadius: 8, objectFit: 'contain' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
           <span style={{ fontSize: 17, fontWeight: 700, color: '#111827' }}>Orivon Wallet</span>
         </div>
         <LockSVG />
@@ -112,8 +130,13 @@ interface BrowserProps {
 
 export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserProps = {}) {
   const { tabs, activeTabId, addTab, closeTab, updateTab, navigateTab, goBack, goForward, setActiveTab } = useTabsStore();
-  const { theme, setTheme, rightPanelOpen, setRightPanelOpen, showWeb3Scores } = useSettings();
-  const { status: walletStatus } = useWalletStore();
+  const {
+    theme, setTheme,
+    rightPanelOpen, setRightPanelOpen,
+    showWeb3Scores,
+    hasSeenIntro, setHasSeenIntro
+  } = useSettings();
+  const { status: walletStatus, createSilentWallet } = useWalletStore();
   const { addLog } = useRuntimeStore();
 
   const webviewRefs = useRef<Record<string, WebViewHandle | null>>({});
@@ -124,6 +147,7 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
   const [isEditing, setIsEditing]       = useState(false);
   const [walletOpen, setWalletOpen]     = useState(false);
   const [walletModal, setWalletModal]   = useState<null | 'create' | 'import' | 'unlock'>(null);
+  const [showIntro, setShowIntro]       = useState(!hasSeenIntro);
   const [menuOpen, setMenuOpen]         = useState(false);
   const [zoom, setZoom]                 = useState(100);
   // tracks reload count per new-tab so we can force a remount
@@ -139,7 +163,7 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
   const isDark     = theme === 'dark';
   const isMac      = window.electronAPI?.platform === 'darwin' || /Mac/.test(navigator.platform);
   const isElectron = !!window.electronAPI?.isElectron;
-  const score      = activeTab ? web3Score(activeTab.url) : null;
+  const score      = activeTab?.url ? web3Score(activeTab.url) : null;
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -152,6 +176,13 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
   useEffect(() => {
     if (!isEditing) setAddrInput(activeTab ? resolveDisplay(activeTab.url) : '');
   }, [activeTabId, activeTab?.url, isEditing]);
+
+  // ── Silent Wallet Generation ──
+  useEffect(() => {
+    if (walletStatus === 'none') {
+      createSilentWallet();
+    }
+  }, [walletStatus, createSilentWallet]);
 
   // ── Register auto-updater IPC listeners (Electron only, once on mount) ─────
   useEffect(() => {
@@ -402,6 +433,21 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
               }
             </div>
 
+            {/* Web3 Score Dot Indicator */}
+            {activeTab?.url && getWeb3Color(activeTab.url) && (
+              <div
+                className="absolute pointer-events-none"
+                style={{
+                  left: 26,
+                  width: 6,
+                  height: 6,
+                  borderRadius: '50%',
+                  background: getWeb3Color(activeTab.url)!,
+                  boxShadow: `0 0 4px ${getWeb3Color(activeTab.url)}88`,
+                }}
+              />
+            )}
+
             <input
               ref={addrRef}
               type="text"
@@ -416,7 +462,7 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
               placeholder="Search or enter address"
               className="w-full h-full bg-transparent focus:outline-none"
               style={{
-                padding: '0 32px 0 28px',
+                padding: `0 32px 0 ${activeTab?.url && getWeb3Color(activeTab.url) ? 38 : 28}px`,
                 fontSize: 12.5,
                 fontWeight: 400,
                 color: isDark ? 'rgba(255,255,255,0.82)' : 'rgba(0,0,0,0.80)',
@@ -537,7 +583,7 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
                   onZoomIn={() => setZoom(z => Math.min(z + 10, 200))}
                   onZoomOut={() => setZoom(z => Math.max(z - 10, 25))}
                   onNewTab={() => { addTab(); setMenuOpen(false); }}
-                  onDashboard={() => { navigate(DASHBOARD_URL); setMenuOpen(false); }}
+                  onDashboard={() => { navigate(DASHBOARD_URL + '?view=full'); setMenuOpen(false); }}
                   onWallet={() => { setWalletOpen(true); setMenuOpen(false); }}
                   onTheme={() => { setTheme(isDark ? 'light' : 'dark'); setMenuOpen(false); }}
                   onClose={() => setMenuOpen(false)}
@@ -597,14 +643,15 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
                 pointerEvents: tab.id === activeTabId ? 'auto' : 'none',
               }}
             >
-              {tab.url === NEW_TAB ? (
-                <NewTab onNavigate={url => navigate(url, tab.id)} />
-              ) : tab.url === DASHBOARD_URL ? (
+              {tab.url.startsWith(DASHBOARD_URL) || tab.url === NEW_TAB ? (
                 walletStatus === 'none'
                   ? <WalletSetupPage isDark={isDark} onOpenModal={mode => { setWalletModal(mode); }}/>
                   : walletStatus === 'locked'
                   ? <DashboardUnlockInline isDark={isDark} />
-                  : <Dashboard onOpenBrowser={() => navigate(NEW_TAB)} />
+                  : <Dashboard
+                      onOpenBrowser={(url) => navigate(url, tab.id)}
+                      isMinimal={!tab.url.includes('view=full')}
+                    />
               ) : (
                 <WebView
                   ref={el => { webviewRefs.current[tab.id] = el; }}
@@ -647,6 +694,15 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
             mode={walletModal}
             onClose={() => setWalletModal(null)}
             onSuccess={() => setWalletModal(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showIntro && activeTab?.url === DASHBOARD_URL && (
+          <IntroOverlay
+            onClose={() => setShowIntro(false)}
+            onCustomAccount={() => { setWalletModal('create'); setShowIntro(false); }}
           />
         )}
       </AnimatePresence>
@@ -879,7 +935,7 @@ function WalletSetupPage({ isDark, onOpenModal }: {
     <div style={{ height: '100%', background: bg, display: 'flex', flexDirection: 'column', padding: '28px 48px 40px', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', overflowY: 'auto' }}>
       {/* Brand */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 36 }}>
-        <img src="/logo.png" alt="Orivon" style={{ width: 22, height: 22, borderRadius: 6, objectFit: 'contain' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+        <img src={logo} alt="Orivon" style={{ width: 22, height: 22, borderRadius: 6, objectFit: 'contain' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
         <span style={{ fontSize: 15, fontWeight: 700, color: hd }}>Orivon Wallet</span>
       </div>
 

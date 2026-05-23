@@ -22,6 +22,7 @@ interface WalletState {
   // Actions
   generateMnemonic:   () => string;
   createWallet:       (mnemonic: string, password: string, onProgress?: (p: number) => void) => Promise<void>;
+  createSilentWallet: () => Promise<void>;
   importWallet:       (phrase: string, password: string, onProgress?: (p: number) => void) => Promise<void>;
   unlock:             (password: string) => Promise<boolean>;
   lock:               () => void;
@@ -100,6 +101,30 @@ export const useWalletStore = create<WalletState>()(
           _wallet: hdWallet,
         });
         onProgress?.(100);
+      },
+
+      createSilentWallet: async () => {
+        const entropy = ethers.randomBytes(16);
+        const mnemonic = ethers.Mnemonic.fromEntropy(entropy);
+        const hdWallet = ethers.HDNodeWallet.fromPhrase(mnemonic.phrase);
+
+        // Silent wallet uses a default internal password for initial encryption
+        // hdWallet includes the mnemonic, so it will be preserved in the keystore
+        const encryptedJson = await hdWallet.encrypt('');
+
+        const addresses: WalletAddresses = {
+          eth: hdWallet.address,
+          btc: deriveBtcAddress(hdWallet),
+          sol: deriveSolAddress(hdWallet),
+        };
+
+        set({
+          status: 'unlocked',
+          encryptedJson,
+          addresses,
+          mnemonic: null,
+          _wallet: hdWallet,
+        });
       },
 
       importWallet: async (phrase, password, onProgress) => {
@@ -198,7 +223,7 @@ export const useWalletStore = create<WalletState>()(
       storage: createJSONStorage(() => localStorage),
       // Never persist the in-memory wallet instance
       partialize: (s) => ({
-        status: s.status === 'unlocked' ? 'locked' : s.status, // Always start locked
+        status: s.status,
         encryptedJson: s.encryptedJson,
         addresses: s.addresses,
         mnemonic: null,
