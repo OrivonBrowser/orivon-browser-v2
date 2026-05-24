@@ -111,6 +111,22 @@
   animation: fadeIn 200ms ease forwards;
 }
 
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #161720 25%,
+    #1e2030 50%,
+    #161720 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
 @layer utilities {
   .drag    { -webkit-app-region: drag;    app-region: drag;    }
   .no-drag { -webkit-app-region: no-drag; app-region: no-drag; }
