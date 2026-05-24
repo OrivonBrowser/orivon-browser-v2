@@ -1,9 +1,10 @@
-import { app, session, BrowserWindow, ipcMain, shell } from "electron";
+import { app, ipcMain, session, BrowserWindow, shell } from "electron";
 import updaterPkg from "electron-updater";
 import log from "electron-log";
 import path from "path";
 import Store from "electron-store";
 import { ethers } from "ethers";
+import bcrypt from "bcryptjs";
 import __cjs_mod__ from "node:module";
 const __filename = import.meta.filename;
 const __dirname = import.meta.dirname;
@@ -78,6 +79,37 @@ app.commandLine.appendSwitch("enable-accelerated-video-decode");
 app.commandLine.appendSwitch("enable-accelerated-video-encode");
 app.commandLine.appendSwitch("disable-features", "HardwareMediaKeyHandling,MediaSessionService");
 const store = new Store();
+let sessionUnlocked = false;
+ipcMain.handle("is-wallet-secured", () => {
+  return !!store.get("wallet_secured");
+});
+ipcMain.handle("is-wallet-unlocked", () => {
+  return sessionUnlocked;
+});
+ipcMain.handle("unlock-wallet", (_event, password) => {
+  const stored = store.get("wallet_password_hash");
+  if (!stored) return { success: false, error: "No password set" };
+  const match = bcrypt.compareSync(password, stored);
+  if (match) {
+    sessionUnlocked = true;
+    return { success: true };
+  }
+  return { success: false, error: "Incorrect password" };
+});
+ipcMain.handle("set-password", (_event, password) => {
+  const hash = bcrypt.hashSync(password, 12);
+  store.set("wallet_password_hash", hash);
+  store.set("wallet_secured", true);
+  sessionUnlocked = true;
+  return { success: true };
+});
+ipcMain.handle("onboarding:complete", () => {
+  store.set("onboarding_complete", true);
+  return true;
+});
+ipcMain.handle("onboarding:status", () => {
+  return !!store.get("onboarding_complete");
+});
 async function initializeWallet() {
   try {
     const existing = store.get("orivon_wallet_address");

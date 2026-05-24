@@ -6,6 +6,7 @@ import path from 'path';
 import fs from 'fs';
 import Store from 'electron-store';
 import { ethers } from 'ethers';
+import bcrypt from 'bcryptjs';
 import { resolveURL } from './resolvers/url-router';
 
 // ─── Logger ───────────────────────────────────────────────────────────────────
@@ -52,6 +53,45 @@ app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling,Media
 
 // ─── Persistent store (electron-store) ─────────────────────────────────────────
 const store = new Store();
+
+let sessionUnlocked = false;
+
+ipcMain.handle('is-wallet-secured', () => {
+  return !!store.get('wallet_secured');
+});
+
+ipcMain.handle('is-wallet-unlocked', () => {
+  return sessionUnlocked;
+});
+
+ipcMain.handle('unlock-wallet', (_event, password) => {
+  const stored = store.get('wallet_password_hash') as string;
+  if (!stored) return { success: false, error: 'No password set' };
+  
+  const match = bcrypt.compareSync(password, stored);
+  if (match) {
+    sessionUnlocked = true;
+    return { success: true };
+  }
+  return { success: false, error: 'Incorrect password' };
+});
+
+ipcMain.handle('set-password', (_event, password) => {
+  const hash = bcrypt.hashSync(password, 12);
+  store.set('wallet_password_hash', hash);
+  store.set('wallet_secured', true);
+  sessionUnlocked = true;
+  return { success: true };
+});
+
+ipcMain.handle('onboarding:complete', () => {
+  store.set('onboarding_complete', true);
+  return true;
+});
+
+ipcMain.handle('onboarding:status', () => {
+  return !!store.get('onboarding_complete');
+});
 
 async function initializeWallet() {
   try {

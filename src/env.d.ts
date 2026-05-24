@@ -39,6 +39,14 @@ interface ElectronAPI {
     address?: string;
     error?: string;
   }>;
+  isWalletSecured: () => Promise<boolean>;
+  isWalletUnlocked: () => Promise<boolean>;
+  unlockWallet: (password: string) => Promise<{ success: boolean; error?: string }>;
+  setPassword: (password: string) => Promise<{ success: boolean }>;
+  onboarding: {
+    complete: () => Promise<boolean>;
+    status: () => Promise<boolean>;
+  };
   updater: {
     onAvailable:  (cb: (version: string) => void) => void;
     onProgress:   (cb: (pct: number)     => void) => void;

@@ -13,6 +13,16 @@ contextBridge.exposeInMainWorld("electronAPI", {
   getWallet: () => ipcRenderer.invoke("get-wallet"),
   getMnemonic: () => ipcRenderer.invoke("get-mnemonic"),
   importWallet: (mnemonic) => ipcRenderer.invoke("import-wallet", mnemonic),
+  // ── Password Security ──────────────────────────────────────────────────────
+  isWalletSecured: () => ipcRenderer.invoke("is-wallet-secured"),
+  isWalletUnlocked: () => ipcRenderer.invoke("is-wallet-unlocked"),
+  unlockWallet: (password) => ipcRenderer.invoke("unlock-wallet", password),
+  setPassword: (password) => ipcRenderer.invoke("set-password", password),
+  // ── Onboarding ─────────────────────────────────────────────────────────────
+  onboarding: {
+    complete: () => ipcRenderer.invoke("onboarding:complete"),
+    status: () => ipcRenderer.invoke("onboarding:status")
+  },
   // ── URL resolution (ENS / IPFS / ipns) ────────────────────────────────────
   resolveURL: (url) => ipcRenderer.invoke("resolve:url", url),
   // ── Window controls ────────────────────────────────────────────────────────

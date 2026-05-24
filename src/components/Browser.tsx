@@ -34,21 +34,15 @@ import { useSessionStore }  from '../store/session';
 import { DASHBOARD_URL, SETTINGS_URL, NODEMANAGER_URL, NEW_TAB_URL as NEW_TAB } from '../constants';
 
 import OnboardingOverlay from './OnboardingOverlay';
+import PasswordModal from './PasswordModal';
 
 const DEMO_URLS = ['uniswap.eth', 'mastodon.eth', 'btcnode.eth', 'apps.orivon.eth', 'opensea.eth'];
 
 function OrivonPermissionPrompt({ details, onApprove, onReject }: { details: any, onApprove: () => void, onReject: () => void }) {
   const isInstall = details.type === 'install';
-  const { password } = useWalletStore();
-  const [pwInput, setPwInput] = useState('');
-  const [error, setError] = useState('');
 
   const handleAction = () => {
-    if (pwInput === password || (!password && pwInput === '1234')) {
-      onApprove();
-    } else {
-      setError('Incorrect password');
-    }
+    (window as any).requestSecurityCheck(onApprove);
   };
   
   return (
@@ -94,20 +88,6 @@ function OrivonPermissionPrompt({ details, onApprove, onReject }: { details: any
                    </div>
                 </>
              )}
-          </div>
-
-          <div className="mb-8">
-             <label className="text-label block mb-2 px-1 text-[#475569]">Action Password Required</label>
-             <input 
-               type="password" 
-               autoFocus
-               placeholder="••••••••"
-               value={pwInput}
-               onChange={e => {setPwInput(e.target.value); setError('');}}
-               onKeyDown={e => e.key === 'Enter' && handleAction()}
-               className="w-full h-11 rounded-lg bg-[#0d0e14] border border-[#1e2030] px-4 text-[#f8fafc] font-bold text-lg outline-none focus:border-[#6366f1] transition-all placeholder:text-[#1e2030]"
-             />
-             {error && <p className="text-[#ef4444] text-[11px] font-bold uppercase mt-2.5 px-1">{error}</p>}
           </div>
 
           <div className="flex items-center justify-between px-1 mb-8">
@@ -309,6 +289,38 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
   const { hasOnboarded, setHasOnboarded } = useSessionStore();
   const { status: walletStatus, initialize: initializeWallet } = useWalletStore();
   const { addLog } = useRuntimeStore();
+
+  const [passwordModal, setPasswordModal] = useState<{ mode: 'setup' | 'unlock', onSuccess: () => void } | null>(null);
+
+  useEffect(() => {
+    if (window.electronAPI?.onboarding) {
+      window.electronAPI.onboarding.status().then(status => {
+        setHasOnboarded(status);
+      });
+    }
+  }, [setHasOnboarded]);
+
+  const requestSecurityCheck = useCallback(async (action: () => void) => {
+    if (!window.electronAPI) {
+      action();
+      return;
+    }
+    const isSecured = await window.electronAPI.isWalletSecured();
+    const isUnlocked = await window.electronAPI.isWalletUnlocked();
+
+    if (!isSecured) {
+      setPasswordModal({ mode: 'setup', onSuccess: () => { setPasswordModal(null); action(); } });
+    } else if (!isUnlocked) {
+      setPasswordModal({ mode: 'unlock', onSuccess: () => { setPasswordModal(null); action(); } });
+    } else {
+      action();
+    }
+  }, []);
+
+  // Expose requestSecurityCheck to global window for other components to use
+  useEffect(() => {
+    (window as any).requestSecurityCheck = requestSecurityCheck;
+  }, [requestSecurityCheck]);
 
   const webviewRefs = useRef<Record<string, WebViewHandle | null>>({});
   const addrRef     = useRef<HTMLInputElement>(null);
@@ -772,12 +784,17 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
       <div className="flex-1 relative overflow-y-auto flex">
         <AnimatePresence>
           {!hasOnboarded && (
-             <motion.div 
-               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-               className="fixed inset-0 z-[10000] backdrop-blur-xl bg-black/60 flex items-center justify-center p-6"
-             >
-                <OnboardingOverlay onComplete={() => setHasOnboarded(true)} />
-             </motion.div>
+             <OnboardingOverlay onComplete={() => {
+                setHasOnboarded(true);
+                navigateTab(activeTabId, DASHBOARD_URL, DASHBOARD_URL, 'https');
+             }} />
+          )}
+          {passwordModal && (
+            <PasswordModal
+              mode={passwordModal.mode}
+              onSuccess={passwordModal.onSuccess}
+              onCancel={() => setPasswordModal(null)}
+            />
           )}
         </AnimatePresence>
         

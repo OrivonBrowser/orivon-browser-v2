@@ -89,11 +89,11 @@ export default function NewTab({ onNavigate }: NewTabProps) {
       {/* Compact Wallet Overview */}
       <div className="w-full max-w-[560px]">
         <CompactWalletCard
-          onSend={() => openDashboardView('send')}
-          onReceive={() => openDashboardView('receive')}
-          onBuy={() => {}}
-          onSwap={() => {}}
-          onImport={() => openDashboardView('import')}
+          onSend={() => (window as any).requestSecurityCheck(() => openDashboardView('send'))}
+          onReceive={() => (window as any).requestSecurityCheck(() => openDashboardView('receive'))}
+          onBuy={() => (window as any).requestSecurityCheck(() => openDashboardView('buy'))}
+          onSwap={() => (window as any).requestSecurityCheck(() => openDashboardView('swap'))}
+          onImport={() => (window as any).requestSecurityCheck(() => openDashboardView('import'))}
           isNewTab={true}
         />
       </div>

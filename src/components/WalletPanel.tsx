@@ -84,10 +84,20 @@ export default function WalletPanel({ onClose, onOpenDashboard }: WalletPanelPro
 
           {/* Actions */}
           <div className="px-4 pb-6 flex gap-3">
-            <button className="flex-1 h-10 rounded-lg bg-[#2b2c31] text-[#e6e7e8] font-bold text-[13px] flex items-center justify-center gap-2 hover:bg-[#3b3c42] transition-colors">
+            <button 
+              onClick={() => (window as any).requestSecurityCheck(() => {
+                console.log('Send action triggered');
+              })}
+              className="flex-1 h-10 rounded-lg bg-[#2b2c31] text-[#e6e7e8] font-bold text-[13px] flex items-center justify-center gap-2 hover:bg-[#3b3c42] transition-colors"
+            >
               <Send size={14} /> Send
             </button>
-            <button className="flex-1 h-10 rounded-lg bg-[#2b2c31] text-[#e6e7e8] font-bold text-[13px] flex items-center justify-center gap-2 hover:bg-[#3b3c42] transition-colors">
+            <button 
+              onClick={() => (window as any).requestSecurityCheck(() => {
+                console.log('Receive action triggered');
+              })}
+              className="flex-1 h-10 rounded-lg bg-[#2b2c31] text-[#e6e7e8] font-bold text-[13px] flex items-center justify-center gap-2 hover:bg-[#3b3c42] transition-colors"
+            >
               <Download size={14} /> Receive
             </button>
           </div>

@@ -111,8 +111,8 @@ export default function Dashboard({ onOpenBrowser }: { onOpenBrowser?: (url: str
 
   const renderContent = () => {
     switch (activeView) {
-      case 'Dashboard': return <DashboardPage onOpenBrowser={onOpenBrowser} onToast={addToast} onBackup={() => setShowSeedModal(true)} />;
-      case 'Wallet': return <WalletPage onBackup={() => setShowSeedModal(true)} onImport={() => setShowImportModal(true)} />;
+      case 'Dashboard': return <DashboardPage onOpenBrowser={onOpenBrowser} onToast={addToast} onBackup={() => (window as any).requestSecurityCheck(() => setShowSeedModal(true))} />;
+      case 'Wallet': return <WalletPage onBackup={() => (window as any).requestSecurityCheck(() => setShowSeedModal(true))} onImport={() => (window as any).requestSecurityCheck(() => setShowImportModal(true))} />;
       case 'Browse Web3': return <BrowseWeb3Page onOpen={onOpenBrowser} />;
       case 'App Store': return <AppStore onOpen={onOpenBrowser} onToast={addToast} />;
       case 'Node Manager': return <NodeManagerPage onToast={addToast} />;
@@ -125,7 +125,7 @@ export default function Dashboard({ onOpenBrowser }: { onOpenBrowser?: (url: str
   return (
     <div className={`flex h-full w-full bg-[#0d0e14] text-[#f8fafc] font-inter overflow-hidden transition-opacity duration-250 ${isInitialLoad ? 'opacity-0' : 'opacity-100'}`}>
       {/* Sidebar */}
-      <Sidebar activeView={activeView} setActiveView={setActiveView} activeAccount={activeAccount} accounts={accounts} onSwitch={switchAccount} onImport={() => setShowImportModal(true)} />
+      <Sidebar activeView={activeView} setActiveView={setActiveView} activeAccount={activeAccount} accounts={accounts} onSwitch={switchAccount} onImport={() => (window as any).requestSecurityCheck(() => setShowImportModal(true))} />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 relative h-full">
@@ -357,9 +357,26 @@ function DashboardPage({ onOpenBrowser, onToast, onBackup }: any) {
               </div>
 
               <div className="flex gap-4">
-                <CircleAction icon={ShoppingCart} label="Buy" />
-                <CircleAction icon={Send} label="Send" />
-                <CircleAction icon={ArrowLeftRight} label="Swap" />
+                <CircleAction 
+                  icon={ShoppingCart} 
+                  label="Buy" 
+                  onClick={() => (window as any).requestSecurityCheck(() => console.log('Buy'))} 
+                />
+                <CircleAction 
+                  icon={Send} 
+                  label="Send" 
+                  onClick={() => (window as any).requestSecurityCheck(() => console.log('Send'))} 
+                />
+                <CircleAction 
+                  icon={Download} 
+                  label="Receive" 
+                  onClick={() => (window as any).requestSecurityCheck(() => console.log('Receive'))} 
+                />
+                <CircleAction 
+                  icon={ArrowLeftRight} 
+                  label="Swap" 
+                  onClick={() => (window as any).requestSecurityCheck(() => console.log('Swap'))} 
+                />
                 <CircleAction icon={MoreHorizontal} label="More" />
               </div>
             </div>
@@ -420,9 +437,9 @@ function DashboardPage({ onOpenBrowser, onToast, onBackup }: any) {
   );
 }
 
-function CircleAction({ icon: Icon, label }: { icon: any; label: string }) {
+function CircleAction({ icon: Icon, label, onClick }: { icon: any; label: string; onClick?: () => void }) {
   return (
-    <div className="flex flex-col items-center gap-2 group cursor-pointer">
+    <div className="flex flex-col items-center gap-2 group cursor-pointer" onClick={onClick}>
       <div className="w-[52px] h-[52px] rounded-full bg-[#1e2030] flex items-center justify-center text-white transition-all duration-150 group-hover:bg-[#252636] group-hover:scale-105">
         <Icon size={20} />
       </div>
@@ -518,7 +535,7 @@ function WalletPage({ onBackup, onImport }: any) {
       <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-6 space-y-6">
         <h3 className="text-[14px] font-semibold text-[#f8fafc]">Security</h3>
         <div className="space-y-4">
-          <SecurityRow name="Orivon Wallet 1" status="Backed Up" isSecure onAction={() => {}} />
+          <SecurityRow name="Orivon Wallet 1" status="Backed Up" isSecure onAction={onBackup} />
           <SecurityRow name="Trading Wallet" status="Backup Recommended" type="Imported" onAction={onBackup} />
         </div>
       </div>
@@ -563,16 +580,19 @@ function SecurityRow({ name, status, isSecure, type, onAction }: any) {
           <span className="text-[12px] text-[#64748b]">{isSecure ? 'Wallet seed phrase is securely backed up' : 'Backup your seed phrase to secure your funds'}</span>
         </div>
       </div>
-      {isSecure ? (
-        <Badge className="bg-[#22c55e]/10 text-[#22c55e] px-3 py-1 uppercase text-[10px]">Backed Up</Badge>
-      ) : (
+      <div className="flex items-center gap-2">
+        {isSecure && (
+          <Badge className="bg-[#22c55e]/10 text-[#22c55e] px-3 py-1 uppercase text-[10px]">Backed Up</Badge>
+        )}
         <button 
           onClick={onAction}
-          className="h-8 px-4 rounded-[6px] border border-[#f59e0b] text-[#f59e0b] text-[12px] font-bold hover:bg-[#f59e0b] hover:text-white transition-all cursor-pointer bg-transparent"
+          className={`h-8 px-4 rounded-[6px] border text-[12px] font-bold transition-all cursor-pointer bg-transparent ${
+            isSecure ? 'border-[#1e2030] text-[#64748b] hover:border-[#6366f1] hover:text-[#f8fafc]' : 'border-[#f59e0b] text-[#f59e0b] hover:bg-[#f59e0b] hover:text-white'
+          }`}
         >
-          Backup Seed Phrase
+          {isSecure ? 'View Seed Phrase' : 'Backup Seed Phrase'}
         </button>
-      )}
+      </div>
     </div>
   );
 }
