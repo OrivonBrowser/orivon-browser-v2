@@ -5,13 +5,11 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "Fira Code", monospace;
 
-  --color-orivon-bg:      #0a0a0a;
-  --color-orivon-surface: #111111;
-  --color-orivon-card:    #161616;
-  --color-orivon-border:  rgba(255,255,255,0.08);
-  --color-orivon-accent:  #00FF87;
-  --color-orivon-blue:    #00D1FF;
-  --color-orivon-muted:   rgba(255,255,255,0.35);
+  --color-orivon-bg:      #0d0e14;
+  --color-orivon-surface: #111218;
+  --color-orivon-elevated: #161720;
+  --color-orivon-border:  #1e2030;
+  --color-orivon-accent:  #6366f1;
 }
 
 @layer base {
@@ -19,13 +17,14 @@
 
   body {
     margin: 0; padding: 0;
-    background: #0a0a0a;
-    color: #e5e5e5;
+    background: #0d0e14;
+    color: #f8fafc;
     font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     overflow: hidden;
     user-select: none;
     letter-spacing: -0.01em;
+    line-height: 1.5;
   }
 
   input, textarea, [contenteditable] {
@@ -34,7 +33,7 @@
   }
 
   button, a, select {
-    transition: all 150ms ease-in-out;
+    transition: all 120ms ease;
   }
 
   /* Thin scrollbars by default for content */
@@ -46,37 +45,70 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #2d2e45;
+    background: #1e2030;
     border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #4f46e5;
+    background: #6366f1;
   }
 
-  /* Typography Colors */
-  .text-primary { color: #f1f5f9; }
+  /* Global Typography Hierarchy */
+  .title-page {
+    font-size: 20px;
+    font-weight: 600;
+    color: #f8fafc;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .title-section {
+    font-size: 14px;
+    font-weight: 600;
+    color: #f8fafc;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  .text-body {
+    font-size: 13px;
+    font-weight: 400;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+
+  .text-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #64748b;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  /* Colors */
+  .text-primary { color: #f8fafc; }
   .text-secondary { color: #94a3b8; }
-  .text-muted { color: #4b5563; }
-  .text-accent { color: #818cf8; }
-  .text-destructive { color: #f87171; }
+  .text-muted { color: #475569; }
+  .text-accent { color: #6366f1; }
+  .text-success { color: #22c55e; }
+  .text-warning { color: #f59e0b; }
+  .text-danger { color: #ef4444; }
 }
 
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-  50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
-}
-
-.animate-in {
-  animation: fadeInUp 400ms ease forwards;
-}
-
-.pulse-dot {
-  animation: pulse 2s infinite;
+.animate-fade {
+  animation: fadeIn 200ms ease forwards;
 }
 
 @layer utilities {
@@ -85,7 +117,7 @@
 
   /* Fullscreen behavior for Windows/Linux custom title bar */
   .fullscreen-titlebar-toggle {
-    height: 2px; /* Small sliver to catch hover */
+    height: 2px;
     overflow: hidden;
     transition: height 200ms ease-in-out;
     position: relative;
@@ -95,9 +127,9 @@
   .fullscreen-titlebar-toggle:hover {
     height: 36px;
   }
+
   .scrollbar-thin::-webkit-scrollbar       { width: 4px; height: 4px; }
-...
   .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
-  .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
-  .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background: #1e2030; border-radius: 4px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #6366f1; }
 }
