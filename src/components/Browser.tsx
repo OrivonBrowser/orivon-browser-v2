@@ -48,51 +48,51 @@ function OrivonPermissionPrompt({ details, onApprove, onReject }: { details: any
   
   return (
     <motion.div 
-      initial={{ y: -100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -100, opacity: 0 }}
-      className="absolute top-4 left-1/2 -translate-x-1/2 w-[400px] bg-[#13141f] border border-[#6366f1]/40 rounded-[24px] shadow-2xl z-[2000] overflow-hidden"
+      initial={{ y: -40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }}
+      className="absolute top-4 left-1/2 -translate-x-1/2 w-[400px] bg-[#111218] border border-[#1e2030] rounded-xl shadow-2xl z-[2000] overflow-hidden"
     >
-       <div className="p-6 bg-gradient-to-b from-[#6366f1]/10 to-transparent">
-          <div className="flex items-center gap-3 mb-4">
-             <div className="w-10 h-10 rounded-full bg-[#6366f1]/20 flex items-center justify-center text-[#6366f1]">
-                <Shield size={20} />
+       <div className="p-6">
+          <div className="flex items-center gap-3 mb-6">
+             <div className="w-9 h-9 rounded-lg bg-[#161720] border border-[#1e2030] flex items-center justify-center text-[#6366f1]">
+                <Shield size={18} />
              </div>
              <div className="flex flex-col">
-                <span className="text-[11px] font-black text-[#6366f1] uppercase tracking-widest">{details.origin} wants to</span>
-                <span className="text-lg font-black text-white tracking-tight">{isInstall ? 'Install Module' : 'Approve Transaction'}</span>
+                <span className="text-label text-[#6366f1]">{details.origin}</span>
+                <span className="text-[15px] font-semibold text-[#f8fafc]">{isInstall ? 'Install Module' : 'Approve Transaction'}</span>
              </div>
           </div>
 
-          <div className="bg-[#1a1b26] rounded-2xl p-5 border border-white/5 space-y-4 mb-4">
+          <div className="bg-[#161720] rounded-xl p-5 border border-[#1e2030] space-y-4 mb-6">
              {isInstall ? (
                 <>
                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl flex items-center justify-center font-black text-white text-xl" style={{ backgroundColor: details.app.color }}>{details.app.icon}</div>
+                      <div className="w-11 h-11 rounded-lg flex items-center justify-center font-bold text-white text-lg" style={{ backgroundColor: details.app.color }}>{details.app.icon}</div>
                       <div className="flex flex-col">
-                         <span className="font-bold text-white">{details.app.name}</span>
-                         <span className="text-xs text-gray-500 font-bold uppercase">Permissions requested</span>
+                         <span className="font-semibold text-[#f8fafc] text-[14px]">{details.app.name}</span>
+                         <span className="text-[11px] text-[#64748b] font-medium uppercase tracking-wider">Module Installation</span>
                       </div>
                    </div>
-                   <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-[11px] font-black uppercase text-[#22c55e]"><div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" /> Network Access</div>
-                      <div className="flex items-center gap-2 text-[11px] font-black uppercase text-[#f59e0b]"><div className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]" /> Storage Access</div>
+                   <div className="space-y-2 pt-1">
+                      <div className="flex items-center gap-2 text-[11px] font-semibold uppercase text-[#22c55e] tabular tracking-wider"><div className="w-1 h-1 rounded-full bg-[#22c55e]" /> Network Access</div>
+                      <div className="flex items-center gap-2 text-[11px] font-semibold uppercase text-[#f59e0b] tabular tracking-wider"><div className="w-1 h-1 rounded-full bg-[#f59e0b]" /> Storage Access</div>
                    </div>
                 </>
              ) : (
                 <>
-                   <div className="flex justify-between items-center text-sm font-bold">
-                      <span className="text-gray-500 uppercase text-[11px]">Swap</span>
-                      <span className="text-white">{details.from} → {details.to}</span>
+                   <div className="flex justify-between items-center text-[13px] font-medium tabular">
+                      <span className="text-[#64748b] uppercase text-[11px]">Action</span>
+                      <span className="text-[#f8fafc]">{details.from} → {details.to}</span>
                    </div>
-                   <div className="flex justify-between items-center text-sm font-bold">
-                      <span className="text-gray-500 uppercase text-[11px]">Network Fee</span>
-                      <span className="text-white">{details.fee}</span>
+                   <div className="flex justify-between items-center text-[13px] font-medium tabular">
+                      <span className="text-[#64748b] uppercase text-[11px]">Fee</span>
+                      <span className="text-[#f8fafc]">{details.fee}</span>
                    </div>
                 </>
              )}
           </div>
 
-          <div className="mb-6">
-             <label className="text-[9px] font-black text-[#4b5563] uppercase tracking-[0.2em] block mb-2 px-1">Action Password Required</label>
+          <div className="mb-8">
+             <label className="text-label block mb-2 px-1 text-[#475569]">Action Password Required</label>
              <input 
                type="password" 
                autoFocus
@@ -100,22 +100,22 @@ function OrivonPermissionPrompt({ details, onApprove, onReject }: { details: any
                value={pwInput}
                onChange={e => {setPwInput(e.target.value); setError('');}}
                onKeyDown={e => e.key === 'Enter' && handleAction()}
-               className="w-full h-11 rounded-xl bg-[#0a0b12] border border-[#2d2e45] px-4 text-white font-black text-lg outline-none focus:border-[#6366f1] transition-all placeholder:text-[#2d2e45]"
+               className="w-full h-11 rounded-lg bg-[#0d0e14] border border-[#1e2030] px-4 text-[#f8fafc] font-bold text-lg outline-none focus:border-[#6366f1] transition-all placeholder:text-[#1e2030]"
              />
-             {error && <p className="text-[#f87171] text-[10px] font-black uppercase mt-2 px-1">{error}</p>}
+             {error && <p className="text-[#ef4444] text-[11px] font-bold uppercase mt-2.5 px-1">{error}</p>}
           </div>
 
-          <div className="flex items-center justify-between px-2 mb-6">
-             <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Web3 Score</span>
+          <div className="flex items-center justify-between px-1 mb-8">
+             <span className="text-label text-[#475569]">Web3 Score</span>
              <div className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
-                <span className="text-[10px] font-black text-[#22c55e] uppercase tracking-widest">TRUSTLESS</span>
+                <div className="w-1 h-1 rounded-full bg-[#22c55e]" />
+                <span className="text-[11px] font-bold text-[#22c55e] uppercase tracking-widest">TRUSTLESS</span>
              </div>
           </div>
 
           <div className="flex gap-3">
-             <button onClick={onReject} className="flex-1 h-12 rounded-xl bg-[#1e1f2e] border border-[#2d2e45] text-gray-400 font-black text-xs uppercase tracking-widest hover:text-white transition-all cursor-pointer">Reject</button>
-             <button onClick={handleAction} className="flex-2 h-12 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#6366f1] text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-indigo-500/20 hover:brightness-110 active:scale-95 transition-all border-none cursor-pointer">
+             <button onClick={onReject} className="flex-1 h-11 rounded-lg bg-[#161720] border border-[#1e2030] text-[#64748b] font-semibold text-[13px] uppercase tracking-wider hover:text-[#f8fafc] transition-all cursor-pointer">Reject</button>
+             <button onClick={handleAction} className="flex-2 h-11 rounded-lg bg-[#6366f1] text-white font-semibold text-[13px] uppercase tracking-widest hover:bg-[#4f46e5] active:scale-[0.98] transition-all border-none cursor-pointer">
                 {isInstall ? 'Install' : 'Approve'}
              </button>
           </div>
@@ -127,19 +127,18 @@ function OrivonPermissionPrompt({ details, onApprove, onReject }: { details: any
 function ExtensionNotification({ onDismiss }: { onDismiss: () => void }) {
   return (
     <motion.div 
-      initial={{ y: -80, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -80, opacity: 0 }}
-      className="absolute top-4 left-1/2 -translate-x-1/2 w-[520px] bg-[#13141f] border border-[#22c55e]/30 rounded-2xl shadow-2xl z-[1500] p-4 flex items-center gap-5"
+      initial={{ y: -40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }}
+      className="absolute top-4 left-1/2 -translate-x-1/2 w-[480px] bg-[#111218] border border-[#22c55e]/30 rounded-xl shadow-2xl z-[1500] p-4 flex items-center gap-5"
     >
-       <div className="w-12 h-12 rounded-full bg-[#22c55e]/10 flex items-center justify-center text-[#22c55e] shrink-0">
-          <Shield size={24} />
+       <div className="w-10 h-10 rounded-lg bg-[#22c55e]/5 flex items-center justify-center text-[#22c55e] shrink-0 border border-[#22c55e]/10">
+          <Shield size={20} />
        </div>
        <div className="flex-1">
-          <div className="font-black text-white text-sm uppercase tracking-wider mb-0.5">Orivon Wallet is already connected</div>
-          <div className="text-xs font-medium text-gray-400">This site requested a wallet extension. You don't need one. Orivon connects natively.</div>
+          <div className="text-[13px] font-semibold text-[#f8fafc] uppercase tracking-wider mb-0.5">Orivon Wallet is already connected</div>
+          <div className="text-[12px] font-medium text-[#64748b]">Site requested an extension. Orivon connects natively.</div>
        </div>
        <div className="flex gap-2">
-          <button onClick={onDismiss} className="px-4 py-2 rounded-lg bg-[#22c55e] text-white font-black text-[10px] uppercase tracking-widest border-none cursor-pointer hover:brightness-110">Got it</button>
-          <button className="px-4 py-2 rounded-lg bg-white/5 text-gray-400 font-black text-[10px] uppercase tracking-widest border-none cursor-pointer hover:bg-white/10 hover:text-white">Learn more</button>
+          <button onClick={onDismiss} className="px-4 h-8 rounded-lg bg-[#22c55e] text-white font-bold text-[11px] uppercase tracking-wider border-none cursor-pointer hover:bg-[#16a34a]">Got it</button>
        </div>
     </motion.div>
   );
@@ -800,8 +799,11 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
                 <MastodonDemo />
               ) : tab.url === 'btcnode.eth' ? (
                 <BitcoinNodeDemo />
-              ) : tab.url === 'apps.orivon.eth' ? (
-                <AppStoreDemo onInstall={(app) => handleRequestApproval({ type: 'install', app })} />
+              ) : tab.url === 'apps.orivon.eth' || tab.url === 'orivon://apps' ? (
+                <AppStoreDemo 
+                  onInstall={(app) => handleRequestApproval({ type: 'install', app })} 
+                  onNavigate={(url) => navigate(url, tab.id)}
+                />
               ) : tab.url === 'opensea.eth' ? (
                 <OpenSeaDemo />
               ) : (

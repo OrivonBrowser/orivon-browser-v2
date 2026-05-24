@@ -18,84 +18,82 @@ export default function OpenSeaDemo() {
   ];
 
   return (
-    <div className="h-full w-full bg-[#0a0b12] text-[#f1f5f9] font-inter overflow-y-auto scrollbar-thin relative pb-20">
+    <div className="h-full w-full bg-[#0d0e14] text-[#f8fafc] font-inter overflow-y-auto scrollbar-thin relative pb-20 animate-fade">
       <IPFSBanner url="opensea.eth" score="Partial" message="Some centralized components" />
 
       {/* Navbar */}
-      <nav className="h-16 px-8 flex items-center justify-between border-b border-white/5 sticky top-0 bg-[#0a0b12]/80 backdrop-blur-md z-10">
-         <div className="flex items-center gap-8">
+      <nav className="h-16 px-8 flex items-center justify-between border-b border-[#1e2030] sticky top-0 bg-[#0d0e14]/80 backdrop-blur-md z-10">
+         <div className="flex items-center gap-10">
             <div className="flex items-center gap-3">
-               <div className="w-8 h-8 bg-[#2081e2] rounded-full flex items-center justify-center font-black text-white text-xl">S</div>
-               <span className="font-black text-lg tracking-tight">OpenSea</span>
+               <div className="w-8 h-8 bg-[#2081e2] rounded-lg flex items-center justify-center font-bold text-white text-xl">S</div>
+               <span className="font-bold text-lg tracking-tight">OpenSea</span>
             </div>
-            <div className="hidden md:flex items-center gap-6 text-[13px] font-black uppercase tracking-wider text-gray-400">
-               <span className="text-white">Drops</span>
-               <span className="hover:text-white transition-colors cursor-pointer">Stats</span>
-               <span className="hover:text-white transition-colors cursor-pointer">Create</span>
+            <div className="hidden md:flex items-center gap-8 text-[13px] font-semibold uppercase tracking-wider text-[#64748b]">
+               <span className="text-[#f8fafc]">Drops</span>
+               <span className="hover:text-[#f8fafc] transition-colors cursor-pointer">Stats</span>
+               <span className="hover:text-[#f8fafc] transition-colors cursor-pointer">Create</span>
             </div>
          </div>
 
-         <div className="flex-1 max-w-[400px] mx-8 relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#4b5563]" size={16} />
+         <div className="flex-1 max-w-[420px] mx-10 relative group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#475569] group-focus-within:text-[#6366f1] transition-colors" size={16} />
             <input 
                placeholder="Search items, collections, and accounts"
-               className="w-full h-10 rounded-xl bg-white/5 border border-white/10 pl-12 pr-4 text-sm font-bold outline-none focus:border-[#6366f1] transition-all"
+               className="w-full h-10 rounded-lg bg-[#111218] border border-[#1e2030] pl-11 pr-4 text-[13px] font-medium outline-none focus:border-[#6366f1] transition-all"
             />
          </div>
 
-         <div className="bg-[#22c55e]/10 border border-[#22c55e]/20 text-[#22c55e] px-4 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-widest flex items-center gap-2">
+         <div className="flex items-center gap-2 transition-all cursor-default">
             <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
-            Orivon Wallet Connected
+            <span className="text-[12px] font-semibold text-[#94a3b8]">Connected 0x71C7...976F</span>
          </div>
       </nav>
 
-      <div className="max-w-[1200px] mx-auto p-8">
-         <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-black tracking-tight">Marketplace</h1>
-            <div className="flex items-center gap-2 bg-[#13141f] border border-[#2d2e45] rounded-xl p-1">
-               <button className="p-2 rounded-lg bg-white/5 text-white border-none cursor-pointer"><Grid size={18}/></button>
-               <button className="p-2 rounded-lg text-gray-500 border-none cursor-pointer hover:text-white"><List size={18}/></button>
+      <div className="max-w-[1200px] mx-auto p-8 pt-12">
+         <div className="flex justify-between items-center mb-10">
+            <h1 className="text-[20px] font-semibold tracking-tight text-[#f8fafc]">Marketplace</h1>
+            <div className="flex items-center gap-1 bg-[#111218] border border-[#1e2030] rounded-lg p-1">
+               <button className="p-1.5 rounded-md bg-[#1e2030] text-[#f8fafc] border-none cursor-pointer"><Grid size={16}/></button>
+               <button className="p-1.5 rounded-md text-[#64748b] border-none cursor-pointer hover:text-[#f8fafc]"><List size={16}/></button>
             </div>
          </div>
 
          <div className="grid grid-cols-4 gap-6">
             {nfts.map(nft => (
-               <motion.div 
+               <div 
                  key={nft.id} 
-                 whileHover={{ y: -4 }}
-                 className="bg-[#13141f] border border-[#2d2e45] rounded-[24px] overflow-hidden shadow-xl group cursor-pointer"
+                 className="bg-[#111218] border border-[#1e2030] rounded-xl overflow-hidden shadow-sm group cursor-pointer transition-all hover:border-[#1e2030]/80"
                >
-                  <div className="aspect-square relative">
-                     <div className="absolute inset-0 transition-opacity opacity-20 group-hover:opacity-40" style={{ backgroundColor: nft.color }} />
-                     <img src={nft.img} className="w-full h-full object-cover p-12" alt={nft.name} />
-                     <div className="absolute top-4 right-4 p-2 rounded-xl bg-black/20 backdrop-blur-md text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Heart size={16} />
+                  <div className="aspect-square relative bg-[#0d0e14] overflow-hidden">
+                     <img src={nft.img} className="w-full h-full object-cover p-12 transition-transform duration-500 group-hover:scale-105" alt={nft.name} />
+                     <div className="absolute top-3 right-3 p-2 rounded-lg bg-black/40 backdrop-blur-md text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Heart size={14} />
                      </div>
                      {nft.owned && (
-                        <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#22c55e] text-white text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-lg">
+                        <div className="absolute top-3 left-3 px-2 py-0.5 rounded-md bg-[#22c55e]/10 border border-[#22c55e]/20 text-[#22c55e] text-[9px] font-bold uppercase tracking-widest flex items-center gap-1.5">
                            <Check size={10} strokeWidth={4} /> In Your Wallet
                         </div>
                      )}
                   </div>
-                  <div className="p-5">
+                  <div className="p-4">
                      <div className="flex justify-between items-start mb-4">
-                        <div className="flex flex-col">
-                           <span className="text-[14px] font-black text-white">{nft.name}</span>
-                           <span className="text-[11px] font-bold text-[#4b5563] uppercase tracking-wider">Orivon Collection</span>
+                        <div className="flex flex-col min-w-0">
+                           <span className="text-[14px] font-semibold text-[#f8fafc] truncate">{nft.name}</span>
+                           <span className="text-[11px] font-medium text-[#475569] uppercase tracking-wider">Orivon Collection</span>
                         </div>
-                        <ExternalLink size={14} className="text-[#4b5563]" />
+                        <ExternalLink size={12} className="text-[#475569] shrink-0" />
                      </div>
-                     <div className="flex justify-between items-end">
+                     <div className="flex justify-between items-end tabular">
                         <div className="flex flex-col">
-                           <span className="text-[10px] font-black text-[#4b5563] uppercase tracking-widest">Floor Price</span>
-                           <span className="text-sm font-black text-white">{nft.floor}</span>
+                           <span className="text-label mb-0.5 text-[#475569]">Floor Price</span>
+                           <span className="text-[14px] font-bold text-[#f8fafc]">{nft.floor}</span>
                         </div>
-                        <button className="bg-[#6366f1] text-white px-4 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest hover:brightness-110 transition-all border-none cursor-pointer shadow-lg shadow-indigo-500/10">
+                        <button className="bg-[#161720] border border-[#1e2030] text-[#94a3b8] px-3.5 py-1.5 rounded-lg font-semibold text-[11px] uppercase tracking-wider hover:bg-[#1e2030] hover:text-[#f8fafc] transition-all border-none cursor-pointer">
                            Details
                         </button>
                      </div>
                   </div>
-               </motion.div>
+               </div>
             ))}
          </div>
       </div>
