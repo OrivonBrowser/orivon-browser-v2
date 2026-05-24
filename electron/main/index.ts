@@ -4,6 +4,8 @@ const { autoUpdater } = updaterPkg;
 import log from 'electron-log';
 import path from 'path';
 import fs from 'fs';
+import Store from 'electron-store';
+import { ethers } from 'ethers';
 import { resolveURL } from './resolvers/url-router';
 
 // ─── Logger ───────────────────────────────────────────────────────────────────
@@ -48,16 +50,21 @@ app.commandLine.appendSwitch('enable-accelerated-video-encode');
 // media-key events reach the webview instead (pause/play keys work in YouTube)
 app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling,MediaSessionService');
 
-// ─── Persistent store (userData JSON) ─────────────────────────────────────────
+// ─── Persistent store (electron-store) ─────────────────────────────────────────
+const store = new Store();
 
-function storePath(): string {
-  return path.join(app.getPath('userData'), 'orivon-store.json');
-}
-function readStore(): Record<string, unknown> {
-  try { return JSON.parse(fs.readFileSync(storePath(), 'utf-8')); } catch { return {}; }
-}
-function writeStore(data: Record<string, unknown>): void {
-  fs.writeFileSync(storePath(), JSON.stringify(data, null, 2), 'utf-8');
+async function initializeWallet() {
+  try {
+    const existingWallet = store.get('wallet_address');
+    if (!existingWallet) {
+      const wallet = ethers.Wallet.createRandom();
+      store.set('wallet_mnemonic', wallet.mnemonic?.phrase);
+      store.set('wallet_address', wallet.address);
+      store.set('wallet_name', 'Orivon Wallet 1');
+    }
+  } catch (error) {
+    log.error('Wallet init failed silently:', error);
+  }
 }
 
 // ─── Window factory ───────────────────────────────────────────────────────────
@@ -124,7 +131,8 @@ function createWindow(): BrowserWindow {
 
 // ─── App lifecycle ────────────────────────────────────────────────────────────
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  await initializeWallet();
   // ── User agent — override for ALL requests from this session ──────────────
   // This makes sites serve the same content they'd serve to Chrome.
   // The webview element also sets useragent="" which overrides navigator.userAgent
@@ -167,13 +175,43 @@ app.on('window-all-closed', () => {
 // ─── IPC: Store ───────────────────────────────────────────────────────────────
 
 ipcMain.handle('store:get', (_e, key: string) => {
-  const s = readStore(); return key ? s[key] : s;
+  return key ? store.get(key) : null;
 });
 ipcMain.handle('store:set', (_e, key: string, value: unknown) => {
-  const s = readStore(); s[key] = value; writeStore(s); return true;
+  store.set(key, value); return true;
 });
 ipcMain.handle('store:delete', (_e, key: string) => {
-  const s = readStore(); delete s[key]; writeStore(s); return true;
+  store.delete(key); return true;
+});
+
+// ─── IPC: Wallet ───────────────────────────────────────────────────────────────
+
+ipcMain.handle('get-wallet', () => {
+  return {
+    address: store.get('wallet_address'),
+    name: store.get('wallet_name'),
+    hasWallet: !!store.get('wallet_address')
+  };
+});
+
+ipcMain.handle('import-wallet', async (_e, mnemonic: string) => {
+  try {
+    const isValid = ethers.Mnemonic.isValidMnemonic(mnemonic);
+    if (!isValid) {
+      return { success: false, error: 'Invalid seed phrase' };
+    }
+    const wallet = ethers.Wallet.fromPhrase(mnemonic);
+    const wallets = (store.get('imported_wallets') as any[]) || [];
+    wallets.push({
+      address: wallet.address,
+      mnemonic: mnemonic,
+      name: `Imported Wallet ${wallets.length + 1}`
+    });
+    store.set('imported_wallets', wallets);
+    return { success: true, address: wallet.address };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
 });
 
 // ─── IPC: URL resolution ──────────────────────────────────────────────────────

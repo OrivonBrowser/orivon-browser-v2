@@ -29,9 +29,7 @@ interface WalletState {
   _wallet: ethers.HDNodeWallet | null;
 
   // Actions
-  generateMnemonic:   () => string;
-  createWallet:       (mnemonic: string, password: string, name?: string, onProgress?: (p: number) => void) => Promise<void>;
-  createSilentWallet: () => Promise<void>;
+  initialize:         () => Promise<void>;
   importWallet:       (phrase: string, password: string, name?: string, onProgress?: (p: number) => void) => Promise<void>;
   unlock:             (password: string) => Promise<boolean>;
   lock:               () => void;
@@ -82,10 +80,59 @@ export const useWalletStore = create<WalletState>()(
       error: null,
       _wallet: null,
 
-      generateMnemonic: () => {
-        const entropy = ethers.randomBytes(16);
-        const mnemonic = ethers.Mnemonic.fromEntropy(entropy);
-        return mnemonic.phrase;
+      initialize: async () => {
+        if (!window.electronAPI?.getWallet) return;
+
+        try {
+          const walletData = await window.electronAPI.getWallet();
+          if (walletData.hasWallet) {
+            const { accounts, activeAccountId } = get();
+
+            // If we don't have this wallet in our local state yet, add it
+            const alreadyExists = accounts.some(a => a.addresses.eth === walletData.address);
+
+            if (!alreadyExists) {
+              // We need the mnemonic to derive other addresses
+              // Since it's stored in main process, we fetch it
+              const mnemonic = await window.electronAPI.store.get('wallet_mnemonic') as string | null;
+              if (mnemonic) {
+                const hdWallet = ethers.HDNodeWallet.fromPhrase(mnemonic);
+                const account: WalletAccount = {
+                  id: `wallet-native-${Date.now()}`,
+                  name: walletData.name,
+                  addresses: {
+                    eth: hdWallet.address,
+                    btc: deriveBtcAddress(hdWallet),
+                    sol: deriveSolAddress(hdWallet),
+                  },
+                  isImported: false,
+                  isBackedUp: false,
+                };
+
+                set({
+                  accounts: [account, ...accounts],
+                  activeAccountId: account.id,
+                  status: 'unlocked',
+                  _wallet: hdWallet
+                });
+              }
+            } else if (get().status === 'none') {
+               // Re-unlock if already exists but status is none (e.g. after refresh)
+               const account = accounts.find(a => a.addresses.eth === walletData.address);
+               const mnemonic = await window.electronAPI.store.get('wallet_mnemonic') as string | null;
+               if (account && mnemonic) {
+                 const hdWallet = ethers.HDNodeWallet.fromPhrase(mnemonic);
+                 set({
+                   activeAccountId: account.id,
+                   status: 'unlocked',
+                   _wallet: hdWallet
+                 });
+               }
+            }
+          }
+        } catch (e) {
+          console.error('Wallet initialization failed:', e);
+        }
       },
 
       _setupAccount: async (mnemonic, password, name, isImported) => {
@@ -116,52 +163,18 @@ export const useWalletStore = create<WalletState>()(
         return account;
       },
 
-      createWallet: async (mnemonic, password, name = 'Orivon Wallet 1', onProgress) => {
-        set({ isGenerating: true, error: null });
-        try {
-          const account = await get()._setupAccount(mnemonic, password, name, false);
-          const hdWallet = ethers.HDNodeWallet.fromPhrase(mnemonic);
-
-          set(s => ({
-            status: 'unlocked',
-            accounts: [...s.accounts, account],
-            activeAccountId: account.id,
-            _wallet: hdWallet,
-            isGenerating: false,
-            error: null
-          }));
-        } catch (e: any) {
-          console.error('Wallet generation failed:', e);
-          set({ isGenerating: false, error: e.message || 'Failed to create wallet' });
-        }
-      },
-
-      createSilentWallet: async () => {
-        if (get().status !== 'none' || get().isGenerating) return;
-        set({ isGenerating: true, error: null });
-        try {
-          const mnemonic = get().generateMnemonic();
-          const account = await get()._setupAccount(mnemonic, '', 'Orivon Wallet 1', false);
-          const hdWallet = ethers.HDNodeWallet.fromPhrase(mnemonic);
-
-          set({
-            status: 'unlocked',
-            accounts: [account],
-            activeAccountId: account.id,
-            _wallet: hdWallet,
-            isGenerating: false,
-            error: null
-          });
-        } catch (e: any) {
-          console.error('Silent wallet generation failed:', e);
-          set({ isGenerating: false, error: e.message || 'Failed to create silent wallet' });
-        }
-      },
-
       importWallet: async (phrase, password, name = `Imported Wallet ${get().accounts.length + 1}`, onProgress) => {
         set({ isGenerating: true, error: null });
         try {
           const trimmed = phrase.trim();
+
+          if (window.electronAPI?.importWallet) {
+            const result = await window.electronAPI.importWallet(trimmed);
+            if (!result.success) {
+              throw new Error(result.error);
+            }
+          }
+
           const account = await get()._setupAccount(trimmed, password, name, true);
           const hdWallet = ethers.HDNodeWallet.fromPhrase(trimmed);
 

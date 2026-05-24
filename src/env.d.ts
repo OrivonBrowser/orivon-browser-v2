@@ -23,6 +23,16 @@ interface ElectronAPI {
     close:    () => void;
   };
   openExternal: (url: string) => void;
+  getWallet: () => Promise<{
+    address: string;
+    name: string;
+    hasWallet: boolean;
+  }>;
+  importWallet: (mnemonic: string) => Promise<{
+    success: boolean;
+    address?: string;
+    error?: string;
+  }>;
   updater: {
     onAvailable:  (cb: (version: string) => void) => void;
     onProgress:   (cb: (pct: number)     => void) => void;
