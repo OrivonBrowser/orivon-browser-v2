@@ -1,432 +1,1512 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
-  Search, Wallet, Send, Download, Globe,
-  Cpu, Activity, History, ExternalLink,
-  MessageSquare, Layers, Box, Store,
-  ChevronRight, Circle, MoreHorizontal,
-  Copy, Check, ArrowRight, Shield, Settings, Lock,
-  Moon, Sun, Eye, EyeOff, AlertTriangle, ArrowLeft,
-  ShoppingCart, RefreshCw, X, Zap, ArrowUpRight, ArrowDownLeft, Plus, LayoutGrid, CheckCircle2,
-  Database, Share2, TrendingUp
+  LayoutDashboard, Wallet, Globe, Package, Activity, Clock, Settings,
+  ChevronDown, ChevronRight, Copy, Check, TrendingUp, ArrowUpRight,
+  ArrowDownLeft, Plus, ArrowLeftRight, Database, Share2, CircleDot,
+  Loader2, Bell, X, Shield, Search, ArrowLeft, ShoppingCart, MoreHorizontal,
+  Server, Key, Terminal, ArrowUpDown, Trash2, ExternalLink, Send
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useWalletStore, WalletAccount } from '../store/wallet';
-import { useSettings } from '../store/settings';
-import { useSessionStore } from '../store/session';
-import logo from '@/assets/logo.png';
-import { ethers } from 'ethers';
-import Spinner from '../components/Spinner';
-import { DASHBOARD_URL, DEMO_WALLET } from '../constants';
+import { useWalletStore } from '../store/wallet';
+import { DEMO_WALLET } from '../constants';
 
-import * as WalletComps from '../components/WalletComponents';
+// --- Types ---
+type ViewType = 'Dashboard' | 'Wallet' | 'Browse Web3' | 'App Store' | 'Node Manager' | 'History' | 'Settings';
 
-interface DashboardProps {
-  onOpenBrowser?: (url: string) => void;
-}
+// --- Components ---
 
-export default function Dashboard({ onOpenBrowser }: DashboardProps) {
-  const { accounts, activeAccountId, getBalance, setBackedUp } = useWalletStore();
-  const { theme, setTheme } = useSettings();
-  const { hasOnboarded } = useSessionStore();
-  
-  const [view, setView] = useState<'main' | 'backup' | 'send' | 'receive' | 'import'>('main');
-  const [initialLoading, setInitialLoading] = useState(true);
+const StatusDot = ({ color, pulse }: { color: string; pulse?: boolean }) => (
+  <div className={`w-1.5 h-1.5 rounded-full ${color} ${pulse ? 'animate-pulse' : ''}`} />
+);
 
+const Badge = ({ children, className }: { children: React.ReactNode; className?: string }) => (
+  <div className={`px-2 py-0.5 rounded-[6px] text-[12px] font-semibold ${className}`}>
+    {children}
+  </div>
+);
+
+// --- Charts ---
+
+const PortfolioChart = ({ data }: { data: any[] }) => {
+  if (!data || data.length === 0) return null;
+
+  const width = 800;
+  const height = 180;
+  const padding = 20;
+
+  const minVal = Math.min(...data.map(d => d.value));
+  const maxVal = Math.max(...data.map(d => d.value));
+  const range = maxVal - minVal || 1;
+
+  const points = data.map((d, i) => ({
+    x: (i / (data.length - 1)) * width,
+    y: height - ((d.value - minVal) / range) * (height - padding * 2) - padding
+  }));
+
+  const pathD = `M ${points.map(p => `${p.x},${p.y}`).join(' L ')}`;
+  const areaD = `${pathD} L ${width},${height} L 0,${height} Z`;
+
+  return (
+    <div className="w-full h-[180px] relative mt-6 group">
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
+        <defs>
+          <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#6366f1" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#6366f1" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        
+        <motion.path
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 1.2, ease: "easeInOut" }}
+          d={pathD}
+          fill="none"
+          stroke="#6366f1"
+          strokeWidth="2"
+        />
+        
+        <motion.path
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+          d={areaD}
+          fill="url(#chartGradient)"
+        />
+      </svg>
+    </div>
+  );
+};
+
+// --- Dashboard Component ---
+
+export default function Dashboard({ onOpenBrowser }: { onOpenBrowser?: (url: string) => void }) {
+  const { accounts, activeAccountId, switchAccount, importWallet } = useWalletStore();
   const activeAccount = accounts.find(a => a.id === activeAccountId) || accounts[0];
+  
+  const [activeView, setActiveView] = useState<ViewType>('Dashboard');
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [showSeedModal, setShowSeedModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [toasts, setToasts] = useState<{ id: string; title: string; sub: string }[]>([]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setInitialLoading(false), 600);
+    const timer = setTimeout(() => setIsInitialLoad(false), 250);
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const v = params.get('view');
-    if (v === 'send') setView('send');
-    else if (v === 'receive') setView('receive');
-    else if (v === 'import') setView('import');
-    else if (v === 'backup') setView('backup');
-  }, []);
-
-  if (initialLoading) {
-    return (
-      <div className="h-full w-full flex flex-col items-center justify-center gap-6 bg-[#0d0e14]">
-        <img src={logo} alt="Orivon" className="h-10 object-contain opacity-20" />
-        <Spinner size={24} color="#6366f1" />
-      </div>
-    );
-  }
-
-  if (view === 'backup') return <BackupView onBack={() => setView('main')} />;
-  if (view === 'send') return <SendView onBack={() => setView('main')} />;
-  if (view === 'receive') return <ReceiveView onBack={() => setView('main')} address={activeAccount?.addresses.eth || ''} />;
-  if (view === 'import') return <ImportView onBack={() => setView('main')} />;
-
-  return (
-    <div className="text-[#f8fafc] min-h-full w-full flex flex-col font-inter bg-[#0d0e14] overflow-y-auto pb-20 relative animate-fade">
-      <div>
-        <DashboardStatsBar />
-
-        <div className="w-full max-w-[960px] mx-auto px-8 pt-10">
-          <WalletBox onImport={() => setView('import')} onBackup={() => setView('backup')} setView={setView} />
-
-          <div className="grid grid-cols-12 gap-6 mt-8">
-            <div className="col-span-7 space-y-6">
-               <NodesWidget />
-               <FeaturedWeb3Sites onOpen={onOpenBrowser} />
-            </div>
-            <div className="col-span-5 space-y-6">
-               <WhyOrivon />
-               <NetworkStatusWidget />
-               <RecentSites />
-            </div>
-          </div>
-
-          <div className="mt-10">
-             <BottomPitch />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function DashboardStatsBar() {
-  return (
-    <div className="w-full h-[36px] border-b border-[#1e2030] bg-[#111218] flex items-center justify-between px-6 shrink-0">
-      <div className="flex items-center gap-6">
-         <div className="flex items-center gap-2">
-           <span className="text-label text-[#64748b]">Web3 Sites:</span>
-           <span className="text-[12px] font-semibold tabular text-[#f8fafc]">1,247,832</span>
-         </div>
-         <div className="w-px h-3 bg-[#1e2030]" />
-         <div className="flex items-center gap-2">
-           <span className="text-label text-[#64748b]">Trackers Blocked:</span>
-           <span className="text-[12px] font-semibold tabular text-[#f8fafc]">48,291,047</span>
-         </div>
-         <div className="w-px h-3 bg-[#1e2030]" />
-         <div className="flex items-center gap-2">
-           <span className="text-label text-[#64748b]">Nodes Active:</span>
-           <span className="text-[12px] font-semibold tabular text-[#f8fafc]">3</span>
-         </div>
-      </div>
-
-      <div className="flex items-center gap-2">
-         <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
-         <span className="text-[11px] font-semibold text-[#64748b] uppercase tracking-wider">Network: Online</span>
-      </div>
-    </div>
-  );
-}
-
-function WalletBox({ onImport, onBackup, setView }: { onImport: () => void, onBackup: () => void, setView: any }) {
-  const { accounts, activeAccountId } = useWalletStore();
-  const [activeTab, setActiveTab] = useState<'tokens' | 'nfts' | 'activity'>('tokens');
-  const [copied, setCopied] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  
-  const activeAccount = accounts.find(a => a.id === activeAccountId) || accounts[0];
-
-  const handleCopy = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const addToast = (title: string, sub: string) => {
+    const id = Math.random().toString(36).slice(2, 9);
+    setToasts(prev => [...prev, { id, title, sub }]);
+    setTimeout(() => {
+      setToasts(prev => prev.filter(t => t.id !== id));
+    }, 3000);
   };
 
-  const tokens = activeAccount.id === 'wallet-demo-1' ? DEMO_WALLET.tokens : DEMO_WALLET.imported_wallet.tokens;
+  const renderContent = () => {
+    switch (activeView) {
+      case 'Dashboard': return <DashboardPage onOpenBrowser={onOpenBrowser} onToast={addToast} onBackup={() => setShowSeedModal(true)} />;
+      case 'Wallet': return <WalletPage onBackup={() => setShowSeedModal(true)} onImport={() => setShowImportModal(true)} />;
+      case 'Browse Web3': return <BrowseWeb3Page onOpen={onOpenBrowser} />;
+      case 'App Store': return <AppStorePage onOpen={onOpenBrowser} onToast={addToast} />;
+      case 'Node Manager': return <NodeManagerPage onToast={addToast} />;
+      case 'History': return <HistoryPage onOpen={onOpenBrowser} />;
+      case 'Settings': return <SettingsPage />;
+      default: return <DashboardPage onOpenBrowser={onOpenBrowser} onToast={addToast} onBackup={() => setShowSeedModal(true)} />;
+    }
+  };
 
   return (
-    <div className="w-full bg-[#111218] border border-[#1e2030] rounded-xl p-8 shadow-sm relative group">
-      <div className="flex justify-between items-start mb-10">
-        <WalletComps.default onImport={onImport} />
+    <div className={`flex h-full w-full bg-[#0d0e14] text-[#f8fafc] font-inter overflow-hidden transition-opacity duration-250 ${isInitialLoad ? 'opacity-0' : 'opacity-100'}`}>
+      {/* Sidebar */}
+      <Sidebar activeView={activeView} setActiveView={setActiveView} activeAccount={activeAccount} accounts={accounts} onSwitch={switchAccount} onImport={() => setShowImportModal(true)} />
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-w-0 relative h-full">
+        <TopBar activeView={activeView} />
         
-        <div className="flex items-center gap-3">
-          <div className="px-2.5 py-1 rounded-md bg-[#161720] border border-[#1e2030] flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
-            <span className="text-label text-[#94a3b8]">Ethereum Mainnet</span>
-          </div>
-          <div className="relative">
-            <button 
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="w-8 h-8 rounded-lg hover:bg-[#1e2030] flex items-center justify-center text-[#64748b] hover:text-[#f8fafc] transition-all border-none bg-transparent cursor-pointer"
+        <main className="flex-1 overflow-y-auto custom-scrollbar relative">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeView}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="p-8 pt-[84px]"
             >
-              <MoreHorizontal size={18} />
-            </button>
-            <AnimatePresence>
-                {menuOpen && (
-                  <>
-                    <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
-                    <motion.div
-                      initial={{ opacity: 0, y: 4, scale: 0.98 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 4, scale: 0.98 }}
-                      className="absolute top-10 right-0 w-52 bg-[#161720] border border-[#1e2030] rounded-lg p-1 z-50 shadow-2xl overflow-hidden"
-                    >
-                      {[
-                        { label: 'View Seed Phrase', icon: <Eye size={14}/>, onClick: () => { onBackup(); setMenuOpen(false); } },
-                        { label: 'Copy Address', icon: <Copy size={14}/>, onClick: () => { handleCopy(activeAccount?.addresses.eth || ''); setMenuOpen(false); } },
-                      ].map(item => (
-                        <button
-                          key={item.label}
-                          onClick={item.onClick}
-                          className="w-full px-3 py-2 flex items-center gap-3 bg-transparent border-none text-[#94a3b8] text-[12px] font-medium cursor-pointer rounded-md text-left hover:bg-[#1e2030] hover:text-[#f8fafc] transition-all"
-                        >
-                          {item.icon} {item.label}
-                        </button>
-                      ))}
-                    </motion.div>
-                  </>
-                )}
-              </AnimatePresence>
-          </div>
+              <div className="max-w-[1200px] mx-auto">
+                {renderContent()}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </main>
+
+        {/* Toasts */}
+        <div className="fixed bottom-6 right-6 z-[60] space-y-3">
+          <AnimatePresence>
+            {toasts.map(toast => (
+              <motion.div
+                key={toast.id}
+                initial={{ opacity: 0, x: 100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 100 }}
+                className="bg-[#111218] border-l-3 border-[#22c55e] border border-[#1e2030] rounded-[8px] p-4 min-w-[240px] shadow-2xl"
+              >
+                <div className="flex items-center gap-2 text-[12px] font-semibold text-[#f8fafc]">
+                  <Check size={14} className="text-[#22c55e]" /> {toast.title}
+                </div>
+                <div className="text-[12px] text-[#64748b] ml-5 mt-0.5">{toast.sub}</div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
 
-      <div className="text-center mb-10">
-        <div className="text-[42px] font-bold text-[#f8fafc] tabular tracking-tight leading-none mb-2">
-          ${(activeAccount.balance_usd || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-        </div>
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <span className="text-[15px] font-semibold text-[#64748b] tabular">{activeAccount.balance_eth} ETH</span>
-          <div className="flex items-center gap-1 text-[#22c55e] font-semibold text-[13px] tabular">
-             <TrendingUp size={14} strokeWidth={2.5} /> +$306.82 today
-          </div>
-        </div>
-        <div className="flex items-center justify-center gap-2 text-[#475569] mono text-[12px] h-6">
-          <span className="group-hover:text-[#64748b] transition-colors">{activeAccount?.addresses.eth.slice(0, 10)}...{activeAccount?.addresses.eth.slice(-8)}</span>
-          <button onClick={() => handleCopy(activeAccount?.addresses.eth || '')} className="p-1 hover:text-[#f8fafc] transition-colors cursor-pointer bg-transparent border-none opacity-0 group-hover:opacity-100">
-            {copied ? <Check size={14} className="text-[#22c55e]" /> : <Copy size={14} />}
-          </button>
-        </div>
+      {/* Modals */}
+      <AnimatePresence>
+        {showSeedModal && (
+          <SeedPhraseModal onClose={() => setShowSeedModal(false)} />
+        )}
+        {showImportModal && (
+          <ImportWalletModal 
+            onClose={() => setShowImportModal(false)} 
+            onImport={async (words) => {
+              await importWallet(words, '', 'Trading Wallet');
+            }}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// --- Sidebar ---
+
+function Sidebar({ activeView, setActiveView, activeAccount, accounts, onSwitch, onImport }: any) {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const navItems = [
+    { label: 'Dashboard', icon: LayoutDashboard },
+    { label: 'Wallet', icon: Wallet },
+    { label: 'Browse Web3', icon: Globe },
+    { label: 'App Store', icon: Package },
+    { label: 'Node Manager', icon: Server },
+    { label: 'History', icon: Clock },
+    { label: 'Settings', icon: Settings },
+  ];
+
+  return (
+    <aside className="w-[220px] h-full bg-[#0a0b11] border-r border-[#1e2030] flex flex-col shrink-0 z-50">
+      <div className="p-6">
+        <div className="text-[15px] text-white font-bold tracking-[0.1em]">ORIVON</div>
+        <div className="text-[10px] text-[#6366f1] font-bold tracking-[0.06em] uppercase mt-0.5">The Web3 Browser</div>
       </div>
 
-      <div className="flex justify-center gap-4 mb-12">
-        {[
-          { label: 'Send', icon: <ArrowUpRight size={16}/>, onClick: () => setView('send') },
-          { label: 'Receive', icon: <ArrowDownLeft size={16}/>, onClick: () => setView('receive') },
-          { label: 'Buy', icon: <Plus size={16}/> },
-          { label: 'Swap', icon: <RefreshCw size={16}/> },
-        ].map(btn => (
+      <div className="h-px bg-[#1e2030] w-full" />
+
+      <nav className="flex-1 py-4 px-3 space-y-1">
+        {navItems.map(item => (
           <button
-            key={btn.label}
-            onClick={btn.onClick}
-            className="w-[110px] h-10 rounded-lg bg-[#161720] border border-[#1e2030] text-[#94a3b8] text-[13px] font-semibold flex items-center justify-center gap-2 hover:bg-[#1e2030] hover:text-[#f8fafc] hover:border-[#6366f1] transition-all border-none cursor-pointer group/btn"
+            key={item.label}
+            onClick={() => setActiveView(item.label as ViewType)}
+            className={`w-full h-11 px-4 flex items-center gap-3 rounded-[8px] transition-all border-none bg-transparent cursor-pointer group relative ${
+              activeView === item.label ? 'bg-[#111218] text-[#f8fafc]' : 'text-[#64748b] hover:text-[#94a3b8]'
+            }`}
           >
-            {btn.icon}
-            <span>{btn.label}</span>
+            {activeView === item.label && (
+              <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#6366f1]" />
+            )}
+            <item.icon size={16} className={activeView === item.label ? 'text-[#f8fafc]' : 'text-[#64748b] group-hover:text-[#94a3b8]'} />
+            <span className="text-[13px] font-medium">{item.label}</span>
+          </button>
+        ))}
+
+        <div className="mt-6 mb-2">
+          <div className="text-[10px] text-[#475569] font-bold tracking-[0.08em] uppercase px-4">Network</div>
+        </div>
+
+        <div className="px-4 space-y-3 py-2">
+          <NetworkRow label="ENS Resolver" status="Active" dotColor="bg-[#22c55e]" />
+          <NetworkRow label="IPFS" status="Active" dotColor="bg-[#22c55e]" />
+          <NetworkRow label="Bitcoin Node" status="Offline" dotColor="bg-[#475569]" />
+        </div>
+      </nav>
+
+      <div className="p-4 relative">
+        <button 
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          className="w-full bg-[#111218] border border-[#1e2030] rounded-[10px] p-3 text-left hover:border-[#1e2030] transition-all cursor-pointer group"
+        >
+          <div className="flex items-center justify-between mb-0.5">
+            <span className="text-[13px] font-medium text-[#f8fafc]">{activeAccount.name}</span>
+            <ChevronDown size={14} className={`text-[#64748b] transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+          </div>
+          <div className="text-[11px] text-[#64748b] font-mono mb-2">{activeAccount.addresses.eth.slice(0, 6)}...{activeAccount.addresses.eth.slice(-4)}</div>
+          <div className="text-[13px] font-bold text-[#f8fafc] tabular-nums">${activeAccount.balance_usd.toLocaleString()}</div>
+        </button>
+
+        <AnimatePresence>
+          {dropdownOpen && (
+            <WalletSwitcherDropdown 
+              accounts={accounts} 
+              activeId={activeAccount.id} 
+              onSwitch={(id) => { onSwitch(id); setDropdownOpen(false); }} 
+              onImport={() => { onImport(); setDropdownOpen(false); }}
+              onClose={() => setDropdownOpen(false)}
+            />
+          )}
+        </AnimatePresence>
+      </div>
+    </aside>
+  );
+}
+
+function NetworkRow({ label, status, dotColor }: { label: string; status: string; dotColor: string }) {
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <div className={`w-1.5 h-1.5 rounded-full ${dotColor}`} />
+        <span className="text-[12px] text-[#f8fafc]">{label}</span>
+      </div>
+      <span className="text-[11px] text-[#64748b] font-medium">{status}</span>
+    </div>
+  );
+}
+
+// --- Top Bar ---
+
+function TopBar({ activeView }: { activeView: ViewType }) {
+  const [greeting, setGreeting] = useState('');
+
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) setGreeting('Good morning');
+    else if (hour < 18) setGreeting('Good afternoon');
+    else setGreeting('Good evening');
+  }, []);
+
+  return (
+    <header className="absolute top-0 left-0 right-0 h-[52px] bg-[#0d0e14] border-b border-[#1e2030] px-8 flex items-center justify-between z-40">
+      <div className="flex flex-col">
+        <h1 className="text-[16px] font-bold text-[#f8fafc]">{activeView}</h1>
+        {activeView === 'Dashboard' && <p className="text-[11px] text-[#64748b] font-medium">{greeting}. Here is your Web3 overview.</p>}
+      </div>
+
+      <div className="flex items-center gap-6">
+        <div className="flex items-center gap-2 text-[12px] text-[#64748b] font-medium">
+          <span>1,247,832 sites loaded</span>
+          <div className="w-px h-3 bg-[#1e2030]" />
+          <span>48M trackers blocked</span>
+        </div>
+
+        <button className="text-[#64748b] hover:text-[#f8fafc] transition-colors bg-transparent border-none cursor-pointer">
+          <Bell size={18} />
+        </button>
+
+        <div className="w-8 h-8 rounded-full bg-[#6366f1] flex items-center justify-center text-[13px] font-bold text-white uppercase">
+          O
+        </div>
+      </div>
+    </header>
+  );
+}
+
+// --- Dashboard Page ---
+
+function DashboardPage({ onOpenBrowser, onToast, onBackup }: any) {
+  const { accounts, activeAccountId } = useWalletStore();
+  const activeAccount = accounts.find(a => a.id === activeAccountId) || accounts[0];
+
+  const chartData = useMemo(() => {
+    return Array.from({ length: 24 }).map((_, i) => ({
+      time: i,
+      value: 12847.63 + (Math.random() - 0.5) * 400
+    }));
+  }, []);
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-10 gap-5">
+        {/* Wallet Section (Left 6/10) */}
+        <div className="col-span-6 space-y-5">
+          <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-8 relative overflow-hidden group">
+            <div className="flex justify-between items-start mb-6">
+              <h2 className="text-[20px] font-semibold text-[#f8fafc]">Portfolio</h2>
+              <button className="w-8 h-8 rounded-full bg-[#161720] border border-[#1e2030] flex items-center justify-center text-[#94a3b8] hover:text-[#f8fafc] hover:border-[#6366f1] transition-all cursor-pointer">
+                <Plus size={18} />
+              </button>
+            </div>
+
+            <div className="flex items-end justify-between">
+              <div>
+                <div className="text-[44px] font-bold text-[#f8fafc] tracking-[-0.03em] tabular-nums leading-tight">
+                  $12,847.63
+                </div>
+                <div className="flex gap-2 mt-2">
+                  <Badge className="bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/20">+$306.82</Badge>
+                  <Badge className="bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/20">+2.4%</Badge>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <CircleAction icon={ShoppingCart} label="Buy" />
+                <CircleAction icon={Send} label="Send" />
+                <CircleAction icon={ArrowLeftRight} label="Swap" />
+                <CircleAction icon={MoreHorizontal} label="More" />
+              </div>
+            </div>
+
+            {/* Chart Area */}
+            <div className="mt-8">
+              <div className="flex justify-end gap-2 mb-2">
+                {['1H', '24H', '7D', '1M', '1Y'].map(t => (
+                  <button
+                    key={t}
+                    className={`px-3 py-1 rounded-[6px] text-[12px] font-semibold transition-all border-none cursor-pointer ${
+                      t === '24H' ? 'bg-[#6366f1] text-white' : 'bg-transparent text-[#64748b] hover:text-[#94a3b8]'
+                    }`}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+              <PortfolioChart data={chartData} />
+            </div>
+
+            {/* Asset Tabs */}
+            <div className="border-t border-[#1e2030] mt-8 pt-8">
+              <div className="flex gap-8 mb-6">
+                {['Assets', 'NFTs', 'Activity'].map(tab => (
+                  <button
+                    key={tab}
+                    className={`text-[13px] font-bold uppercase tracking-wider bg-transparent border-none cursor-pointer pb-2 relative ${
+                      tab === 'Assets' ? 'text-[#f8fafc]' : 'text-[#64748b] hover:text-[#94a3b8]'
+                    }`}
+                  >
+                    {tab}
+                    {tab === 'Assets' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#6366f1]" />}
+                  </button>
+                ))}
+              </div>
+              <div className="space-y-1">
+                <AssetRow symbol="ETH" name="Ethereum" amount="3.4821" val="$11,203.42" change="+2.4%" color="#627EEA" />
+                <AssetRow symbol="USDC" name="USD Coin" amount="1,250.00" val="$1,250.00" change="+0.01%" color="#2775CA" />
+                <AssetRow symbol="UNI" name="Uniswap" amount="48.5" val="$394.21" change="-1.2%" color="#FF007A" />
+              </div>
+            </div>
+          </div>
+          
+          <NodesCard onToast={onToast} />
+        </div>
+
+        {/* Right Section (4/10) */}
+        <div className="col-span-4 space-y-5">
+          <FeaturedAppsCard onOpen={onOpenBrowser} />
+          <Web3ActivityFeed />
+          <NetworkStatusDetailsCard />
+        </div>
+      </div>
+      
+      <MarketingCard />
+    </div>
+  );
+}
+
+function CircleAction({ icon: Icon, label }: { icon: any; label: string }) {
+  return (
+    <div className="flex flex-col items-center gap-2 group cursor-pointer">
+      <div className="w-[52px] h-[52px] rounded-full bg-[#1e2030] flex items-center justify-center text-white transition-all duration-150 group-hover:bg-[#252636] group-hover:scale-105">
+        <Icon size={20} />
+      </div>
+      <span className="text-[12px] text-[#94a3b8] font-medium group-hover:text-[#f8fafc]">{label}</span>
+    </div>
+  );
+}
+
+// --- Wallet Page ---
+
+function WalletPage({ onBackup, onImport }: any) {
+  const { accounts, activeAccountId, switchAccount } = useWalletStore();
+  
+  const totalBalance = accounts.reduce((sum, acc) => sum + (acc.balance_usd || 0), 0);
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-[20px] font-semibold text-[#f8fafc]">Wallet</h2>
+        <p className="text-[13px] text-[#64748b] mt-1">Manage your Web3 identity</p>
+      </div>
+
+      <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar">
+        {accounts.map(acc => (
+          <button
+            key={acc.id}
+            onClick={() => switchAccount(acc.id)}
+            className={`min-w-[220px] bg-[#111218] border rounded-[12px] p-5 text-left transition-all cursor-pointer ${
+              acc.id === activeAccountId ? 'border-[#6366f1]' : 'border-[#1e2030] hover:border-[#2d2e45]'
+            }`}
+          >
+            <div className="flex justify-between items-start mb-4">
+              <div className={`w-9 h-9 rounded-full flex items-center justify-center text-[13px] font-bold text-white ${acc.id === 'wallet-demo-2' ? 'bg-[#0891b2]' : 'bg-[#6366f1]'}`}>
+                {acc.name.charAt(0)}
+              </div>
+              {acc.id === activeAccountId && (
+                <div className="flex items-center gap-1.5 bg-[#22c55e]/10 px-2 py-0.5 rounded-[6px]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+                  <span className="text-[10px] font-bold text-[#22c55e] uppercase">Active</span>
+                </div>
+              )}
+            </div>
+            <div className="text-[13px] font-bold text-[#f8fafc] mb-0.5">{acc.name}</div>
+            <div className="text-[11px] text-[#64748b] font-mono mb-4">{acc.addresses.eth.slice(0, 6)}...{acc.addresses.eth.slice(-4)}</div>
+            <div className="text-[18px] font-bold text-[#f8fafc] tabular-nums mb-1">${acc.balance_usd.toLocaleString()}</div>
+            <div className="text-[12px] text-[#94a3b8]">{acc.balance_eth} ETH</div>
+            <div className="mt-4 flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+              <span className="text-[11px] text-[#64748b] font-medium">Ethereum Mainnet</span>
+            </div>
+          </button>
+        ))}
+        <button 
+          onClick={onImport}
+          className="min-w-[220px] border border-dashed border-[#2d2e45] rounded-[12px] p-5 flex flex-col items-center justify-center gap-3 bg-transparent text-[#64748b] hover:border-[#6366f1] hover:text-[#818cf8] transition-all cursor-pointer"
+        >
+          <Plus size={24} />
+          <span className="text-[13px] font-semibold">Add Wallet</span>
+        </button>
+      </div>
+
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-[16px] font-semibold text-[#f8fafc]">All Assets</h3>
+          <span className="text-[14px] text-[#94a3b8]">Total: ${totalBalance.toLocaleString()}</span>
+        </div>
+        <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] overflow-hidden">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-[#1e2030] h-10">
+                <th className="pl-6 text-[11px] font-bold text-[#475569] uppercase tracking-wider">Asset</th>
+                <th className="text-[11px] font-bold text-[#475569] uppercase tracking-wider">Wallet</th>
+                <th className="text-[11px] font-bold text-[#475569] uppercase tracking-wider">Amount</th>
+                <th className="text-[11px] font-bold text-[#475569] uppercase tracking-wider">Value</th>
+                <th className="pr-6 text-[11px] font-bold text-[#475569] uppercase tracking-wider text-right">24H</th>
+              </tr>
+            </thead>
+            <tbody>
+              <AssetTableRow iconColor="#627EEA" symbol="ETH" name="Ethereum" network="Ethereum Mainnet" wallet="Orivon Wallet 1" amount="3.4821 ETH" value="$11,203.42" change="+2.4%" />
+              <AssetTableRow iconColor="#627EEA" symbol="ETH" name="Ethereum" network="Ethereum Mainnet" wallet="Trading Wallet" amount="1.2450 ETH" value="$4,002.18" change="+2.4%" />
+              <AssetTableRow iconColor="#2775CA" symbol="USDC" name="USD Coin" network="Ethereum Mainnet" wallet="Orivon Wallet 1" amount="1,250 USDC" value="$1,250.00" change="+0.01%" />
+              <AssetTableRow iconColor="#FF007A" symbol="UNI" name="Uniswap" network="Ethereum Mainnet" wallet="Orivon Wallet 1" amount="48.5 UNI" value="$394.21" change="-1.2%" isNegative />
+              <AssetTableRow iconColor="#F7931A" symbol="WBTC" name="Wrapped Bitcoin" network="Ethereum Mainnet" wallet="Trading Wallet" amount="0.0412 WBTC" value="$889.02" change="+1.8%" />
+            </tbody>
+          </table>
+          <div className="h-[52px] px-6 flex items-center justify-between bg-[#0d0e14]/30">
+            <span className="text-[13px] text-[#94a3b8] font-medium">Total Portfolio</span>
+            <span className="text-[14px] text-[#f8fafc] font-bold tabular-nums">$17,738.83</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-6 space-y-6">
+        <h3 className="text-[14px] font-semibold text-[#f8fafc]">Security</h3>
+        <div className="space-y-4">
+          <SecurityRow name="Orivon Wallet 1" status="Backed Up" isSecure onAction={() => {}} />
+          <SecurityRow name="Trading Wallet" status="Backup Recommended" type="Imported" onAction={onBackup} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AssetTableRow({ iconColor, symbol, name, network, wallet, amount, value, change, isNegative }: any) {
+  return (
+    <tr className="h-[52px] border-b border-[#1e2030] hover:bg-[#161720] transition-colors group">
+      <td className="pl-6">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0" style={{ backgroundColor: iconColor }}>{symbol}</div>
+          <div className="flex flex-col">
+            <span className="text-[13px] font-semibold text-[#f8fafc]">{name}</span>
+            <span className="text-[11px] text-[#64748b] font-medium">{symbol} on {network}</span>
+          </div>
+        </div>
+      </td>
+      <td><span className="text-[12px] text-[#94a3b8] font-medium">{wallet}</span></td>
+      <td><span className="text-[13px] text-[#f8fafc] font-medium tabular-nums">{amount}</span></td>
+      <td><span className="text-[13px] text-[#f8fafc] font-bold tabular-nums">{value}</span></td>
+      <td className="pr-6 text-right">
+        <span className={`text-[12px] font-bold tabular-nums ${isNegative ? 'text-[#ef4444]' : 'text-[#22c55e]'}`}>{change}</span>
+      </td>
+    </tr>
+  );
+}
+
+function SecurityRow({ name, status, isSecure, type, onAction }: any) {
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-4">
+        <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${isSecure ? 'bg-[#22c55e]/10 text-[#22c55e]' : 'bg-[#f59e0b]/10 text-[#f59e0b]'}`}>
+          <Key size={18} />
+        </div>
+        <div className="flex flex-col">
+          <div className="flex items-center gap-2">
+            <span className="text-[13px] font-semibold text-[#f8fafc]">{name}</span>
+            {type && <Badge className="bg-[#6366f1]/10 text-[#6366f1] text-[10px] uppercase">Imported</Badge>}
+          </div>
+          <span className="text-[12px] text-[#64748b]">{isSecure ? 'Wallet seed phrase is securely backed up' : 'Backup your seed phrase to secure your funds'}</span>
+        </div>
+      </div>
+      {isSecure ? (
+        <Badge className="bg-[#22c55e]/10 text-[#22c55e] px-3 py-1 uppercase text-[10px]">Backed Up</Badge>
+      ) : (
+        <button 
+          onClick={onAction}
+          className="h-8 px-4 rounded-[6px] border border-[#f59e0b] text-[#f59e0b] text-[12px] font-bold hover:bg-[#f59e0b] hover:text-white transition-all cursor-pointer bg-transparent"
+        >
+          Backup Seed Phrase
+        </button>
+      )}
+    </div>
+  );
+}
+
+// --- Browse Web3 Page ---
+
+function BrowseWeb3Page({ onOpen }: any) {
+  const [activeCategory, setActiveCategory] = useState('All');
+  const categories = ['All', 'DeFi', 'Social', 'Storage', 'Nodes', 'NFTs', 'Gaming', 'Tools'];
+
+  const dapps = [
+    { n: 'Uniswap', d: 'uniswap.eth', c: 'DeFi', i: '#ff007a', s: 97, desc: 'Decentralized exchange' },
+    { n: 'Mastodon', d: 'mastodon.eth', c: 'Social', i: '#2b90d9', s: 94, desc: 'Decentralized social network' },
+    { n: 'Aave', d: 'aave.eth', c: 'DeFi', i: '#2ebac6', s: 92, desc: 'Liquidity protocol' },
+    { n: 'ENS', d: 'ens.eth', c: 'Tools', i: '#5298ff', s: 99, desc: 'Ethereum Name Service' },
+    { n: 'OpenSea', d: 'opensea.eth', c: 'NFTs', i: '#2081e2', s: 85, desc: 'NFT marketplace' },
+    { n: 'Gitcoin', d: 'gitcoin.eth', c: 'Tools', i: '#00cc85', s: 96, desc: 'Funding public goods' },
+    { n: 'MakerDAO', d: 'makerdao.eth', c: 'DeFi', i: '#1aab9b', s: 98, desc: 'Stablecoin system' },
+    { n: 'IPFS', d: 'ipfs.eth', c: 'Storage', i: '#06b6d4', s: 99, desc: 'Peer-to-peer file system' },
+    { n: 'Compound', d: 'compound.eth', c: 'DeFi', i: '#00d395', s: 95, desc: 'Money markets' },
+    { n: 'Arweave', d: 'arweave.eth', c: 'Storage', i: '#000000', s: 99, desc: 'Permanent data storage' },
+    { n: 'Synthetix', d: 'synthetix.eth', c: 'DeFi', i: '#00d1ff', s: 91, desc: 'Derivatives liquidity' },
+    { n: 'Lido', d: 'lido.eth', c: 'DeFi', i: '#00a3ff', s: 94, desc: 'Liquid staking' },
+  ];
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-[20px] font-semibold text-[#f8fafc]">Browse Web3</h2>
+        <p className="text-[13px] text-[#64748b] mt-1">Discover the decentralized web</p>
+      </div>
+
+      <div className="relative">
+        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#475569]" />
+        <input 
+          placeholder="Search .eth domains, DApps, and Web3 sites"
+          className="w-full h-11 bg-[#111218] border border-[#1e2030] rounded-[10px] pl-12 pr-4 text-[#f8fafc] font-medium outline-none focus:border-[#6366f1] transition-all placeholder:text-[#475569]"
+        />
+      </div>
+
+      <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+        {categories.map(cat => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className={`px-4 py-1.5 rounded-[6px] text-[12px] font-semibold transition-all border cursor-pointer ${
+              activeCategory === cat ? 'bg-[#6366f1] border-[#6366f1] text-white' : 'bg-[#111218] border-[#1e2030] text-[#64748b] hover:border-[#2d2e45] hover:text-[#94a3b8]'
+            }`}
+          >
+            {cat}
           </button>
         ))}
       </div>
 
-      <div className="border-t border-[#1e2030] pt-8">
-        <div className="flex gap-8 mb-8">
-          {(['tokens', 'nfts', 'activity'] as const).map(tab => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`pb-3 text-[13px] font-semibold uppercase tracking-widest bg-transparent border-none cursor-pointer relative transition-all ${
-                activeTab === tab ? 'text-[#f8fafc]' : 'text-[#64748b] hover:text-[#94a3b8]'
-              }`}
-            >
-              {tab}
-              {activeTab === tab && (
-                <motion.div layoutId="activeTabUnderline" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#6366f1]" />
-              )}
-            </button>
+      <div className="space-y-4">
+        <h3 className="text-[14px] font-semibold text-[#f8fafc]">Featured</h3>
+        <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar">
+          {dapps.slice(0, 3).map(app => (
+            <div key={app.n} className="min-w-[280px] bg-[#111218] border border-[#1e2030] rounded-[12px] p-6 group cursor-pointer hover:border-[#6366f1] transition-all relative">
+              <div className="w-12 h-12 rounded-[12px] flex items-center justify-center text-[20px] font-bold text-white mb-4" style={{ backgroundColor: app.i }}>{app.n.charAt(0)}</div>
+              <h4 className="text-[16px] font-bold text-[#f8fafc]">{app.n}</h4>
+              <p className="text-[13px] text-[#64748b] mt-1">{app.desc}</p>
+              <div className="absolute bottom-6 right-6 flex items-center gap-1.5 bg-[#22c55e]/10 px-2 py-0.5 rounded-[6px]">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+                <span className="text-[10px] font-bold text-[#22c55e] uppercase">{app.s}</span>
+              </div>
+              <button 
+                onClick={() => onOpen?.(app.d)}
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 flex items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-[12px] transition-all"
+              >
+                <div className="bg-[#6366f1] text-white px-6 py-2 rounded-[8px] font-bold text-[13px]">Open</div>
+              </button>
+            </div>
           ))}
         </div>
+      </div>
 
-        <div className="space-y-1">
-           {activeTab === 'tokens' && tokens.map(token => (
-             <div key={token.symbol} className="flex items-center justify-between p-3.5 rounded-lg border-l-2 border-transparent hover:bg-[#161720] transition-all group" style={{ borderLeftColor: token.color }}>
-                <div className="flex items-center gap-4 pl-1">
-                   <div className="flex flex-col">
-                      <span className="font-semibold text-[#f8fafc] text-[13px]">{token.symbol}</span>
-                      <span className="text-[12px] text-[#64748b] font-medium">{token.name}</span>
-                   </div>
-                </div>
-                <div className="flex-1 flex justify-center text-[13px] text-[#94a3b8] tabular font-medium">
-                   {token.amount} {token.symbol}
-                </div>
-                <div className="flex items-center gap-10">
-                   <div className="text-right flex flex-col">
-                      <span className="font-semibold text-[#f8fafc] text-[13px] tabular">${token.value_usd.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-                      <span className={`text-[12px] font-semibold tabular ${token.change_24h > 0 ? 'text-[#22c55e]' : 'text-[#ef4444]'}`}>
-                        {token.change_24h > 0 ? '+' : ''}{token.change_24h}%
-                      </span>
-                   </div>
-                </div>
-             </div>
-           ))}
-           {activeTab !== 'tokens' && (
-              <div className="py-12 flex flex-col items-center justify-center gap-4 text-[#475569]">
-                 <div className="w-12 h-12 rounded-xl border border-[#1e2030] flex items-center justify-center opacity-40">
-                    {activeTab === 'nfts' ? <Layers size={24} /> : <Activity size={24} />}
-                 </div>
-                 <span className="text-label uppercase tracking-widest">No {activeTab} Found</span>
-              </div>
-           )}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <h3 className="text-[14px] font-semibold text-[#f8fafc]">All Apps</h3>
+          <span className="text-[12px] text-[#475569] font-bold bg-[#161720] px-2 py-0.5 rounded">24</span>
         </div>
-        
-        <div className="mt-10 flex justify-between items-center text-[#475569] text-[11px] font-semibold uppercase tracking-[0.12em]">
-           <span>Secured by Orivon Protocol</span>
-           <span className="text-muted">Total Value: <span className="text-[#94a3b8] tabular">${(activeAccount.balance_usd || 0).toLocaleString()}</span></span>
+        <div className="grid grid-cols-3 gap-3">
+          {dapps.map(app => (
+            <div key={app.n} className="flex items-center gap-3 p-3 rounded-[10px] bg-[#111218] border border-[#1e2030] hover:bg-[#161720] hover:border-[#6366f1] transition-all group cursor-pointer">
+              <div className="relative shrink-0">
+                <div className="w-9 h-9 rounded-[8px] flex items-center justify-center text-[14px] font-bold text-white" style={{ backgroundColor: app.i }}>{app.n.charAt(0)}</div>
+                <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full border border-[#111218] bg-[#22c55e]" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <span className="text-[13px] font-semibold text-[#f8fafc] truncate block">{app.n}</span>
+                <span className="text-[11px] text-[#6366f1] font-medium truncate block">{app.d}</span>
+              </div>
+              <button 
+                onClick={(e) => { e.stopPropagation(); onOpen?.(app.d); }}
+                className="opacity-0 group-hover:opacity-100 text-[12px] font-bold text-[#6366f1] bg-transparent border-none cursor-pointer"
+              >
+                Open
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div className="space-y-4">
+        <h3 className="text-[14px] font-semibold text-[#f8fafc]">Recently Visited</h3>
+        <div className="space-y-1">
+          {dapps.slice(0, 5).map(app => (
+             <div key={app.d} className="h-12 flex items-center justify-between px-3 rounded-[8px] hover:bg-[#161720] transition-all group">
+                <div className="flex items-center gap-4">
+                   <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+                   <span className="text-[13px] font-medium text-[#f8fafc] font-mono">{app.d}</span>
+                   <span className="text-[11px] text-[#475569] font-medium">Visited 2 hours ago</span>
+                </div>
+                <button 
+                   onClick={() => onOpen?.(app.d)}
+                   className="opacity-0 group-hover:opacity-100 h-7 px-4 rounded-[6px] border border-[#1e2030] text-[#64748b] text-[11px] font-bold uppercase tracking-wider hover:border-[#6366f1] hover:text-[#f8fafc] transition-all cursor-pointer bg-transparent"
+                >
+                   Visit Again
+                </button>
+             </div>
+          ))}
         </div>
       </div>
     </div>
   );
 }
 
-function NodesWidget() {
-  const [nodes, setNodes] = useState<Record<string, 'Online' | 'Offline' | 'Syncing'>>({
+// --- App Store Page ---
+
+function AppStorePage({ onOpen, onToast }: any) {
+  const [activeTab, setActiveTab] = useState('All');
+  const [installing, setInstalling] = useState<string | null>(null);
+  const [installed, setInstalled] = useState<string[]>(['ENS Resolver', 'IPFS Module', 'Uniswap Module', 'Bitcoin Node', 'Orivon Web3 Score', 'Web3 Compass Search']);
+  const [showPermissionModal, setShowPermissionModal] = useState<any>(null);
+
+  const available = [
+    { n: 'Monero Wallet', c: 'Crypto', desc: 'Private digital currency wallet', s: 'Trustless' },
+    { n: 'Tor Network', c: 'Privacy', desc: 'Anonymity online network', s: 'High Privacy' },
+    { n: 'Arweave Module', c: 'Data Gathering', desc: 'Permanent data storage resolver', s: 'Trustless' },
+    { n: 'Filecoin Storage', c: 'Storage', desc: 'Decentralized storage network', s: 'Trustless' },
+    { n: 'OpenSea Module', c: 'NFTs', desc: 'NFT marketplace integration', s: 'Partial' },
+    { n: 'Aave DeFi', c: 'DeFi', desc: 'Lending and borrowing module', s: 'Partial' },
+    { n: 'Handshake DNS', c: 'DNS Resolution', desc: 'Decentralized naming protocol', s: 'Trustless' },
+    { n: 'ZCash Wallet', c: 'Crypto', desc: 'Privacy-preserving crypto wallet', s: 'Trustless' },
+    { n: 'Bisq DEX', c: 'Trading', desc: 'Private decentralized exchange', s: 'Trustless' },
+    { n: 'Brave Search', c: 'Search', desc: 'Private search engine integration', s: 'Partial' },
+  ];
+
+  const handleInstall = (app: any) => {
+    setShowPermissionModal({
+      app,
+      onApprove: () => {
+        setShowPermissionModal(null);
+        setInstalling(app.n);
+        setTimeout(() => {
+          setInstalling(null);
+          setInstalled(prev => [...prev, app.n]);
+          onToast(`${app.n} Installed`, 'Module successfully added to Orivon');
+        }, 1500);
+      }
+    });
+  };
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-[20px] font-semibold text-[#f8fafc]">App Store</h2>
+        <p className="text-[13px] text-[#64748b] mt-1">Extend Orivon with Web3 modules and applications</p>
+      </div>
+
+      <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-6 flex justify-between items-center">
+        <div className="flex-1 flex flex-col items-center">
+          <span className="text-[18px] font-bold text-[#f8fafc]">284</span>
+          <span className="text-[12px] text-[#64748b] mt-1">Apps Available</span>
+        </div>
+        <div className="w-px h-10 bg-[#1e2030]" />
+        <div className="flex-1 flex flex-col items-center">
+          <span className="text-[18px] font-bold text-[#f8fafc]">{installed.length}</span>
+          <span className="text-[12px] text-[#64748b] mt-1">Installed</span>
+        </div>
+        <div className="w-px h-10 bg-[#1e2030]" />
+        <div className="flex-1 flex flex-col items-center">
+          <span className="text-[18px] font-bold text-[#f8fafc]">Verified</span>
+          <span className="text-[12px] text-[#64748b] mt-1">All Web3 Score Verified</span>
+        </div>
+      </div>
+
+      <div className="relative">
+        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#475569]" />
+        <input 
+          placeholder="Search Web3 modules and apps"
+          className="w-full h-11 bg-[#111218] border border-[#1e2030] rounded-[10px] pl-12 pr-4 text-[#f8fafc] font-medium outline-none focus:border-[#6366f1] transition-all placeholder:text-[#475569]"
+        />
+      </div>
+
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <h3 className="text-[14px] font-semibold text-[#f8fafc]">Installed</h3>
+          <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+          <span className="text-[12px] text-[#475569] font-bold ml-1">{installed.length}</span>
+        </div>
+        <div className="space-y-1">
+          {installed.map(n => (
+            <div key={n} className="h-[72px] bg-[#111218] border border-[#1e2030] rounded-[10px] px-5 flex items-center group">
+              <div className="w-10 h-10 rounded-[10px] bg-[#161720] border border-[#1e2030] flex items-center justify-center font-bold text-white text-[18px] shrink-0">
+                {n.charAt(0)}
+              </div>
+              <div className="flex-1 ml-5">
+                <div className="flex items-center gap-2">
+                  <span className="text-[14px] font-bold text-[#f8fafc]">{n}</span>
+                  <span className="text-[11px] text-[#22c55e] font-bold uppercase tracking-widest">Trustless</span>
+                </div>
+                <span className="text-[12px] text-[#64748b]">v1.0.0 · Web3 Module</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <Badge className="bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/20 flex items-center gap-1.5">
+                  <Check size={12} /> Installed
+                </Badge>
+                <button className="opacity-0 group-hover:opacity-100 text-[#64748b] hover:text-[#f8fafc] transition-colors bg-transparent border-none cursor-pointer">
+                  <MoreHorizontal size={18} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-[14px] font-semibold text-[#f8fafc]">Available</h3>
+        <div className="space-y-1">
+          {available.map(app => (
+            <div key={app.n} className="h-[72px] bg-[#111218] border border-[#1e2030] rounded-[10px] px-5 flex items-center group">
+              <div className="w-10 h-10 rounded-[10px] bg-[#161720] border border-[#1e2030] flex items-center justify-center font-bold text-white text-[18px] shrink-0">
+                {app.n.charAt(0)}
+              </div>
+              <div className="flex-1 ml-5">
+                <div className="flex items-center gap-2">
+                  <span className="text-[14px] font-bold text-[#f8fafc]">{app.n}</span>
+                  <span className="text-[11px] text-[#22c55e] font-bold uppercase tracking-widest">{app.s}</span>
+                </div>
+                <span className="text-[13px] text-[#64748b]">{app.desc}</span>
+              </div>
+              <button
+                onClick={() => handleInstall(app)}
+                disabled={installing === app.n || installed.includes(app.n)}
+                className={`h-8 px-5 rounded-[6px] border text-[12px] font-bold transition-all cursor-pointer bg-transparent ${
+                  installed.includes(app.n) 
+                    ? 'border-[#1e2030] text-[#475569] cursor-default'
+                    : 'border-[#6366f1] text-[#818cf8] hover:bg-[#6366f1] hover:text-white'
+                }`}
+              >
+                {installing === app.n ? <Loader2 size={14} className="animate-spin" /> : installed.includes(app.n) ? 'Installed' : 'Install'}
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {showPermissionModal && (
+          <PermissionModal 
+            app={showPermissionModal.app} 
+            onApprove={showPermissionModal.onApprove} 
+            onReject={() => setShowPermissionModal(null)} 
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function PermissionModal({ app, onApprove, onReject }: any) {
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-[8px] flex items-center justify-center p-6"
+    >
+      <motion.div
+        initial={{ scale: 0.96, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.96, opacity: 0 }}
+        className="bg-[#111218] border border-[#1e2030] rounded-[16px] p-8 max-w-[400px] w-full"
+      >
+        <div className="flex items-center gap-4 mb-8">
+           <div className="w-12 h-12 rounded-[12px] flex items-center justify-center text-[22px] font-bold text-white" style={{ backgroundColor: '#6366f1' }}>{app.n.charAt(0)}</div>
+           <div className="flex flex-col">
+              <span className="text-label text-[#6366f1] uppercase tracking-[0.08em] font-bold">App Store</span>
+              <span className="text-[18px] font-bold text-[#f8fafc]">Approve Permissions</span>
+           </div>
+        </div>
+
+        <div className="bg-[#161720] border border-[#1e2030] rounded-[12px] p-5 space-y-4 mb-8">
+           <div className="flex justify-between items-center text-[13px] font-medium">
+              <span className="text-[#64748b] uppercase text-[11px] font-bold tracking-widest">Access</span>
+              <span className="text-[#f8fafc]">Network & Storage</span>
+           </div>
+           <div className="flex justify-between items-center text-[13px] font-medium">
+              <span className="text-[#64748b] uppercase text-[11px] font-bold tracking-widest">Origin</span>
+              <span className="text-[#f8fafc]">orivon://app-store</span>
+           </div>
+           <div className="h-px bg-[#1e2030]" />
+           <div className="flex justify-between items-center">
+              <span className="text-[#64748b] uppercase text-[11px] font-bold tracking-widest">Trust Level</span>
+              <div className="flex items-center gap-2">
+                 <div className="w-1 h-1 rounded-full bg-[#22c55e]" />
+                 <span className="text-[11px] font-bold text-[#22c55e] uppercase tracking-widest">Trustless</span>
+              </div>
+           </div>
+        </div>
+
+        <div className="flex gap-3">
+           <button onClick={onReject} className="flex-1 h-11 rounded-[10px] bg-[#161720] border border-[#1e2030] text-[#64748b] font-bold text-[13px] hover:text-[#f8fafc] transition-all cursor-pointer">Reject</button>
+           <button onClick={onApprove} className="flex-1 h-11 rounded-[10px] bg-[#6366f1] text-white font-bold text-[13px] hover:bg-[#4f46e5] transition-all border-none cursor-pointer">Install</button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// --- Node Manager Page ---
+
+function NodeManagerPage({ onToast }: any) {
+  const [nodes, setNodes] = useState<Record<string, 'Online' | 'Offline' | 'Starting'>>({
     ipfs: 'Online',
     bittorrent: 'Offline',
     bitcoin: 'Offline'
   });
-  const [loading, setLoading] = useState<Record<string, boolean>>({});
+  const [logs, setLogs] = useState([
+    '[12:34:45] Reprovide sweep completed',
+    '[12:34:31] Peer discovery: 3 new peers',
+    '[12:34:25] Pinned block QmContent...',
+    '[12:34:22] Connected to peer QmHash...',
+    '[12:34:21] Swarm listening on /ip4/192.168.1.1/tcp/4001',
+  ]);
+  const [btcHeight, setBtcHeight] = useState(840847);
+  const [progress, setProgress] = useState(0);
 
-  const startNode = (id: string) => {
-    setLoading(prev => ({ ...prev, [id]: true }));
-    setNodes(prev => ({ ...prev, [id]: 'Syncing' }));
+  useEffect(() => {
+    const logPool = [
+      'Peer discovery: new peer QmZk...',
+      'Block fetched: QmRa...',
+      'Protocol sweep in progress...',
+      'DHT re-routing successful',
+      'BitSwap: received block QmXy...',
+      'Network DHT height synchronized'
+    ];
+    const interval = setInterval(() => {
+      const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
+      const newLog = `[${time}] ${logPool[Math.floor(Math.random() * logPool.length)]}`;
+      setLogs(prev => [newLog, ...prev.slice(0, 4)]);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBtcHeight(h => h + 1);
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (nodes.bitcoin === 'Starting') {
+      const interval = setInterval(() => {
+        setProgress(p => {
+          if (p >= 100) {
+             clearInterval(interval);
+             setNodes(prev => ({ ...prev, bitcoin: 'Online' }));
+             onToast('Bitcoin Node synced', 'Ready to validate transactions');
+             return 100;
+          }
+          return p + 2;
+        });
+      }, 50);
+      return () => clearInterval(interval);
+    }
+  }, [nodes.bitcoin]);
+
+  const handleStart = (id: string) => {
+    setNodes(prev => ({ ...prev, [id]: 'Starting' }));
+    if (id !== 'bitcoin') {
+      setTimeout(() => {
+        setNodes(prev => ({ ...prev, [id]: 'Online' }));
+        onToast(`${id.toUpperCase()} Node active`, 'Module running background process');
+      }, 1500);
+    } else {
+      setProgress(0);
+    }
+  };
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-[20px] font-semibold text-[#f8fafc]">Node Manager</h2>
+        <p className="text-[13px] text-[#64748b] mt-1">Run Web3 infrastructure directly in your browser</p>
+      </div>
+
+      <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-6 flex justify-between items-center">
+        <div className="flex-1 flex flex-col items-center">
+          <span className="text-[18px] font-bold text-[#f8fafc]">{Object.values(nodes).filter(v => v === 'Online').length} Running</span>
+          <span className="text-[12px] text-[#64748b] mt-1">Nodes Active</span>
+        </div>
+        <div className="w-px h-10 bg-[#1e2030]" />
+        <div className="flex-1 flex flex-col items-center">
+          <span className="text-[18px] font-bold text-[#f8fafc]">24</span>
+          <span className="text-[12px] text-[#64748b] mt-1">IPFS Peers</span>
+        </div>
+        <div className="w-px h-10 bg-[#1e2030]" />
+        <div className="flex-1 flex flex-col items-center">
+          <motion.span 
+             key={btcHeight}
+             initial={{ scale: 1.1, color: '#f8fafc' }}
+             animate={{ scale: 1, color: '#f8fafc' }}
+             className="text-[18px] font-bold tabular-nums"
+          >
+            {btcHeight.toLocaleString()}
+          </motion.span>
+          <span className="text-[12px] text-[#64748b] mt-1">BTC Block Height</span>
+        </div>
+      </div>
+
+      <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-6 flex justify-between items-center">
+        <div className="flex-1 flex flex-col gap-2">
+           <div className="flex justify-between items-center pr-8">
+              <span className="text-[11px] text-[#64748b] font-bold uppercase tracking-widest">CPU</span>
+              <span className="text-[12px] text-[#f8fafc] font-bold">12%</span>
+           </div>
+           <div className="w-[180px] h-1.5 bg-[#1e2030] rounded-full overflow-hidden">
+              <div className="h-full bg-[#6366f1] w-[12%]" />
+           </div>
+        </div>
+        <div className="flex-1 flex flex-col gap-2">
+           <div className="flex justify-between items-center pr-8">
+              <span className="text-[11px] text-[#64748b] font-bold uppercase tracking-widest">Memory</span>
+              <span className="text-[12px] text-[#f8fafc] font-bold">847 MB / 16 GB</span>
+           </div>
+           <div className="w-[180px] h-1.5 bg-[#1e2030] rounded-full overflow-hidden">
+              <div className="h-full bg-[#22c55e] w-[5%]" />
+           </div>
+        </div>
+        <div className="flex-1 flex flex-col gap-2">
+           <div className="flex justify-between items-center pr-8">
+              <span className="text-[11px] text-[#64748b] font-bold uppercase tracking-widest">Network</span>
+              <div className="flex items-center gap-1.5 text-[12px] text-[#f8fafc] font-bold">
+                 <ArrowUpDown size={12} /> 2.4 MB/s
+              </div>
+           </div>
+           <div className="h-1.5" />
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <NodeManagerCard 
+          id="ipfs" n="IPFS Node" v="v0.27.0" status={nodes.ipfs} icon={Database} c="#06b6d4" 
+          onStart={() => handleStart('ipfs')} 
+          onStop={() => setNodes(p => ({...p, ipfs: 'Offline'}))}
+          body={nodes.ipfs === 'Online' ? (
+             <div className="space-y-6">
+                <div className="grid grid-cols-4 gap-8">
+                   <div className="flex flex-col">
+                      <span className="text-[11px] text-[#64748b] font-bold uppercase">Connected Peers</span>
+                      <span className="text-[18px] font-bold text-[#f8fafc]">24</span>
+                   </div>
+                   <div className="flex flex-col">
+                      <span className="text-[11px] text-[#64748b] font-bold uppercase">Repo Size</span>
+                      <span className="text-[18px] font-bold text-[#f8fafc]">1.2 GB</span>
+                   </div>
+                   <div className="flex flex-col">
+                      <span className="text-[11px] text-[#64748b] font-bold uppercase">Bandwidth In</span>
+                      <span className="text-[18px] font-bold text-[#f8fafc]">847 KB/s</span>
+                   </div>
+                   <div className="flex flex-col">
+                      <span className="text-[11px] text-[#64748b] font-bold uppercase">Bandwidth Out</span>
+                      <span className="text-[18px] font-bold text-[#f8fafc]">124 KB/s</span>
+                   </div>
+                </div>
+                <div>
+                   <div className="flex items-center gap-2 mb-4">
+                      <span className="text-[13px] font-bold text-[#f8fafc]">Connected Peers</span>
+                      <Badge className="bg-[#161720] text-[#64748b]">24</Badge>
+                   </div>
+                   <div className="space-y-1">
+                      {[
+                        { id: 'QmZk...', loc: '🇺🇸 USA', lat: '24ms', v: '1.8.0' },
+                        { id: 'QmRa...', loc: '🇩🇪 Germany', lat: '48ms', v: '1.7.2' },
+                        { id: 'QmXy...', loc: '🇯🇵 Japan', lat: '152ms', v: '1.8.0' },
+                        { id: 'QmBa...', loc: '🇬🇧 UK', lat: '32ms', v: '1.8.1' },
+                        { id: 'Qm9z...', loc: '🇨🇦 Canada', lat: '12ms', v: '1.8.0' }
+                      ].map((peer, i) => (
+                        <PeerRow key={peer.id} {...peer} index={i} />
+                      ))}
+                   </div>
+                </div>
+                <div className="bg-[#0a0b11] rounded-[8px] p-4 font-mono text-[12px] text-[#22c55e] space-y-1 min-h-[140px]">
+                   <div className="flex items-center gap-2 text-[#64748b] mb-2">
+                      <Terminal size={12} />
+                      <span className="font-bold uppercase text-[10px]">Node Logs</span>
+                   </div>
+                   <AnimatePresence initial={false}>
+                      {logs.map(log => (
+                        <motion.div key={log} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="truncate">{log}</motion.div>
+                      ))}
+                   </AnimatePresence>
+                </div>
+             </div>
+          ) : null}
+        />
+
+        <NodeManagerCard 
+          id="bittorrent" n="BitTorrent Node" v="v1.2.4" status={nodes.bittorrent} icon={Share2} c="#f59e0b"
+          onStart={() => handleStart('bittorrent')} 
+          onStop={() => setNodes(p => ({...p, bittorrent: 'Offline'}))}
+          body={nodes.bittorrent === 'Offline' ? (
+             <div className="space-y-6">
+                <p className="text-[13px] text-[#94a3b8]">Peer-to-peer file sharing network. Download and seed torrents directly in your browser without any external application.</p>
+                <div className="grid grid-cols-2 gap-y-3">
+                   <FeatureRow iconColor="text-[#6366f1]" label="Magnet link support" />
+                   <FeatureRow iconColor="text-[#6366f1]" label="Streaming playback" />
+                   <FeatureRow iconColor="text-[#6366f1]" label="DHT and PEX enabled" />
+                   <FeatureRow iconColor="text-[#6366f1]" label="No port forwarding required" />
+                </div>
+                <button onClick={() => handleStart('bittorrent')} className="h-10 px-8 rounded-[8px] bg-[#6366f1] text-white font-bold text-[13px] hover:bg-[#4f46e5] transition-all border-none cursor-pointer">Start Node</button>
+             </div>
+          ) : null}
+        />
+
+        <NodeManagerCard 
+          id="bitcoin" n="Bitcoin Node" v="v27.0.0" status={nodes.bitcoin} icon={CircleDot} c="#f97316"
+          onStart={() => handleStart('bitcoin')} 
+          onStop={() => setNodes(p => ({...p, bitcoin: 'Offline'}))}
+          body={nodes.bitcoin === 'Offline' ? (
+             <div className="space-y-6">
+                <p className="text-[13px] text-[#94a3b8]">Full validation node using quick sync technology. Run your own sovereign infrastructure and validate your own transactions.</p>
+                <div className="grid grid-cols-2 gap-y-3">
+                   <FeatureRow iconColor="text-[#f97316]" label="Validates all transactions" />
+                   <FeatureRow iconColor="text-[#f97316]" label="No trust required" />
+                   <FeatureRow iconColor="text-[#f97316]" label="Pruned: saves disk space" />
+                   <FeatureRow iconColor="text-[#f97316]" label="Quick sync from snapshot" />
+                </div>
+                <div className="flex items-center gap-4">
+                   <Badge className="bg-[#161720] text-[#64748b] border border-[#1e2030] uppercase">Pruned Node</Badge>
+                   <span className="text-[12px] text-[#64748b]">550 MB storage used</span>
+                   <span className="text-[12px] text-[#64748b]">Pre-synced to block 840,000</span>
+                </div>
+                <button onClick={() => handleStart('bitcoin')} className="h-10 px-8 rounded-[8px] bg-[#f97316] text-white font-bold text-[13px] hover:bg-[#ea580c] transition-all border-none cursor-pointer">Start Bitcoin Node</button>
+             </div>
+          ) : nodes.bitcoin === 'Starting' ? (
+             <div className="space-y-4">
+                <div className="flex justify-between items-center text-[13px] text-[#94a3b8]">
+                   <span>Syncing from snapshot...</span>
+                   <span className="tabular-nums font-bold">{progress}%</span>
+                </div>
+                <div className="h-2 bg-[#1e2030] rounded-full overflow-hidden">
+                   <motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }} className="h-full bg-[#f97316]" />
+                </div>
+                <p className="text-[12px] text-[#64748b]">This will take approximately 4-8 minutes</p>
+             </div>
+          ) : null}
+        />
+      </div>
+    </div>
+  );
+}
+
+function NodeManagerCard({ id, n, v, status, icon: Icon, c, body, onStart, onStop }: any) {
+  return (
+    <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-6 transition-all">
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0" style={{ backgroundColor: `${c}15`, color: c }}>
+            <Icon size={18} />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[16px] font-bold text-[#f8fafc]">{n}</span>
+            <span className="text-[12px] text-[#475569]">{v}</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className={`px-3 py-1 rounded-[6px] flex items-center gap-2 border ${status === 'Online' ? 'bg-[#22c55e]/10 border-[#22c55e]/20 text-[#22c55e]' : 'bg-[#1e2030] border-[#2d2e45] text-[#64748b]'}`}>
+            <StatusDot color={status === 'Online' ? 'bg-[#22c55e]' : status === 'Starting' ? 'bg-[#f59e0b]' : 'bg-[#475569]'} pulse={status === 'Starting'} />
+            <span className="text-[11px] font-bold uppercase tracking-wider">{status}</span>
+          </div>
+          {status === 'Online' && (
+            <button onClick={onStop} className="h-8 px-4 rounded-[6px] border border-[#ef4444]/50 text-[#ef4444] text-[12px] font-bold hover:bg-[#ef4444] hover:text-white transition-all cursor-pointer bg-transparent">Stop</button>
+          )}
+        </div>
+      </div>
+      {body && <div className="border-t border-[#1e2030] pt-6">{body}</div>}
+    </div>
+  );
+}
+
+function PeerRow({ id, loc, lat, v, index }: any) {
+  return (
+    <motion.div 
+       initial={{ opacity: 0, x: -10 }}
+       animate={{ opacity: 1, x: 0 }}
+       transition={{ delay: index * 0.03 }}
+       className="h-8 flex items-center justify-between text-[12px] font-mono text-[#64748b] hover:text-[#f8fafc] transition-colors"
+    >
+       <span className="w-24 shrink-0">{id}</span>
+       <span className="flex-1 text-center">{loc}</span>
+       <span className="w-16 text-right">{lat}</span>
+       <span className="w-16 text-right">v{v}</span>
+    </motion.div>
+  );
+}
+
+function FeatureRow({ iconColor, label }: any) {
+  return (
+    <div className="flex items-center gap-3 text-[13px] text-[#94a3b8]">
+       <Check size={14} className={iconColor} strokeWidth={3} /> {label}
+    </div>
+  );
+}
+
+// --- History Page ---
+
+function HistoryPage({ onOpen }: any) {
+  const [activeTab, setActiveTab] = useState<'Browsing' | 'Transactions'>('Browsing');
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-[20px] font-semibold text-[#f8fafc]">History</h2>
+      </div>
+
+      <div className="flex gap-8 border-b border-[#1e2030]">
+        {['Browsing', 'Transactions'].map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab as any)}
+            className={`pb-3 text-[14px] font-bold transition-all bg-transparent border-none cursor-pointer relative ${
+              activeTab === tab ? 'text-[#f8fafc]' : 'text-[#64748b] hover:text-[#94a3b8]'
+            }`}
+          >
+            {tab} History
+            {activeTab === tab && <motion.div layoutId="histTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#6366f1]" />}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === 'Browsing' ? (
+        <div className="space-y-8">
+          <div className="flex justify-between items-center">
+             <div className="relative w-96">
+                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#475569]" />
+                <input placeholder="Search history..." className="w-full h-9 bg-[#111218] border border-[#1e2030] rounded-[8px] pl-10 pr-4 text-[13px] outline-none focus:border-[#6366f1]" />
+             </div>
+             <button className="text-[13px] font-bold text-[#ef4444] hover:text-[#f87171] transition-colors bg-transparent border-none cursor-pointer flex items-center gap-2">
+                <Trash2 size={16} /> Clear History
+             </button>
+          </div>
+
+          <HistorySection title="Today" items={[
+            { d: 'uniswap.eth', t: 'Uniswap - Swap Tokens', time: '2 min ago', s: '🟢' },
+            { d: 'mastodon.eth', t: 'Mastodon - Home Feed', time: '1 hr ago', s: '🟢' },
+            { d: 'opensea.eth', t: 'OpenSea - NFT Marketplace', time: '2 hrs ago', s: '🟡' },
+            { d: 'btcnode.eth', t: 'Bitcoin Node Dashboard', time: '3 hrs ago', s: '🟢' },
+            { d: 'apps.orivon.eth', t: 'Orivon App Store', time: '4 hrs ago', s: '🟢' },
+            { d: 'google.com', t: 'Google Search', time: '5 hrs ago', s: '🔴' },
+            { d: 'gitcoin.eth', t: 'Gitcoin - Public Goods', time: '6 hrs ago', s: '🟢' },
+          ]} onOpen={onOpen} />
+
+          <HistorySection title="Yesterday" items={[
+            { d: 'uniswap.eth', t: 'Uniswap - Pool Positions', time: '1 day ago', s: '🟢' },
+            { d: 'mastodon.eth', t: 'Mastodon - Explore', time: '1 day ago', s: '🟢' },
+            { d: 'twitter.com', t: 'Twitter / X', time: '1 day ago', s: '🔴' },
+          ]} onOpen={onOpen} />
+        </div>
+      ) : (
+        <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] overflow-hidden">
+           <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-[#1e2030] h-10">
+                   <th className="pl-6 text-[11px] font-bold text-[#475569] uppercase tracking-wider">Type</th>
+                   <th className="text-[11px] font-bold text-[#475569] uppercase tracking-wider">Description</th>
+                   <th className="text-[11px] font-bold text-[#475569] uppercase tracking-wider">Amount</th>
+                   <th className="text-[11px] font-bold text-[#475569] uppercase tracking-wider">Status</th>
+                   <th className="pr-6 text-[11px] font-bold text-[#475569] uppercase tracking-wider text-right">Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { type: 'Sent', desc: 'to 0x742d...', amt: '-$1,609.20', cur: '0.5 ETH', status: 'Confirmed', time: '2 hrs ago' },
+                  { type: 'Received', desc: 'from 0x1234...', amt: '+$3,218.40', cur: '1.0 ETH', status: 'Confirmed', time: '1 day ago', isPositive: true },
+                  { type: 'Swapped', desc: '1 ETH → 3,201 USDC', amt: '$3,201.00', status: 'Confirmed', time: '2 days ago' },
+                  { type: 'Sent', desc: 'to 0x9876...', amt: '-$100.00', cur: '100 USDC', status: 'Confirmed', time: '3 days ago' }
+                ].map((tx, i) => (
+                  <TxRow key={i} {...tx} index={i} />
+                ))}
+              </tbody>
+           </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function HistorySection({ title, items, onOpen }: any) {
+  return (
+    <div className="space-y-4">
+       <div className="text-[11px] font-bold text-[#475569] uppercase tracking-[0.06em]">{title}</div>
+       <div className="space-y-1">
+          {items.map((item: any, i: number) => (
+             <motion.div 
+                key={item.d + i}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.05 }}
+                className="h-12 flex items-center justify-between px-3 rounded-[8px] hover:bg-[#111218] group cursor-pointer"
+             >
+                <div className="flex items-center gap-4">
+                   <span className="text-[10px] shrink-0">{item.s}</span>
+                   <div className="w-5 h-5 rounded-md bg-[#161720] flex items-center justify-center font-bold text-[10px] text-[#64748b]">{item.d.charAt(0).toUpperCase()}</div>
+                   <div className="flex flex-col">
+                      <span className="text-[13px] font-medium text-[#f8fafc]">{item.d}</span>
+                      <span className="text-[12px] text-[#64748b]">{item.t}</span>
+                   </div>
+                </div>
+                <div className="flex items-center gap-4">
+                   <span className="text-[11px] text-[#475569] font-medium">{item.time}</span>
+                   <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button onClick={(e) => { e.stopPropagation(); onOpen?.(item.d); }} className="p-1.5 rounded-md hover:bg-[#1e2030] text-[#64748b] hover:text-[#f8fafc] bg-transparent border-none cursor-pointer"><ExternalLink size={14} /></button>
+                      <button className="p-1.5 rounded-md hover:bg-[#1e2030] text-[#64748b] hover:text-[#ef4444] bg-transparent border-none cursor-pointer"><X size={14} /></button>
+                   </div>
+                </div>
+             </motion.div>
+          ))}
+       </div>
+    </div>
+  );
+}
+
+function TxRow({ type, desc, amt, cur, status, time, isPositive, index }: any) {
+  return (
+    <motion.tr 
+       initial={{ opacity: 0, x: -10 }}
+       animate={{ opacity: 1, x: 0 }}
+       transition={{ delay: index * 0.05 }}
+       className="h-14 border-b border-[#1e2030] hover:bg-[#161720] transition-colors cursor-pointer group"
+    >
+       <td className="pl-6">
+          <div className="flex items-center gap-3">
+             <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${type === 'Sent' ? 'bg-[#ef4444]/10 text-[#ef4444]' : type === 'Received' ? 'bg-[#22c55e]/10 text-[#22c55e]' : 'bg-[#6366f1]/10 text-[#6366f1]'}`}>
+                {type === 'Sent' ? <ArrowUpRight size={16} /> : type === 'Received' ? <ArrowDownLeft size={16} /> : <ArrowLeftRight size={16} />}
+             </div>
+             <span className="text-[13px] font-bold text-[#f8fafc]">{type}</span>
+          </div>
+       </td>
+       <td><span className="text-[12px] text-[#94a3b8] font-medium">{desc}</span></td>
+       <td>
+          <div className="flex flex-col">
+             <span className={`text-[13px] font-bold tabular-nums ${isPositive ? 'text-[#22c55e]' : type === 'Sent' ? 'text-[#ef4444]' : 'text-[#f8fafc]'}`}>{amt}</span>
+             {cur && <span className="text-[11px] text-[#64748b] tabular-nums">{cur}</span>}
+          </div>
+       </td>
+       <td>
+          <div className="flex items-center gap-2 bg-[#22c55e]/10 px-2 py-0.5 rounded-[6px] w-fit">
+             <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+             <span className="text-[10px] font-bold text-[#22c55e] uppercase tracking-wider">{status}</span>
+          </div>
+       </td>
+       <td className="pr-6 text-right"><span className="text-[11px] text-[#475569] font-medium">{time}</span></td>
+    </motion.tr>
+  );
+}
+
+// --- Settings Page ---
+
+function SettingsPage() {
+  const [activeCat, setActiveCat] = useState('General');
+  const cats = ['General', 'Privacy', 'Web3', 'Nodes', 'Wallet', 'Search', 'About'];
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-[20px] font-semibold text-[#f8fafc]">Settings</h2>
+      </div>
+
+      <div className="flex gap-10 items-start">
+         <div className="w-48 flex flex-col gap-1 shrink-0">
+            {cats.map(cat => (
+               <button
+                  key={cat}
+                  onClick={() => setActiveCat(cat)}
+                  className={`h-9 px-4 rounded-[8px] text-left text-[13px] font-bold transition-all border-none bg-transparent cursor-pointer ${
+                    activeCat === cat ? 'bg-[#111218] text-[#f8fafc]' : 'text-[#64748b] hover:text-[#94a3b8]'
+                  }`}
+               >
+                  {cat}
+               </button>
+            ))}
+         </div>
+
+         <div className="flex-1 max-w-[600px] space-y-8">
+            {activeCat === 'General' && (
+               <div className="space-y-6">
+                  <SettingsSection title="Preferences">
+                     <SettingsRow label="Language" control={<select className="bg-[#111218] border border-[#1e2030] text-[#f8fafc] rounded-[6px] h-8 px-2 text-[12px] outline-none"><option>English (US)</option></select>} />
+                     <SettingsRow label="Startup Behavior" control={<select className="bg-[#111218] border border-[#1e2030] text-[#f8fafc] rounded-[6px] h-8 px-2 text-[12px] outline-none"><option>Open Dashboard</option><option>Continue where I left off</option></select>} />
+                     <SettingsRow label="Theme" control={<div className="flex items-center gap-4"><Toggle active /><span className="text-[12px] text-[#475569] font-bold uppercase italic">Light coming soon</span></div>} />
+                  </SettingsSection>
+               </div>
+            )}
+            {activeCat === 'Privacy' && (
+               <div className="space-y-6">
+                  <SettingsSection title="Protection">
+                     <SettingsRow label="Tracker Blocking" sub="48,291,047 trackers blocked to date" control={<Toggle active />} />
+                     <SettingsRow label="Fingerprint Protection" control={<Toggle active />} />
+                     <SettingsRow label="Clear Browsing Data" control={<button className="h-8 px-4 rounded-[6px] border border-[#ef4444] text-[#ef4444] text-[11px] font-bold uppercase hover:bg-[#ef4444] hover:text-white transition-all bg-transparent cursor-pointer">Clear Now</button>} />
+                  </SettingsSection>
+               </div>
+            )}
+            {activeCat === 'About' && (
+               <div className="space-y-6">
+                  <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-8 flex flex-col items-center text-center">
+                     <div className="text-[15px] text-white font-bold tracking-[0.1em] mb-1">ORIVON</div>
+                     <div className="text-[11px] text-[#6366f1] font-bold tracking-[0.06em] uppercase mb-6">v0.1.0 MVP</div>
+                     <p className="text-[13px] text-[#64748b] max-w-[320px] mb-8">A native Web3 desktop browser built for privacy, decentralization, and the future of the internet.</p>
+                     <div className="flex gap-4">
+                        <button className="h-8 px-4 rounded-[6px] bg-[#161720] border border-[#1e2030] text-[#94a3b8] text-[11px] font-bold uppercase tracking-widest hover:text-[#f8fafc] transition-all cursor-pointer">GitHub</button>
+                        <button className="h-8 px-4 rounded-[6px] bg-[#161720] border border-[#1e2030] text-[#94a3b8] text-[11px] font-bold uppercase tracking-widest hover:text-[#f8fafc] transition-all cursor-pointer">Discord</button>
+                     </div>
+                     <div className="mt-12 text-[11px] text-[#475569] font-bold italic">Built with love for the decentralized web.</div>
+                  </div>
+               </div>
+            )}
+            {(!['General', 'Privacy', 'About'].includes(activeCat)) && (
+               <div className="py-20 flex flex-col items-center justify-center text-center">
+                  <Settings size={40} className="text-[#2d2e45] mb-4" />
+                  <span className="text-[14px] text-[#64748b] font-medium">{activeCat} settings coming soon</span>
+               </div>
+            )}
+         </div>
+      </div>
+    </div>
+  );
+}
+
+function SettingsSection({ title, children }: any) {
+  return (
+    <div className="space-y-4">
+       <div className="text-[13px] font-bold text-[#f8fafc] pb-2 border-b border-[#1e2030]">{title}</div>
+       <div className="space-y-1">{children}</div>
+    </div>
+  );
+}
+
+function SettingsRow({ label, sub, control }: any) {
+  return (
+    <div className="h-[52px] flex items-center justify-between">
+       <div className="flex flex-col">
+          <span className="text-[13px] font-medium text-[#94a3b8]">{label}</span>
+          {sub && <span className="text-[11px] text-[#64748b]">{sub}</span>}
+       </div>
+       {control}
+    </div>
+  );
+}
+
+function Toggle({ active }: { active?: boolean }) {
+  return (
+    <div className={`w-8 h-4 rounded-full relative transition-all duration-200 cursor-pointer ${active ? 'bg-[#6366f1]' : 'bg-[#1e2030]'}`}>
+       <div className={`absolute top-0.5 bottom-0.5 w-3 bg-white rounded-full transition-all duration-200 ${active ? 'left-[18px]' : 'left-0.5'}`} />
+    </div>
+  );
+}
+
+// --- Helper UI Components (Reused) ---
+
+function NodesCard({ onToast }: { onToast: (t: string, s: string) => void }) {
+  const [nodes, setNodes] = useState<Record<string, 'Online' | 'Offline' | 'Starting'>>({
+    ipfs: 'Online', bittorrent: 'Offline', bitcoin: 'Offline'
+  });
+
+  const handleStart = (id: string) => {
+    setNodes(prev => ({ ...prev, [id]: 'Starting' }));
     setTimeout(() => {
-      setLoading(prev => ({ ...prev, [id]: false }));
       setNodes(prev => ({ ...prev, [id]: 'Online' }));
-    }, 1500);
+      onToast(id === 'ipfs' ? 'IPFS Node started' : 'Node active', 'Module running background process');
+    }, 2500);
   };
 
   const activeCount = Object.values(nodes).filter(s => s === 'Online').length;
 
   return (
-    <div className="bg-[#111218] border border-[#1e2030] rounded-xl p-5 shadow-sm">
+    <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="title-section">Web3 Nodes</h2>
-        <span className="text-[11px] font-semibold uppercase text-[#22c55e] tracking-wider">{activeCount} Active</span>
+        <h2 className="text-[14px] font-bold text-[#f8fafc]">Web3 Nodes</h2>
+        <Badge className="bg-[#22c55e]/10 text-[#22c55e]">{activeCount} Active</Badge>
       </div>
-
-      <div className="divide-y divide-[#1e2030]">
-        {[
-          { id: 'ipfs', name: 'IPFS Node', sub: 'Distributed file system', icon: <Database size={16} className="text-[#06b6d4]" /> },
-          { id: 'bittorrent', name: 'BitTorrent Node', sub: 'Peer-to-peer file sharing', icon: <Share2 size={16} className="text-[#f59e0b]" /> },
-          { id: 'bitcoin', name: 'Bitcoin Node Pruned', sub: 'Pruned node, quick sync', icon: <Circle size={16} className="text-[#f97316]" fill="currentColor" /> }
-        ].map(node => (
-          <div key={node.id} className="py-4 first:pt-0 last:pb-0 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-8 h-8 rounded-lg bg-[#161720] border border-[#1e2030] flex items-center justify-center">
-                 {node.icon}
-              </div>
-              <div className="flex flex-col">
-                 <span className="text-[13px] font-semibold text-[#f8fafc]">{node.name}</span>
-                 <span className="text-[12px] text-[#64748b] font-medium">{node.sub}</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-               <div className="flex items-center gap-2">
-                  <div className={`w-1.5 h-1.5 rounded-full ${nodes[node.id] === 'Online' ? 'bg-[#22c55e]' : nodes[node.id] === 'Syncing' ? 'bg-[#f59e0b] animate-pulse' : 'bg-[#374151]'}`} />
-                  <span className={`text-[12px] font-medium uppercase tracking-wider ${nodes[node.id] === 'Online' ? 'text-[#22c55e]' : nodes[node.id] === 'Syncing' ? 'text-[#f59e0b]' : 'text-[#64748b]'}`}>
-                     {nodes[node.id]}
-                  </span>
-               </div>
-               <button 
-                 onClick={() => nodes[node.id] === 'Offline' ? startNode(node.id) : setNodes(p => ({...p, [node.id]: 'Offline'}))}
-                 className={`min-w-[72px] h-8 rounded-md font-semibold text-[11px] uppercase tracking-wider transition-all border cursor-pointer ${
-                  nodes[node.id] === 'Online' ? 'bg-transparent border-[#ef4444]/40 text-[#ef4444] hover:bg-[#ef4444]/5' : 'bg-transparent border-[#1e2030] text-[#94a3b8] hover:border-[#6366f1] hover:text-[#818cf8]'
-                 }`}
-               >
-                 {loading[node.id] ? <Spinner size={12} /> : nodes[node.id] === 'Online' ? 'Stop' : 'Start'}
-               </button>
-            </div>
-          </div>
-        ))}
+      <div className="space-y-0 divide-y divide-[#1e2030]">
+        <NodeRow id="ipfs" name="IPFS Node" sub="Distributed file system" status={nodes.ipfs} icon={Database} iconColor="text-[#06b6d4]" iconBg="bg-[#06b6d4]/15" onStart={() => handleStart('ipfs')} onStop={() => setNodes(p=>({...p,ipfs:'Offline'}))} />
+        <NodeRow id="bittorrent" name="BitTorrent" sub="P2P file sharing" status={nodes.bittorrent} icon={Share2} iconColor="text-[#f59e0b]" iconBg="bg-[#f59e0b]/15" onStart={() => handleStart('bittorrent')} onStop={() => setNodes(p=>({...p,bittorrent:'Offline'}))} />
       </div>
     </div>
   );
 }
 
-function WhyOrivon() {
+function NodeRow({ id, name, sub, status, icon: Icon, iconColor, iconBg, onStart, onStop }: any) {
   return (
-    <div className="bg-[#111218] border border-[#1e2030] rounded-xl p-5 shadow-sm">
-      <h2 className="title-section mb-6">Why Orivon</h2>
-      <div className="space-y-1">
-        {[
-          { icon: <Shield size={14} />, title: 'Zero Trackers', desc: 'Your data never leaves your device.' },
-          { icon: <Globe size={14} />, title: 'True Web3', desc: 'Native .eth domain support built in.' },
-          { icon: <Zap size={14} />, title: 'Instant Nodes', desc: 'Run Bitcoin and IPFS in one click.' },
-          { icon: <CheckCircle2 size={14} />, title: 'Web3 Scores', desc: 'Real-time trustsite indicators.' }
-        ].map((item, i) => (
-          <div key={item.title}>
-            <div className="flex gap-4 py-3.5">
-               <div className="text-[#6366f1] mt-0.5">{item.icon}</div>
-               <div className="flex flex-col">
-                  <div className="text-[13px] font-semibold text-[#f8fafc] mb-0.5">{item.title}</div>
-                  <div className="text-[12px] text-[#64748b] leading-snug font-medium">{item.desc}</div>
-               </div>
-            </div>
-            {i < 3 && <div className="h-px bg-[#161720] ml-8" />}
-          </div>
-        ))}
+    <div className="h-16 flex items-center justify-between first:pb-4 last:pt-4">
+      <div className="flex items-center gap-4">
+        <div className={`w-9 h-9 ${iconBg} rounded-[8px] flex items-center justify-center ${iconColor}`}><Icon size={16} /></div>
+        <div className="flex flex-col"><span className="text-[13px] font-semibold text-[#f8fafc]">{name}</span><span className="text-[12px] text-[#64748b] font-medium">{sub}</span></div>
+      </div>
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2"><StatusDot color={status === 'Online' ? 'bg-[#22c55e]' : status === 'Starting' ? 'bg-[#f59e0b]' : 'bg-[#475569]'} pulse={status === 'Starting'} /><span className="text-[12px] text-[#64748b] font-medium">{status}</span></div>
+        <button onClick={status === 'Online' ? onStop : onStart} disabled={status === 'Starting'} className={`h-8 px-3 rounded-[6px] border text-[12px] font-semibold transition-all cursor-pointer bg-transparent ${status === 'Online' ? 'border-[#ef4444]/50 text-[#ef4444] hover:bg-[#ef4444] hover:text-white' : 'border-[#6366f1] text-[#818cf8] hover:bg-[#6366f1] hover:text-white'}`}>
+           {status === 'Starting' ? <Loader2 size={12} className="animate-spin" /> : status === 'Online' ? 'Stop' : 'Start'}
+        </button>
       </div>
     </div>
   );
 }
 
-function NetworkStatusWidget() {
+function AssetRow({ symbol, name, amount, val, change, color }: any) {
+  const isPositive = change.startsWith('+');
   return (
-    <div className="bg-[#111218] border border-[#1e2030] rounded-xl p-5 shadow-sm">
-      <div className="flex items-center gap-2 mb-6">
-        <h2 className="title-section">Network Status</h2>
-        <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
-      </div>
-      <div className="space-y-4">
-         {[
-           { name: 'ENS Resolver', status: 'Active', icon: <Search size={14} /> },
-           { name: 'IPFS Gateway', status: 'Active', icon: <Database size={14} /> },
-           { name: 'Web3 Score', status: 'Active', icon: <Shield size={14} /> },
-           { name: 'Bitcoin Node', status: 'Offline', icon: <Zap size={14} /> }
-         ].map(item => (
-           <div key={item.name} className="flex justify-between items-center group cursor-default">
-              <div className="flex items-center gap-3">
-                 <span className="text-[#475569] group-hover:text-[#64748b] transition-colors">{item.icon}</span>
-                 <span className="text-[13px] font-medium text-[#f1f5f9]">{item.name}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                 <div className={`w-1 h-1 rounded-full ${item.status === 'Active' ? 'bg-[#22c55e]' : 'bg-[#374151]'}`} />
-                 <span className={`text-[11px] font-semibold uppercase tracking-widest ${item.status === 'Active' ? 'text-[#22c55e]' : 'text-[#64748b]'}`}>{item.status}</span>
-              </div>
-           </div>
-         ))}
-      </div>
+    <div className="h-11 flex items-center gap-3 px-2 rounded-[8px] hover:bg-[#161720] transition-colors group cursor-default">
+      <div className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold text-white shrink-0" style={{ backgroundColor: color }}>{symbol}</div>
+      <div className="flex-1 flex flex-col min-w-0"><span className="text-[13px] font-semibold text-[#f8fafc]">{name}</span><span className="text-[12px] text-[#64748b] font-medium tabular-nums">{amount} {symbol}</span></div>
+      <div className="text-right"><div className="text-[13px] font-semibold text-[#f8fafc] tabular-nums">{val}</div><div className={`text-[11px] font-medium tabular-nums ${isPositive ? 'text-[#22c55e]' : 'text-[#ef4444]'}`}>{change}</div></div>
     </div>
   );
 }
 
-function FeaturedWeb3Sites({ onOpen }: { onOpen?: (u: string) => void }) {
+function FeaturedAppsCard({ onOpen }: { onOpen?: (u: string) => void }) {
+  const apps = [{ n: 'Uniswap', d: 'uniswap.eth', c: '#7c3aed', s: 'green' }, { n: 'Mastodon', d: 'mastodon.eth', c: '#2563eb', s: 'green' }, { n: 'Bitcoin', d: 'btcnode.eth', c: '#d97706', s: 'green' }, { n: 'App Store', d: 'apps.orivon.eth', c: '#6366f1', s: 'green' }, { n: 'OpenSea', d: 'opensea.eth', c: '#0891b2', s: 'amber' }, { n: 'Gitcoin', d: 'gitcoin.eth', c: '#059669', s: 'green' }];
   return (
-    <div className="bg-[#111218] border border-[#1e2030] rounded-xl p-5 shadow-sm">
-      <h2 className="title-section mb-6">Explore Web3</h2>
-      <div className="grid grid-cols-3 gap-2">
-        {[
-          { name: 'Uniswap', domain: 'uniswap.eth', color: '#ff007a' },
-          { name: 'Mastodon', domain: 'mastodon.eth', color: '#2b90d9' },
-          { name: 'IPFS', domain: 'ipfs.eth', color: '#06b6d4' },
-          { name: 'OpenSea', domain: 'opensea.eth', color: '#2081e2' },
-          { name: 'Gitcoin', domain: 'gitcoin.eth', color: '#00cc85' },
-          { name: 'App Store', domain: 'apps.orivon.eth', color: '#6366f1' }
-        ].map(site => (
-          <button 
-            key={site.name} 
-            onClick={() => onOpen?.(site.domain)}
-            className="flex items-center gap-3 p-3 rounded-lg border-none bg-transparent hover:bg-[#161720] transition-all cursor-pointer group text-left"
-          >
-             <div className="w-9 h-9 rounded-lg flex items-center justify-center font-black text-white text-[14px] shrink-0" style={{ backgroundColor: site.color }}>
-                {site.name.charAt(0)}
-             </div>
-             <div className="flex flex-col min-w-0">
-                <div className="flex items-center gap-1.5">
-                   <span className="font-semibold text-[#f8fafc] text-[13px] truncate">{site.name}</span>
-                   <div className="w-1 h-1 rounded-full bg-[#22c55e] shrink-0" />
-                </div>
-                <div className="text-[11px] text-[#6366f1] font-medium mono truncate">{site.domain}</div>
-             </div>
+    <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-6">
+      <div className="flex justify-between items-center mb-6"><h2 className="text-[14px] font-bold text-[#f8fafc]">Explore Web3</h2><button className="text-[12px] text-[#6366f1] font-semibold hover:text-[#818cf8] transition-colors bg-transparent border-none cursor-pointer">Browse All</button></div>
+      <div className="grid grid-cols-2 gap-2">
+        {apps.map(app => (
+          <button key={app.n} onClick={() => onOpen?.(app.d)} className="flex items-center gap-3 p-3 rounded-[10px] bg-transparent border-none text-left cursor-pointer transition-all duration-150 hover:bg-[#161720] hover:-translate-y-0.5 hover:shadow-lg group">
+            <div className="relative shrink-0"><div className="w-9 h-9 rounded-[8px] flex items-center justify-center text-[14px] font-bold text-white" style={{ backgroundColor: app.c }}>{app.n.charAt(0)}</div><div className={`absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full border border-[#111218] ${app.s === 'green' ? 'bg-[#22c55e]' : 'bg-[#f59e0b]'}`} /></div>
+            <div className="flex-1 min-w-0"><span className="text-[13px] font-semibold text-[#f8fafc] truncate block">{app.n}</span><span className="text-[11px] text-[#6366f1] font-medium truncate block">{app.d}</span></div>
           </button>
         ))}
       </div>
@@ -434,416 +1514,85 @@ function FeaturedWeb3Sites({ onOpen }: { onOpen?: (u: string) => void }) {
   );
 }
 
-function RecentSites() {
+function Web3ActivityFeed() {
+  const [items, setItems] = useState([{ c: 'bg-[#22c55e]', d: 'uniswap.eth', a: 'Resolved via ENS + IPFS', t: 'just now', id: 1 }, { c: 'bg-[#22c55e]', d: 'mastodon.eth', a: 'Loaded trustlessly', t: '2m ago', id: 2 }, { c: 'bg-[#f59e0b]', d: 'opensea.eth', a: 'Partial trustless detected', t: '5m ago', id: 3 }, { c: 'bg-[#ef4444]', d: 'google.com', a: 'Centralized connection', t: '8m ago', id: 4 }, { c: 'bg-[#22c55e]', d: 'btcnode.eth', a: 'Node synced 99.94%', t: '12m ago', id: 5 }, { c: 'bg-[#22c55e]', d: 'gitcoin.eth', a: 'Loaded trustlessly', t: '18m ago', id: 6 }]);
+  const pool = [{ c: 'bg-[#22c55e]', d: 'aave.eth', a: 'Direct IPFS resolve', t: 'just now' }, { c: 'bg-[#22c55e]', d: 'ens.eth', a: 'Smart contract verified', t: 'just now' }, { c: 'bg-[#ef4444]', d: 'facebook.com', a: 'Centralized hop detected', t: 'just now' }];
+  useEffect(() => { const interval = setInterval(() => { const newItem = { ...pool[Math.floor(Math.random() * pool.length)], id: Date.now() }; setItems(prev => [newItem, ...prev.slice(0, 5)]); }, 8000); return () => clearInterval(interval); }, []);
   return (
-    <div className="bg-[#111218] border border-[#1e2030] rounded-xl p-5 shadow-sm">
-      <h2 className="title-section mb-6">Recent Sites</h2>
-      <div className="space-y-5">
-        {[
-          { name: 'uniswap.eth', time: '2m ago', score: '#22c55e' },
-          { name: 'mastodon.eth', time: '1h ago', score: '#22c55e' },
-          { name: 'opensea.eth', time: '3h ago', score: '#f59e0b' },
-          { name: 'google.com', time: '5h ago', score: '#ef4444' }
-        ].map(site => (
-          <div key={site.name} className="flex justify-between items-center">
-            <div className="flex items-center gap-3">
-               <div className="w-6 h-6 rounded-md bg-[#161720] border border-[#1e2030] flex items-center justify-center font-bold text-[#475569] text-[10px]">
-                  {site.name.charAt(0).toUpperCase()}
-               </div>
-               <div className="flex flex-col">
-                  <span className="text-[13px] font-medium text-[#f8fafc]">{site.name}</span>
-                  <span className="text-[11px] text-[#475569] font-medium tabular">{site.time}</span>
-               </div>
-            </div>
-            <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: site.score }} />
-          </div>
-        ))}
-      </div>
+    <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-6 h-[320px] flex flex-col">
+      <div className="flex justify-between items-center mb-6"><h2 className="text-[14px] font-bold text-[#f8fafc]">Web3 Activity</h2><div className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-[#22c55e] animate-pulse" /><span className="text-[11px] font-bold text-[#22c55e] uppercase tracking-wider">Live</span></div></div>
+      <div className="flex-1 space-y-4 overflow-hidden relative"><AnimatePresence initial={false}>{items.map((item) => ( <motion.div key={item.id} initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.2 }} className="flex items-center gap-3"><div className={`w-1.5 h-1.5 rounded-full ${item.c} shrink-0`} /><span className="text-[13px] text-[#f8fafc] font-mono truncate w-24 shrink-0">{item.d}</span><span className="text-[12px] text-[#64748b] truncate flex-1">{item.a}</span><span className="text-[11px] text-[#475569] font-medium shrink-0">{item.t}</span></motion.div> ))}</AnimatePresence></div>
     </div>
   );
 }
 
-function BottomPitch() {
+function NetworkStatusDetailsCard() {
+  const rows = [{ i: Globe, n: 'ENS Resolver', s: 'Active' }, { i: Database, n: 'IPFS Gateway', s: 'Active' }, { i: Search, n: 'Web3 Compass', s: 'Connected' }, { i: Activity, n: 'Bitcoin Network', s: 'Reachable' }, { i: Shield, n: 'Web3 Score', s: 'Operational' }];
   return (
-    <div className="w-full bg-[#111218] border border-[#1e2030] rounded-xl p-10 flex justify-between items-center relative overflow-hidden">
-      <div className="max-w-[60%]">
-        <span className="text-label text-[#6366f1] block mb-4">The Web3 Browser</span>
-        <h2 className="text-[22px] font-bold text-[#f8fafc] mb-4 tracking-tight">The browser Web3 has been waiting for.</h2>
-        <p className="text-[#94a3b8] text-[14px] leading-relaxed font-medium mb-8">
-          Orivon is the first browser built from the ground up for Web3. Native ENS domains, one-click nodes, built-in Web3 Scores, and a unified wallet for every chain.
-        </p>
-        <div className="space-y-3">
-           {[
-             'Open any .eth domain instantly',
-             'Run a Bitcoin node in one click',
-             'Know exactly how trustless every site is'
-           ].map(item => (
-             <div key={item} className="flex items-center gap-3 text-[13px] font-semibold text-[#64748b]">
-                <Check size={14} className="text-[#6366f1]" strokeWidth={3} />
-                {item}
-             </div>
-           ))}
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-8 text-right pr-4">
-         {[
-           { val: '2B', label: 'People coming to Web3' },
-           { val: '1 Browser', label: 'Built to onboard them' },
-           { val: '0', label: 'Compromises on decentralization' }
-         ].map(stat => (
-           <div key={stat.label} className="flex flex-col">
-              <span className="text-[28px] font-bold text-[#f8fafc] tabular tracking-tighter leading-none">{stat.val}</span>
-              <span className="text-[12px] text-[#64748b] font-medium mt-1 uppercase tracking-wider">{stat.label}</span>
-           </div>
-         ))}
-      </div>
+    <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-6">
+      <div className="flex justify-between items-center mb-6"><h2 className="text-[14px] font-bold text-[#f8fafc]">Network</h2><span className="text-[11px] font-bold text-[#22c55e] uppercase tracking-wider">All Systems Operational</span></div>
+      <div className="space-y-1">{rows.map(row => ( <div key={row.n} className="h-10 flex items-center justify-between px-2 rounded-[6px] hover:bg-[#161720] group cursor-default"><div className="flex items-center gap-3"><row.i size={14} className="text-[#64748b] group-hover:text-[#94a3b8]" /><span className="text-[13px] font-medium text-[#f8fafc]">{row.n}</span></div><div className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" /><span className="text-[11px] font-bold text-[#22c55e] uppercase tracking-wider">{row.s}</span></div></div> ))}</div>
     </div>
   );
 }
 
-function BackupView({ onBack }: { onBack: () => void }) {
+function MarketingCard() {
+  return (
+    <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-[28px_32px] flex items-center justify-between">
+      <div className="w-[55%] space-y-4"><div className="text-[10px] text-[#6366f1] font-bold tracking-[0.08em] uppercase">The Web3 Browser</div><h2 className="text-[22px] font-bold text-[#f8fafc] tracking-[-0.02em]">Built for the internet that's coming.</h2><p className="text-[14px] text-[#94a3b8] leading-[1.6] max-w-[480px]">Orivon is the first browser where Web3 is native, not bolted on. No extensions, no setup, no compromises. Just the web as it was meant to be.</p><div className="space-y-2 pt-2">{['Open any .eth domain natively', 'Run Bitcoin and IPFS nodes in one click', 'Know exactly how trustless every site is'].map(f => ( <div key={f} className="flex items-center gap-3 text-[13px] text-[#94a3b8] font-medium"><Check size={14} className="text-[#6366f1]" strokeWidth={3} /> {f}</div> ))}</div></div>
+      <div className="w-[45%] flex flex-col gap-6 text-right"><StatItem val="2B" label="People coming to Web3" /><StatItem val="1 Browser" label="Built for all of them" /><StatItem val="0" label="Compromises on decentralization" /></div>
+    </div>
+  );
+}
+
+function StatItem({ val, label }: { val: string; label: string }) {
+  return (
+    <div className="flex flex-col"><span className="text-[32px] font-bold text-[#f8fafc] tracking-[-0.03em] leading-none">{val}</span><span className="text-[12px] text-[#94a3b8] font-semibold mt-1.5">{label}</span><span className="text-[10px] text-[#64748b] font-bold uppercase tracking-wider mt-0.5">Built for all of them</span></div>
+  );
+}
+
+// --- Modals (Seed Phrase, Import Wallet, etc.) ---
+
+function SeedPhraseModal({ onClose }: { onClose: () => void }) {
   const [revealed, setRevealed] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { password } = useWalletStore();
-  const [pwInput, setPwInput] = useState('');
-  const [showPwEntry, setShowPwInput] = useState(true);
-  const [error, setError] = useState('');
-
-  const DEMO_MNEMONIC = 'abandon ability able about above absent absorb abstract absurd abuse access accident';
-  const words = DEMO_MNEMONIC.split(' ');
-
-  const handleReveal = () => {
-    if (pwInput === password || (!password && pwInput === '1234')) {
-      setShowPwInput(false);
-      setRevealed(true);
-    } else {
-      setError('Incorrect password');
-    }
-  };
-
-  const handleCopyAll = () => {
-    navigator.clipboard.writeText(DEMO_MNEMONIC);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  if (showPwEntry) {
-    return (
-      <div className="text-[#f8fafc] min-h-full w-full py-16 px-5 flex flex-col items-center font-inter bg-[#0d0e14]">
-        <div className="w-full max-w-[440px]">
-          <button onClick={onBack} className="flex items-center gap-2 bg-transparent border-none text-[#64748b] hover:text-[#f8fafc] cursor-pointer mb-12 transition-all font-semibold text-[13px] uppercase tracking-wider">
-            <ArrowLeft size={16} /> Back
-          </button>
-          
-          <h1 className="title-page mb-4">Enter Password</h1>
-          <p className="text-[#94a3b8] text-[14px] leading-relaxed mb-10">
-             Please enter your Orivon Action Password to view your seed phrase.
-          </p>
-          
-          <div className="mb-10">
-             <label className="text-label text-[#64748b] block mb-2 px-1">Your Password</label>
-             <input 
-               type="password" 
-               autoFocus
-               value={pwInput} 
-               onChange={e => {setPwInput(e.target.value); setError('');}}
-               onKeyDown={e => e.key === 'Enter' && handleReveal()}
-               className="w-full h-11 rounded-lg bg-[#111218] border border-[#1e2030] px-4 text-[#f8fafc] font-bold text-lg outline-none focus:border-[#6366f1] transition-all"
-             />
-             {error && <p className="text-[#ef4444] text-[11px] font-bold uppercase mt-3 px-1">{error}</p>}
-          </div>
-
-          <button 
-            onClick={handleReveal}
-            className="w-full h-11 rounded-lg bg-[#6366f1] text-white font-semibold text-[14px] hover:bg-[#4f46e5] active:scale-[0.98] transition-all border-none cursor-pointer"
-          >
-             Unlock & Reveal
-          </button>
-        </div>
-      </div>
-    );
-  }
-
+  const words = DEMO_WALLET.mnemonic.split(' ');
+  const handleCopy = () => { navigator.clipboard.writeText(DEMO_WALLET.mnemonic); setCopied(true); setTimeout(() => setCopied(false), 2000); };
   return (
-    <div className="text-[#f8fafc] min-h-full w-full py-16 px-5 flex flex-col items-center font-inter bg-[#0d0e14]">
-      <div className="w-full max-w-[600px]">
-        <button onClick={onBack} className="flex items-center gap-2 bg-transparent border-none text-[#64748b] hover:text-[#f8fafc] cursor-pointer mb-12 transition-all font-semibold text-[13px] uppercase tracking-wider">
-          <ArrowLeft size={16} /> Back to dashboard
-        </button>
-
-        <div className="border-l-3 border-[#ef4444] p-5 bg-transparent mb-12">
-          <div className="text-[13px] text-[#ef4444] font-semibold leading-relaxed">
-            Never share your seed phrase with anyone. Anyone who has these 12 words has full access to your funds.
-          </div>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-[8px] flex items-center justify-center p-6">
+      <motion.div initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.96, opacity: 0 }} transition={{ duration: 0.15 }} className="bg-[#111218] border border-[#1e2030] rounded-[16px] p-8 max-w-[520px] w-full relative">
+        <button onClick={onClose} className="absolute top-6 right-6 text-[#64748b] hover:text-[#f8fafc] transition-colors bg-transparent border-none cursor-pointer"><X size={20} /></button>
+        <h2 className="text-[18px] font-bold text-[#f8fafc] mb-6">Wallet Backup</h2>
+        <div className="bg-[#ef4444]/5 border-l-3 border-[#ef4444] p-4 rounded-r-[6px] mb-8"><p className="text-[13px] text-[#ef4444] font-medium m-0 leading-relaxed">Never share your seed phrase. Anyone who has it controls your wallet.</p></div>
+        <div className="relative mb-8">
+          <div className="grid grid-cols-3 gap-3">{words.map((word, i) => ( <div key={i} className="bg-[#161720] border border-[#1e2030] rounded-[8px] p-[10px_14px] flex flex-col items-center justify-center"><span className="text-[10px] text-[#475569] font-bold uppercase self-start leading-none mb-1.5">{i + 1}</span><span className="text-[15px] font-bold text-[#f8fafc] font-mono tracking-tight">{word}</span></div> ))}</div>
+          {!revealed && ( <div className="absolute inset-0 bg-[#0d0e14]/60 backdrop-blur-[10px] rounded-[8px] flex items-center justify-center z-10"><button onClick={() => setRevealed(true)} className="h-10 w-40 rounded-[8px] border border-[#6366f1] bg-transparent text-[#818cf8] font-bold text-[13px] hover:bg-[#6366f1] hover:text-white transition-all cursor-pointer">Reveal Seed Phrase</button></div> )}
         </div>
-
-        <h1 className="title-page mb-3">Backup your wallet</h1>
-        <p className="text-[#94a3b8] text-[14px] font-medium mb-12">Write down these 12 words in order and keep them somewhere safe offline.</p>
-
-        <div className="relative mb-12 group">
-          <div className="grid grid-cols-3 gap-y-8 gap-x-12">
-            {words.map((word, i) => (
-              <div key={i} className="flex items-center gap-4">
-                <span className="text-[11px] font-bold text-[#64748b] mono w-5 shrink-0 tabular">{i + 1}</span>
-                <span className="font-semibold text-[#f8fafc] text-[15px] mono tracking-tight">{word}</span>
-              </div>
-            ))}
-          </div>
-          {!revealed && (
-            <div className="absolute -inset-4 bg-transparent backdrop-blur-xl z-10 flex items-center justify-center rounded-xl">
-               <button 
-                 onClick={() => setRevealed(true)}
-                 className="bg-transparent border border-[#6366f1] text-[#818cf8] px-8 h-10 rounded-lg font-semibold text-[13px] hover:bg-[#6366f1] hover:text-white transition-all cursor-pointer"
-               >
-                  Reveal Seed Phrase
-               </button>
-            </div>
-          )}
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <button
-            onClick={handleCopyAll}
-            className="w-full h-11 rounded-lg bg-[#111218] border border-[#1e2030] text-[#94a3b8] font-semibold text-[13px] uppercase tracking-widest cursor-pointer hover:border-[#6366f1] hover:text-[#f8fafc] transition-all flex items-center justify-center gap-3"
-          >
-            {copied ? <CheckCircle2 size={16} className="text-[#22c55e]" /> : <Copy size={16} />}
-            {copied ? 'Copied to clipboard' : 'Copy all 12 words'}
-          </button>
-          <button
-            onClick={onBack}
-            className="w-full h-11 rounded-lg bg-[#6366f1] text-white font-semibold text-[14px] uppercase tracking-widest cursor-pointer hover:bg-[#4f46e5] transition-all border-none mt-2"
-          >
-            I have saved it
-          </button>
-        </div>
-      </div>
-    </div>
+        <div className="flex gap-3"><button onClick={handleCopy} className="flex-1 h-11 rounded-[8px] border border-[#1e2030] bg-transparent text-[#64748b] font-bold text-[13px] flex items-center justify-center gap-2 hover:border-[#6366f1] hover:text-[#f8fafc] transition-all cursor-pointer">{copied ? <Check size={16} className="text-[#22c55e]" /> : <Copy size={16} />} {copied ? 'Copied' : 'Copy All'}</button><button onClick={onClose} className="flex-1 h-11 rounded-[8px] bg-[#6366f1] text-white font-bold text-[13px] hover:bg-[#4f46e5] transition-all border-none cursor-pointer">I have saved it</button></div>
+      </motion.div>
+    </motion.div>
   );
 }
 
-function ImportView({ onBack }: { onBack: () => void }) {
-  const { importWallet } = useWalletStore();
+function ImportWalletModal({ onClose, onImport }: { onClose: () => void; onImport: (words: string) => Promise<void> }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-
-  const DEMO_IMPORT = [
-    'venture', 'capital', 'market', 'chain', 'block', 'token',
-    'wallet', 'defi', 'node', 'crypto', 'zero', 'proof'
-  ];
-
-  const handleImport = async () => {
-    setLoading(true);
-    setTimeout(async () => {
-      await importWallet(DEMO_IMPORT.join(' '), '', 'Trading Wallet');
-      setSuccess(true);
-      setTimeout(() => onBack(), 1200);
-    }, 1200);
-  };
-
-  if (success) {
-    return (
-      <div className="h-full w-full flex flex-col items-center justify-center text-center p-10 bg-[#0d0e14]">
-        <div className="w-16 h-16 rounded-full bg-[#22c55e]/10 flex items-center justify-center mb-8">
-          <Check size={32} className="text-[#22c55e]" />
-        </div>
-        <h1 className="title-page mb-2">Wallet Connected</h1>
-        <p className="text-[#94a3b8] font-medium text-[14px]">Trading Wallet has been successfully imported.</p>
-      </div>
-    );
-  }
-
+  const demoWords = ['venture', 'capital', 'market', 'chain', 'block', 'token', 'wallet', 'defi', 'node', 'crypto', 'zero', 'proof'];
+  const handleImport = async () => { setLoading(true); await onImport(demoWords.join(' ')); setTimeout(() => { setLoading(false); setSuccess(true); setTimeout(onClose, 1000); }, 1500); };
   return (
-    <div className="text-[#f8fafc] min-h-full w-full py-16 px-5 flex flex-col items-center font-inter bg-[#0d0e14]">
-      <div className="w-full max-w-[560px]">
-        <button onClick={onBack} className="flex items-center gap-2 bg-transparent border-none text-[#64748b] hover:text-[#f8fafc] cursor-pointer mb-12 transition-all font-semibold text-[13px] uppercase tracking-wider">
-          <ArrowLeft size={16} /> Back
-        </button>
-
-        <h1 className="title-page mb-2">Import Wallet</h1>
-        <p className="text-[#94a3b8] mb-12 font-medium text-[14px]">Enter your 12 word seed phrase to connect an existing wallet</p>
-
-        <div className="mb-4 text-[#64748b] text-[11px] font-semibold uppercase tracking-widest italic pl-1">Demo seed phrase pre-filled. Click Import to continue.</div>
-        
-        <div className="grid grid-cols-3 gap-3 mb-12">
-          {DEMO_IMPORT.map((word, i) => (
-            <div key={i} className="relative">
-              <span className="absolute top-2 left-2.5 text-[9px] font-bold text-[#475569] mono tabular uppercase">{i + 1}</span>
-              <div className="w-full h-11 rounded-lg bg-[#111218] border border-[#1e2030] flex items-center px-4 pt-1.5 text-[#f8fafc] font-semibold text-[14px] mono">{word}</div>
-            </div>
-          ))}
-        </div>
-
-        <button
-          onClick={handleImport}
-          disabled={loading}
-          className="w-full h-11 rounded-lg font-bold text-[14px] transition-all flex items-center justify-center gap-4 border-none bg-[#6366f1] text-white cursor-pointer hover:bg-[#4f46e5]"
-        >
-          {loading ? <Spinner size={18} color="#fff" /> : "Verify and Import"}
-        </button>
-      </div>
-    </div>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-[8px] flex items-center justify-center p-6">
+      <motion.div initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.96, opacity: 0 }} transition={{ duration: 0.15 }} className="bg-[#111218] border border-[#1e2030] rounded-[16px] p-8 max-w-[520px] w-full relative">
+        {!success ? ( <> <button onClick={onClose} className="absolute top-6 right-6 text-[#64748b] hover:text-[#f8fafc] transition-colors bg-transparent border-none cursor-pointer"><X size={20} /></button> <h2 className="text-[18px] font-bold text-[#f8fafc] mb-1">Import Wallet</h2> <p className="text-[13px] text-[#64748b] font-medium mb-8">Enter your 12 word seed phrase below.</p> <div className="text-[12px] text-[#475569] italic mb-4 px-1">Demo seed phrase pre-filled. Click Import to continue.</div> <div className="grid grid-cols-3 gap-3 mb-8">{demoWords.map((word, i) => ( <div key={i} className="relative"><span className="absolute top-2 left-2.5 text-[9px] font-bold text-[#475569] mono tabular uppercase">{i + 1}</span><div className="w-full h-10 rounded-[8px] bg-[#161720] border border-[#1e2030] flex items-center px-3 pt-1 text-[#f8fafc] font-bold text-[13px] font-mono">{word}</div></div> ))}</div> <button onClick={handleImport} disabled={loading} className="w-full h-11 rounded-[10px] bg-[#6366f1] text-white font-bold text-[14px] hover:bg-[#4f46e5] transition-all border-none cursor-pointer flex items-center justify-center gap-3 disabled:bg-[#1e2030] disabled:text-[#475569]">{loading ? <Loader2 size={18} className="animate-spin" /> : null} {loading ? 'Importing...' : 'Verify and Import'}</button> </> ) : ( <div className="flex flex-col items-center justify-center py-12 text-center"><div className="w-12 h-12 rounded-full bg-[#22c55e]/10 flex items-center justify-center mb-6"><Check size={24} className="text-[#22c55e]" /></div><h3 className="text-[18px] font-bold text-[#f8fafc] mb-1">Wallet Imported</h3><p className="text-[14px] text-[#64748b] font-medium">Your Trading Wallet is now active.</p></div> )}
+      </motion.div>
+    </motion.div>
   );
 }
 
-function SendView({ onBack }: { onBack: () => void }) {
-  const { accounts, activeAccountId } = useWalletStore();
-  const activeAccount = accounts.find(a => a.id === activeAccountId) || accounts[0];
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-
-  const handleSend = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setSuccess(true);
-      setTimeout(() => onBack(), 1500);
-    }, 1800);
-  };
-
-  if (loading) {
-    return (
-      <div className="h-full w-full bg-[#0d0e14]/90 fixed inset-0 z-[1000] flex flex-col items-center justify-center text-center backdrop-blur-sm">
-        <Spinner size={32} color="#6366f1" className="mb-8" />
-        <h2 className="text-xl font-bold text-[#f8fafc] mb-2 uppercase tracking-widest">Broadcasting</h2>
-        <p className="text-[#94a3b8] font-medium text-[14px]">Processing your transaction on Ethereum Mainnet...</p>
-      </div>
-    );
-  }
-
-  if (success) {
-    return (
-      <div className="h-full w-full flex flex-col items-center justify-center text-center p-10 bg-[#0d0e14]">
-        <div className="w-16 h-16 rounded-full bg-[#22c55e]/10 flex items-center justify-center mb-8">
-          <Check size={32} className="text-[#22c55e]" />
-        </div>
-        <h1 className="title-page mb-2">Transaction Sent</h1>
-        <p className="text-[#94a3b8] font-medium text-[14px]">Your funds are on the way!</p>
-      </div>
-    );
-  }
-
+function WalletSwitcherDropdown({ accounts, activeId, onSwitch, onImport, onClose }: any) {
   return (
-    <div className="text-[#f8fafc] min-h-full w-full py-16 px-5 flex flex-col items-center font-inter bg-[#0d0e14]">
-      <div className="w-full max-w-[500px]">
-        <button onClick={onBack} className="flex items-center gap-2 bg-transparent border-none text-[#64748b] hover:text-[#f8fafc] cursor-pointer mb-12 transition-all font-semibold text-[13px] uppercase tracking-wider">
-          <ArrowLeft size={16} /> Back
-        </button>
-
-        <h1 className="title-page mb-10">Send Crypto</h1>
-
-        <div className="space-y-6">
-          <div>
-            <label className="text-label text-[#64748b] block mb-2 px-1">Network</label>
-            <div className="h-12 rounded-lg bg-[#111218] border border-[#1e2030] flex items-center px-4 gap-3 hover:bg-[#161720] transition-colors cursor-pointer group">
-              <div className="w-5 h-5 rounded-full bg-[#627eea] flex items-center justify-center text-[10px] font-black text-white italic">Ξ</div>
-              <span className="flex-1 font-semibold text-[13px] text-[#f8fafc]">Ethereum Mainnet</span>
-              <ChevronRight size={16} className="text-[#475569] group-hover:text-[#64748b]" />
-            </div>
-          </div>
-
-          <div>
-            <label className="text-label text-[#64748b] block mb-2 px-1">Recipient Address</label>
-            <input
-              placeholder="0x... or .eth name"
-              className="w-full h-12 rounded-lg bg-[#111218] border border-[#1e2030] px-4 text-[#f8fafc] font-semibold text-[14px] outline-none focus:border-[#6366f1] transition-all placeholder:text-[#374151]"
-            />
-          </div>
-
-          <div>
-            <label className="text-label text-[#64748b] block mb-2 px-1">Amount</label>
-            <div className="relative">
-              <input
-                placeholder="0.0"
-                className="w-full h-12 rounded-lg bg-[#111218] border border-[#1e2030] pl-4 pr-16 text-[#f8fafc] font-bold text-xl outline-none focus:border-[#6366f1] transition-all placeholder:text-[#374151] tabular"
-              />
-              <div className="absolute right-4 top-3 font-bold text-[#6366f1] text-sm">ETH</div>
-            </div>
-            <div className="flex justify-between mt-2.5 text-[11px] font-semibold text-[#475569] px-1 uppercase tracking-wider tabular">
-              <span>Balance: {activeAccount.balance_eth} ETH</span>
-              <span>≈ ${(activeAccount.balance_usd || 0).toLocaleString()}</span>
-            </div>
-          </div>
-
-          <div className="p-6 bg-[#111218] border border-[#1e2030] rounded-xl space-y-4">
-             <div className="flex justify-between items-center text-[12px] font-medium text-[#64748b]">
-                <span>ESTIMATED FEE</span>
-                <span className="text-[#f8fafc] font-semibold tabular">$1.03</span>
-             </div>
-             <div className="h-px bg-[#161720]" />
-             <div className="flex justify-between items-center text-[12px] font-medium text-[#64748b]">
-                <span>WEB3 SCORE</span>
-                <div className="flex items-center gap-2">
-                   <div className="w-1 h-1 rounded-full bg-[#22c55e]" />
-                   <span className="text-[#22c55e] font-bold tracking-widest">TRUSTLESS</span>
-                </div>
-             </div>
-          </div>
-
-          <button
-            onClick={handleSend}
-            className="h-11 rounded-lg bg-[#6366f1] text-white border-none font-bold text-[14px] uppercase tracking-widest cursor-pointer hover:bg-[#4f46e5] active:scale-[0.98] transition-all mt-4 w-full"
-          >
-            Confirm and Send
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ReceiveView({ onBack, address }: { onBack: () => void, address: string }) {
-  const [copied, setCopied] = useState(false);
-  const [generating, setGenerating] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setGenerating(false), 500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(address);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <div className="text-[#f8fafc] min-h-full w-full py-16 px-5 flex flex-col items-center font-inter text-center bg-[#0d0e14]">
-      <div className="w-full max-w-[440px]">
-        <button onClick={onBack} className="flex items-center gap-2 bg-transparent border-none text-[#64748b] hover:text-[#f8fafc] cursor-pointer mb-12 transition-all font-semibold text-[13px] uppercase tracking-wider mx-auto">
-          <ArrowLeft size={16} /> Back
-        </button>
-
-        <h1 className="title-page mb-2">Receive Crypto</h1>
-        <p className="text-[#94a3b8] mb-12 font-medium text-[14px]">Your Ethereum wallet address</p>
-
-        <div className="bg-white p-6 rounded-2xl inline-block mb-12 shadow-sm relative min-w-[240px] min-h-[240px]">
-          {generating ? (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Spinner size={24} color="#6366f1" />
-            </div>
-          ) : (
-            <div className="w-48 h-48 bg-black flex flex-wrap p-1">
-              {Array.from({ length: 484 }).map((_, i) => (
-                <div key={i} className="w-[10px] h-[10px]" style={{ background: Math.random() > 0.5 ? '#fff' : '#000' }} />
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="bg-[#111218] border border-[#1e2030] rounded-xl p-4 flex items-center gap-4 mb-10 shadow-sm">
-           <span className="flex-1 text-[12px] text-[#f8fafc] mono font-medium break-all">{address}</span>
-           <button onClick={handleCopy} className="bg-[#1e2030] border border-[#1e2030] rounded-lg h-9 px-4 text-[#f8fafc] text-[11px] font-bold uppercase tracking-widest cursor-pointer hover:border-[#6366f1] transition-all active:scale-95">
-             {copied ? 'Copied' : 'Copy'}
-           </button>
-        </div>
-
-        <div className="border-l-3 border-[#6366f1]/40 p-4 text-left items-start">
-           <p className="text-[12px] text-[#64748b] font-medium leading-relaxed m-0 uppercase tracking-tight">
-             Only send compatible tokens to this address. Sending unsupported tokens may result in permanent loss.
-           </p>
-        </div>
-      </div>
-    </div>
+    <motion.div initial={{ opacity: 0, scale: 0.97, y: 4 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97, y: 4 }} transition={{ duration: 0.12 }} className="absolute bottom-full left-0 right-0 mb-2 bg-[#111218] border border-[#1e2030] rounded-[10px] p-2 shadow-2xl z-[60] min-w-[260px]">
+      <div className="space-y-1">{accounts.map((acc: any) => ( <button key={acc.id} onClick={() => onSwitch(acc.id)} className="w-full h-12 px-3 flex items-center gap-3 rounded-[8px] hover:bg-[#161720] transition-all border-none bg-transparent cursor-pointer text-left group"><div className={`w-8 h-8 rounded-full flex items-center justify-center text-[13px] font-bold text-white shrink-0 ${acc.id === 'wallet-demo-2' ? 'bg-[#0891b2]' : 'bg-[#6366f1]'}`}>{acc.name.charAt(0)}</div><div className="flex-1 min-w-0"><div className="text-[13px] font-bold text-[#f8fafc] truncate">{acc.name}</div><div className="text-[11px] text-[#64748b] font-mono truncate">{acc.addresses.eth.slice(0, 6)}...{acc.addresses.eth.slice(-4)}</div></div><div className="flex items-center gap-2"><span className="text-[13px] font-medium text-[#f8fafc] tabular-nums">${acc.balance_usd.toLocaleString()}</span> {acc.id === activeId && <Check size={14} className="text-[#6366f1] shrink-0" />}</div></button> ))}</div>
+      <div className="h-px bg-[#1e2030] my-2" /><button onClick={onImport} className="w-full h-11 px-3 flex items-center gap-3 rounded-[8px] hover:bg-[#161720] transition-all border-none bg-transparent cursor-pointer text-[#6366f1] font-bold text-[13px]"><div className="w-8 h-8 rounded-full bg-[#6366f1]/10 flex items-center justify-center shrink-0"><Plus size={16} /></div>Add or Import Wallet</button><div className="fixed inset-0 z-[-1]" onClick={onClose} />
+    </motion.div>
   );
 }
