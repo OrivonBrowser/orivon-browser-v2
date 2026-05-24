@@ -9,6 +9,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
     set: (key, value) => ipcRenderer.invoke("store:set", key, value),
     delete: (key) => ipcRenderer.invoke("store:delete", key)
   },
+  // ── Wallet ─────────────────────────────────────────────────────────────────
+  getWallet: () => ipcRenderer.invoke("get-wallet"),
+  importWallet: (mnemonic) => ipcRenderer.invoke("import-wallet", mnemonic),
   // ── URL resolution (ENS / IPFS / ipns) ────────────────────────────────────
   resolveURL: (url) => ipcRenderer.invoke("resolve:url", url),
   // ── Window controls ────────────────────────────────────────────────────────

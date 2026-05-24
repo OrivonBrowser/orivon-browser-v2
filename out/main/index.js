@@ -2,7 +2,8 @@ import { app, session, BrowserWindow, ipcMain, shell } from "electron";
 import updaterPkg from "electron-updater";
 import log from "electron-log";
 import path from "path";
-import fs from "fs";
+import Store from "electron-store";
+import { ethers } from "ethers";
 import __cjs_mod__ from "node:module";
 const __filename = import.meta.filename;
 const __dirname = import.meta.dirname;
@@ -76,18 +77,19 @@ app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 app.commandLine.appendSwitch("enable-accelerated-video-decode");
 app.commandLine.appendSwitch("enable-accelerated-video-encode");
 app.commandLine.appendSwitch("disable-features", "HardwareMediaKeyHandling,MediaSessionService");
-function storePath() {
-  return path.join(app.getPath("userData"), "orivon-store.json");
-}
-function readStore() {
+const store = new Store();
+async function initializeWallet() {
   try {
-    return JSON.parse(fs.readFileSync(storePath(), "utf-8"));
-  } catch {
-    return {};
+    const existingWallet = store.get("wallet_address");
+    if (!existingWallet) {
+      const wallet = ethers.Wallet.createRandom();
+      store.set("wallet_mnemonic", wallet.mnemonic?.phrase);
+      store.set("wallet_address", wallet.address);
+      store.set("wallet_name", "Orivon Wallet 1");
+    }
+  } catch (error) {
+    log.error("Wallet init failed silently:", error);
   }
-}
-function writeStore(data) {
-  fs.writeFileSync(storePath(), JSON.stringify(data, null, 2), "utf-8");
 }
 function createWindow() {
   const win = new BrowserWindow({
@@ -140,7 +142,8 @@ function createWindow() {
   });
   return win;
 }
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  await initializeWallet();
   session.defaultSession.setUserAgent(CHROME_UA);
   session.defaultSession.setPermissionRequestHandler((_wc, _permission, callback) => {
     callback(true);
@@ -166,20 +169,41 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
 ipcMain.handle("store:get", (_e, key) => {
-  const s = readStore();
-  return key ? s[key] : s;
+  return key ? store.get(key) : null;
 });
 ipcMain.handle("store:set", (_e, key, value) => {
-  const s = readStore();
-  s[key] = value;
-  writeStore(s);
+  store.set(key, value);
   return true;
 });
 ipcMain.handle("store:delete", (_e, key) => {
-  const s = readStore();
-  delete s[key];
-  writeStore(s);
+  store.delete(key);
   return true;
+});
+ipcMain.handle("get-wallet", () => {
+  return {
+    address: store.get("wallet_address"),
+    name: store.get("wallet_name"),
+    hasWallet: !!store.get("wallet_address")
+  };
+});
+ipcMain.handle("import-wallet", async (_e, mnemonic) => {
+  try {
+    const isValid = ethers.Mnemonic.isValidMnemonic(mnemonic);
+    if (!isValid) {
+      return { success: false, error: "Invalid seed phrase" };
+    }
+    const wallet = ethers.Wallet.fromPhrase(mnemonic);
+    const wallets = store.get("imported_wallets") || [];
+    wallets.push({
+      address: wallet.address,
+      mnemonic,
+      name: `Imported Wallet ${wallets.length + 1}`
+    });
+    store.set("imported_wallets", wallets);
+    return { success: true, address: wallet.address };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
 });
 ipcMain.handle("resolve:url", async (_e, url) => {
   try {
