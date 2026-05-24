@@ -1,11 +1,12 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import {
+import { 
   ChevronLeft, ChevronRight, RotateCcw, Lock, Globe,
   Shield, Wallet, X, Star, User, AlignJustify,
   Plus, Square, History, Bookmark, Download, Trash2,
   Printer, FileSearch, LayoutGrid, HelpCircle, Settings,
   ZoomIn, ZoomOut, Maximize2, Sun, Moon, Eye, EyeOff, Layers,
+  Puzzle, PanelRight, Folder, MapPin, CheckCircle2, AlertTriangle, Info, Check,
 } from 'lucide-react';
 
 import TabBar      from './TabBar';
@@ -13,6 +14,13 @@ import WebView, { WebViewHandle } from './WebView';
 import WalletPanel from './WalletPanel';
 import NewTab      from '../pages/NewTab';
 import Dashboard   from '../pages/Dashboard';
+
+import UniswapDemo from '../pages/demo/UniswapDemo';
+import MastodonDemo from '../pages/demo/MastodonDemo';
+import BitcoinNodeDemo from '../pages/demo/BitcoinNodeDemo';
+import AppStoreDemo from '../pages/demo/AppStoreDemo';
+import OpenSeaDemo from '../pages/demo/OpenSeaDemo';
+
 import logo from '@/assets/logo.png';
 import Spinner from './Spinner';
 
@@ -21,6 +29,121 @@ import { useSettings }     from '../store/settings';
 import { useWalletStore }   from '../store/wallet';
 import { useRuntimeStore }  from '../store/runtime';
 import { DASHBOARD_URL, SETTINGS_URL, NEW_TAB_URL as NEW_TAB } from '../constants';
+
+const DEMO_URLS = ['uniswap.eth', 'mastodon.eth', 'btcnode.eth', 'apps.orivon.eth', 'opensea.eth'];
+
+function OrivonPermissionPrompt({ details, onApprove, onReject }: { details: any, onApprove: () => void, onReject: () => void }) {
+  const isInstall = details.type === 'install';
+  const { password } = useWalletStore();
+  const [pwInput, setPwInput] = useState('');
+  const [error, setError] = useState('');
+
+  const handleAction = () => {
+    if (pwInput === password || (!password && pwInput === '1234')) {
+      onApprove();
+    } else {
+      setError('Incorrect password');
+    }
+  };
+  
+  return (
+    <motion.div 
+      initial={{ y: -100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -100, opacity: 0 }}
+      className="absolute top-4 left-1/2 -translate-x-1/2 w-[400px] bg-[#13141f] border border-[#6366f1]/40 rounded-[24px] shadow-2xl z-[2000] overflow-hidden"
+    >
+       <div className="p-6 bg-gradient-to-b from-[#6366f1]/10 to-transparent">
+          <div className="flex items-center gap-3 mb-4">
+             <div className="w-10 h-10 rounded-full bg-[#6366f1]/20 flex items-center justify-center text-[#6366f1]">
+                <Shield size={20} />
+             </div>
+             <div className="flex flex-col">
+                <span className="text-[11px] font-black text-[#6366f1] uppercase tracking-widest">{details.origin} wants to</span>
+                <span className="text-lg font-black text-white tracking-tight">{isInstall ? 'Install Module' : 'Approve Transaction'}</span>
+             </div>
+          </div>
+
+          <div className="bg-[#1a1b26] rounded-2xl p-5 border border-white/5 space-y-4 mb-4">
+             {isInstall ? (
+                <>
+                   <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-xl flex items-center justify-center font-black text-white text-xl" style={{ backgroundColor: details.app.color }}>{details.app.icon}</div>
+                      <div className="flex flex-col">
+                         <span className="font-bold text-white">{details.app.name}</span>
+                         <span className="text-xs text-gray-500 font-bold uppercase">Permissions requested</span>
+                      </div>
+                   </div>
+                   <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-[11px] font-black uppercase text-[#22c55e]"><div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" /> Network Access</div>
+                      <div className="flex items-center gap-2 text-[11px] font-black uppercase text-[#f59e0b]"><div className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]" /> Storage Access</div>
+                   </div>
+                </>
+             ) : (
+                <>
+                   <div className="flex justify-between items-center text-sm font-bold">
+                      <span className="text-gray-500 uppercase text-[11px]">Swap</span>
+                      <span className="text-white">{details.from} → {details.to}</span>
+                   </div>
+                   <div className="flex justify-between items-center text-sm font-bold">
+                      <span className="text-gray-500 uppercase text-[11px]">Network Fee</span>
+                      <span className="text-white">{details.fee}</span>
+                   </div>
+                </>
+             )}
+          </div>
+
+          <div className="mb-6">
+             <label className="text-[9px] font-black text-[#4b5563] uppercase tracking-[0.2em] block mb-2 px-1">Action Password Required</label>
+             <input 
+               type="password" 
+               autoFocus
+               placeholder="••••••••"
+               value={pwInput}
+               onChange={e => {setPwInput(e.target.value); setError('');}}
+               onKeyDown={e => e.key === 'Enter' && handleAction()}
+               className="w-full h-11 rounded-xl bg-[#0a0b12] border border-[#2d2e45] px-4 text-white font-black text-lg outline-none focus:border-[#6366f1] transition-all placeholder:text-[#2d2e45]"
+             />
+             {error && <p className="text-[#f87171] text-[10px] font-black uppercase mt-2 px-1">{error}</p>}
+          </div>
+
+          <div className="flex items-center justify-between px-2 mb-6">
+             <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Web3 Score</span>
+             <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+                <span className="text-[10px] font-black text-[#22c55e] uppercase tracking-widest">TRUSTLESS</span>
+             </div>
+          </div>
+
+          <div className="flex gap-3">
+             <button onClick={onReject} className="flex-1 h-12 rounded-xl bg-[#1e1f2e] border border-[#2d2e45] text-gray-400 font-black text-xs uppercase tracking-widest hover:text-white transition-all cursor-pointer">Reject</button>
+             <button onClick={handleAction} className="flex-2 h-12 rounded-xl bg-gradient-to-r from-[#4f46e5] to-[#6366f1] text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-indigo-500/20 hover:brightness-110 active:scale-95 transition-all border-none cursor-pointer">
+                {isInstall ? 'Install' : 'Approve'}
+             </button>
+          </div>
+       </div>
+    </motion.div>
+  );
+}
+
+function ExtensionNotification({ onDismiss }: { onDismiss: () => void }) {
+  return (
+    <motion.div 
+      initial={{ y: -80, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -80, opacity: 0 }}
+      className="absolute top-4 left-1/2 -translate-x-1/2 w-[520px] bg-[#13141f] border border-[#22c55e]/30 rounded-2xl shadow-2xl z-[1500] p-4 flex items-center gap-5"
+    >
+       <div className="w-12 h-12 rounded-full bg-[#22c55e]/10 flex items-center justify-center text-[#22c55e] shrink-0">
+          <Shield size={24} />
+       </div>
+       <div className="flex-1">
+          <div className="font-black text-white text-sm uppercase tracking-wider mb-0.5">Orivon Wallet is already connected</div>
+          <div className="text-xs font-medium text-gray-400">This site requested a wallet extension. You don't need one. Orivon connects natively.</div>
+       </div>
+       <div className="flex gap-2">
+          <button onClick={onDismiss} className="px-4 py-2 rounded-lg bg-[#22c55e] text-white font-black text-[10px] uppercase tracking-widest border-none cursor-pointer hover:brightness-110">Got it</button>
+          <button className="px-4 py-2 rounded-lg bg-white/5 text-gray-400 font-black text-[10px] uppercase tracking-widest border-none cursor-pointer hover:bg-white/10 hover:text-white">Learn more</button>
+       </div>
+    </motion.div>
+  );
+}
 
 function resolveDisplay(url: string, isEditing: boolean): string {
   if (!url || url === NEW_TAB || url === SETTINGS_URL || url === DASHBOARD_URL) return '';
@@ -49,16 +172,17 @@ function web3Score(url: string) {
 
 function getWeb3Color(url: string): string {
   if (!url || url === NEW_TAB || url.startsWith(DASHBOARD_URL)) return '#6b7280';
-
+  if (url === 'opensea.eth') return '#f59e0b';
   if (url.endsWith('.eth')) return '#22c55e';
   if (url.includes('.onion')) return '#a855f7';
-  if (url.startsWith('https://')) return '#ef4444';
-  if (url.startsWith('http://')) return '#ef4444';
+  if (url.startsWith('https://')) return '#22c55e';
+  if (url.startsWith('http://')) return '#f97316';
 
   return '#6b7280';
 }
 
 function getWeb3ScoreInfo(url: string) {
+  if (url === 'opensea.eth') return { name: 'Partial', color: '#f59e0b', desc: 'Mix of decentralized and centralized components.' };
   if (url.endsWith('.eth')) return { name: 'Trustless', color: '#22c55e', desc: 'Decentralized .eth domain resolving directly via IPFS.' };
   if (url.includes('.onion')) return { name: 'Private', color: '#a855f7', desc: 'Fully private and trustless connection via Tor.' };
   if (url.startsWith('https://')) return { name: 'Centralized', color: '#ef4444', desc: 'Standard web domain resolving via traditional centralized DNS.' };
@@ -137,6 +261,36 @@ interface BrowserProps {
   onOpenDashboard?:  () => void;
 }
 
+function ToolbarIcon({ icon, title, onClick, isLast }: { icon: React.ReactNode; title: string; onClick?: () => void; isLast?: boolean }) {
+  return (
+    <button
+      onClick={onClick}
+      title={title}
+      className={`no-drag w-8 h-8 flex items-center justify-center rounded-[6px] transition-all text-[#9a9ba5] hover:text-[#e6e7e8] hover:bg-white/[0.08] ${isLast ? '' : 'mr-[4px]'}`}
+      style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}
+    >
+      {React.cloneElement(icon as React.ReactElement, { size: 18 })}
+    </button>
+  );
+}
+
+function BookmarksBar() {
+  return (
+    <div 
+      className="shrink-0 h-[28px] flex items-center px-[12px] gap-[12px]"
+      style={{ background: '#1a1b20' }}
+    >
+      <div className="flex items-center gap-[4px] cursor-pointer hover:bg-white/5 px-1 py-0.5 rounded transition-colors">
+        <LayoutGrid size={16} className="text-[#9a9ba5]" />
+      </div>
+      <div className="flex items-center gap-[6px] cursor-pointer hover:bg-white/5 px-2 py-0.5 rounded transition-colors">
+        <Folder size={16} className="text-[#9a9ba5]" />
+        <span className="text-[12px] text-[#9a9ba5] font-medium">Other Bookmarks</span>
+      </div>
+    </div>
+  );
+}
+
 export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
   const { tabs, activeTabId, addTab, closeTab, updateTab, navigateTab, goBack, goForward, setActiveTab } = useTabsStore();
   const {
@@ -171,6 +325,9 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
   // tracks reload count per new-tab so we can force a remount
   const [newTabKeys, setNewTabKeys]     = useState<Record<string, number>>({});
 
+  const [permissionPrompt, setPermissionPrompt] = useState<any>(null);
+  const [showExtensionNotif, setShowExtensionNotif] = useState(false);
+
   // ── Auto-updater state ─────────────────────────────────────────────────────
   type UpdateState = 'idle' | 'available' | 'downloading' | 'ready';
   const [updateState,   setUpdateState]   = useState<UpdateState>('idle');
@@ -179,6 +336,24 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
 
   const activeTab  = tabs.find(t => t.id === activeTabId) ?? tabs[0];
   const isDark     = theme === 'dark';
+
+  const isDemoUrl = activeTab?.url && DEMO_URLS.includes(activeTab.url);
+
+  const handleRequestApproval = (details: any) => {
+    return new Promise<boolean>((resolve) => {
+      setPermissionPrompt({ ...details, origin: activeTab?.url, resolve });
+    });
+  };
+
+  const handleApprove = () => {
+    permissionPrompt?.resolve(true);
+    setPermissionPrompt(null);
+  };
+
+  const handleReject = () => {
+    permissionPrompt?.resolve(false);
+    setPermissionPrompt(null);
+  };
 
   if (!activeTab) {
     return (
@@ -229,7 +404,6 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
 
     if (input.startsWith('orivon://')) {
       if (input === DASHBOARD_URL || input.startsWith(DASHBOARD_URL)) {
-        // Open dashboard in new tab always if not already on it or even if on it as per FIX 6
         const newId = addTab(input);
         setTimeout(() => setIsNavigating(false), 500);
         return;
@@ -242,7 +416,10 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
     let url = input;
     let type: ReturnType<typeof useTabsStore.getState>['tabs'][0]['type'] = 'https';
 
-    if (window.electronAPI?.resolveURL) {
+    if (DEMO_URLS.includes(input)) {
+       url = input;
+       type = 'ens';
+    } else if (window.electronAPI?.resolveURL) {
       const r = await window.electronAPI.resolveURL(input);
       if (r.ok) { url = r.url; type = r.type as typeof type; }
     } else {
@@ -258,7 +435,6 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
       } else if (isUrl) {
         url = `https://${input}`; type = 'https';
       } else {
-        // Search Engine Integration (FIX 7)
         const engine = useSettings.getState().searchEngine;
         if (engine === 'web3compass') {
           url = `https://www.web3compass.net/search?q=${encodeURIComponent(input)}`;
@@ -275,7 +451,15 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
 
     navigateTab(tabId, url, input, type);
     setAddrInput(input);
-    webviewRefs.current[tabId]?.loadURL(url);
+    
+    if (!DEMO_URLS.includes(url)) {
+      webviewRefs.current[tabId]?.loadURL(url);
+    }
+
+    if (url.includes('uniswap.org') || url.includes('opensea.io') || url.includes('pancakeswap.finance')) {
+       setTimeout(() => setShowExtensionNotif(true), 1500);
+    }
+
     addLog(`→ ${url}`);
     setTimeout(() => setIsNavigating(false), 500);
   }, [activeTabId, navigateTab, addTab, addLog]);
@@ -372,134 +556,65 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
         className="shrink-0 flex items-center"
         style={{
           height: 40,
-          background: toolbarBg,
-          borderBottom: `1px solid ${toolbarBdr}`,
-          padding: '0 8px',
-          gap: 4,
+          background: '#1e1f24',
+          paddingLeft: isMac ? 80 : 12,
+          paddingRight: 12,
+          borderBottom: 'none',
         }}
       >
-        {/* Left: back / forward / reload / home */}
-        <div className="flex items-center shrink-0" style={{ gap: 2 }}>
-          <NavBtn
-            onClick={handleBack}
-            disabled={!canBack}
-            isDark={isDark}
-            title="Back"
-          >
-            <ChevronLeft size={18} strokeWidth={2.5} />
+        {/* Left Side: Back / Forward / Reload */}
+        <div className="flex items-center shrink-0" style={{ gap: 4 }}>
+          <NavBtn onClick={handleBack} disabled={!canBack} title="Back">
+            <ChevronLeft strokeWidth={2.5} />
           </NavBtn>
-          <NavBtn
-            onClick={handleForward}
-            disabled={!canForward}
-            isDark={isDark}
-            title="Forward"
-          >
-            <ChevronRight size={18} strokeWidth={2.5} />
+          <NavBtn onClick={handleForward} disabled={!canForward} title="Forward">
+            <ChevronRight strokeWidth={2.5} />
           </NavBtn>
-          <button
-            onClick={activeTab?.isLoading
-              ? () => webviewRefs.current[activeTabId]?.stop()
-              : handleReload}
-            title={activeTab?.isLoading ? 'Stop loading' : 'Reload page'}
-            className="no-drag"
-            style={{
-              width: 28, height: 28, borderRadius: 4, border: 'none',
-              background: 'transparent',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer',
-              color: isDark ? '#9a9ba5' : 'rgba(0,0,0,0.50)',
-              transition: 'background 0.14s, color 0.14s',
-              flexShrink: 0,
-            }}
-            onMouseEnter={e => {
-              const btn = e.currentTarget as HTMLButtonElement;
-              btn.style.background = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.07)';
-              btn.style.color = isDark ? '#e6e7e8' : 'rgba(0,0,0,0.82)';
-            }}
-            onMouseLeave={e => {
-              const btn = e.currentTarget as HTMLButtonElement;
-              btn.style.background = 'transparent';
-              btn.style.color = isDark ? '#9a9ba5' : 'rgba(0,0,0,0.50)';
-            }}
+          <NavBtn 
+            onClick={activeTab?.isLoading ? () => webviewRefs.current[activeTabId]?.stop() : handleReload} 
+            title={activeTab?.isLoading ? 'Stop' : 'Reload'}
           >
-            {activeTab?.isLoading ? (
-              <X size={18} strokeWidth={2.5} />
-            ) : (
-              <RotateCcw size={18} strokeWidth={2.5} />
-            )}
-          </button>
-          <NavBtn
-            onClick={() => navigate(NEW_TAB)}
-            isDark={isDark}
-            title="Home"
-          >
-            <Globe size={18} strokeWidth={2} />
+            {activeTab?.isLoading ? <X strokeWidth={2.5} /> : <RotateCcw strokeWidth={2.5} />}
           </NavBtn>
         </div>
 
-        {/* Address bar — fills remaining space */}
+        {/* Gap and Bookmark Icon */}
+        <div className="flex items-center ml-[12px] mr-[8px]">
+           <button className="no-drag w-[34px] h-[34px] flex items-center justify-center text-[#9a9ba5] hover:text-[#e6e7e8] hover:bg-white/[0.08] rounded-[6px] transition-all">
+              <Bookmark size={18} />
+           </button>
+        </div>
+
+        {/* URL Bar */}
         <form
           onSubmit={handleAddrSubmit}
-          className="flex-1 no-drag"
-          style={{ minWidth: 0, padding: '0 4px' }}
+          className="flex-1 no-drag flex items-center"
+          style={{ minWidth: 0 }}
         >
           <div
-            className="relative flex items-center w-full transition-all duration-150"
+            className="relative flex items-center w-full transition-all duration-150 border border-[#3b3c42] focus-within:border-[#4f46e5]/50 group"
             style={{
               height: 32,
-              background: addrBg,
+              background: '#2b2c31',
               borderRadius: 8,
             }}
           >
-            {/* Protocol icon — left of input */}
-            <div
-              className="absolute pointer-events-none flex items-center"
-              style={{ left: 10 }}
-            >
-              {!activeTab || activeTab.url === NEW_TAB || activeTab.url === DASHBOARD_URL
-                ? <Shield size={12} color="#FB5B22" />
-                : isSecureURL(activeTab.url)
-                  ? <Lock size={11} className="text-[#00c76a]" />
-                  : <Globe size={11} style={{ color: isDark ? 'rgba(255,255,255,0.30)' : 'rgba(0,0,0,0.28)' }} />
-              }
+            {/* Inside left: Location Dot */}
+            <div className="pl-3 flex items-center shrink-0 gap-2">
+               {isDemoUrl ? (
+                  <div className="w-4 h-4 rounded-full bg-[#22c55e]/10 flex items-center justify-center text-[#22c55e]">
+                     <Check size={12} strokeWidth={4} />
+                  </div>
+               ) : (
+                  <div 
+                    className="w-2.5 h-2.5 rounded-full" 
+                    style={{ 
+                      backgroundColor: getWeb3Color(activeTab.url),
+                      transition: 'background-color 500ms ease'
+                    }} 
+                  />
+               )}
             </div>
-
-            {/* Web3 Score Dot Indicator */}
-            {activeTab?.url && (
-              <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); setScorePanelOpen(!scorePanelOpen); }}
-                className="absolute no-drag flex items-center justify-center"
-                style={{
-                  left: 6,
-                  width: 20,
-                  height: 20,
-                  background: 'transparent',
-                  border: 'none',
-                  cursor: 'pointer',
-                  zIndex: 10,
-                }}
-              >
-                <div
-                  className={activeTab?.isLoading ? "animate-pulse" : ""}
-                  style={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: '50%',
-                    background: activeTab?.isLoading ? '#6b7280' : getWeb3Color(activeTab.url),
-                    transition: 'all 0.5s ease-in-out'
-                  }}
-                />
-              </button>
-            )}
-
-            {scorePanelOpen && activeTab?.url && (
-                <Web3ScoreDropdown
-                  info={getWeb3ScoreInfo(activeTab.url)}
-                  onClose={() => setScorePanelOpen(false)}
-                  isDark={isDark}
-                />
-            )}
 
             <div className="flex-1 relative h-full flex items-center">
               <input
@@ -516,13 +631,19 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
                 placeholder="Search or enter address"
                 className="w-full h-full bg-transparent focus:outline-none"
                 style={{
-                  padding: `0 32px 0 28px`,
+                  padding: `0 ${isDemoUrl ? '60px' : '12px'} 0 12px`,
                   fontSize: 13,
-                  fontWeight: 500,
+                  fontWeight: 400,
                   color: isDark ? '#e6e7e8' : 'rgba(0,0,0,0.90)',
-                  letterSpacing: '0.01em',
                 }}
               />
+              {isDemoUrl && !isEditing && (
+                 <div className="absolute right-3 flex items-center gap-2 pointer-events-none">
+                    <div className="px-2 py-0.5 rounded-md bg-[#06b6d4]/10 border border-[#06b6d4]/20 text-[#06b6d4] text-[9px] font-black uppercase tracking-widest">
+                       IPFS
+                    </div>
+                 </div>
+              )}
               {isNavigating && (
                 <div className="absolute right-3">
                   <Spinner size={14} color="#4f46e5" />
@@ -530,105 +651,76 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
               )}
             </div>
 
-            {/* ENS / IPFS badge — right of input */}
-            {activeTab?.type === 'ens' && !isEditing && (
-              <span
-                className="absolute pointer-events-none"
-                style={{ right: 10, fontSize: 9, fontWeight: 700, color: '#00c76a', letterSpacing: '0.08em' }}
-              >
-                ENS
-              </span>
-            )}
-            {(activeTab?.type === 'ipfs' || activeTab?.type === 'ipns') && !isEditing && (
-              <span
-                className="absolute pointer-events-none"
-                style={{ right: 10, fontSize: 9, fontWeight: 700, color: '#00d1ff', letterSpacing: '0.08em' }}
-              >
-                IPFS
-              </span>
+            {/* Inside right: Web3 Score + AI Icon */}
+            <div className="pr-2 flex items-center gap-1 shrink-0">
+               <button 
+                 type="button"
+                 onClick={(e) => { e.stopPropagation(); setScorePanelOpen(!scorePanelOpen); }}
+                 className="p-1 hover:bg-white/5 rounded text-[#9a9ba5] hover:text-[#e6e7e8] transition-colors"
+               >
+                 <Shield size={16} />
+               </button>
+               <button 
+                 type="button"
+                 className="p-1 hover:bg-white/5 rounded text-[#9a9ba5] hover:text-[#e6e7e8] transition-colors"
+               >
+                 <div className="w-4 h-4 bg-orange-500 rounded-sm flex items-center justify-center text-[8px] font-bold text-white">O</div>
+               </button>
+            </div>
+
+            {scorePanelOpen && activeTab?.url && (
+                <Web3ScoreDropdown
+                  info={getWeb3ScoreInfo(activeTab.url)}
+                  onClose={() => setScorePanelOpen(false)}
+                  isDark={isDark}
+                />
             )}
           </div>
         </form>
 
-        {/* Right cluster */}
-        <div className="flex items-center shrink-0" style={{ gap: 2 }}>
-          {/* Web3 score badge */}
-          {showWeb3Scores && score !== null && (
-            <button
-              onClick={() => setScorePanelOpen(!scorePanelOpen)}
-              title={`Web3 Score: ${score}`}
-              className={`no-drag flex items-center justify-center rounded transition-colors duration-100 focus:outline-none`}
-              style={{
-                width: 28, height: 28,
-                background: scorePanelOpen
-                  ? isDark ? 'rgba(34,197,94,0.15)' : 'rgba(34,197,94,0.1)'
-                  : 'transparent',
-                color: score >= 90 ? '#22c55e' : score >= 70 ? '#f59e0b' : '#ef4444',
-              }}
-            >
-              <Shield size={18} strokeWidth={2.5} />
-            </button>
-          )}
-
-          {/* Wallet */}
-          <div className="relative">
-            <button
-              onClick={() => setWalletOpen(p => !p)}
-              title="Orivon Wallet"
-              className={`${iconBtnCls} ${iconBtnColors} no-drag`}
-              style={{
-                width: 28, height: 28,
-                ...(walletOpen ? { background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.07)', color: isDark ? '#e6e7e8' : 'rgba(0,0,0,0.78)' } : {})
-              }}
-            >
-              <Wallet size={18} strokeWidth={2} />
-            </button>
-            {walletOpen && (
-                <WalletPanel
-                  onClose={() => setWalletOpen(false)}
-                  onOpenDashboard={() => { navigate(DASHBOARD_URL); setWalletOpen(false); }}
-                />
-            )}
-          </div>
-
-          {/* Extensions */}
-          <button
-            title="Extensions"
-            className={`${iconBtnCls} ${iconBtnColors} no-drag`}
-            style={{ width: 28, height: 28 }}
-          >
-            <Layers size={18} strokeWidth={2} />
-          </button>
-
-          {/* Hamburger menu */}
-          <div ref={menuRef} className="relative">
-            <button
-              onClick={() => setMenuOpen(p => !p)}
-              title="Menu"
-              className={`${iconBtnCls} ${iconBtnColors} no-drag`}
-              style={{
-                width: 28, height: 28,
-                ...(menuOpen ? { background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.07)', color: isDark ? '#e6e7e8' : 'rgba(0,0,0,0.78)' } : {})
-              }}
-            >
-              <AlignJustify size={18} strokeWidth={2.5} />
-            </button>
-            {menuOpen && (
-                <BurgerMenu
-                  isDark={isDark}
-                  isDarkMode={isDark}
-                  zoom={zoom}
-                  onZoomIn={() => setZoom(z => Math.min(z + 10, 200))}
-                  onZoomOut={() => setZoom(z => Math.max(z - 10, 25))}
-                  onNewTab={() => { addTab(); setMenuOpen(false); }}
-                  onDashboard={() => { navigate(DASHBOARD_URL + '?view=full'); setMenuOpen(false); }}
-                  onTheme={() => { setTheme(isDark ? 'light' : 'dark'); setMenuOpen(false); }}
-                  onClose={() => setMenuOpen(false)}
-                />
-            )}
-          </div>
+        {/* Right Side Icons */}
+        <div className="flex items-center ml-2 shrink-0">
+           <div className="w-[1px] h-5 bg-[#3b3c42] mr-2" />
+           <ToolbarIcon icon={<Puzzle />} title="Extensions" />
+           <ToolbarIcon icon={<PanelRight />} title="Sidebar" />
+           <div className="relative">
+             <ToolbarIcon icon={<Wallet />} title="Wallet" onClick={() => setWalletOpen(!walletOpen)} />
+             {walletOpen && (
+                  <WalletPanel
+                    onClose={() => setWalletOpen(false)}
+                    onOpenDashboard={() => { navigate(DASHBOARD_URL); setWalletOpen(false); }}
+                  />
+             )}
+           </div>
+           <ToolbarIcon icon={<Star />} title="Favorites" />
+           <ToolbarIcon icon={<Shield />} title="Shields" />
+           <ToolbarIcon 
+             icon={<div className="w-2 h-2 rounded-full bg-green-500" />} 
+             title="Node Status" 
+           />
+           <div className="relative">
+             <ToolbarIcon icon={<AlignJustify />} title="Menu" isLast onClick={() => setMenuOpen(!menuOpen)} />
+             {menuOpen && (
+               <div ref={menuRef}>
+                 <BurgerMenu
+                    isDark={isDark}
+                    isDarkMode={theme === 'dark'}
+                    zoom={zoom}
+                    onNewTab={() => addTab()}
+                    onDashboard={() => navigate(DASHBOARD_URL)}
+                    onTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                    onZoomIn={() => setZoom(z => Math.min(z + 10, 200))}
+                    onZoomOut={() => setZoom(z => Math.max(z - 10, 25))}
+                    onClose={() => setMenuOpen(false)}
+                 />
+               </div>
+             )}
+           </div>
         </div>
       </div>
+
+      {/* ── BOOKMARKS BAR ── */}
+      <BookmarksBar />
 
       {/* ── Update banner ──────────────────────────────────────────────────── */}
       {updateState !== 'idle' && (
@@ -670,6 +762,19 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
       {/* ── CONTENT AREA ── */}
       <div className="flex-1 relative overflow-y-auto flex">
         <div className="flex-1 relative min-h-full">
+          <AnimatePresence>
+            {permissionPrompt && (
+               <OrivonPermissionPrompt 
+                 details={permissionPrompt} 
+                 onApprove={handleApprove} 
+                 onReject={handleReject} 
+               />
+            )}
+            {showExtensionNotif && (
+               <ExtensionNotification onDismiss={() => setShowExtensionNotif(false)} />
+            )}
+          </AnimatePresence>
+
           {tabs.map(tab => (
             <div
               key={tab.url === NEW_TAB ? `${tab.id}-${newTabKeys[tab.id] ?? 0}` : tab.id}
@@ -689,6 +794,16 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
                   : <Dashboard
                       onOpenBrowser={(url) => navigate(url, tab.id)}
                     />
+              ) : tab.url === 'uniswap.eth' ? (
+                <UniswapDemo onRequestApproval={handleRequestApproval} />
+              ) : tab.url === 'mastodon.eth' ? (
+                <MastodonDemo />
+              ) : tab.url === 'btcnode.eth' ? (
+                <BitcoinNodeDemo />
+              ) : tab.url === 'apps.orivon.eth' ? (
+                <AppStoreDemo onInstall={(app) => handleRequestApproval({ type: 'install', app })} />
+              ) : tab.url === 'opensea.eth' ? (
+                <OpenSeaDemo />
               ) : (
                 <WebView
                   ref={el => { webviewRefs.current[tab.id] = el; }}
@@ -726,12 +841,11 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
 
 // ─── NavBtn ─────────────────────────────────────────────────────────────────
 function NavBtn({
-  children, onClick, disabled, isDark, title,
+  children, onClick, disabled, title,
 }: {
   children: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;
-  isDark: boolean;
   title?: string;
 }) {
   return (
@@ -739,27 +853,13 @@ function NavBtn({
       onClick={onClick}
       disabled={disabled}
       title={title}
-      className="no-drag focus:outline-none flex items-center justify-center rounded transition-colors duration-100 disabled:opacity-25 disabled:cursor-not-allowed"
-      style={{ width: 28, height: 28 }}
-      onMouseEnter={e => {
-        if (!(e.currentTarget as HTMLButtonElement).disabled) {
-          (e.currentTarget as HTMLButtonElement).style.background = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
-          (e.currentTarget as HTMLButtonElement).style.color = isDark ? 'rgba(255,255,255,0.80)' : 'rgba(0,0,0,0.75)';
-        }
-      }}
-      onMouseLeave={e => {
-        (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
-        (e.currentTarget as HTMLButtonElement).style.color = isDark ? 'rgba(255,255,255,0.38)' : 'rgba(0,0,0,0.38)';
-      }}
-      onMouseDown={e => {
-        if (!(e.currentTarget as HTMLButtonElement).disabled)
-          (e.currentTarget as HTMLButtonElement).style.background = isDark ? 'rgba(255,255,255,0.11)' : 'rgba(0,0,0,0.09)';
-      }}
-      onMouseUp={e => {
-        (e.currentTarget as HTMLButtonElement).style.background = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
-      }}
+      className="no-drag w-[34px] h-[34px] flex items-center justify-center rounded-[6px] transition-all disabled:opacity-30 disabled:cursor-not-allowed group"
+      style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}
     >
-      <span style={{ color: isDark ? 'rgba(255,255,255,0.38)' : 'rgba(0,0,0,0.38)', display: 'flex', alignItems: 'center' }}>
+      <span 
+        className="transition-colors group-hover:text-[#e6e7e8]"
+        style={{ color: disabled ? '#6b7280' : '#9a9ba5', display: 'flex', alignItems: 'center' }}
+      >
         {children}
       </span>
     </button>

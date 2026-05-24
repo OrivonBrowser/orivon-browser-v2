@@ -15,6 +15,7 @@ interface SettingsState {
   showWeb3Scores: boolean;
   ipfsGateway: string;
   rpcUrl: string;
+  hasOnboarded: boolean;
 
   // Actions
   setTheme: (theme: Theme) => void;
@@ -28,6 +29,7 @@ interface SettingsState {
   setShowWeb3Scores: (v: boolean) => void;
   setIpfsGateway: (url: string) => void;
   setRpcUrl: (url: string) => void;
+  setHasOnboarded: (v: boolean) => void;
 }
 
 export const useSettings = create<SettingsState>()(
@@ -43,6 +45,7 @@ export const useSettings = create<SettingsState>()(
     showWeb3Scores: true,
     ipfsGateway: 'https://ipfs.io',
     rpcUrl: 'https://cloudflare-eth.com',
+    hasOnboarded: false,
 
     setTheme:          (theme)         => set({ theme }),
     setSidebarOpen:    (sidebarOpen)   => set({ sidebarOpen }),
@@ -55,5 +58,6 @@ export const useSettings = create<SettingsState>()(
     setShowWeb3Scores: (v)             => set({ showWeb3Scores: v }),
     setIpfsGateway:    (url)           => set({ ipfsGateway: url }),
     setRpcUrl:         (url)           => set({ rpcUrl: url }),
+    setHasOnboarded:   (v)             => set({ hasOnboarded: v }),
   })
 );

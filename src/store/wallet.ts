@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { ethers } from 'ethers';
+import { DEMO_WALLET } from '../constants';
 
 export type WalletStatus = 'none' | 'locked' | 'unlocked';
 
@@ -16,6 +17,8 @@ export interface WalletAccount {
   addresses: WalletAddresses;
   isImported: boolean;
   isBackedUp: boolean;
+  balance_eth?: number;
+  balance_usd?: number;
 }
 
 interface WalletState {
@@ -24,6 +27,7 @@ interface WalletState {
   activeAccountId: string | null;
   isGenerating: boolean;
   error: string | null;
+  password: string | null;
 
   // Ephemeral (not persisted)
   _wallet: ethers.HDNodeWallet | null;
@@ -38,106 +42,75 @@ interface WalletState {
   setBackedUp:        (v: boolean) => void;
   getBalance:         () => Promise<string>;
   getMnemonic:        (id?: string) => Promise<string | null>;
+  setPassword:        (pw: string) => void;
 
   // Internal helpers
   _setupAccount: (mnemonic: string, password: string, name: string, isImported: boolean) => Promise<WalletAccount>;
 }
 
-// BTC address from ETH private key (simplified P2WPKH-style for display)
-function deriveBtcAddress(wallet: ethers.HDNodeWallet): string {
-  const btcPath = "m/44'/0'/0'/0/0";
-  try {
-    const btcNode = wallet.derivePath(btcPath.replace("m/", ""));
-    const hash = ethers.ripemd160(ethers.sha256(btcNode.publicKey));
-    return `bc1q${hash.slice(2, 22)}`;
-  } catch {
-    return `bc1q${wallet.address.slice(2, 22).toLowerCase()}`;
-  }
-}
-
-// SOL address from HD derivation (display-only for MVP)
-function deriveSolAddress(wallet: ethers.HDNodeWallet): string {
-  const solPath = "m/44'/501'/0'/0'";
-  try {
-    const node = wallet.derivePath(solPath.replace("m/", ""));
-    const base58chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-    const bytes = ethers.getBytes(node.publicKey).slice(0, 32);
-    let result = '';
-    for (let i = 0; i < 32; i++) result += base58chars[bytes[i] % 58];
-    return result;
-  } catch {
-    return `SOL${wallet.address.slice(2, 30)}`;
-  }
-}
-
 export const useWalletStore = create<WalletState>()(
   (set, get) => ({
-    status: 'none',
-    accounts: [],
-    activeAccountId: null,
+    status: 'unlocked', // Default to unlocked for demo
+    accounts: [
+      {
+        id: 'wallet-demo-1',
+        name: DEMO_WALLET.name,
+        addresses: {
+          eth: DEMO_WALLET.address,
+          btc: 'bc1q71c7656ec7ab88b098defb751b7401b5f6d8976f',
+          sol: 'ORIVON71C7656EC7ab88b098defB751B7401B5f6d8',
+        },
+        isImported: false,
+        isBackedUp: false,
+        balance_eth: DEMO_WALLET.balance_eth,
+        balance_usd: DEMO_WALLET.balance_usd,
+      }
+    ],
+    activeAccountId: 'wallet-demo-1',
     isGenerating: false,
     error: null,
+    password: null,
     _wallet: null,
 
     initialize: async () => {
-      try {
-        if (!window.electronAPI?.getWallet) return;
-        const walletData = await window.electronAPI.getWallet();
-        if (walletData.hasWallet) {
-          const { accounts } = get();
-          const nativeExists = accounts.some(a => a.id === 'wallet-native');
-
-          if (!nativeExists) {
-            const mnemonicData = await window.electronAPI.getMnemonic();
-            const mnemonic = mnemonicData?.mnemonic;
-            if (mnemonic) {
-              const hdWallet = ethers.HDNodeWallet.fromPhrase(mnemonic);
-              const account: WalletAccount = {
-                id: 'wallet-native',
-                name: walletData.name || 'Orivon Wallet 1',
-                addresses: {
-                  eth: hdWallet.address,
-                  btc: deriveBtcAddress(hdWallet),
-                  sol: deriveSolAddress(hdWallet),
-                },
-                isImported: false,
-                isBackedUp: false,
-              };
-
-              set({
-                accounts: [account, ...accounts],
-                activeAccountId: account.id,
-                status: 'unlocked',
-                _wallet: hdWallet
-              });
-            }
-          }
-        }
-      } catch (e) {
-        console.error('Wallet initialization failed:', e);
-      }
+      // For demo, we already initialized with accounts in the default state
     },
 
     _setupAccount: async (mnemonic, password, name, isImported) => {
+      // In demo, we just return the trading wallet if it looks like the demo import
+      if (mnemonic.includes('venture capital market')) {
+        return {
+          id: 'wallet-demo-2',
+          name: DEMO_WALLET.imported_wallet.name,
+          isImported: true,
+          isBackedUp: true,
+          addresses: {
+            eth: DEMO_WALLET.imported_wallet.address,
+            btc: 'bc1q3fc91a3afd70395cd496c647d5a6cc9d4b2b7fad',
+            sol: 'TRADING3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD',
+          },
+          balance_eth: DEMO_WALLET.imported_wallet.balance_eth,
+          balance_usd: DEMO_WALLET.imported_wallet.balance_usd,
+        };
+      }
+      
       const hdWallet = ethers.HDNodeWallet.fromPhrase(mnemonic);
       const id = `wallet-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
       const account: WalletAccount = {
         id, name, isImported, isBackedUp: false,
-        addresses: { eth: hdWallet.address, btc: deriveBtcAddress(hdWallet), sol: deriveSolAddress(hdWallet) },
+        addresses: { eth: hdWallet.address, btc: `bc1q${hdWallet.address.slice(2, 22).toLowerCase()}`, sol: `SOL${hdWallet.address.slice(2, 30)}` },
       };
       return account;
     },
 
-    importWallet: async (phrase, password, name = `Imported Wallet ${get().accounts.length + 1}`) => {
+    importWallet: async (phrase, password, name) => {
       set({ isGenerating: true, error: null });
       try {
-        const account = await get()._setupAccount(phrase.trim(), password, name, true);
-        const hdWallet = ethers.HDNodeWallet.fromPhrase(phrase.trim());
+        const account = await get()._setupAccount(phrase.trim(), password, name || 'Imported Wallet', true);
         set(s => ({
           status: 'unlocked',
-          accounts: [...s.accounts, account],
+          accounts: s.accounts.some(a => a.id === account.id) ? s.accounts : [...s.accounts, account],
           activeAccountId: account.id,
-          _wallet: hdWallet,
           isGenerating: false
         }));
       } catch (e: any) {
@@ -145,16 +118,21 @@ export const useWalletStore = create<WalletState>()(
       }
     },
 
-    unlock: async () => true, // Auto-unlock for debugging
-    lock: () => set({ status: 'locked', _wallet: null }),
-    clearWallet: () => set({ status: 'none', accounts: [], activeAccountId: null, _wallet: null }),
+    unlock: async () => true,
+    lock: () => set({ status: 'locked' }),
+    clearWallet: () => set({ status: 'none', accounts: [], activeAccountId: null }),
     switchAccount: async (id) => set({ activeAccountId: id }),
     setBackedUp: (v) => {
       const { activeAccountId, accounts } = get();
       if (!activeAccountId) return;
       set({ accounts: accounts.map(a => a.id === activeAccountId ? { ...a, isBackedUp: v } : a) });
     },
-    getBalance: async () => '0',
-    getMnemonic: async (id) => null,
+    getBalance: async () => {
+      const { accounts, activeAccountId } = get();
+      const active = accounts.find(a => a.id === activeAccountId);
+      return (active?.balance_eth ?? 0).toString();
+    },
+    getMnemonic: async (id) => DEMO_WALLET.mnemonic,
+    setPassword: (pw) => set({ password: pw }),
   })
 );

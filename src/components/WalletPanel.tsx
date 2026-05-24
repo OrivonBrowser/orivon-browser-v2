@@ -74,10 +74,10 @@ export default function WalletPanel({ onClose, onOpenDashboard }: WalletPanelPro
                 <Spinner size={20} color="#4f46e5" />
             ) : (
                 <>
-                    <span className="text-3xl font-bold text-white mb-1">
-                        ${(parseFloat(balance) * 2450.50).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    <span className="text-3xl font-bold text-white mb-1.5">
+                        ${(activeAccount.balance_usd || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
-                    <span className="text-sm text-[#9a9ba5] font-medium">{balance} ETH</span>
+                    <span className="text-sm text-[#818cf8] font-bold">{activeAccount.balance_eth || 0} ETH</span>
                 </>
             )}
           </div>
