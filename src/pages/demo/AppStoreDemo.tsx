@@ -106,14 +106,14 @@ export default function AppStoreDemo({ onInstall, onNavigate }: AppStoreDemoProp
                      </span>
                      <button 
                        onClick={(e) => handleInstall(e, app)}
-                       disabled={installed[app.name] || !!installing}
+                       disabled={installedApps[app.name] || !!installing}
                        className={`min-w-[100px] h-8 rounded-md font-semibold text-[11px] uppercase tracking-wider transition-all border cursor-pointer flex items-center justify-center gap-2 ${
-                        installed[app.name] ? 'bg-transparent border-[#1e2030] text-[#64748b]' : 'bg-transparent border-[#6366f1] text-[#818cf8] hover:bg-[#6366f1] hover:text-white'
+                        installedApps[app.name] ? 'bg-transparent border-[#1e2030] text-[#64748b]' : 'bg-transparent border-[#6366f1] text-[#818cf8] hover:bg-[#6366f1] hover:text-white'
                        }`}
                      >
                         {installing === app.name ? (
                            <Spinner size={12} color="#fff" />
-                        ) : installed[app.name] ? (
+                        ) : installedApps[app.name] ? (
                            <><Check size={12} strokeWidth={4} /> Installed</>
                         ) : 'Install'}
                      </button>
