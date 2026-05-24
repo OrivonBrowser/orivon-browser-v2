@@ -4,10 +4,13 @@ import {
   ChevronDown, ChevronRight, Copy, Check, TrendingUp, ArrowUpRight,
   ArrowDownLeft, Plus, ArrowLeftRight, Database, Share2, CircleDot,
   Loader2, Bell, X, Shield, Search, ArrowLeft, ShoppingCart, MoreHorizontal,
-  Server, Key, Terminal, ArrowUpDown, Trash2, ExternalLink, Send
+  Server, Key, Terminal, ArrowUpDown, Trash2, ExternalLink, Send,
+  LayoutGrid, Star, Download, Repeat, Cpu, Users, Image, Gamepad, Wrench,
+  Code, BookOpen, Github, CheckCircle, SlidersHorizontal, SearchX
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useWalletStore } from '../store/wallet';
+import { useSessionStore } from '../store/session';
 import { DEMO_WALLET } from '../constants';
 
 // --- Types ---
