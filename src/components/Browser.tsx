@@ -28,7 +28,10 @@ import { useTabsStore }    from '../store/tabs';
 import { useSettings }     from '../store/settings';
 import { useWalletStore }   from '../store/wallet';
 import { useRuntimeStore }  from '../store/runtime';
+import { useSessionStore }  from '../store/session';
 import { DASHBOARD_URL, SETTINGS_URL, NEW_TAB_URL as NEW_TAB } from '../constants';
+
+import OnboardingOverlay from './OnboardingOverlay';
 
 const DEMO_URLS = ['uniswap.eth', 'mastodon.eth', 'btcnode.eth', 'apps.orivon.eth', 'opensea.eth'];
 
@@ -297,6 +300,7 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
     rightPanelOpen, setRightPanelOpen,
     showWeb3Scores,
   } = useSettings();
+  const { hasOnboarded, setHasOnboarded } = useSessionStore();
   const { status: walletStatus, initialize: initializeWallet } = useWalletStore();
   const { addLog } = useRuntimeStore();
 
@@ -760,6 +764,17 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
 
       {/* ── CONTENT AREA ── */}
       <div className="flex-1 relative overflow-y-auto flex">
+        <AnimatePresence>
+          {!hasOnboarded && (
+             <motion.div 
+               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+               className="fixed inset-0 z-[10000] backdrop-blur-xl bg-black/60 flex items-center justify-center p-6"
+             >
+                <OnboardingOverlay onComplete={() => setHasOnboarded(true)} />
+             </motion.div>
+          )}
+        </AnimatePresence>
+        
         <div className="flex-1 relative min-h-full">
           <AnimatePresence>
             {permissionPrompt && (
@@ -802,7 +817,10 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
               ) : tab.url === 'apps.orivon.eth' || tab.url === 'orivon://apps' ? (
                 <AppStoreDemo 
                   onInstall={(app) => handleRequestApproval({ type: 'install', app })} 
-                  onNavigate={(url) => navigate(url, tab.id)}
+                  onNavigate={(url) => {
+                    const newId = addTab(url);
+                    setTimeout(() => navigate(url, newId), 10);
+                  }}
                 />
               ) : tab.url === 'opensea.eth' ? (
                 <OpenSeaDemo />

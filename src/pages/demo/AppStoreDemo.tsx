@@ -6,6 +6,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { DemoWatermark, IPFSBanner } from './DemoComponents';
 import Spinner from '../../components/Spinner';
+import { useSessionStore } from '../../store/session';
 
 interface AppStoreDemoProps {
   onInstall: (app: any) => Promise<boolean>;
@@ -13,12 +14,7 @@ interface AppStoreDemoProps {
 }
 
 export default function AppStoreDemo({ onInstall, onNavigate }: AppStoreDemoProps) {
-  const [installed, setInstalled] = useState<Record<string, boolean>>({
-    'Uniswap Module': true,
-    'ENS Resolver': true,
-    'IPFS Module': true,
-    'Bitcoin Node': true,
-  });
+  const { installedApps, installApp } = useSessionStore();
   const [installing, setInstalling] = useState<string | null>(null);
 
   const apps = [
@@ -32,13 +28,13 @@ export default function AppStoreDemo({ onInstall, onNavigate }: AppStoreDemoProp
 
   const handleInstall = async (e: React.MouseEvent, app: any) => {
     e.stopPropagation();
-    if (installed[app.name] || installing) return;
+    if (installedApps[app.name] || installing) return;
     
     const approved = await onInstall(app);
     if (approved) {
       setInstalling(app.name);
       setTimeout(() => {
-        setInstalled(prev => ({ ...prev, [app.name]: true }));
+        installApp(app.name);
         setInstalling(null);
       }, 2000);
     }
