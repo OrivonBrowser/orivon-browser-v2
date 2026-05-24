@@ -21,12 +21,18 @@ interface ElectronAPI {
     minimize: () => void;
     maximize: () => void;
     close:    () => void;
+    isMaximized: () => Promise<boolean>;
+    onFullscreenChange: (cb: (isFullscreen: boolean) => void) => void;
+    onMaximizedChange: (cb: (isMaximized: boolean) => void) => void;
   };
   openExternal: (url: string) => void;
   getWallet: () => Promise<{
     address: string;
     name: string;
     hasWallet: boolean;
+  }>;
+  getMnemonic: () => Promise<{
+    mnemonic: string | null;
   }>;
   importWallet: (mnemonic: string) => Promise<{
     success: boolean;

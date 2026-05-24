@@ -53,12 +53,24 @@
     background: rgba(255, 255, 255, 0.2);
   }
 }
-
 @layer utilities {
   .drag    { -webkit-app-region: drag;    app-region: drag;    }
   .no-drag { -webkit-app-region: no-drag; app-region: no-drag; }
 
+  /* Fullscreen behavior for Windows/Linux custom title bar */
+  .fullscreen-titlebar-toggle {
+    height: 2px; /* Small sliver to catch hover */
+    overflow: hidden;
+    transition: height 200ms ease-in-out;
+    position: relative;
+    z-index: 1000;
+  }
+  
+  .fullscreen-titlebar-toggle:hover {
+    height: 36px;
+  }
   .scrollbar-thin::-webkit-scrollbar       { width: 4px; height: 4px; }
+...
   .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
   .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
   .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }

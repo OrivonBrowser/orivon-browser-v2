@@ -11,6 +11,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   },
   // ── Wallet ─────────────────────────────────────────────────────────────────
   getWallet: () => ipcRenderer.invoke("get-wallet"),
+  getMnemonic: () => ipcRenderer.invoke("get-mnemonic"),
   importWallet: (mnemonic) => ipcRenderer.invoke("import-wallet", mnemonic),
   // ── URL resolution (ENS / IPFS / ipns) ────────────────────────────────────
   resolveURL: (url) => ipcRenderer.invoke("resolve:url", url),
@@ -18,7 +19,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
   window: {
     minimize: () => ipcRenderer.send("window:minimize"),
     maximize: () => ipcRenderer.send("window:maximize"),
-    close: () => ipcRenderer.send("window:close")
+    close: () => ipcRenderer.send("window:close"),
+    isMaximized: () => ipcRenderer.invoke("window:is-maximized"),
+    onFullscreenChange: (cb) => ipcRenderer.on("window:fullscreen-change", (_e, v) => cb(v)),
+    onMaximizedChange: (cb) => ipcRenderer.on("window:maximized-change", (_e, v) => cb(v))
   },
   // ── Shell ──────────────────────────────────────────────────────────────────
   openExternal: (url) => ipcRenderer.send("shell:open", url),

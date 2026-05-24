@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { DASHBOARD_URL, SETTINGS_URL, NEW_TAB_URL } from '../constants';
 
 export interface TabEntry {
   id: string;
@@ -33,8 +33,6 @@ interface TabsState {
   closeAllTabs: () => void;
 }
 
-const NEW_TAB_URL = 'orivon://newtab';
-
 function makeTab(url = NEW_TAB_URL): TabEntry {
   return {
     id: `tab-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
@@ -49,129 +47,115 @@ function makeTab(url = NEW_TAB_URL): TabEntry {
   };
 }
 
+const initialTab = makeTab();
+
 export const useTabsStore = create<TabsState>()(
-  persist(
-    (set, get) => ({
-      tabs: [makeTab()],
-      activeTabId: '',
+  (set, get) => ({
+    tabs: [initialTab],
+    activeTabId: initialTab.id,
 
-      addTab: (url = NEW_TAB_URL) => {
-        const tab = makeTab(url);
-        set(s => ({ tabs: [...s.tabs, tab], activeTabId: tab.id }));
-        return tab.id;
-      },
+    addTab: (url = NEW_TAB_URL) => {
+      const tab = makeTab(url);
+      set(s => ({ tabs: [...s.tabs, tab], activeTabId: tab.id }));
+      return tab.id;
+    },
 
-      closeTab: (id) => {
-        const { tabs, activeTabId } = get();
-        if (tabs.length === 1) {
-          // Replace with new tab instead of closing
+    closeTab: (id) => {
+      const { tabs, activeTabId } = get();
+      if (tabs.length === 1) {
+        if (window.electronAPI?.window?.close) {
+          window.electronAPI.window.close();
+        } else {
           const fresh = makeTab();
           set({ tabs: [fresh], activeTabId: fresh.id });
-          return;
         }
-        const idx = tabs.findIndex(t => t.id === id);
-        const remaining = tabs.filter(t => t.id !== id);
-        let next = activeTabId;
-        if (id === activeTabId) {
-          next = (remaining[idx] ?? remaining[idx - 1] ?? remaining[0]).id;
-        }
-        set({ tabs: remaining, activeTabId: next });
-      },
+        return;
+      }
+      const idx = tabs.findIndex(t => t.id === id);
+      const remaining = tabs.filter(t => t.id !== id);
+      let next = activeTabId;
+      if (id === activeTabId) {
+        next = (remaining[idx] ?? remaining[idx - 1] ?? remaining[0]).id;
+      }
+      set({ tabs: remaining, activeTabId: next });
+    },
 
-      setActiveTab: (id) => set({ activeTabId: id }),
+    setActiveTab: (id) => set({ activeTabId: id }),
 
-      updateTab: (id, patch) =>
-        set(s => ({
-          tabs: s.tabs.map(t => (t.id === id ? { ...t, ...patch } : t)),
-        })),
+    updateTab: (id, patch) =>
+      set(s => ({
+        tabs: s.tabs.map(t => (t.id === id ? { ...t, ...patch } : t)),
+      })),
 
-      navigateTab: (id, url, displayUrl, type) => {
-        // Internal orivon:// pages render as React components — no network request,
-        // so never mark them as loading.
-        const isInternal = url.startsWith('orivon://');
-        const autoTitle  = url === NEW_TAB_URL     ? 'New Tab'
-                         : url.includes('dashboard') ? 'Dashboard'
-                         : displayUrl || url;
-        set(s => ({
-          tabs: s.tabs.map(t => {
-            if (t.id !== id) return t;
-            const newHistory = [...t.history.slice(0, t.historyIndex + 1), url];
-            return {
-              ...t,
-              url,
-              displayUrl,
-              type,
-              isLoading: !isInternal,
-              title: autoTitle,
-              history: newHistory,
-              historyIndex: newHistory.length - 1,
-            };
-          }),
-        }));
-      },
-
-      goBack: (id) => {
-        const tab = get().tabs.find(t => t.id === id);
-        if (!tab || tab.historyIndex <= 0) return null;
-        const url = tab.history[tab.historyIndex - 1];
-        set(s => ({
-          tabs: s.tabs.map(t =>
-            t.id === id
-              ? { ...t, historyIndex: t.historyIndex - 1, url, isLoading: !url.startsWith('orivon://') }
-              : t
-          ),
-        }));
-        return url;
-      },
-
-      goForward: (id) => {
-        const tab = get().tabs.find(t => t.id === id);
-        if (!tab || tab.historyIndex >= tab.history.length - 1) return null;
-        const url = tab.history[tab.historyIndex + 1];
-        set(s => ({
-          tabs: s.tabs.map(t =>
-            t.id === id
-              ? { ...t, historyIndex: t.historyIndex + 1, url, isLoading: !url.startsWith('orivon://') }
-              : t
-          ),
-        }));
-        return url;
-      },
-
-      pinTab: (id) =>
-        set(s => ({
-          tabs: s.tabs.map(t => (t.id === id ? { ...t, pinned: !t.pinned } : t)),
-        })),
-
-      reorderTabs: (from, to) =>
-        set(s => {
-          const tabs = [...s.tabs];
-          const [moved] = tabs.splice(from, 1);
-          tabs.splice(to, 0, moved);
-          return { tabs };
+    navigateTab: (id, url, displayUrl, type) => {
+      const isInternal = url.startsWith('orivon://');
+      const autoTitle  = url === NEW_TAB_URL     ? 'New Tab'
+                       : url.includes('dashboard') ? 'Dashboard'
+                       : displayUrl || url;
+      set(s => ({
+        tabs: s.tabs.map(t => {
+          if (t.id !== id) return t;
+          const newHistory = [...t.history.slice(0, t.historyIndex + 1), url];
+          return {
+            ...t,
+            url,
+            displayUrl,
+            type,
+            isLoading: !isInternal,
+            title: autoTitle,
+            history: newHistory,
+            historyIndex: newHistory.length - 1,
+          };
         }),
+      }));
+    },
 
-      closeAllTabs: () => {
-        const fresh = makeTab();
-        set({ tabs: [fresh], activeTabId: fresh.id });
-      },
-    }),
-    {
-      name: 'orivon-tabs',
-      storage: createJSONStorage(() => localStorage),
-      // Don't persist loading state — reset on restore
-      partialize: (s) => ({
-        ...s,
-        tabs: s.tabs.map(t => ({ ...t, isLoading: false })),
+    goBack: (id) => {
+      const tab = get().tabs.find(t => t.id === id);
+      if (!tab || tab.historyIndex <= 0) return null;
+      const url = tab.history[tab.historyIndex - 1];
+      set(s => ({
+        tabs: s.tabs.map(t =>
+          t.id === id
+            ? { ...t, historyIndex: t.historyIndex - 1, url, isLoading: !url.startsWith('orivon://') }
+            : t
+        ),
+      }));
+      return url;
+    },
+
+    goForward: (id) => {
+      const tab = get().tabs.find(t => t.id === id);
+      if (!tab || tab.historyIndex >= tab.history.length - 1) return null;
+      const url = tab.history[tab.historyIndex + 1];
+      set(s => ({
+        tabs: s.tabs.map(t =>
+          t.id === id
+            ? { ...t, historyIndex: t.historyIndex + 1, url, isLoading: !url.startsWith('orivon://') }
+            : t
+        ),
+      }));
+      return url;
+    },
+
+    pinTab: (id) =>
+      set(s => ({
+        tabs: s.tabs.map(t => (t.id === id ? { ...t, pinned: !t.pinned } : t)),
+      })),
+
+    reorderTabs: (from, to) =>
+      set(s => {
+        const tabs = [...s.tabs];
+        const [moved] = tabs.splice(from, 1);
+        tabs.splice(to, 0, moved);
+        return { tabs };
       }),
-      onRehydrateStorage: () => (state) => {
-        // Fix missing activeTabId after rehydration
-        if (state && (!state.activeTabId || !state.tabs.find(t => t.id === state.activeTabId))) {
-          state.activeTabId = state.tabs[0]?.id ?? '';
-        }
-      },
-    }
-  )
+
+    closeAllTabs: () => {
+      const fresh = makeTab();
+      set({ tabs: [fresh], activeTabId: fresh.id });
+    },
+  })
 );
 
 export const NEW_TAB = NEW_TAB_URL;

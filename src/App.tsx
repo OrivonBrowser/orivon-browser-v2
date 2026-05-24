@@ -3,59 +3,91 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
-
 import Browser    from './components/Browser';
 import { useSettings }   from './store/settings';
-
-export const DASHBOARD_URL = 'orivon://dashboard';
+import logo from '@/assets/logo.png';
+import Spinner from './components/Spinner';
+import { DASHBOARD_URL } from './constants';
 
 export default function App() {
   const { theme } = useSettings();
   const [hasError, setHasError] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const platform = (window.electronAPI?.platform || navigator.platform).toLowerCase();
+    const isMac = platform.includes('mac') || platform.includes('darwin');
+    const isWindows = platform.includes('win');
+    const isLinux = platform.includes('linux');
+
+    document.documentElement.setAttribute('data-platform', 
+      isMac ? 'mac' : isWindows ? 'windows' : 'linux'
+    );
+
+    if (window.electronAPI?.window) {
+      window.electronAPI.window.onFullscreenChange((isFullscreen) => {
+        document.documentElement.classList.toggle('fullscreen', isFullscreen);
+      });
+      window.electronAPI.window.onMaximizedChange((isMaximized) => {
+        document.documentElement.classList.toggle('maximized', isMaximized);
+      });
+    }
+  }, []);
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
   }, [theme]);
 
   useEffect(() => {
+    const timer = setTimeout(() => setShowSplash(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     const handleError = (event: ErrorEvent) => {
       console.error("Global error caught:", event.error);
       setHasError(true);
     };
+    const handleRejection = (event: PromiseRejectionEvent) => {
+      console.error("Unhandled rejection caught:", event.reason);
+      setHasError(true);
+    };
     window.addEventListener('error', handleError);
-    return () => window.removeEventListener('error', handleError);
+    window.addEventListener('unhandledrejection', handleRejection);
+    return () => {
+      window.removeEventListener('error', handleError);
+      window.removeEventListener('unhandledrejection', handleRejection);
+    };
   }, []);
 
   if (hasError) {
     return (
-      <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#0a0a0a] text-white p-6 text-center">
-        <h1 className="text-2xl font-bold mb-4">Something went wrong</h1>
-        <p className="text-gray-400 mb-6">The application encountered an unexpected error.</p>
+      <div style={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#13141a', color: 'white', padding: 24, textAlign: 'center' }}>
+        <h1 style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 16 }}>Something went wrong</h1>
+        <p style={{ color: '#9a9ba5', marginBottom: 24 }}>The application encountered an unexpected error.</p>
         <button
-          onClick={() => window.location.reload()}
-          className="px-6 py-2 bg-indigo-600 rounded-lg font-semibold hover:bg-indigo-500 transition-colors"
+          onClick={() => { localStorage.clear(); window.location.reload(); }}
+          style={{ padding: '8px 24px', background: '#4f46e5', borderRadius: 8, border: 'none', color: 'white', fontWeight: 'bold', cursor: 'pointer' }}
         >
-          Reload App
+          Reset and Reload
         </button>
       </div>
     );
   }
 
-  const ease = { duration: 0.3, ease: [0.22, 1, 0.36, 1] as const };
+  if (showSplash) {
+    return (
+      <div style={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#13141a', color: 'white' }}>
+        <img src={logo} alt="Orivon" style={{ height: 48, objectFit: 'contain', marginBottom: 24 }} />
+        <Spinner size={32} color="#4f46e5" />
+        <p style={{ marginTop: 24, fontSize: 13, color: '#9a9ba5', fontWeight: 500 }}>Starting Orivon Browser...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-[#0a0a0a] text-white">
-      <AnimatePresence mode="wait">
-
-        <motion.div key="browser" className="h-full"
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          transition={ease}
-        >
-          <Browser />
-        </motion.div>
-
-      </AnimatePresence>
+    <div style={{ height: '100vh', width: '100vw', overflow: 'hidden', background: '#13141a', color: 'white' }}>
+      <Browser />
     </div>
   );
 }

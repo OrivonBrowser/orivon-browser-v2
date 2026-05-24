@@ -203,7 +203,7 @@ const WebView = forwardRef<WebViewHandle, WebViewProps>(({
               position: 'absolute',
               inset: 0,
               zIndex: 10,
-              background: '#0f0f0f',
+              background: '#13141a',
               opacity: fading ? 0 : 1,
               transition: fading ? 'opacity 0.18s ease' : 'none',
               pointerEvents: 'none',
@@ -246,7 +246,7 @@ function BlockedPage({ url, onRetry }: { url: string; onRetry: () => void }) {
   const isDark = theme === 'dark';
 
   return (
-    <div className={`w-full h-full flex flex-col items-center justify-center gap-5 ${isDark ? 'bg-[#0f0f0f] text-white' : 'bg-[#f5f5f5] text-black'}`}>
+    <div className={`w-full h-full flex flex-col items-center justify-center gap-5 ${isDark ? 'bg-[#13141a] text-white' : 'bg-[#f5f5f5] text-black'}`}>
       <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isDark ? 'bg-white/[0.04] border border-white/[0.08]' : 'bg-black/[0.03] border border-black/[0.07]'}`}>
         <Globe size={22} className={isDark ? 'text-white/25' : 'text-black/25'} />
       </div>

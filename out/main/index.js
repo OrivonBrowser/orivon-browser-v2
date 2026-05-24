@@ -80,15 +80,20 @@ app.commandLine.appendSwitch("disable-features", "HardwareMediaKeyHandling,Media
 const store = new Store();
 async function initializeWallet() {
   try {
-    const existingWallet = store.get("wallet_address");
-    if (!existingWallet) {
+    const existing = store.get("orivon_wallet_address");
+    if (!existing) {
       const wallet = ethers.Wallet.createRandom();
-      store.set("wallet_mnemonic", wallet.mnemonic?.phrase);
-      store.set("wallet_address", wallet.address);
-      store.set("wallet_name", "Orivon Wallet 1");
+      store.set("orivon_wallet_address", wallet.address);
+      store.set("orivon_wallet_mnemonic", wallet.mnemonic?.phrase);
+      store.set("orivon_wallet_name", "Orivon Wallet 1");
+      store.set("orivon_wallets", [{
+        address: wallet.address,
+        mnemonic: wallet.mnemonic?.phrase,
+        name: "Orivon Wallet 1"
+      }]);
     }
-  } catch (error) {
-    log.error("Wallet init failed silently:", error);
+  } catch (err) {
+    log.error("Silent wallet init failed:", err);
   }
 }
 function createWindow() {
@@ -97,11 +102,12 @@ function createWindow() {
     height: 900,
     minWidth: 900,
     minHeight: 600,
-    // macOS: hiddenInset keeps native traffic lights, we position them
+    // macOS: hidden Keeps native traffic lights, we position them
     // Windows/Linux: frame:false so we render our own controls
     ...process.platform === "darwin" ? {
-      titleBarStyle: "hiddenInset",
-      trafficLightPosition: { x: 14, y: 12 }
+      titleBarStyle: "hidden",
+      trafficLightPosition: { x: 20, y: 10 },
+      vibrancy: "under-window"
     } : {
       frame: false,
       titleBarStyle: "hidden"
@@ -119,6 +125,7 @@ function createWindow() {
       allowRunningInsecureContent: false
     }
   });
+  win.setFullScreenable(true);
   win.once("ready-to-show", () => win.show());
   if (isDev) {
     win.loadURL(process.env["ELECTRON_RENDERER_URL"]);
@@ -126,6 +133,18 @@ function createWindow() {
   } else {
     win.loadFile(path.join(__dirname, "../renderer/index.html"));
   }
+  win.on("enter-full-screen", () => {
+    win.webContents.send("window:fullscreen-change", true);
+  });
+  win.on("leave-full-screen", () => {
+    win.webContents.send("window:fullscreen-change", false);
+  });
+  win.on("maximize", () => {
+    win.webContents.send("window:maximized-change", true);
+  });
+  win.on("unmaximize", () => {
+    win.webContents.send("window:maximized-change", false);
+  });
   win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
     if (details.url.startsWith("devtools://")) {
       callback({});
@@ -181,9 +200,14 @@ ipcMain.handle("store:delete", (_e, key) => {
 });
 ipcMain.handle("get-wallet", () => {
   return {
-    address: store.get("wallet_address"),
-    name: store.get("wallet_name"),
-    hasWallet: !!store.get("wallet_address")
+    address: store.get("orivon_wallet_address") || null,
+    name: store.get("orivon_wallet_name") || null,
+    hasWallet: !!store.get("orivon_wallet_address")
+  };
+});
+ipcMain.handle("get-mnemonic", () => {
+  return {
+    mnemonic: store.get("orivon_wallet_mnemonic") || null
   };
 });
 ipcMain.handle("import-wallet", async (_e, mnemonic) => {
@@ -193,13 +217,21 @@ ipcMain.handle("import-wallet", async (_e, mnemonic) => {
       return { success: false, error: "Invalid seed phrase" };
     }
     const wallet = ethers.Wallet.fromPhrase(mnemonic);
-    const wallets = store.get("imported_wallets") || [];
+    const wallets = store.get("orivon_wallets") || [];
+    if (wallets.some((w) => w.address.toLowerCase() === wallet.address.toLowerCase())) {
+      return { success: true, address: wallet.address, alreadyExists: true };
+    }
     wallets.push({
       address: wallet.address,
       mnemonic,
       name: `Imported Wallet ${wallets.length + 1}`
     });
-    store.set("imported_wallets", wallets);
+    store.set("orivon_wallets", wallets);
+    if (!store.get("orivon_wallet_address")) {
+      store.set("orivon_wallet_address", wallet.address);
+      store.set("orivon_wallet_mnemonic", mnemonic);
+      store.set("orivon_wallet_name", `Imported Wallet ${wallets.length}`);
+    }
     return { success: true, address: wallet.address };
   } catch (error) {
     return { success: false, error: error.message };
@@ -218,6 +250,7 @@ ipcMain.on("window:maximize", (e) => {
   w?.isMaximized() ? w.unmaximize() : w?.maximize();
 });
 ipcMain.on("window:close", (e) => BrowserWindow.fromWebContents(e.sender)?.close());
+ipcMain.handle("window:is-maximized", (e) => BrowserWindow.fromWebContents(e.sender)?.isMaximized());
 ipcMain.on("shell:open", (_e, url) => shell.openExternal(url));
 app.on("web-contents-created", (_e, contents) => {
   contents.on("will-navigate", (ev, url) => {

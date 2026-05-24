@@ -31,35 +31,29 @@ interface SettingsState {
 }
 
 export const useSettings = create<SettingsState>()(
-  persist(
-    (set) => ({
-      theme: 'dark',
-      sidebarOpen: true,
-      rightPanelOpen: false,
-      homepage: 'orivon://newtab',
-      searchEngine: 'web3compass',
-      web3ScoreProvider: 'Orivon Native',
-      blockTrackers: true,
-      blockAds: true,
-      showWeb3Scores: true,
-      ipfsGateway: 'https://ipfs.io',
-      rpcUrl: 'https://cloudflare-eth.com',
+  (set) => ({
+    theme: 'dark',
+    sidebarOpen: true,
+    rightPanelOpen: false,
+    homepage: 'orivon://newtab',
+    searchEngine: 'web3compass',
+    web3ScoreProvider: 'Orivon Native',
+    blockTrackers: true,
+    blockAds: true,
+    showWeb3Scores: true,
+    ipfsGateway: 'https://ipfs.io',
+    rpcUrl: 'https://cloudflare-eth.com',
 
-      setTheme:          (theme)         => set({ theme }),
-      setSidebarOpen:    (sidebarOpen)   => set({ sidebarOpen }),
-      setRightPanelOpen: (rightPanelOpen) => set({ rightPanelOpen }),
-      setHomepage:       (homepage)      => set({ homepage }),
-      setSearchEngine:   (searchEngine)  => set({ searchEngine }),
-      setWeb3ScoreProvider: (web3ScoreProvider) => set({ web3ScoreProvider }),
-      setBlockTrackers:  (v)             => set({ blockTrackers: v }),
-      setBlockAds:       (v)             => set({ blockAds: v }),
-      setShowWeb3Scores: (v)             => set({ showWeb3Scores: v }),
-      setIpfsGateway:    (url)           => set({ ipfsGateway: url }),
-      setRpcUrl:         (url)           => set({ rpcUrl: url }),
-    }),
-    {
-      name: 'orivon-settings',
-      storage: createJSONStorage(() => localStorage),
-    }
-  )
+    setTheme:          (theme)         => set({ theme }),
+    setSidebarOpen:    (sidebarOpen)   => set({ sidebarOpen }),
+    setRightPanelOpen: (rightPanelOpen) => set({ rightPanelOpen }),
+    setHomepage:       (homepage)      => set({ homepage }),
+    setSearchEngine:   (searchEngine)  => set({ searchEngine }),
+    setWeb3ScoreProvider: (web3ScoreProvider) => set({ web3ScoreProvider }),
+    setBlockTrackers:  (v)             => set({ blockTrackers: v }),
+    setBlockAds:       (v)             => set({ blockAds: v }),
+    setShowWeb3Scores: (v)             => set({ showWeb3Scores: v }),
+    setIpfsGateway:    (url)           => set({ ipfsGateway: url }),
+    setRpcUrl:         (url)           => set({ rpcUrl: url }),
+  })
 );

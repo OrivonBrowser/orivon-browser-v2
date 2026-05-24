@@ -14,6 +14,7 @@ import { useSettings } from '../store/settings';
 import logo from '@/assets/logo.png';
 import { ethers } from 'ethers';
 import Spinner from '../components/Spinner';
+import { DASHBOARD_URL } from '../constants';
 
 // I decided to put switcher and compact card into src/components/WalletComponents.tsx
 import * as WalletComps from '../components/WalletComponents';
@@ -109,9 +110,9 @@ export default function Dashboard({ onOpenBrowser, isMinimal = false }: Dashboar
 
   if (initialLoading) {
     return (
-      <div className="h-full w-full bg-[#0a0a0f] flex flex-col items-center justify-center gap-6">
-        <img src={logo} alt="Orivon" className="w-16 h-16 rounded-2xl animate-pulse" />
-        <Spinner size={32} color="#4f46e5" />
+      <div className="h-full w-full bg-[#13141a] flex flex-col items-center justify-center gap-6">
+        <img src={logo} alt="Orivon" className="h-12 object-contain animate-pulse" />
+        <Spinner size={24} color="#4f46e5" />
       </div>
     );
   }
@@ -122,34 +123,21 @@ export default function Dashboard({ onOpenBrowser, isMinimal = false }: Dashboar
   if (view === 'import') return <ImportView onBack={() => setView('main')} />;
 
   return (
-    <div className="bg-[#0a0a0f] text-white min-h-full w-full flex flex-col items-center px-5 py-10 pb-20 font-inter overflow-y-auto">
-      {/* Search Section */}
-      <div className="w-full max-w-[640px] mb-12 text-center">
-        <img src={logo} alt="Orivon" className="w-12 h-12 rounded-xl mb-6 mx-auto" />
-        <form onSubmit={handleSearch}>
-          <div className="relative flex items-center group">
-            <Search className="absolute left-5 text-gray-500 group-focus-within:text-indigo-500 transition-colors" size={20} />
-            <input
-              name="search"
-              placeholder="Search Web3 or type a .eth address"
-              className="w-full h-14 rounded-full bg-white/5 border border-white/10 pl-14 pr-12 text-base text-white outline-none transition-all duration-200 focus:bg-white/[0.08] focus:border-indigo-500/50"
-            />
-          </div>
-        </form>
-      </div>
+    <div className="bg-[#13141a] text-white min-h-full w-full flex flex-col items-center px-8 py-10 pb-20 font-inter overflow-y-auto">
+      <div className="w-full max-w-[800px]">
+        <h1 className="text-2xl font-bold mb-8">Dashboard</h1>
 
-      <div className="w-full max-w-[900px]">
         {/* Wallet Box */}
-        <div className="bg-gradient-to-br from-indigo-500/10 to-[#0f0f19]/50 border border-white/10 rounded-[32px] p-8 mb-8 relative shadow-2xl">
-          <div className="flex justify-between items-start mb-8">
+        <div className="bg-[#1e1f24] border border-[#2b2c31] rounded-2xl p-6 mb-8 relative shadow-xl">
+          <div className="flex justify-between items-start mb-6">
             <WalletComps.default onImport={() => setView('import')} />
 
             <div className="relative">
               <button
                 onClick={() => setWalletMenuOpen(!walletMenuOpen)}
-                className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-white cursor-pointer hover:bg-white/10 transition-colors"
+                className="w-8 h-8 rounded-lg hover:bg-[#2b2c31] flex items-center justify-center text-[#9a9ba5] cursor-pointer transition-colors"
               >
-                <MoreHorizontal size={20} />
+                <MoreHorizontal size={18} />
               </button>
 
               <AnimatePresence>
@@ -160,20 +148,19 @@ export default function Dashboard({ onOpenBrowser, isMinimal = false }: Dashboar
                       initial={{ opacity: 0, y: 10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      className="absolute top-12 right-0 w-56 bg-[#1a1a24] border border-white/10 rounded-2xl p-2 z-50 shadow-2xl overflow-hidden"
+                      className="absolute top-10 right-0 w-56 bg-[#1e1f24] border border-[#2b2c31] rounded-xl p-1.5 z-50 shadow-2xl overflow-hidden"
                     >
                       {[
                         { label: 'View Seed Phrase', icon: <Eye size={16}/>, onClick: () => { setView('backup'); setWalletMenuOpen(false); } },
                         { label: 'Copy Wallet Address', icon: <Copy size={16}/>, onClick: () => { handleCopy(activeAccount?.addresses.eth || ''); setWalletMenuOpen(false); } },
-                        { label: 'Rename Account', icon: <ExternalLink size={16}/>, onClick: () => setWalletMenuOpen(false) },
-                        { label: 'Add New Account', icon: <ExternalLink size={16}/>, onClick: () => setWalletMenuOpen(false) },
-                        { label: 'Import Account', icon: <ExternalLink size={16}/>, onClick: () => { setView('import'); setWalletMenuOpen(false); } },
-                        { label: 'Remove Account', icon: <ExternalLink size={16}/>, onClick: () => setWalletMenuOpen(false) },
+                        { label: 'Rename Wallet', icon: <ExternalLink size={16}/>, onClick: () => setWalletMenuOpen(false) },
+                        { label: 'Import Wallet', icon: <ExternalLink size={16}/>, onClick: () => { setView('import'); setWalletMenuOpen(false); } },
+                        { label: 'Remove Wallet', icon: <ExternalLink size={16}/>, onClick: () => setWalletMenuOpen(false) },
                       ].map(item => (
                         <button
                           key={item.label}
                           onClick={item.onClick}
-                          className="w-full px-4 py-3 flex items-center gap-3 bg-transparent border-none text-gray-400 text-[13px] font-medium cursor-pointer rounded-xl text-left hover:bg-white/5 hover:text-white transition-all"
+                          className="w-full px-3 py-2 flex items-center gap-3 bg-transparent border-none text-[#9a9ba5] text-[13px] font-medium cursor-pointer rounded-lg text-left hover:bg-[#2b2c31] hover:text-[#e6e7e8] transition-all"
                         >
                           {item.icon} {item.label}
                         </button>
@@ -185,22 +172,21 @@ export default function Dashboard({ onOpenBrowser, isMinimal = false }: Dashboar
             </div>
           </div>
 
-          <div className="text-center mb-10">
-            <div className="text-5xl font-black tracking-tight text-white mb-2">
+          <div className="text-center mb-8">
+            <div className="text-4xl font-bold text-white mb-1">
               ${(parseFloat(balance) * 2450.50).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
-            <div className="flex items-center justify-center gap-2 text-gray-500 font-mono text-sm">
+            <div className="flex items-center justify-center gap-2 text-[#9a9ba5] font-mono text-xs">
               <span>{activeAccount?.addresses.eth.slice(0, 6)}...{activeAccount?.addresses.eth.slice(-4)}</span>
-              <button onClick={() => handleCopy(activeAccount?.addresses.eth || '')} className="bg-transparent border-none text-gray-600 hover:text-gray-300 cursor-pointer p-0">
-                {copied ? <Check size={14} color="#00c76a" /> : <Copy size={14} />}
+              <button onClick={() => handleCopy(activeAccount?.addresses.eth || '')} className="bg-transparent border-none text-[#9a9ba5] hover:text-[#e6e7e8] cursor-pointer p-0">
+                {copied ? <Check size={14} color="#22c55e" /> : <Copy size={14} />}
               </button>
             </div>
-            <div className="text-gray-600 text-sm mt-1 font-medium">{balance} ETH</div>
           </div>
 
-          <div className="flex gap-4 mb-10">
+          <div className="flex gap-4 mb-8">
             {[
-              { label: 'Send', icon: <Send size={18}/>, onClick: () => setView('send'), primary: true },
+              { label: 'Send', icon: <Send size={18}/>, onClick: () => setView('send') },
               { label: 'Receive', icon: <Download size={18}/>, onClick: () => setView('receive') },
               { label: 'Buy', icon: <ShoppingCart size={18}/>, onClick: () => {} },
               { label: 'Swap', icon: <RefreshCw size={18}/>, onClick: () => {} },
@@ -208,11 +194,7 @@ export default function Dashboard({ onOpenBrowser, isMinimal = false }: Dashboar
               <button
                 key={btn.label}
                 onClick={btn.onClick}
-                className={`flex-1 h-12 rounded-2xl flex items-center justify-center gap-2 font-bold text-sm transition-all duration-200 active:scale-95 ${
-                  btn.primary
-                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20 hover:bg-indigo-500'
-                    : 'bg-white/5 text-gray-200 border border-white/10 hover:bg-white/10'
-                }`}
+                className="flex-1 h-10 rounded-lg bg-[#2b2c31] text-[#e6e7e8] font-bold text-sm transition-all duration-200 hover:bg-[#3b3c42] flex items-center justify-center gap-2"
               >
                 {btn.icon} {btn.label}
               </button>
@@ -220,13 +202,13 @@ export default function Dashboard({ onOpenBrowser, isMinimal = false }: Dashboar
           </div>
 
           <div>
-            <div className="flex gap-6 border-b border-white/5 mb-6">
+            <div className="flex gap-6 border-b border-[#2b2c31] mb-6">
               {(['tokens', 'nfts', 'activity'] as const).map(tab => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-1 pb-4 bg-transparent border-none text-sm font-bold cursor-pointer relative transition-colors ${
-                    activeTab === tab ? 'text-indigo-500' : 'text-gray-500 hover:text-gray-300'
+                  className={`px-1 pb-3 bg-transparent border-none text-[13px] font-bold cursor-pointer relative transition-colors ${
+                    activeTab === tab ? 'text-indigo-500' : 'text-[#9a9ba5] hover:text-[#e6e7e8]'
                   }`}
                 >
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -237,42 +219,41 @@ export default function Dashboard({ onOpenBrowser, isMinimal = false }: Dashboar
               ))}
             </div>
 
-            <div className="py-10 text-center text-gray-500 font-medium">
+            <div className="py-4 text-center text-[#9a9ba5] font-medium">
               {activeTab === 'tokens' && (
                 <div>
                   {balance === '0' ? (
-                    <p className="text-sm">No tokens yet. Start by receiving crypto.</p>
+                    <div className="flex flex-col items-center gap-3 py-10">
+                        <Wallet size={48} className="text-[#2b2c31]" />
+                        <p className="text-sm">No tokens yet</p>
+                    </div>
                   ) : (
-                    <div className="flex justify-between items-center p-4 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/[0.08] transition-colors">
+                    <div className="flex justify-between items-center p-4 bg-[#2b2c31] border border-[#3b3c42]/30 rounded-xl hover:bg-[#3b3c42] transition-colors">
                       <div className="flex items-center gap-4">
                         <div className="w-10 h-10 rounded-full bg-[#627eea] flex items-center justify-center font-bold text-base text-white">Ξ</div>
                         <div className="text-left">
                           <div className="font-bold text-white">Ethereum</div>
-                          <div className="text-xs text-gray-500">ETH</div>
+                          <div className="text-xs text-[#9a9ba5]">ETH</div>
                         </div>
                       </div>
                       <div className="text-right">
                         <div className="font-bold text-white">{balance} ETH</div>
-                        <div className="text-xs text-gray-500">${(parseFloat(balance) * 2450.50).toLocaleString()}</div>
+                        <div className="text-xs text-[#9a9ba5]">${(parseFloat(balance) * 2450.50).toLocaleString()}</div>
                       </div>
                     </div>
                   )}
                 </div>
               )}
               {activeTab === 'nfts' && (
-                 <div className="flex flex-col items-center gap-4">
-                    <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center text-gray-700">
-                       <Layers size={32} />
-                    </div>
-                    <p className="text-sm">No NFTs yet.</p>
+                 <div className="flex flex-col items-center gap-3 py-10">
+                    <Layers size={48} className="text-[#2b2c31]" />
+                    <p className="text-sm">No NFTs yet</p>
                  </div>
               )}
               {activeTab === 'activity' && (
-                 <div className="flex flex-col items-center gap-4">
-                    <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center text-gray-700">
-                       <Activity size={32} />
-                    </div>
-                    <p className="text-sm">No transactions yet.</p>
+                 <div className="flex flex-col items-center gap-3 py-10">
+                    <Activity size={48} className="text-[#2b2c31]" />
+                    <p className="text-sm">No transactions yet</p>
                  </div>
               )}
             </div>
@@ -280,36 +261,34 @@ export default function Dashboard({ onOpenBrowser, isMinimal = false }: Dashboar
         </div>
 
         {/* Nodes Widget */}
-        <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 mb-8 shadow-xl">
-          <div className="text-xl font-bold mb-8 flex items-center gap-3">
-            <Cpu size={24} className="text-indigo-500" /> Web3 Nodes
-          </div>
+        <div className="bg-[#1e1f24] border border-[#2b2c31] rounded-2xl p-6 mb-8 shadow-xl">
+          <div className="text-base font-bold mb-6">Web3 Nodes</div>
           <div className="flex flex-col gap-6">
             {[
               { id: 'ipfs', name: 'IPFS Node' },
               { id: 'bittorrent', name: 'BitTorrent Node' },
-              { id: 'bitcoin', name: 'Bitcoin Node (Pruned)', sub: 'Uses a pre-synced snapshot. Quick sync.' }
+              { id: 'bitcoin', name: 'Bitcoin Node Pruned' }
             ].map(node => (
               <div key={node.id} className="flex justify-between items-center">
-                <div>
-                  <div className="text-[15px] font-semibold text-gray-200">{node.name}</div>
-                  {node.sub && <div className="text-xs text-gray-600 mt-1">{node.sub}</div>}
-                  <div className="flex items-center gap-2 mt-2">
-                    <div className={`w-2 h-2 rounded-full ${nodes[node.id] === 'Online' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : nodes[node.id] === 'Starting' ? 'bg-amber-500' : 'bg-gray-700'}`} />
-                    <span className="text-xs text-gray-500 font-medium">{nodes[node.id]}</span>
-                    {nodes[node.id] === 'Starting' && <Spinner size={10} color="#f59e0b" className="ml-1" />}
+                <div className="flex items-center gap-4">
+                  <div className="flex flex-col">
+                    <div className="text-[14px] font-semibold text-[#e6e7e8]">{node.name}</div>
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className={`w-2 h-2 rounded-full ${nodes[node.id] === 'Online' ? 'bg-[#22c55e]' : nodes[node.id] === 'Starting' ? 'bg-[#f59e0b] animate-pulse' : 'bg-[#6b7280]'}`} />
+                      <span className="text-[11px] text-[#9a9ba5] font-medium">{nodes[node.id]}</span>
+                    </div>
                   </div>
                 </div>
                 <button
                   onClick={() => nodes[node.id] === 'Online' ? stopNode(node.id) : startNode(node.id)}
                   disabled={nodes[node.id] === 'Starting'}
-                  className={`px-5 py-2.5 rounded-xl font-bold text-[13px] transition-all duration-200 cursor-pointer ${
+                  className={`px-4 py-1.5 rounded-lg font-bold text-[12px] transition-all duration-200 cursor-pointer ${
                     nodes[node.id] === 'Online'
-                      ? 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20'
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                      ? 'bg-[#22c55e]/10 text-[#22c55e] hover:bg-[#22c55e]/20'
+                      : 'bg-[#2b2c31] text-[#9a9ba5] hover:bg-[#3b3c42]'
                   }`}
                 >
-                  {nodes[node.id] === 'Online' ? 'Stop' : nodes[node.id] === 'Starting' ? 'Starting' : 'Start'}
+                  {nodes[node.id] === 'Online' ? 'Stop' : nodes[node.id] === 'Starting' ? 'Starting...' : 'Start'}
                 </button>
               </div>
             ))}
@@ -317,35 +296,35 @@ export default function Dashboard({ onOpenBrowser, isMinimal = false }: Dashboar
         </div>
 
         {/* Widget Grid */}
-        <div className="grid grid-cols-2 gap-8">
+        <div className="grid grid-cols-2 gap-6">
           {/* Featured Web3 Sites */}
-          <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 shadow-xl">
-            <div className="text-lg font-bold mb-6">Explore Web3</div>
-            <div className="grid grid-cols-2 gap-4">
+          <div className="bg-[#1e1f24] border border-[#2b2c31] rounded-2xl p-6 shadow-xl">
+            <div className="text-base font-bold mb-4">Explore Web3</div>
+            <div className="grid grid-cols-2 gap-3">
               {FEATURED_SITES.map(site => (
-                <button key={site.name} onClick={() => onOpenBrowser?.(site.url)} className="p-5 rounded-2xl bg-white/5 border border-white/5 flex flex-col items-center gap-3 cursor-pointer transition-all duration-200 hover:bg-white/10 hover:-translate-y-1">
-                  <span className="text-3xl">{site.icon}</span>
-                  <span className="text-[13px] font-bold text-white">{site.name}</span>
+                <button key={site.name} onClick={() => onOpenBrowser?.(site.url)} className="p-4 rounded-xl bg-[#2b2c31] border border-[#3b3c42]/30 flex flex-col items-center gap-2 cursor-pointer transition-all duration-200 hover:bg-[#3b3c42]">
+                  <span className="text-2xl">{site.icon}</span>
+                  <span className="text-[12px] font-bold text-white">{site.name}</span>
                 </button>
               ))}
             </div>
           </div>
 
           {/* Network Status */}
-          <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 shadow-xl">
-            <div className="text-lg font-bold mb-6">Network</div>
-            <div className="flex flex-col gap-5">
+          <div className="bg-[#1e1f24] border border-[#2b2c31] rounded-2xl p-6 shadow-xl">
+            <div className="text-base font-bold mb-4">Network</div>
+            <div className="flex flex-col gap-4">
               {[
                 { name: 'ENS Resolver', active: true },
                 { name: 'IPFS Gateway', active: true },
                 { name: 'Search Engine', val: 'Web3 Compass', active: true },
-                { name: 'Web3 Score', val: web3ScoreProvider, active: true },
+                { name: 'Web3 Score Provider', val: 'Orivon', active: true },
               ].map(item => (
                 <div key={item.name} className="flex justify-between items-center">
-                  <span className="text-[13px] text-gray-500 font-medium">{item.name}</span>
+                  <span className="text-[12px] text-[#9a9ba5] font-medium">{item.name}</span>
                   <div className="flex items-center gap-2">
-                    {item.val && <span className="text-xs font-bold text-gray-300">{item.val}</span>}
-                    <div className={`w-2 h-2 rounded-full ${item.active ? 'bg-emerald-500' : 'bg-gray-700'}`} />
+                    {item.val && <span className="text-[11px] font-bold text-[#e6e7e8]">{item.val}</span>}
+                    <div className={`w-1.5 h-1.5 rounded-full ${item.active ? 'bg-[#22c55e]' : 'bg-[#6b7280]'}`} />
                   </div>
                 </div>
               ))}
@@ -353,23 +332,23 @@ export default function Dashboard({ onOpenBrowser, isMinimal = false }: Dashboar
           </div>
 
           {/* Recent Sites */}
-          <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 shadow-xl">
-            <div className="text-lg font-bold mb-6">Recent Sites</div>
-            <div className="h-24 flex items-center justify-center text-gray-600 text-[13px] font-medium text-center">
-              Your visited Web3 sites will appear here
+          <div className="bg-[#1e1f24] border border-[#2b2c31] rounded-2xl p-6 shadow-xl">
+            <div className="text-base font-bold mb-4">Recent Sites</div>
+            <div className="py-6 flex items-center justify-center text-[#9a9ba5] text-[12px] font-medium text-center">
+              Your visited Web3 sites will appear here.
             </div>
           </div>
 
           {/* Quick Settings */}
-          <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 shadow-xl">
-            <div className="text-lg font-bold mb-6">Quick Settings</div>
-            <div className="flex flex-col gap-6">
+          <div className="bg-[#1e1f24] border border-[#2b2c31] rounded-2xl p-6 shadow-xl">
+            <div className="text-base font-bold mb-4">Quick Settings</div>
+            <div className="flex flex-col gap-5">
                <div>
-                  <div className="text-[11px] font-black text-gray-600 uppercase mb-2 tracking-wider">Search Engine</div>
+                  <div className="text-[10px] font-bold text-[#6b7280] uppercase mb-1.5 tracking-wider">Search Engine</div>
                   <select
                     value={searchEngine}
                     onChange={(e) => setSearchEngine(e.target.value as any)}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white outline-none cursor-pointer hover:bg-white/[0.08]"
+                    className="w-full bg-[#2b2c31] border border-[#3b3c42] rounded-lg p-2 text-[12px] text-white outline-none cursor-pointer hover:bg-[#3b3c42]"
                   >
                     <option value="web3compass">Web3 Compass</option>
                     <option value="google">Google</option>
@@ -377,15 +356,15 @@ export default function Dashboard({ onOpenBrowser, isMinimal = false }: Dashboar
                   </select>
                </div>
                <div className="flex justify-between items-center">
-                  <span className="text-sm font-bold text-gray-300">Dark Mode</span>
+                  <span className="text-[12px] font-bold text-[#e6e7e8]">Dark Mode</span>
                   <button
                     onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                    className={`w-12 h-6 rounded-full relative transition-colors duration-200 cursor-pointer border-none ${theme === 'dark' ? 'bg-indigo-600' : 'bg-gray-700'}`}
+                    className={`w-10 h-5 rounded-full relative transition-colors duration-200 cursor-pointer border-none ${theme === 'dark' ? 'bg-indigo-600' : 'bg-[#6b7280]'}`}
                   >
-                    <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all duration-200 ${theme === 'dark' ? 'left-7' : 'left-1'}`} />
+                    <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all duration-200 ${theme === 'dark' ? 'left-5.5' : 'left-0.5'}`} />
                   </button>
                </div>
-               <button className="text-indigo-500 bg-transparent border-none p-0 text-sm font-bold cursor-pointer text-left hover:text-indigo-400">More settings</button>
+               <button className="text-indigo-500 bg-transparent border-none p-0 text-[12px] font-bold cursor-pointer text-left hover:text-indigo-400">More Settings</button>
             </div>
           </div>
         </div>
@@ -436,23 +415,23 @@ function BackupView({ onBack }: { onBack: () => void }) {
         <p className="text-gray-500 mb-10 leading-relaxed font-medium">Write down these 12 words in order and keep them somewhere safe offline.</p>
 
         {error ? (
-          <div className="bg-white/5 border border-white/10 rounded-3xl p-10 text-center text-rose-500 font-bold">{error}</div>
+          <div className="bg-[#1e1f24] border border-[#2b2c31] rounded-2xl p-10 text-center text-rose-500 font-bold">{error}</div>
         ) : (
-          <div className="relative bg-white/5 border border-white/10 rounded-[32px] p-8 mb-10 overflow-hidden shadow-2xl">
-            <div className={`grid grid-cols-3 gap-4 transition-all duration-500 ${revealed ? 'blur-0' : 'blur-xl scale-105'}`}>
+          <div className="relative bg-[#1e1f24] border border-[#2b2c31] rounded-2xl p-8 mb-10 overflow-hidden shadow-2xl">
+            <div className={`grid grid-cols-3 gap-3 transition-all duration-500 ${revealed ? 'blur-0' : 'blur-[8px]'}`}>
               {words.map((word, i) => (
-                <div key={i} className="flex flex-col bg-white/5 p-4 rounded-xl border border-white/5 relative">
-                  <span className="text-[10px] font-black text-gray-700 absolute top-2 left-2 uppercase">{i + 1}</span>
-                  <span className="font-bold text-white text-center mt-2">{word}</span>
+                <div key={i} className="flex flex-col bg-[#2b2c31] p-4 rounded-xl border border-[#3b3c42]/30 relative">
+                  <span className="text-[10px] font-bold text-[#6b7280] absolute top-2 left-2 uppercase">{i + 1}</span>
+                  <span className="font-bold text-[#e6e7e8] text-center mt-2">{word}</span>
                 </div>
               ))}
             </div>
 
             {!revealed && (
-              <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/20">
+              <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/40">
                 <button
                   onClick={() => setRevealed(true)}
-                  className="px-8 py-4 rounded-2xl bg-indigo-600 text-white border-none font-black cursor-pointer shadow-2xl shadow-indigo-500/40 hover:bg-indigo-500 transition-all active:scale-95"
+                  className="px-8 py-3 rounded-full bg-indigo-600 text-white border-none font-bold cursor-pointer shadow-2xl hover:bg-indigo-500 transition-all active:scale-95"
                 >
                   Reveal Seed Phrase
                 </button>
@@ -466,9 +445,9 @@ function BackupView({ onBack }: { onBack: () => void }) {
             <div className="relative">
               <button
                 onClick={handleCopyAll}
-                className="w-full h-14 rounded-2xl bg-white/5 border border-white/10 text-white font-bold cursor-pointer hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                className="w-full h-12 rounded-xl bg-[#2b2c31] border border-[#3b3c42] text-[#e6e7e8] font-bold cursor-pointer hover:bg-[#3b3c42] transition-all flex items-center justify-center gap-2"
               >
-                <Copy size={18} /> Copy All
+                <Copy size={16} /> Copy All
               </button>
               <AnimatePresence>
                 {copied && (
@@ -567,23 +546,23 @@ function ImportView({ onBack }: { onBack: () => void }) {
         <p className="text-gray-500 mb-12 font-medium">Enter your 12 word seed phrase to import an existing wallet</p>
 
         {pasteMode ? (
-          <div className="mb-10">
+          <div className="mb-8">
             <textarea
               autoFocus
               placeholder="Paste your 12 words here separated by spaces..."
-              className="w-full h-40 bg-white/5 border border-white/10 rounded-3xl p-6 text-white font-bold outline-none focus:border-indigo-500/50 resize-none transition-all"
+              className="w-full h-32 bg-[#1e1f24] border border-[#2b2c31] rounded-xl p-4 text-[#e6e7e8] font-bold outline-none focus:border-indigo-500/50 resize-none transition-all"
               value={pastedText}
               onChange={(e) => handlePasteChange(e.target.value)}
             />
           </div>
         ) : (
-          <div className="grid grid-cols-3 gap-4 mb-10">
+          <div className="grid grid-cols-3 gap-3 mb-8">
             {words.map((word, i) => (
-              <div key={i} className="flex flex-col bg-white/5 rounded-2xl border border-white/10 p-3 group focus-within:border-indigo-500/50 transition-all">
-                <span className="text-[10px] font-black text-gray-700 uppercase mb-1">{i + 1}</span>
+              <div key={i} className="flex flex-col bg-[#1e1f24] rounded-xl border border-[#2b2c31] p-3 group focus-within:border-indigo-500/50 transition-all">
+                <span className="text-[10px] font-bold text-[#6b7280] uppercase mb-1">{i + 1}</span>
                 <input
                   type="text"
-                  className="bg-transparent border-none text-white font-bold outline-none text-center"
+                  className="bg-transparent border-none text-[#e6e7e8] font-bold outline-none text-center"
                   value={word}
                   onChange={(e) => handleWordChange(i, e.target.value)}
                 />
@@ -594,7 +573,7 @@ function ImportView({ onBack }: { onBack: () => void }) {
 
         <button
           onClick={() => setPasteMode(!pasteMode)}
-          className="bg-transparent border-none text-indigo-500 font-black text-sm cursor-pointer mb-12 hover:text-indigo-400 transition-colors"
+          className="bg-transparent border-none text-indigo-500 font-bold text-sm cursor-pointer mb-10 hover:text-indigo-400 transition-colors"
         >
           {pasteMode ? "Use grid input instead" : "Paste as text instead"}
         </button>
@@ -604,10 +583,10 @@ function ImportView({ onBack }: { onBack: () => void }) {
         <button
           onClick={handleImport}
           disabled={!isComplete || loading}
-          className={`w-full h-16 rounded-2xl font-black text-lg transition-all duration-200 flex items-center justify-center gap-3 ${
+          className={`w-full h-14 rounded-xl font-bold text-lg transition-all duration-200 flex items-center justify-center gap-3 ${
             isComplete && !loading
-              ? 'bg-indigo-600 text-white cursor-pointer hover:bg-indigo-500 shadow-xl shadow-indigo-500/20'
-              : 'bg-white/5 text-gray-600 cursor-not-allowed border border-white/5'
+              ? 'bg-indigo-600 text-white cursor-pointer hover:bg-indigo-500 shadow-xl'
+              : 'bg-[#2b2c31] text-[#9a9ba5] cursor-not-allowed border border-[#3b3c42]/30'
           }`}
         >
           {loading ? <Spinner size={20} /> : "Verify and Import"}
