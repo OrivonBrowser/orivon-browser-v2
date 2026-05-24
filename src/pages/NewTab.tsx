@@ -3,21 +3,21 @@ import { Search, MessageSquare, Layers, Box, Store, SearchCode, Bitcoin, Setting
 import { motion } from 'motion/react';
 import logo from '@/assets/logo.png';
 import { CompactWalletCard } from '../components/WalletComponents';
-import { DASHBOARD_URL, DEMO_WALLET } from '../constants';
+import { DASHBOARD_URL } from '../constants';
 
 interface NewTabProps {
   onNavigate: (url: string) => void;
 }
 
 const QUICK_LAUNCH = [
-  { name: 'Web3 Social', icon: <MessageSquare size={24} />, url: 'https://lenster.xyz' },
-  { name: 'DeFi', icon: <Layers size={24} />, url: 'https://app.uniswap.org' },
-  { name: 'IPFS Browser', icon: <Box size={24} />, url: 'https://ipfs.io' },
-  { name: 'App Store', icon: <Store size={24} />, url: 'orivon://apps' },
-  { name: 'ENS Lookup', icon: <SearchCode size={24} />, url: 'https://ens.domains' },
-  { name: 'Bitcoin', icon: <Bitcoin size={24} />, url: 'https://bitcoin.org' },
-  { name: 'Settings', icon: <Settings size={24} />, url: 'orivon://settings' },
-  { name: 'Dashboard', icon: <LayoutGrid size={24} />, url: DASHBOARD_URL },
+  { name: 'Web3 Social', icon: <MessageSquare size={20} />, url: 'https://lenster.xyz' },
+  { name: 'DeFi', icon: <Layers size={20} />, url: 'https://app.uniswap.org' },
+  { name: 'IPFS Browser', icon: <Box size={20} />, url: 'https://ipfs.io' },
+  { name: 'App Store', icon: <Store size={20} />, url: 'orivon://apps' },
+  { name: 'ENS Lookup', icon: <SearchCode size={20} />, url: 'https://ens.domains' },
+  { name: 'Bitcoin', icon: <Bitcoin size={20} />, url: 'https://bitcoin.org' },
+  { name: 'Settings', icon: <Settings size={20} />, url: 'orivon://settings' },
+  { name: 'Dashboard', icon: <LayoutGrid size={20} />, url: DASHBOARD_URL },
 ];
 
 export default function NewTab({ onNavigate }: NewTabProps) {
@@ -39,65 +39,55 @@ export default function NewTab({ onNavigate }: NewTabProps) {
   };
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-      className="h-full w-full text-white flex flex-col items-center pt-20 px-4 overflow-hidden font-inter"
-      style={{
-        background: 'radial-gradient(ellipse at 50% 40%, rgba(88, 28, 255, 0.08) 0%, transparent 70%), #0d0e14'
-      }}
-    >
+    <div className="h-full w-full bg-[#0d0e14] text-[#f8fafc] flex flex-col items-center pt-24 px-4 overflow-hidden font-inter animate-fade">
       {/* Centered Logo */}
-      <div className="mb-10 flex flex-col items-center">
-        <div className="flex items-center gap-3 mb-2">
-           <img src={logo} alt="Orivon" className="h-10 object-contain brightness-[1.3]" />
-           <span className="text-3xl font-black tracking-tighter text-white">ORIVON</span>
+      <div className="mb-12 flex flex-col items-center">
+        <div className="flex items-center gap-3 mb-1">
+           <img src={logo} alt="Orivon" className="h-6 object-contain brightness-[1.2]" />
+           <span className="text-[18px] font-bold tracking-[0.12em] text-[#f8fafc]">ORIVON</span>
         </div>
-        <span className="text-[12px] text-[#6366f1] uppercase tracking-[0.3em] font-black">The Web3 Browser</span>
+        <span className="text-[11px] text-[#6366f1] uppercase tracking-[0.08em] font-medium">The Web3 Browser</span>
       </div>
 
       {/* Web3 Compass Search Bar */}
-      <div className="w-full max-w-[600px] mb-12">
+      <div className="w-full max-w-[560px] mb-14">
         <form onSubmit={handleSearch}>
-          <div className="relative flex items-center">
+          <div className="relative flex items-center group">
             <Search
-              className="absolute left-4 text-[#9a9ba5]"
+              className="absolute left-4 text-[#475569]"
               size={18}
             />
             <input
               name="search"
               autoFocus
               placeholder="Search Web3 or type a .eth address"
-              className="w-full h-12 rounded-[12px] bg-[#1a1b26] border border-[#2d2e45] pl-11 pr-12 text-[15px] text-white outline-none transition-all duration-200 focus:border-[#4f46e5] focus:shadow-[0_0_0_2px_rgba(99,102,241,0.3)] placeholder:text-[#9a9ba5]"
+              className="w-full h-[44px] rounded-[10px] bg-[#111218] border border-[#1e2030] pl-11 pr-32 text-[14px] text-[#f8fafc] outline-none transition-all duration-120 focus:border-[#6366f1] placeholder:text-[#475569]"
             />
             <div className="absolute right-4 flex items-center gap-2 pointer-events-none">
-                <span className="text-[10px] font-bold text-[#818cf8] uppercase tracking-tighter">Web3 Compass</span>
+                <span className="text-[11px] font-medium text-[#64748b] uppercase tracking-wider">Web3 Compass</span>
             </div>
           </div>
         </form>
       </div>
 
       {/* Quick Launch Icons */}
-      <div className="flex gap-4 justify-center flex-wrap mb-12 max-w-[800px]">
+      <div className="flex gap-4 justify-center flex-wrap mb-14 max-w-[700px]">
         {QUICK_LAUNCH.map(app => (
           <button
             key={app.name}
             onClick={() => onNavigate(app.url)}
-            className="flex flex-col items-center gap-2 w-[80px] group transition-transform duration-150 hover:scale-[1.01]"
+            className="flex flex-col items-center gap-2 w-[72px] group transition-all duration-120"
           >
-            <div className="w-14 h-14 rounded-[12px] bg-[#1a1b26] flex items-center justify-center border border-[#2d2e45] transition-all duration-200 group-hover:border-[#4f46e5] group-hover:shadow-[0_0_10px_rgba(79,70,229,0.2)] active:scale-95">
-              <span className="text-[#e6e7e8]">
-                {app.icon}
-              </span>
+            <div className="w-12 h-12 rounded-[10px] bg-[#111218] flex items-center justify-center border border-[#1e2030] transition-all duration-120 group-hover:border-[#6366f1] group-hover:text-[#818cf8] text-white">
+              {app.icon}
             </div>
-            <span className="text-[11px] font-medium text-[#a5b4fc] text-center leading-tight">{app.name}</span>
+            <span className="text-[11px] font-medium text-[#64748b] text-center leading-tight group-hover:text-[#94a3b8]">{app.name}</span>
           </button>
         ))}
       </div>
 
       {/* Compact Wallet Overview */}
-      <div className="w-full max-w-[600px] transition-transform duration-150 hover:scale-[1.01]">
+      <div className="w-full max-w-[560px]">
         <CompactWalletCard
           onSend={() => openDashboardView('send')}
           onReceive={() => openDashboardView('receive')}
@@ -107,6 +97,6 @@ export default function NewTab({ onNavigate }: NewTabProps) {
           isNewTab={true}
         />
       </div>
-    </motion.div>
+    </div>
   );
 }
