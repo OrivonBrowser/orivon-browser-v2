@@ -154,7 +154,9 @@ function createWindow() {
     responseHeaders["Content-Security-Policy"] = [
       "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src 'self' https: wss:; font-src 'self' https://fonts.gstatic.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:;"
     ];
-    responseHeaders["Access-Control-Allow-Origin"] = ["*"];
+    if (!responseHeaders["Access-Control-Allow-Origin"] && !responseHeaders["access-control-allow-origin"]) {
+      responseHeaders["Access-Control-Allow-Origin"] = ["*"];
+    }
     callback({ responseHeaders });
   });
   return win;
