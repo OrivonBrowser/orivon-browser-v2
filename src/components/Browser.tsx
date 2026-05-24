@@ -14,6 +14,8 @@ import WebView, { WebViewHandle } from './WebView';
 import WalletPanel from './WalletPanel';
 import NewTab      from '../pages/NewTab';
 import Dashboard   from '../pages/Dashboard';
+import SettingsPage from '../pages/Settings';
+import NodeManagerPage from '../pages/NodeManager';
 
 import UniswapDemo from '../pages/demo/UniswapDemo';
 import MastodonDemo from '../pages/demo/MastodonDemo';
@@ -29,7 +31,7 @@ import { useSettings }     from '../store/settings';
 import { useWalletStore }   from '../store/wallet';
 import { useRuntimeStore }  from '../store/runtime';
 import { useSessionStore }  from '../store/session';
-import { DASHBOARD_URL, SETTINGS_URL, NEW_TAB_URL as NEW_TAB } from '../constants';
+import { DASHBOARD_URL, SETTINGS_URL, NODEMANAGER_URL, NEW_TAB_URL as NEW_TAB } from '../constants';
 
 import OnboardingOverlay from './OnboardingOverlay';
 
@@ -174,6 +176,7 @@ function web3Score(url: string) {
 
 function getWeb3Color(url: string): string {
   if (!url || url === NEW_TAB || url.startsWith(DASHBOARD_URL)) return '#6b7280';
+  if (url === SETTINGS_URL || url === NODEMANAGER_URL) return '#a855f7';
   if (url === 'opensea.eth') return '#f59e0b';
   if (url.endsWith('.eth')) return '#22c55e';
   if (url.includes('.onion')) return '#a855f7';
@@ -184,6 +187,9 @@ function getWeb3Color(url: string): string {
 }
 
 function getWeb3ScoreInfo(url: string) {
+  if (url === SETTINGS_URL || url === NODEMANAGER_URL || url.startsWith('orivon://')) {
+    return { name: 'Internal Page', color: '#a855f7', desc: 'Secure internal browser configuration page.' };
+  }
   if (url === 'opensea.eth') return { name: 'Partial', color: '#f59e0b', desc: 'Mix of decentralized and centralized components.' };
   if (url.endsWith('.eth')) return { name: 'Trustless', color: '#22c55e', desc: 'Decentralized .eth domain resolving directly via IPFS.' };
   if (url.includes('.onion')) return { name: 'Private', color: '#a855f7', desc: 'Fully private and trustless connection via Tor.' };
@@ -808,6 +814,10 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
                   : <Dashboard
                       onOpenBrowser={(url) => navigate(url, tab.id)}
                     />
+              ) : tab.url === SETTINGS_URL ? (
+                <SettingsPage />
+              ) : tab.url === NODEMANAGER_URL ? (
+                <NodeManagerPage />
               ) : tab.url === 'uniswap.eth' ? (
                 <UniswapDemo onRequestApproval={handleRequestApproval} />
               ) : tab.url === 'mastodon.eth' ? (

@@ -11,7 +11,10 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { useWalletStore } from '../store/wallet';
 import { useSessionStore } from '../store/session';
-import { DEMO_WALLET } from '../constants';
+import { useTabsStore } from '../store/tabs';
+import { useSettings } from '../store/settings';
+import AppStore from '../components/AppStore';
+import { DEMO_WALLET, SETTINGS_URL, NODEMANAGER_URL } from '../constants';
 
 // --- Types ---
 type ViewType = 'Dashboard' | 'Wallet' | 'Browse Web3' | 'App Store' | 'Node Manager' | 'History' | 'Settings';
@@ -111,7 +114,7 @@ export default function Dashboard({ onOpenBrowser }: { onOpenBrowser?: (url: str
       case 'Dashboard': return <DashboardPage onOpenBrowser={onOpenBrowser} onToast={addToast} onBackup={() => setShowSeedModal(true)} />;
       case 'Wallet': return <WalletPage onBackup={() => setShowSeedModal(true)} onImport={() => setShowImportModal(true)} />;
       case 'Browse Web3': return <BrowseWeb3Page onOpen={onOpenBrowser} />;
-      case 'App Store': return <AppStorePage onOpen={onOpenBrowser} onToast={addToast} />;
+      case 'App Store': return <AppStore onOpen={onOpenBrowser} onToast={addToast} />;
       case 'Node Manager': return <NodeManagerPage onToast={addToast} />;
       case 'History': return <HistoryPage onOpen={onOpenBrowser} />;
       case 'Settings': return <SettingsPage />;
@@ -319,6 +322,7 @@ function TopBar({ activeView }: { activeView: ViewType }) {
 
 function DashboardPage({ onOpenBrowser, onToast, onBackup }: any) {
   const { accounts, activeAccountId } = useWalletStore();
+  const { accentColor } = useSettings();
   const activeAccount = accounts.find(a => a.id === activeAccountId) || accounts[0];
 
   const chartData = useMemo(() => {
@@ -698,200 +702,6 @@ function BrowseWeb3Page({ onOpen }: any) {
 }
 
 // --- App Store Page ---
-
-function AppStorePage({ onOpen, onToast }: any) {
-  const [activeTab, setActiveTab] = useState('All');
-  const [installing, setInstalling] = useState<string | null>(null);
-  const [installed, setInstalled] = useState<string[]>(['ENS Resolver', 'IPFS Module', 'Uniswap Module', 'Bitcoin Node', 'Orivon Web3 Score', 'Web3 Compass Search']);
-  const [showPermissionModal, setShowPermissionModal] = useState<any>(null);
-
-  const available = [
-    { n: 'Monero Wallet', c: 'Crypto', desc: 'Private digital currency wallet', s: 'Trustless' },
-    { n: 'Tor Network', c: 'Privacy', desc: 'Anonymity online network', s: 'High Privacy' },
-    { n: 'Arweave Module', c: 'Data Gathering', desc: 'Permanent data storage resolver', s: 'Trustless' },
-    { n: 'Filecoin Storage', c: 'Storage', desc: 'Decentralized storage network', s: 'Trustless' },
-    { n: 'OpenSea Module', c: 'NFTs', desc: 'NFT marketplace integration', s: 'Partial' },
-    { n: 'Aave DeFi', c: 'DeFi', desc: 'Lending and borrowing module', s: 'Partial' },
-    { n: 'Handshake DNS', c: 'DNS Resolution', desc: 'Decentralized naming protocol', s: 'Trustless' },
-    { n: 'ZCash Wallet', c: 'Crypto', desc: 'Privacy-preserving crypto wallet', s: 'Trustless' },
-    { n: 'Bisq DEX', c: 'Trading', desc: 'Private decentralized exchange', s: 'Trustless' },
-    { n: 'Brave Search', c: 'Search', desc: 'Private search engine integration', s: 'Partial' },
-  ];
-
-  const handleInstall = (app: any) => {
-    setShowPermissionModal({
-      app,
-      onApprove: () => {
-        setShowPermissionModal(null);
-        setInstalling(app.n);
-        setTimeout(() => {
-          setInstalling(null);
-          setInstalled(prev => [...prev, app.n]);
-          onToast(`${app.n} Installed`, 'Module successfully added to Orivon');
-        }, 1500);
-      }
-    });
-  };
-
-  return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-[20px] font-semibold text-[#f8fafc]">App Store</h2>
-        <p className="text-[13px] text-[#64748b] mt-1">Extend Orivon with Web3 modules and applications</p>
-      </div>
-
-      <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-6 flex justify-between items-center">
-        <div className="flex-1 flex flex-col items-center">
-          <span className="text-[18px] font-bold text-[#f8fafc]">284</span>
-          <span className="text-[12px] text-[#64748b] mt-1">Apps Available</span>
-        </div>
-        <div className="w-px h-10 bg-[#1e2030]" />
-        <div className="flex-1 flex flex-col items-center">
-          <span className="text-[18px] font-bold text-[#f8fafc]">{installed.length}</span>
-          <span className="text-[12px] text-[#64748b] mt-1">Installed</span>
-        </div>
-        <div className="w-px h-10 bg-[#1e2030]" />
-        <div className="flex-1 flex flex-col items-center">
-          <span className="text-[18px] font-bold text-[#f8fafc]">Verified</span>
-          <span className="text-[12px] text-[#64748b] mt-1">All Web3 Score Verified</span>
-        </div>
-      </div>
-
-      <div className="relative">
-        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#475569]" />
-        <input 
-          placeholder="Search Web3 modules and apps"
-          className="w-full h-11 bg-[#111218] border border-[#1e2030] rounded-[10px] pl-12 pr-4 text-[#f8fafc] font-medium outline-none focus:border-[#6366f1] transition-all placeholder:text-[#475569]"
-        />
-      </div>
-
-      <div className="space-y-4">
-        <div className="flex items-center gap-2">
-          <h3 className="text-[14px] font-semibold text-[#f8fafc]">Installed</h3>
-          <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
-          <span className="text-[12px] text-[#475569] font-bold ml-1">{installed.length}</span>
-        </div>
-        <div className="space-y-1">
-          {installed.map(n => (
-            <div key={n} className="h-[72px] bg-[#111218] border border-[#1e2030] rounded-[10px] px-5 flex items-center group">
-              <div className="w-10 h-10 rounded-[10px] bg-[#161720] border border-[#1e2030] flex items-center justify-center font-bold text-white text-[18px] shrink-0">
-                {n.charAt(0)}
-              </div>
-              <div className="flex-1 ml-5">
-                <div className="flex items-center gap-2">
-                  <span className="text-[14px] font-bold text-[#f8fafc]">{n}</span>
-                  <span className="text-[11px] text-[#22c55e] font-bold uppercase tracking-widest">Trustless</span>
-                </div>
-                <span className="text-[12px] text-[#64748b]">v1.0.0 · Web3 Module</span>
-              </div>
-              <div className="flex items-center gap-4">
-                <Badge className="bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/20 flex items-center gap-1.5">
-                  <Check size={12} /> Installed
-                </Badge>
-                <button className="opacity-0 group-hover:opacity-100 text-[#64748b] hover:text-[#f8fafc] transition-colors bg-transparent border-none cursor-pointer">
-                  <MoreHorizontal size={18} />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        <h3 className="text-[14px] font-semibold text-[#f8fafc]">Available</h3>
-        <div className="space-y-1">
-          {available.map(app => (
-            <div key={app.n} className="h-[72px] bg-[#111218] border border-[#1e2030] rounded-[10px] px-5 flex items-center group">
-              <div className="w-10 h-10 rounded-[10px] bg-[#161720] border border-[#1e2030] flex items-center justify-center font-bold text-white text-[18px] shrink-0">
-                {app.n.charAt(0)}
-              </div>
-              <div className="flex-1 ml-5">
-                <div className="flex items-center gap-2">
-                  <span className="text-[14px] font-bold text-[#f8fafc]">{app.n}</span>
-                  <span className="text-[11px] text-[#22c55e] font-bold uppercase tracking-widest">{app.s}</span>
-                </div>
-                <span className="text-[13px] text-[#64748b]">{app.desc}</span>
-              </div>
-              <button
-                onClick={() => handleInstall(app)}
-                disabled={installing === app.n || installed.includes(app.n)}
-                className={`h-8 px-5 rounded-[6px] border text-[12px] font-bold transition-all cursor-pointer bg-transparent ${
-                  installed.includes(app.n) 
-                    ? 'border-[#1e2030] text-[#475569] cursor-default'
-                    : 'border-[#6366f1] text-[#818cf8] hover:bg-[#6366f1] hover:text-white'
-                }`}
-              >
-                {installing === app.n ? <Loader2 size={14} className="animate-spin" /> : installed.includes(app.n) ? 'Installed' : 'Install'}
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {showPermissionModal && (
-          <PermissionModal 
-            app={showPermissionModal.app} 
-            onApprove={showPermissionModal.onApprove} 
-            onReject={() => setShowPermissionModal(null)} 
-          />
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-function PermissionModal({ app, onApprove, onReject }: any) {
-  return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-[8px] flex items-center justify-center p-6"
-    >
-      <motion.div
-        initial={{ scale: 0.96, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.96, opacity: 0 }}
-        className="bg-[#111218] border border-[#1e2030] rounded-[16px] p-8 max-w-[400px] w-full"
-      >
-        <div className="flex items-center gap-4 mb-8">
-           <div className="w-12 h-12 rounded-[12px] flex items-center justify-center text-[22px] font-bold text-white" style={{ backgroundColor: '#6366f1' }}>{app.n.charAt(0)}</div>
-           <div className="flex flex-col">
-              <span className="text-label text-[#6366f1] uppercase tracking-[0.08em] font-bold">App Store</span>
-              <span className="text-[18px] font-bold text-[#f8fafc]">Approve Permissions</span>
-           </div>
-        </div>
-
-        <div className="bg-[#161720] border border-[#1e2030] rounded-[12px] p-5 space-y-4 mb-8">
-           <div className="flex justify-between items-center text-[13px] font-medium">
-              <span className="text-[#64748b] uppercase text-[11px] font-bold tracking-widest">Access</span>
-              <span className="text-[#f8fafc]">Network & Storage</span>
-           </div>
-           <div className="flex justify-between items-center text-[13px] font-medium">
-              <span className="text-[#64748b] uppercase text-[11px] font-bold tracking-widest">Origin</span>
-              <span className="text-[#f8fafc]">orivon://app-store</span>
-           </div>
-           <div className="h-px bg-[#1e2030]" />
-           <div className="flex justify-between items-center">
-              <span className="text-[#64748b] uppercase text-[11px] font-bold tracking-widest">Trust Level</span>
-              <div className="flex items-center gap-2">
-                 <div className="w-1 h-1 rounded-full bg-[#22c55e]" />
-                 <span className="text-[11px] font-bold text-[#22c55e] uppercase tracking-widest">Trustless</span>
-              </div>
-           </div>
-        </div>
-
-        <div className="flex gap-3">
-           <button onClick={onReject} className="flex-1 h-11 rounded-[10px] bg-[#161720] border border-[#1e2030] text-[#64748b] font-bold text-[13px] hover:text-[#f8fafc] transition-all cursor-pointer">Reject</button>
-           <button onClick={onApprove} className="flex-1 h-11 rounded-[10px] bg-[#6366f1] text-white font-bold text-[13px] hover:bg-[#4f46e5] transition-all border-none cursor-pointer">Install</button>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
-
-// --- Node Manager Page ---
 
 function NodeManagerPage({ onToast }: any) {
   const [nodes, setNodes] = useState<Record<string, 'Online' | 'Offline' | 'Starting'>>({

@@ -150,14 +150,12 @@ function createWindow() {
       callback({});
       return;
     }
-    callback({
-      responseHeaders: {
-        ...details.responseHeaders,
-        "Content-Security-Policy": [
-          "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src 'self' https: wss:; font-src 'self' https://fonts.gstatic.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:;"
-        ]
-      }
-    });
+    const responseHeaders = { ...details.responseHeaders };
+    responseHeaders["Content-Security-Policy"] = [
+      "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src 'self' https: wss:; font-src 'self' https://fonts.gstatic.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:;"
+    ];
+    responseHeaders["Access-Control-Allow-Origin"] = ["*"];
+    callback({ responseHeaders });
   });
   return win;
 }
@@ -168,14 +166,6 @@ app.whenReady().then(async () => {
     callback(true);
   });
   session.defaultSession.setPermissionCheckHandler(() => true);
-  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    callback({
-      responseHeaders: {
-        ...details.responseHeaders,
-        "Access-Control-Allow-Origin": ["*"]
-      }
-    });
-  });
   createWindow();
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();

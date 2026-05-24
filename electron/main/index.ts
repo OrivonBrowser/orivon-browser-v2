@@ -132,21 +132,27 @@ function createWindow(): BrowserWindow {
     win.webContents.send('window:maximized-change', false);
   });
 
-  // CSP for the shell window only (webviews have their own session)
+  // Security & CORS headers for the shell window
   win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
     if (details.url.startsWith('devtools://')) { callback({}); return; }
-    callback({
-      responseHeaders: {
-        ...details.responseHeaders,
-        'Content-Security-Policy': [
-          "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; " +
-          "connect-src 'self' https: wss:; " +
-          "font-src 'self' https://fonts.gstatic.com data:; " +
-          "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
-          "img-src 'self' data: https:;",
-        ],
-      },
-    });
+    
+    const responseHeaders = { ...details.responseHeaders };
+    
+    // Set CSP
+    responseHeaders['Content-Security-Policy'] = [
+      "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; " +
+      "connect-src 'self' https: wss:; " +
+      "font-src 'self' https://fonts.gstatic.com data:; " +
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+      "img-src 'self' data: https:;",
+    ];
+
+    // Set CORS (for webviews in the same session)
+    if (!responseHeaders['Access-Control-Allow-Origin'] && !responseHeaders['access-control-allow-origin']) {
+      responseHeaders['Access-Control-Allow-Origin'] = ['*'];
+    }
+
+    callback({ responseHeaders });
   });
 
   return win;
@@ -169,16 +175,6 @@ app.whenReady().then(async () => {
     callback(true); // allow all (media, geolocation, notifications, clipboard, etc.)
   });
   session.defaultSession.setPermissionCheckHandler(() => true);
-
-  // ── CORS headers — allow cross-origin requests from webviews ──────────────
-  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    callback({
-      responseHeaders: {
-        ...details.responseHeaders,
-        'Access-Control-Allow-Origin': ['*'],
-      },
-    });
-  });
 
   createWindow();
 

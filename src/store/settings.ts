@@ -15,6 +15,7 @@ interface SettingsState {
   showWeb3Scores: boolean;
   ipfsGateway: string;
   rpcUrl: string;
+  accentColor: string;
 
   // Actions
   setTheme: (theme: Theme) => void;
@@ -28,6 +29,7 @@ interface SettingsState {
   setShowWeb3Scores: (v: boolean) => void;
   setIpfsGateway: (url: string) => void;
   setRpcUrl: (url: string) => void;
+  setAccentColor: (color: string) => void;
 }
 
 export const useSettings = create<SettingsState>()(
@@ -43,6 +45,7 @@ export const useSettings = create<SettingsState>()(
     showWeb3Scores: true,
     ipfsGateway: 'https://ipfs.io',
     rpcUrl: 'https://cloudflare-eth.com',
+    accentColor: '#6366f1',
 
     setTheme:          (theme)         => set({ theme }),
     setSidebarOpen:    (sidebarOpen)   => set({ sidebarOpen }),
@@ -55,5 +58,6 @@ export const useSettings = create<SettingsState>()(
     setShowWeb3Scores: (v)             => set({ showWeb3Scores: v }),
     setIpfsGateway:    (url)           => set({ ipfsGateway: url }),
     setRpcUrl:         (url)           => set({ rpcUrl: url }),
+    setAccentColor:    (accentColor)   => set({ accentColor }),
   })
 );
