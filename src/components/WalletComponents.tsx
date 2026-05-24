@@ -101,7 +101,7 @@ interface CompactWalletCardProps {
 }
 
 export function CompactWalletCard({ onSend, onReceive, onBuy, onSwap, onImport }: CompactWalletCardProps) {
-  const { accounts, activeAccountId, getBalance, isGenerating, error, createSilentWallet } = useWalletStore();
+  const { accounts, activeAccountId, getBalance, isGenerating, error, initialize: initializeWallet } = useWalletStore();
   const [balance, setBalance] = useState('0');
   const [loading, setLoading] = useState(true);
 
@@ -145,7 +145,7 @@ export function CompactWalletCard({ onSend, onReceive, onBuy, onSwap, onImport }
         </div>
         <div className="flex gap-3 mt-2">
           <button
-            onClick={() => createSilentWallet()}
+            onClick={() => initializeWallet()}
             className="px-5 h-10 rounded-xl bg-white/10 text-white text-sm font-semibold hover:bg-white/15 transition-colors"
           >
             Retry

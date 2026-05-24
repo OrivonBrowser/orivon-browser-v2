@@ -15,6 +15,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
     delete: (key: string)                   => ipcRenderer.invoke('store:delete', key),
   },
 
+  // ── Wallet ─────────────────────────────────────────────────────────────────
+  getWallet:    ()                => ipcRenderer.invoke('get-wallet'),
+  importWallet: (mnemonic: string) => ipcRenderer.invoke('import-wallet', mnemonic),
+
   // ── URL resolution (ENS / IPFS / ipns) ────────────────────────────────────
   resolveURL: (url: string) => ipcRenderer.invoke('resolve:url', url),
 

@@ -9,7 +9,6 @@ interface SettingsState {
   rightPanelOpen: boolean;
   homepage: string;
   searchEngine: 'google' | 'duckduckgo' | 'brave' | 'web3compass';
-  hasSeenIntro: boolean;
   web3ScoreProvider: string;
   blockTrackers: boolean;
   blockAds: boolean;
@@ -23,7 +22,6 @@ interface SettingsState {
   setRightPanelOpen: (open: boolean) => void;
   setHomepage: (url: string) => void;
   setSearchEngine: (engine: SettingsState['searchEngine']) => void;
-  setHasSeenIntro: (v: boolean) => void;
   setWeb3ScoreProvider: (v: string) => void;
   setBlockTrackers: (v: boolean) => void;
   setBlockAds: (v: boolean) => void;
@@ -40,7 +38,6 @@ export const useSettings = create<SettingsState>()(
       rightPanelOpen: false,
       homepage: 'orivon://newtab',
       searchEngine: 'web3compass',
-      hasSeenIntro: false,
       web3ScoreProvider: 'Orivon Native',
       blockTrackers: true,
       blockAds: true,
@@ -53,7 +50,6 @@ export const useSettings = create<SettingsState>()(
       setRightPanelOpen: (rightPanelOpen) => set({ rightPanelOpen }),
       setHomepage:       (homepage)      => set({ homepage }),
       setSearchEngine:   (searchEngine)  => set({ searchEngine }),
-      setHasSeenIntro:   (hasSeenIntro)  => set({ hasSeenIntro }),
       setWeb3ScoreProvider: (web3ScoreProvider) => set({ web3ScoreProvider }),
       setBlockTrackers:  (v)             => set({ blockTrackers: v }),
       setBlockAds:       (v)             => set({ blockAds: v }),

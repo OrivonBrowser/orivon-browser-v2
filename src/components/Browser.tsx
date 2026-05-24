@@ -13,8 +13,6 @@ import WebView, { WebViewHandle } from './WebView';
 import WalletPanel from './WalletPanel';
 import NewTab      from '../pages/NewTab';
 import Dashboard   from '../pages/Dashboard';
-import WalletModal from './modals/WalletModal';
-import IntroOverlay from './IntroOverlay';
 import logo from '@/assets/logo.png';
 import Spinner from './Spinner';
 
@@ -145,18 +143,16 @@ function LockSVG() {
 
 interface BrowserProps {
   onOpenDashboard?:  () => void;
-  onOpenOnboarding?: () => void;
 }
 
-export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserProps = {}) {
+export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
   const { tabs, activeTabId, addTab, closeTab, updateTab, navigateTab, goBack, goForward, setActiveTab } = useTabsStore();
   const {
     theme, setTheme,
     rightPanelOpen, setRightPanelOpen,
     showWeb3Scores,
-    hasSeenIntro, setHasSeenIntro
   } = useSettings();
-  const { status: walletStatus, createSilentWallet } = useWalletStore();
+  const { status: walletStatus, initialize: initializeWallet } = useWalletStore();
   const { addLog } = useRuntimeStore();
 
   const webviewRefs = useRef<Record<string, WebViewHandle | null>>({});
@@ -167,8 +163,6 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
   const [isEditing, setIsEditing]       = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const [walletOpen, setWalletOpen]     = useState(false);
-  const [walletModal, setWalletModal]   = useState<null | 'create' | 'import' | 'unlock'>(null);
-  const [showIntro, setShowIntro]       = useState(!hasSeenIntro);
   const [menuOpen, setMenuOpen]         = useState(false);
   const [zoom, setZoom]                 = useState(100);
   // tracks reload count per new-tab so we can force a remount
@@ -199,12 +193,9 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
     if (!isEditing) setAddrInput(activeTab ? resolveDisplay(activeTab.url) : '');
   }, [activeTabId, activeTab?.url, isEditing]);
 
-  // ── Silent Wallet Generation ──
   useEffect(() => {
-    if (walletStatus === 'none') {
-      createSilentWallet();
-    }
-  }, [walletStatus, createSilentWallet]);
+    initializeWallet();
+  }, [initializeWallet]);
 
   // ── Register auto-updater IPC listeners (Electron only, once on mount) ─────
   useEffect(() => {
@@ -592,7 +583,6 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
               {walletOpen && (
                 <WalletPanel
                   onClose={() => setWalletOpen(false)}
-                  onOpenWalletModal={mode => { setWalletModal(mode); setWalletOpen(false); }}
                   onOpenDashboard={() => { navigate(DASHBOARD_URL); setWalletOpen(false); }}
                 />
               )}
@@ -731,9 +721,7 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
               {tab.url === NEW_TAB ? (
                 <NewTab onNavigate={(url) => navigate(url, tab.id)} />
               ) : tab.url.startsWith(DASHBOARD_URL) ? (
-                walletStatus === 'none'
-                  ? <WalletSetupPage isDark={isDark} onOpenModal={mode => { setWalletModal(mode); }}/>
-                  : walletStatus === 'locked'
+                walletStatus === 'locked'
                   ? <DashboardUnlockInline isDark={isDark} />
                   : <Dashboard
                       onOpenBrowser={(url) => navigate(url, tab.id)}
@@ -774,24 +762,6 @@ export default function Browser({ onOpenDashboard, onOpenOnboarding }: BrowserPr
         </AnimatePresence>
       </div>
 
-      <AnimatePresence>
-        {walletModal && (
-          <WalletModal
-            mode={walletModal}
-            onClose={() => setWalletModal(null)}
-            onSuccess={() => setWalletModal(null)}
-          />
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {showIntro && activeTab?.url === NEW_TAB && (
-          <IntroOverlay
-            onClose={() => setShowIntro(false)}
-            onCustomAccount={() => { setWalletModal('create'); setShowIntro(false); }}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 }
@@ -1024,81 +994,6 @@ function Web3Panel({
           </div>
         ))}
       </div>
-    </div>
-  );
-}
-// ─── Wallet Setup Page ────────────────────────────────────────────────────────
-// Shown inside orivon://dashboard when the user has no wallet yet.
-// Matches the Brave "Browser-native. Self-custody. And multi-chain." page.
-
-function WalletSetupPage({ isDark, onOpenModal }: {
-  isDark: boolean;
-  onOpenModal: (mode: 'create' | 'import') => void;
-}) {
-  const bg    = isDark ? '#0f0f0f' : '#F0F2F9';
-  const cardBg = isDark ? 'rgba(255,255,255,0.04)' : '#ffffff';
-  const cardBd = isDark ? 'rgba(255,255,255,0.09)' : '#E5E7EB';
-  const title = isDark ? '#ffffff' : '#111827';
-  const sub   = isDark ? 'rgba(255,255,255,0.55)' : '#6B7280';
-  const hd    = isDark ? 'rgba(255,255,255,0.85)' : '#111827';
-  const hd2   = isDark ? 'rgba(255,255,255,0.55)' : '#6B7280';
-
-  const card = (accent: string, accBg: string, icon: string, head: string, desc: string, extra: React.ReactNode | null, onClick: () => void) => (
-    <div
-      onClick={onClick}
-      style={{ background: cardBg, borderRadius: 18, padding: '28px 28px 24px', cursor: 'pointer', border: `1.5px solid ${cardBd}`, boxShadow: isDark ? 'none' : '0 1px 6px rgba(0,0,0,0.06)', transition: 'border-color 0.15s, box-shadow 0.15s', flex: 1 }}
-      onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = '#4F46E5'; (e.currentTarget as HTMLDivElement).style.boxShadow = '0 4px 20px rgba(79,70,229,0.12)'; }}
-      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = cardBd; (e.currentTarget as HTMLDivElement).style.boxShadow = isDark ? 'none' : '0 1px 6px rgba(0,0,0,0.06)'; }}
-    >
-      <div style={{ width: 46, height: 46, borderRadius: 13, background: accBg, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16, fontSize: 22, color: accent, fontWeight: 700 }}>
-        {icon}
-      </div>
-      <h3 style={{ fontSize: 17, fontWeight: 700, color: hd, margin: '0 0 8px' }}>{head}</h3>
-      <p style={{ fontSize: 13, color: hd2, margin: extra ? '0 0 14px' : '0', lineHeight: 1.55 }}>{desc}</p>
-      {extra}
-    </div>
-  );
-
-  return (
-    <div style={{ height: '100%', background: bg, display: 'flex', flexDirection: 'column', padding: '28px 48px 40px', fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', overflowY: 'auto' }}>
-      {/* Brand */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 36 }}>
-        <img src={logo} alt="Orivon" style={{ width: 22, height: 22, borderRadius: 6, objectFit: 'contain' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-        <span style={{ fontSize: 15, fontWeight: 700, color: hd }}>Orivon Wallet</span>
-      </div>
-
-      {/* Heading */}
-      <h1 style={{ fontSize: 36, fontWeight: 800, color: title, margin: '0 0 14px', lineHeight: 1.12, letterSpacing: '-0.5px' }}>
-        Browser-native.<br />Self-custody.<br />And multi-chain.
-      </h1>
-      <p style={{ fontSize: 15, color: sub, margin: '0 0 36px', maxWidth: 560, lineHeight: 1.65 }}>
-        Take control of your crypto and NFTs. Orivon Wallet supports Ethereum, EVM chains, Solana, Filecoin, Bitcoin, and more.
-      </p>
-
-      {/* Two cards */}
-      <div style={{ display: 'flex', gap: 20, marginBottom: 48 }}>
-        {card(
-          '#4F46E5', isDark ? 'rgba(79,70,229,0.15)' : '#EEF2FF',
-          '+', 'Need a new wallet?',
-          'Get started with Orivon Wallet in minutes.',
-          null,
-          () => onOpenModal('create')
-        )}
-        {card(
-          '#0090FF', isDark ? 'rgba(0,144,255,0.12)' : '#E0F2FF',
-          '↓', 'Already have a wallet?',
-          'Import using your existing seed phrase.',
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' as const }}>
-            {['🦁','🟣','🦊','🔵','🔒','🔳'].map((ic, i) => <span key={i} style={{ fontSize: 18 }}>{ic}</span>)}
-          </div>,
-          () => onOpenModal('import')
-        )}
-      </div>
-
-      {/* Footer */}
-      <p style={{ fontSize: 11, color: isDark ? 'rgba(255,255,255,0.25)' : '#9CA3AF', marginTop: 'auto' }}>
-        ©2025 Orivon. All rights reserved. Orivon Wallet is not affiliated with Brave Software.
-      </p>
     </div>
   );
 }

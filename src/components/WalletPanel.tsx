@@ -17,7 +17,6 @@ import { useRuntimeStore } from '../store/runtime';
 
 interface WalletPanelProps {
   onClose: () => void;
-  onOpenWalletModal: (mode: 'create' | 'import' | 'unlock') => void;
   onOpenDashboard?: () => void;
 }
 
@@ -59,8 +58,8 @@ const FLOATING_COINS = [
   { top: 108, left: 296, size: 32, bg: '#0090FF', icon: 'F', color: '#fff' },
 ];
 
-export default function WalletPanel({ onClose, onOpenWalletModal, onOpenDashboard }: WalletPanelProps) {
-  const { status, accounts, activeAccountId, lock, unlock, getBalance } = useWalletStore();
+export default function WalletPanel({ onClose, onOpenDashboard }: WalletPanelProps) {
+  const { status, accounts, activeAccountId, lock, unlock, getBalance, initialize: initializeWallet } = useWalletStore();
   const activeAccount = accounts.find(a => a.id === activeAccountId) || accounts[0];
   const addresses = activeAccount?.addresses;
   // Unlock panel state
@@ -207,7 +206,7 @@ export default function WalletPanel({ onClose, onOpenWalletModal, onOpenDashboar
               Use this panel to securely access Web3 and all your crypto assets.
             </p>
             <button
-              onClick={() => { onOpenWalletModal('create'); onClose(); }}
+              onClick={() => { initializeWallet(); onClose(); }}
               style={{
                 width: '78%', height: 48, borderRadius: 9999,
                 background: '#4F46E5', color: '#fff',
