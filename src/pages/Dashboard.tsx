@@ -13,7 +13,7 @@ import { useWalletStore } from '../store/wallet';
 import { useSessionStore } from '../store/session';
 import { useTabsStore } from '../store/tabs';
 import { useSettings } from '../store/settings';
-import AppStore from '../components/AppStore';
+import AppStore, { APPS as APP_STORE_APPS, AppData as AppStoreData } from '../components/AppStore';
 import { DEMO_WALLET, SETTINGS_URL, NODEMANAGER_URL } from '../constants';
 import logo from '@/assets/logo.png';
 
@@ -1644,18 +1644,135 @@ function AssetRow({ symbol, name, amount, val, change, color }: any) {
   );
 }
 
+const EXPLORE_CATS = ['All', 'DeFi', 'Social', 'Wallets', 'Nodes', 'NFTs', 'Search', 'Storage'];
+
 function FeaturedAppsCard({ onOpen }: { onOpen?: (u: string) => void }) {
-  const apps = [{ n: 'Uniswap', d: 'uniswap.eth', c: '#7c3aed', s: 'green' }, { n: 'Mastodon', d: 'mastodon.eth', c: '#2563eb', s: 'green' }, { n: 'Bitcoin', d: 'btcnode.eth', c: '#d97706', s: 'green' }, { n: 'App Store', d: 'apps.orivon.eth', c: '#6366f1', s: 'green' }, { n: 'OpenSea', d: 'opensea.eth', c: '#0891b2', s: 'amber' }, { n: 'Gitcoin', d: 'gitcoin.eth', c: '#059669', s: 'green' }];
+  const [activeCat, setActiveCat] = useState('All');
+  const [query, setQuery] = useState('');
+
+  const filtered = useMemo((): AppStoreData[] => {
+    let list: AppStoreData[] = APP_STORE_APPS;
+    if (activeCat !== 'All') {
+      list = list.filter(a => a.category.toLowerCase().includes(activeCat.toLowerCase()));
+    }
+    if (query) {
+      list = list.filter(a =>
+        a.name.toLowerCase().includes(query.toLowerCase()) ||
+        a.desc.toLowerCase().includes(query.toLowerCase())
+      );
+    }
+    return list;
+  }, [activeCat, query]);
+
   return (
-    <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-6">
-      <div className="flex justify-between items-center mb-6"><h2 className="text-[14px] font-bold text-[#f8fafc]">Explore Web3</h2><button className="text-[12px] text-[#6366f1] font-semibold hover:text-[#818cf8] transition-colors bg-transparent border-none cursor-pointer">Browse All</button></div>
-      <div className="grid grid-cols-2 gap-2">
-        {apps.map(app => (
-          <button key={app.n} onClick={() => onOpen?.(app.d)} className="flex items-center gap-3 p-3 rounded-[10px] bg-transparent border-none text-left cursor-pointer transition-all duration-150 hover:bg-[#161720] hover:-translate-y-0.5 hover:shadow-lg group">
-            <div className="relative shrink-0"><div className="w-9 h-9 rounded-[8px] flex items-center justify-center text-[14px] font-bold text-white" style={{ backgroundColor: app.c }}>{app.n.charAt(0)}</div><div className={`absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full border border-[#111218] ${app.s === 'green' ? 'bg-[#22c55e]' : 'bg-[#f59e0b]'}`} /></div>
-            <div className="flex-1 min-w-0"><span className="text-[13px] font-semibold text-[#f8fafc] truncate block">{app.n}</span><span className="text-[11px] text-[#6366f1] font-medium truncate block">{app.d}</span></div>
+    <div
+      className="rounded-[16px] overflow-hidden flex flex-col"
+      style={{ border: '1px solid #1e2030', background: '#0a0b11' }}
+    >
+      {/* Header */}
+      <div className="px-5 pt-5 pb-4 border-b border-[#1e2030]">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <div className="text-[10px] font-bold tracking-[0.14em] uppercase text-[#6366f1] mb-0.5">Modules</div>
+            <div className="text-[15px] font-black text-[#f8fafc] tracking-[-0.02em]">Explore Web3</div>
+          </div>
+          <button
+            onClick={() => onOpen?.('apps.orivon.eth')}
+            className="text-[11px] font-bold text-[#6366f1] hover:text-[#818cf8] transition-colors bg-transparent border-none cursor-pointer uppercase tracking-wider"
+          >
+            App Store
           </button>
-        ))}
+        </div>
+
+        {/* Search */}
+        <div className="relative mb-3">
+          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#475569]" />
+          <input
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            placeholder="Search modules..."
+            className="w-full h-8 rounded-[8px] pl-8 pr-3 text-[12px] font-medium outline-none placeholder:text-[#475569]"
+            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid #1e2030', color: '#f8fafc' }}
+          />
+        </div>
+
+        {/* Category chips */}
+        <div className="flex gap-1.5 overflow-x-auto scrollbar-none pb-0.5">
+          {EXPLORE_CATS.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setActiveCat(cat)}
+              className="h-6 px-2.5 rounded-full text-[10px] font-bold whitespace-nowrap border-none cursor-pointer shrink-0 transition-all"
+              style={
+                activeCat === cat
+                  ? { background: '#6366f1', color: '#fff' }
+                  : { background: 'rgba(255,255,255,0.04)', color: '#64748b' }
+              }
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* App list — scrollable */}
+      <div className="overflow-y-auto" style={{ maxHeight: 320 }}>
+        {filtered.length === 0 ? (
+          <div className="py-8 flex flex-col items-center text-center">
+            <Search size={18} className="text-[#2d2e45] mb-2" />
+            <span className="text-[12px] text-[#475569]">No modules found</span>
+          </div>
+        ) : (
+          filtered.map((app, i) => (
+            <button
+              key={app.id}
+              onClick={() => app.url ? onOpen?.(app.url) : onOpen?.('apps.orivon.eth')}
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-left border-none cursor-pointer transition-colors group"
+              style={{
+                background: 'transparent',
+                borderTop: i > 0 ? '1px solid rgba(30,32,48,0.6)' : 'none',
+              }}
+              onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) =>
+                (e.currentTarget.style.background = 'rgba(99,102,241,0.05)')
+              }
+              onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) =>
+                (e.currentTarget.style.background = 'transparent')
+              }
+            >
+              <div
+                className="w-8 h-8 rounded-[8px] flex items-center justify-center text-white font-black text-[13px] shrink-0"
+                style={{ backgroundColor: app.iconBg }}
+              >
+                {app.name.charAt(0)}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[12px] font-bold text-[#f8fafc] truncate group-hover:text-[#818cf8] transition-colors">
+                    {app.name}
+                  </span>
+                </div>
+                <span className="text-[10px] text-[#475569] font-medium truncate block">{app.desc}</span>
+              </div>
+              <div
+                className="text-[9px] font-bold uppercase tracking-wider shrink-0"
+                style={{ color: app.score === 'Trustless' ? '#22c55e' : '#f59e0b' }}
+              >
+                {app.score === 'Trustless' ? 'Trustless' : 'Partial'}
+              </div>
+            </button>
+          ))
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="px-5 py-3 border-t border-[#1e2030] flex items-center justify-between">
+        <span className="text-[11px] text-[#475569] font-medium">{filtered.length} module{filtered.length !== 1 ? 's' : ''}</span>
+        <button
+          onClick={() => onOpen?.('apps.orivon.eth')}
+          className="text-[11px] font-bold text-[#6366f1] hover:text-[#818cf8] transition-colors bg-transparent border-none cursor-pointer"
+        >
+          Browse all →
+        </button>
       </div>
     </div>
   );

@@ -20,7 +20,14 @@ const QUICK_LAUNCH = [
   { name: 'Dashboard', icon: <LayoutGrid size={20} />, url: DASHBOARD_URL },
 ];
 
+const BG_COUNT = 7;
+function pickBg() {
+  return Math.floor(Math.random() * BG_COUNT) + 1;
+}
+
 export default function NewTab({ onNavigate }: NewTabProps) {
+  const [bgIndex] = React.useState(pickBg);
+
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -39,7 +46,30 @@ export default function NewTab({ onNavigate }: NewTabProps) {
   };
 
   return (
-    <div className="h-full w-full bg-[#0d0e14] text-[#f8fafc] flex flex-col items-center pt-24 px-4 overflow-hidden font-inter animate-fade">
+    <div
+      className="h-full w-full text-[#f8fafc] flex flex-col items-center pt-24 px-4 overflow-hidden font-inter animate-fade relative"
+      style={{ backgroundColor: '#0d0e14' }}
+    >
+      {/* Shuffled background image */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `url(/image-${bgIndex}.png)`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          opacity: 0.18,
+        }}
+      />
+      {/* Dark gradient overlay so content stays legible */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'linear-gradient(to bottom, rgba(13,14,20,0.55) 0%, rgba(13,14,20,0.82) 60%, #0d0e14 100%)',
+        }}
+      />
+      {/* Content layer — sits above bg image */}
+      <div className="relative z-10 w-full flex flex-col items-center">
+
       {/* Centered Logo */}
       <div className="mb-12 flex flex-col items-center">
         <div className="flex items-center gap-3 mb-1">
@@ -97,6 +127,8 @@ export default function NewTab({ onNavigate }: NewTabProps) {
           isNewTab={true}
         />
       </div>
+
+      </div>{/* end content layer */}
     </div>
   );
 }

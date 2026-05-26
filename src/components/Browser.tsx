@@ -829,7 +829,10 @@ export default function Browser({ onOpenDashboard }: BrowserProps = {}) {
                 walletStatus === 'locked'
                   ? <DashboardUnlockInline isDark={isDark} />
                   : <Dashboard
-                      onOpenBrowser={(url) => navigate(url, tab.id)}
+                      onOpenBrowser={(url) => {
+                        const newId = addTab(url);
+                        setTimeout(() => navigate(url, newId), 10);
+                      }}
                     />
               ) : tab.url === SETTINGS_URL ? (
                 <SettingsPage />

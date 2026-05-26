@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useSessionStore } from '../store/session';
 import Spinner from './Spinner';
 
-interface AppData {
+export interface AppData {
   id: string;
   name: string;
   category: string;
@@ -23,7 +23,7 @@ interface AppData {
   url?: string;
 }
 
-const APPS: AppData[] = [
+export const APPS: AppData[] = [
   { id: 'monero', name: 'Monero Wallet', category: 'WALLETS', desc: 'XMR privacy wallet with ring signatures', score: 'Trustless', rating: 4.7, downloads: '127k', iconBg: '#ff6600', version: 'v1.4.2', lastUpdated: '2 days ago', developer: 'Monero Project', website: 'getmonero.org', size: '24 MB' },
   { id: 'arweave', name: 'Arweave Module', category: 'DATA GATHERING', desc: 'Permanent decentralized storage integration', score: 'Trustless', rating: 4.8, downloads: '89k', iconBg: '#000000', version: 'v1.0.5', lastUpdated: '1 week ago', developer: 'Arweave Team', website: 'arweave.org', size: '12 MB' },
   { id: 'filecoin', name: 'Filecoin Storage', category: 'STORAGE', desc: 'Store and retrieve files on Filecoin network', score: 'Trustless', rating: 4.6, downloads: '76k', iconBg: '#0090ff', version: 'v2.1.0', lastUpdated: '3 days ago', developer: 'Protocol Labs', website: 'filecoin.io', size: '32 MB' },
