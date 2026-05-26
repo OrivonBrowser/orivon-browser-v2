@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { DASHBOARD_URL, SETTINGS_URL, NEW_TAB_URL } from '../constants';
 
+
 export interface TabEntry {
   id: string;
   url: string;            // Currently loaded URL (resolved)
@@ -33,12 +34,12 @@ interface TabsState {
   closeAllTabs: () => void;
 }
 
-function makeTab(url = NEW_TAB_URL): TabEntry {
+function makeTab(url = DASHBOARD_URL): TabEntry {
   return {
     id: `tab-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
     url,
-    displayUrl: url === NEW_TAB_URL ? '' : url,
-    title: url === NEW_TAB_URL ? 'New Tab' : url,
+    displayUrl: url === NEW_TAB_URL ? '' : url === DASHBOARD_URL ? '' : url,
+    title: url === NEW_TAB_URL ? 'New Tab' : url === DASHBOARD_URL ? 'Dashboard' : url,
     isLoading: false,
     history: [url],
     historyIndex: 0,
@@ -66,7 +67,7 @@ export const useTabsStore = create<TabsState>()(
         if (window.electronAPI?.window?.close) {
           window.electronAPI.window.close();
         } else {
-          const fresh = makeTab();
+          const fresh = makeTab(DASHBOARD_URL);
           set({ tabs: [fresh], activeTabId: fresh.id });
         }
         return;
@@ -152,7 +153,7 @@ export const useTabsStore = create<TabsState>()(
       }),
 
     closeAllTabs: () => {
-      const fresh = makeTab();
+      const fresh = makeTab(DASHBOARD_URL);
       set({ tabs: [fresh], activeTabId: fresh.id });
     },
   })
