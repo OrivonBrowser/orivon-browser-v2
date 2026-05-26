@@ -1,11 +1,14 @@
-"use strict";
-const electron = require("electron");
-const updaterPkg = require("electron-updater");
-const log = require("electron-log");
-const path = require("path");
-const Store = require("electron-store");
-const ethers = require("ethers");
-const bcrypt = require("bcryptjs");
+import electronModule from "electron";
+import updaterPkg from "electron-updater";
+import log from "electron-log/main";
+import path from "path";
+import Store from "electron-store";
+import { ethers } from "ethers";
+import bcrypt from "bcryptjs";
+import __cjs_mod__ from "node:module";
+const __filename = import.meta.filename;
+const __dirname = import.meta.dirname;
+const require2 = __cjs_mod__.createRequire(import.meta.url);
 const IPFS_GATEWAYS = [
   "https://ipfs.io",
   "https://cloudflare-ipfs.com",
@@ -61,29 +64,35 @@ async function resolveENS(name) {
     return { ok: false, url: "", originalUrl: name, type: "error", error: `ENS resolution failed: ${err}` };
   }
 }
-const { autoUpdater } = updaterPkg;
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  shell,
+  session,
+  Menu,
+  clipboard
+} = electronModule;
 log.transports.file.level = "info";
 log.transports.console.level = "debug";
-log.initialize();
-autoUpdater.logger = log;
 const isDev = !!process.env["ELECTRON_RENDERER_URL"];
 const CHROME_UA = process.platform === "darwin" ? "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" : process.platform === "win32" ? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" : "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
-electron.app.commandLine.appendSwitch("disable-background-timer-throttling");
-electron.app.commandLine.appendSwitch("disable-renderer-backgrounding");
-electron.app.commandLine.appendSwitch("disable-backgrounding-occluded-windows");
-electron.app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
-electron.app.commandLine.appendSwitch("enable-accelerated-video-decode");
-electron.app.commandLine.appendSwitch("enable-accelerated-video-encode");
-electron.app.commandLine.appendSwitch("disable-features", "HardwareMediaKeyHandling,MediaSessionService");
+app.commandLine.appendSwitch("disable-background-timer-throttling");
+app.commandLine.appendSwitch("disable-renderer-backgrounding");
+app.commandLine.appendSwitch("disable-backgrounding-occluded-windows");
+app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+app.commandLine.appendSwitch("enable-accelerated-video-decode");
+app.commandLine.appendSwitch("enable-accelerated-video-encode");
+app.commandLine.appendSwitch("disable-features", "HardwareMediaKeyHandling,MediaSessionService");
 const store = new Store();
 let sessionUnlocked = false;
-electron.ipcMain.handle("is-wallet-secured", () => {
+ipcMain.handle("is-wallet-secured", () => {
   return !!store.get("wallet_secured");
 });
-electron.ipcMain.handle("is-wallet-unlocked", () => {
+ipcMain.handle("is-wallet-unlocked", () => {
   return sessionUnlocked;
 });
-electron.ipcMain.handle("unlock-wallet", (_event, password) => {
+ipcMain.handle("unlock-wallet", (_event, password) => {
   const stored = store.get("wallet_password_hash");
   if (!stored) return { success: false, error: "No password set" };
   const match = bcrypt.compareSync(password, stored);
@@ -93,25 +102,25 @@ electron.ipcMain.handle("unlock-wallet", (_event, password) => {
   }
   return { success: false, error: "Incorrect password" };
 });
-electron.ipcMain.handle("set-password", (_event, password) => {
+ipcMain.handle("set-password", (_event, password) => {
   const hash = bcrypt.hashSync(password, 12);
   store.set("wallet_password_hash", hash);
   store.set("wallet_secured", true);
   sessionUnlocked = true;
   return { success: true };
 });
-electron.ipcMain.handle("onboarding:complete", () => {
+ipcMain.handle("onboarding:complete", () => {
   store.set("onboarding_complete", true);
   return true;
 });
-electron.ipcMain.handle("onboarding:status", () => {
+ipcMain.handle("onboarding:status", () => {
   return !!store.get("onboarding_complete");
 });
 async function initializeWallet() {
   try {
     const existing = store.get("orivon_wallet_address");
     if (!existing) {
-      const wallet = ethers.ethers.Wallet.createRandom();
+      const wallet = ethers.Wallet.createRandom();
       store.set("orivon_wallet_address", wallet.address);
       store.set("orivon_wallet_mnemonic", wallet.mnemonic?.phrase);
       store.set("orivon_wallet_name", "Orivon Wallet 1");
@@ -126,7 +135,7 @@ async function initializeWallet() {
   }
 }
 function createWindow() {
-  const win = new electron.BrowserWindow({
+  const win = new BrowserWindow({
     width: 1440,
     height: 900,
     minWidth: 900,
@@ -207,17 +216,17 @@ function buildAppMenu() {
     ]
   };
   const template = [
-    ...isMac ? [{ label: electron.app.name, submenu: [{ role: "hide" }, { role: "quit" }] }] : [],
+    ...isMac ? [{ label: app.name, submenu: [{ role: "hide" }, { role: "quit" }] }] : [],
     editMenu
   ];
-  electron.Menu.setApplicationMenu(electron.Menu.buildFromTemplate(template));
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 function setupContextMenu(win) {
   win.webContents.on("context-menu", (_e, params) => {
     const items = [];
     if (params.selectionText) {
       items.push(
-        { label: "Copy", accelerator: "CmdOrCtrl+C", click: () => electron.clipboard.writeText(params.selectionText) },
+        { label: "Copy", accelerator: "CmdOrCtrl+C", click: () => clipboard.writeText(params.selectionText) },
         { type: "separator" }
       );
     }
@@ -231,23 +240,23 @@ function setupContextMenu(win) {
       );
     }
     if (items.length > 0) {
-      electron.Menu.buildFromTemplate(items).popup({ window: win });
+      Menu.buildFromTemplate(items).popup({ window: win });
     }
   });
 }
-electron.app.whenReady().then(async () => {
+app.whenReady().then(async () => {
   buildAppMenu();
   store.clear();
   await initializeWallet();
-  electron.session.defaultSession.setUserAgent(CHROME_UA);
-  electron.session.defaultSession.setPermissionRequestHandler((_wc, _permission, callback) => {
+  session.defaultSession.setUserAgent(CHROME_UA);
+  session.defaultSession.setPermissionRequestHandler((_wc, _permission, callback) => {
     callback(true);
   });
-  electron.session.defaultSession.setPermissionCheckHandler(() => true);
+  session.defaultSession.setPermissionCheckHandler(() => true);
   const win = createWindow();
   setupContextMenu(win);
-  electron.app.on("activate", () => {
-    if (electron.BrowserWindow.getAllWindows().length === 0) {
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
       const w = createWindow();
       setupContextMenu(w);
     }
@@ -256,39 +265,39 @@ electron.app.whenReady().then(async () => {
     setupAutoUpdater();
   }
 });
-electron.app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") electron.app.quit();
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") app.quit();
 });
-electron.ipcMain.handle("store:get", (_e, key) => {
+ipcMain.handle("store:get", (_e, key) => {
   return key ? store.get(key) : null;
 });
-electron.ipcMain.handle("store:set", (_e, key, value) => {
+ipcMain.handle("store:set", (_e, key, value) => {
   store.set(key, value);
   return true;
 });
-electron.ipcMain.handle("store:delete", (_e, key) => {
+ipcMain.handle("store:delete", (_e, key) => {
   store.delete(key);
   return true;
 });
-electron.ipcMain.handle("get-wallet", () => {
+ipcMain.handle("get-wallet", () => {
   return {
     address: store.get("orivon_wallet_address") || null,
     name: store.get("orivon_wallet_name") || null,
     hasWallet: !!store.get("orivon_wallet_address")
   };
 });
-electron.ipcMain.handle("get-mnemonic", () => {
+ipcMain.handle("get-mnemonic", () => {
   return {
     mnemonic: store.get("orivon_wallet_mnemonic") || null
   };
 });
-electron.ipcMain.handle("import-wallet", async (_e, mnemonic) => {
+ipcMain.handle("import-wallet", async (_e, mnemonic) => {
   try {
-    const isValid = ethers.ethers.Mnemonic.isValidMnemonic(mnemonic);
+    const isValid = ethers.Mnemonic.isValidMnemonic(mnemonic);
     if (!isValid) {
       return { success: false, error: "Invalid seed phrase" };
     }
-    const wallet = ethers.ethers.Wallet.fromPhrase(mnemonic);
+    const wallet = ethers.Wallet.fromPhrase(mnemonic);
     const wallets = store.get("orivon_wallets") || [];
     if (wallets.some((w) => w.address.toLowerCase() === wallet.address.toLowerCase())) {
       return { success: true, address: wallet.address, alreadyExists: true };
@@ -309,36 +318,38 @@ electron.ipcMain.handle("import-wallet", async (_e, mnemonic) => {
     return { success: false, error: error.message };
   }
 });
-electron.ipcMain.handle("resolve:url", async (_e, url) => {
+ipcMain.handle("resolve:url", async (_e, url) => {
   try {
     return await resolveURL(url);
   } catch (err) {
     return { ok: false, url, type: "error", error: String(err) };
   }
 });
-electron.ipcMain.on("window:minimize", (e) => electron.BrowserWindow.fromWebContents(e.sender)?.minimize());
-electron.ipcMain.on("window:maximize", (e) => {
-  const w = electron.BrowserWindow.fromWebContents(e.sender);
+ipcMain.on("window:minimize", (e) => BrowserWindow.fromWebContents(e.sender)?.minimize());
+ipcMain.on("window:maximize", (e) => {
+  const w = BrowserWindow.fromWebContents(e.sender);
   w?.isMaximized() ? w.unmaximize() : w?.maximize();
 });
-electron.ipcMain.on("window:close", (e) => electron.BrowserWindow.fromWebContents(e.sender)?.close());
-electron.ipcMain.handle("window:is-maximized", (e) => electron.BrowserWindow.fromWebContents(e.sender)?.isMaximized());
-electron.ipcMain.on("shell:open", (_e, url) => electron.shell.openExternal(url));
-electron.app.on("web-contents-created", (_e, contents) => {
+ipcMain.on("window:close", (e) => BrowserWindow.fromWebContents(e.sender)?.close());
+ipcMain.handle("window:is-maximized", (e) => BrowserWindow.fromWebContents(e.sender)?.isMaximized());
+ipcMain.on("shell:open", (_e, url) => shell.openExternal(url));
+app.on("web-contents-created", (_e, contents) => {
   contents.on("will-navigate", (ev, url) => {
     if (url.startsWith("devtools://") && !isDev) ev.preventDefault();
   });
   contents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith("https://") || url.startsWith("http://")) electron.shell.openExternal(url);
+    if (url.startsWith("https://") || url.startsWith("http://")) shell.openExternal(url);
     return { action: "deny" };
   });
 });
 function broadcast(channel, ...args) {
-  electron.BrowserWindow.getAllWindows().forEach((w) => {
+  BrowserWindow.getAllWindows().forEach((w) => {
     if (!w.isDestroyed()) w.webContents.send(channel, ...args);
   });
 }
 function setupAutoUpdater() {
+  const { autoUpdater } = updaterPkg;
+  autoUpdater.logger = log;
   autoUpdater.autoDownload = true;
   autoUpdater.autoInstallOnAppQuit = true;
   autoUpdater.on("checking-for-update", () => {
@@ -375,7 +386,7 @@ function setupAutoUpdater() {
     });
   }, 4 * 60 * 60 * 1e3);
 }
-electron.ipcMain.on("app:install-update", () => {
+ipcMain.on("app:install-update", () => {
   log.info("[updater] User requested immediate install — quitting and installing.");
-  autoUpdater.quitAndInstall(false, true);
+  updaterPkg.autoUpdater.quitAndInstall(false, true);
 });

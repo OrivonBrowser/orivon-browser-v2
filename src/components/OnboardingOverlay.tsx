@@ -37,99 +37,70 @@ export default function OnboardingOverlay({ onComplete }: { onComplete: () => vo
 function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="relative z-10 flex flex-col items-center text-center px-6 w-full max-w-[780px]"
+      transition={{ duration: 0.4 }}
+      className="relative z-10 flex flex-col items-center text-center px-6 max-w-[680px] w-full"
     >
-      {/* Glass card */}
-      <div
-        className="w-full flex flex-col items-center px-16 py-14 rounded-[40px]"
-        style={{
-          background: 'rgba(255, 255, 255, 0.06)',
-          backdropFilter: 'blur(28px)',
-          WebkitBackdropFilter: 'blur(28px)',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          boxShadow: '0 32px 80px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255,255,255,0.1)',
-        }}
+      {/* Logo */}
+      <motion.img
+        src={logo}
+        alt="Orivon"
+        initial={{ opacity: 0, scale: 0.85 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.1, duration: 0.5 }}
+        className="w-20 h-20 rounded-[22px] mb-10 shadow-2xl shadow-black/40"
+      />
+
+      {/* Headline */}
+      <motion.h1
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className="text-[38px] font-bold text-white tracking-[-0.02em] leading-[1.2] mb-8"
       >
-        {/* Logo */}
-        <motion.img
-          src={logo}
-          alt="Orivon"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="w-24 h-24 rounded-[26px] mb-10 shadow-2xl"
-          style={{ boxShadow: '0 16px 40px rgba(99,102,241,0.35)' }}
-        />
+        The browser Web3 has been waiting for.
+      </motion.h1>
 
-        {/* Headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25, duration: 0.5 }}
-          className="text-[42px] font-bold text-white tracking-[-0.03em] leading-[1.15] mb-8"
-        >
-          The browser Web3<br />has been waiting for.
-        </motion.h1>
+      {/* Sub-lines */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.35, duration: 0.5 }}
+        className="flex flex-col gap-1 mb-10"
+      >
+        {[
+          'Open any .eth domain.',
+          'Run a Bitcoin node in one click.',
+          'Know how trustless every site is.',
+        ].map((line) => (
+          <p key={line} className="text-[17px] text-[#94a3b8] font-normal leading-[1.8]">
+            {line}
+          </p>
+        ))}
+      </motion.div>
 
-        {/* Divider */}
-        <motion.div
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: 1, opacity: 1 }}
-          transition={{ delay: 0.38, duration: 0.5 }}
-          className="w-16 h-px mb-8"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(99,102,241,0.7), transparent)' }}
-        />
+      {/* CTA */}
+      <motion.button
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.4 }}
+        onClick={onEnter}
+        className="h-[52px] px-[44px] bg-[#6366f1] text-white rounded-[12px] text-[15px] font-semibold tracking-[-0.01em] hover:bg-[#4f46e5] active:scale-[0.98] transition-all duration-150 cursor-pointer border-none mb-6 shadow-xl shadow-indigo-500/30"
+      >
+        Enter Orivon
+      </motion.button>
 
-        {/* Sub-lines */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.42, duration: 0.5 }}
-          className="flex flex-col gap-2 mb-12"
-        >
-          {[
-            'Open any .eth domain.',
-            'Run a Bitcoin node in one click.',
-            'Know how trustless every site is.',
-          ].map((line) => (
-            <p key={line} className="text-[18px] text-[#cbd5e1] font-normal leading-[1.7] tracking-[-0.01em]">
-              {line}
-            </p>
-          ))}
-        </motion.div>
-
-        {/* CTA button */}
-        <motion.button
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55, duration: 0.4 }}
-          onClick={onEnter}
-          className="h-[56px] px-[52px] rounded-[16px] text-[16px] font-semibold tracking-[-0.01em] text-white border-none cursor-pointer mb-6 transition-all duration-150 active:scale-[0.97]"
-          style={{
-            background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
-            boxShadow: '0 8px 32px rgba(99,102,241,0.45), 0 2px 8px rgba(0,0,0,0.3)',
-          }}
-          onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 12px 40px rgba(99,102,241,0.6), 0 2px 8px rgba(0,0,0,0.3)')}
-          onMouseLeave={e => (e.currentTarget.style.boxShadow = '0 8px 32px rgba(99,102,241,0.45), 0 2px 8px rgba(0,0,0,0.3)')}
-        >
-          Enter Orivon
-        </motion.button>
-
-        {/* Fine print */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.68, duration: 0.4 }}
-          className="text-[13px] font-medium"
-          style={{ color: 'rgba(148,163,184,0.6)' }}
-        >
-          No extensions. No setup. Just Orivon.
-        </motion.p>
-      </div>
+      {/* Fine print */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.65, duration: 0.4 }}
+        className="text-[12px] text-[#475569]"
+      >
+        No extensions. No setup. Just Orivon.
+      </motion.p>
     </motion.div>
   );
 }

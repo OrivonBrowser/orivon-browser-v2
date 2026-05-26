@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell, session, Menu, clipboard } from 'electron';
+import { app, BrowserWindow, ipcMain, shell, session } from 'electron';
 import updaterPkg from 'electron-updater';
 const { autoUpdater } = updaterPkg;
 import log from 'electron-log';
@@ -149,7 +149,6 @@ function createWindow(): BrowserWindow {
 
   win.setFullScreenable(true);
 
-
   win.once('ready-to-show', () => win.show());
 
   if (isDev) {
@@ -201,63 +200,7 @@ function createWindow(): BrowserWindow {
 
 // ─── App lifecycle ────────────────────────────────────────────────────────────
 
-// ─── Application menu (enables Cmd+C/V/X/Z shortcuts system-wide) ────────────
-function buildAppMenu() {
-  const isMac = process.platform === 'darwin';
-
-  const editMenu: Electron.MenuItemConstructorOptions = {
-    label: 'Edit',
-    submenu: [
-      { role: 'undo' },
-      { role: 'redo' },
-      { type: 'separator' },
-      { role: 'cut' },
-      { role: 'copy' },
-      { role: 'paste' },
-      { role: 'pasteAndMatchStyle' },
-      { role: 'delete' },
-      { role: 'selectAll' },
-    ],
-  };
-
-  const template: Electron.MenuItemConstructorOptions[] = [
-    ...(isMac ? [{ label: app.name, submenu: [{ role: 'hide' as const }, { role: 'quit' as const }] }] : []),
-    editMenu,
-  ];
-
-  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
-}
-
-// ─── Right-click context menu for the renderer shell ─────────────────────────
-function setupContextMenu(win: BrowserWindow) {
-  win.webContents.on('context-menu', (_e, params) => {
-    const items: Electron.MenuItemConstructorOptions[] = [];
-
-    if (params.selectionText) {
-      items.push(
-        { label: 'Copy', accelerator: 'CmdOrCtrl+C', click: () => clipboard.writeText(params.selectionText) },
-        { type: 'separator' },
-      );
-    }
-
-    if (params.isEditable) {
-      items.push(
-        { label: 'Cut',       role: 'cut' },
-        { label: 'Copy',      role: 'copy' },
-        { label: 'Paste',     role: 'paste' },
-        { type: 'separator' },
-        { label: 'Select All', role: 'selectAll' },
-      );
-    }
-
-    if (items.length > 0) {
-      Menu.buildFromTemplate(items).popup({ window: win });
-    }
-  });
-}
-
 app.whenReady().then(async () => {
-  buildAppMenu();
   store.clear();
   await initializeWallet();
   // ── User agent — override for ALL requests from this session ──────────────
@@ -274,14 +217,10 @@ app.whenReady().then(async () => {
   });
   session.defaultSession.setPermissionCheckHandler(() => true);
 
-  const win = createWindow();
-  setupContextMenu(win);
+  createWindow();
 
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      const w = createWindow();
-      setupContextMenu(w);
-    }
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 
   if (!isDev) {
