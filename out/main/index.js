@@ -1,6 +1,6 @@
-import electronModule from "electron";
+import { app, ipcMain, session, BrowserWindow, shell } from "electron";
 import updaterPkg from "electron-updater";
-import log from "electron-log/main";
+import log from "electron-log";
 import path from "path";
 import Store from "electron-store";
 import { ethers } from "ethers";
@@ -64,17 +64,11 @@ async function resolveENS(name) {
     return { ok: false, url: "", originalUrl: name, type: "error", error: `ENS resolution failed: ${err}` };
   }
 }
-const {
-  app,
-  BrowserWindow,
-  ipcMain,
-  shell,
-  session,
-  Menu,
-  clipboard
-} = electronModule;
+const { autoUpdater } = updaterPkg;
 log.transports.file.level = "info";
 log.transports.console.level = "debug";
+log.initialize();
+autoUpdater.logger = log;
 const isDev = !!process.env["ELECTRON_RENDERER_URL"];
 const CHROME_UA = process.platform === "darwin" ? "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" : process.platform === "win32" ? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" : "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
 app.commandLine.appendSwitch("disable-background-timer-throttling");
@@ -199,53 +193,7 @@ function createWindow() {
   });
   return win;
 }
-function buildAppMenu() {
-  const isMac = process.platform === "darwin";
-  const editMenu = {
-    label: "Edit",
-    submenu: [
-      { role: "undo" },
-      { role: "redo" },
-      { type: "separator" },
-      { role: "cut" },
-      { role: "copy" },
-      { role: "paste" },
-      { role: "pasteAndMatchStyle" },
-      { role: "delete" },
-      { role: "selectAll" }
-    ]
-  };
-  const template = [
-    ...isMac ? [{ label: app.name, submenu: [{ role: "hide" }, { role: "quit" }] }] : [],
-    editMenu
-  ];
-  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
-}
-function setupContextMenu(win) {
-  win.webContents.on("context-menu", (_e, params) => {
-    const items = [];
-    if (params.selectionText) {
-      items.push(
-        { label: "Copy", accelerator: "CmdOrCtrl+C", click: () => clipboard.writeText(params.selectionText) },
-        { type: "separator" }
-      );
-    }
-    if (params.isEditable) {
-      items.push(
-        { label: "Cut", role: "cut" },
-        { label: "Copy", role: "copy" },
-        { label: "Paste", role: "paste" },
-        { type: "separator" },
-        { label: "Select All", role: "selectAll" }
-      );
-    }
-    if (items.length > 0) {
-      Menu.buildFromTemplate(items).popup({ window: win });
-    }
-  });
-}
 app.whenReady().then(async () => {
-  buildAppMenu();
   store.clear();
   await initializeWallet();
   session.defaultSession.setUserAgent(CHROME_UA);
@@ -253,13 +201,9 @@ app.whenReady().then(async () => {
     callback(true);
   });
   session.defaultSession.setPermissionCheckHandler(() => true);
-  const win = createWindow();
-  setupContextMenu(win);
+  createWindow();
   app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      const w = createWindow();
-      setupContextMenu(w);
-    }
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
   if (!isDev) {
     setupAutoUpdater();
@@ -348,8 +292,6 @@ function broadcast(channel, ...args) {
   });
 }
 function setupAutoUpdater() {
-  const { autoUpdater } = updaterPkg;
-  autoUpdater.logger = log;
   autoUpdater.autoDownload = true;
   autoUpdater.autoInstallOnAppQuit = true;
   autoUpdater.on("checking-for-update", () => {
@@ -388,5 +330,5 @@ function setupAutoUpdater() {
 }
 ipcMain.on("app:install-update", () => {
   log.info("[updater] User requested immediate install — quitting and installing.");
-  updaterPkg.autoUpdater.quitAndInstall(false, true);
+  autoUpdater.quitAndInstall(false, true);
 });

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import logo from '@/assets/logo.png';
 
@@ -34,73 +34,87 @@ export default function OnboardingOverlay({ onComplete }: { onComplete: () => vo
   );
 }
 
+const glassCard: React.CSSProperties = {
+  background: 'rgba(255, 255, 255, 0.07)',
+  backdropFilter: 'blur(32px)',
+  WebkitBackdropFilter: 'blur(32px)',
+  border: '1px solid rgba(255, 255, 255, 0.13)',
+  boxShadow: '0 40px 100px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)',
+  borderRadius: 48,
+};
+
 function WelcomeScreen({ onEnter }: { onEnter: () => void }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.4 }}
-      className="relative z-10 flex flex-col items-center text-center px-6 max-w-[680px] w-full"
+      exit={{ opacity: 0, y: -16 }}
+      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      className="relative z-10 w-full max-w-[820px] px-6"
     >
-      {/* Logo */}
-      <motion.img
-        src={logo}
-        alt="Orivon"
-        initial={{ opacity: 0, scale: 0.85 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.1, duration: 0.5 }}
-        className="w-20 h-20 rounded-[22px] mb-10 shadow-2xl shadow-black/40"
-      />
+      <div style={glassCard} className="flex flex-col items-center text-center px-20 py-16">
 
-      {/* Headline */}
-      <motion.h1
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-        className="text-[38px] font-bold text-white tracking-[-0.02em] leading-[1.2] mb-8"
-      >
-        The browser Web3 has been waiting for.
-      </motion.h1>
+        {/* Logo */}
+        <motion.img
+          src={logo}
+          alt="Orivon"
+          initial={{ opacity: 0, scale: 0.85 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.1, duration: 0.5 }}
+          className="w-24 h-24 rounded-[26px] mb-10 shadow-2xl shadow-black/40"
+        />
 
-      {/* Sub-lines */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.35, duration: 0.5 }}
-        className="flex flex-col gap-1 mb-10"
-      >
-        {[
-          'Open any .eth domain.',
-          'Run a Bitcoin node in one click.',
-          'Know how trustless every site is.',
-        ].map((line) => (
-          <p key={line} className="text-[17px] text-[#94a3b8] font-normal leading-[1.8]">
-            {line}
-          </p>
-        ))}
-      </motion.div>
+        {/* Headline */}
+        <motion.h1
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className="text-[40px] font-bold text-white tracking-[-0.02em] leading-[1.2] mb-8"
+        >
+          The browser Web3 has been waiting for.
+        </motion.h1>
 
-      {/* CTA */}
-      <motion.button
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.4 }}
-        onClick={onEnter}
-        className="h-[52px] px-[44px] bg-[#6366f1] text-white rounded-[12px] text-[15px] font-semibold tracking-[-0.01em] hover:bg-[#4f46e5] active:scale-[0.98] transition-all duration-150 cursor-pointer border-none mb-6 shadow-xl shadow-indigo-500/30"
-      >
-        Enter Orivon
-      </motion.button>
+        {/* Sub-lines */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35, duration: 0.5 }}
+          className="flex flex-col gap-1 mb-12"
+        >
+          {[
+            'Open any .eth domain.',
+            'Run a Bitcoin node in one click.',
+            'Know how trustless every site is.',
+          ].map((line) => (
+            <p key={line} className="text-[18px] text-[#94a3b8] font-normal leading-[1.8]">
+              {line}
+            </p>
+          ))}
+        </motion.div>
 
-      {/* Fine print */}
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.65, duration: 0.4 }}
-        className="text-[12px] text-[#475569]"
-      >
-        No extensions. No setup. Just Orivon.
-      </motion.p>
+        {/* CTA */}
+        <motion.button
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.4 }}
+          onClick={onEnter}
+          className="h-[56px] px-[52px] bg-[#6366f1] text-white rounded-[14px] text-[16px] font-semibold tracking-[-0.01em] hover:bg-[#4f46e5] active:scale-[0.97] transition-all duration-150 cursor-pointer border-none mb-7"
+          style={{ boxShadow: '0 8px 32px rgba(99,102,241,0.5)' }}
+        >
+          Enter Orivon
+        </motion.button>
+
+        {/* Fine print */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.65, duration: 0.4 }}
+          className="text-[13px] text-[#475569]"
+        >
+          No extensions. No setup. Just Orivon.
+        </motion.p>
+
+      </div>
     </motion.div>
   );
 }
@@ -159,10 +173,12 @@ function CreatingScreen({ onComplete }: { onComplete: () => void }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="relative z-10 flex flex-col items-center w-full"
+      className="relative z-10 w-full max-w-[820px] px-6"
     >
+      <div style={glassCard} className="flex flex-col items-center text-center px-20 py-16">
+
       {/* Logo small */}
-      <img src={logo} alt="Orivon" className="w-10 h-10 rounded-[10px] mb-10 shadow-lg" />
+      <img src={logo} alt="Orivon" className="w-14 h-14 rounded-[14px] mb-10 shadow-lg" />
 
       {/* Spinner circle */}
       <div className="relative w-[200px] h-[200px] flex items-center justify-center mb-8">
@@ -232,17 +248,20 @@ function CreatingScreen({ onComplete }: { onComplete: () => void }) {
         )}
       </div>
 
-      <div className="h-[52px]">
+      <div className="h-[56px]">
         {showButton && (
           <motion.button
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             onClick={handleDashboard}
-            className="h-[52px] px-[40px] bg-[#6366f1] text-white rounded-[12px] text-[15px] font-semibold hover:bg-[#4f46e5] active:scale-[0.98] transition-all duration-150 cursor-pointer border-none shadow-xl shadow-indigo-500/30"
+            className="h-[56px] px-[52px] bg-[#6366f1] text-white rounded-[14px] text-[16px] font-semibold hover:bg-[#4f46e5] active:scale-[0.97] transition-all duration-150 cursor-pointer border-none"
+            style={{ boxShadow: '0 8px 32px rgba(99,102,241,0.5)' }}
           >
             Open Dashboard
           </motion.button>
         )}
+      </div>
+
       </div>
     </motion.div>
   );
