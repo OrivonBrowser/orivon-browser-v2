@@ -4,7 +4,7 @@ import {
   ChevronDown, ChevronRight, Copy, Check, TrendingUp, ArrowUpRight,
   ArrowDownLeft, Plus, ArrowLeftRight, Database, Share2, CircleDot,
   Loader2, Bell, X, Shield, Search, ArrowLeft, ShoppingCart, MoreHorizontal,
-  Server, Key, Terminal, ArrowUpDown, Trash2, ExternalLink, Send,
+  Server, Key, Terminal, Trash2, ExternalLink, Send,
   LayoutGrid, Star, Download, Repeat, Cpu, Users, Image, Gamepad, Wrench,
   Code, BookOpen, Github, CheckCircle, SlidersHorizontal, SearchX
 } from 'lucide-react';
@@ -15,6 +15,7 @@ import { useTabsStore } from '../store/tabs';
 import { useSettings } from '../store/settings';
 import AppStore from '../components/AppStore';
 import { DEMO_WALLET, SETTINGS_URL, NODEMANAGER_URL } from '../constants';
+import logo from '@/assets/logo.png';
 
 // --- Types ---
 type ViewType = 'Dashboard' | 'Wallet' | 'Browse Web3' | 'App Store' | 'Node Manager' | 'History' | 'Settings';
@@ -204,27 +205,38 @@ function Sidebar({ activeView, setActiveView, activeAccount, accounts, onSwitch,
 
   return (
     <aside className="w-[220px] h-full bg-[#0a0b11] border-r border-[#1e2030] flex flex-col shrink-0 z-50">
-      <div className="p-6">
-        <div className="text-[15px] text-white font-bold tracking-[0.1em]">ORIVON</div>
-        <div className="text-[10px] text-[#6366f1] font-bold tracking-[0.06em] uppercase mt-0.5">The Web3 Browser</div>
+      <div className="p-5 flex items-center gap-3">
+        <img
+          src={logo}
+          alt="Orivon"
+          className="w-9 h-9 rounded-[10px] shrink-0"
+          style={{ boxShadow: '0 0 18px rgba(99,102,241,0.35)' }}
+        />
+        <div>
+          <div className="text-[13px] text-white font-bold tracking-[0.12em]">ORIVON</div>
+          <div className="text-[9px] text-[#6366f1] font-bold tracking-[0.06em] uppercase mt-0.5">Web3 Browser</div>
+        </div>
       </div>
 
       <div className="h-px bg-[#1e2030] w-full" />
 
-      <nav className="flex-1 py-4 px-3 space-y-1">
+      <nav className="flex-1 py-4 px-3 space-y-0.5">
         {navItems.map(item => (
           <button
             key={item.label}
             onClick={() => setActiveView(item.label as ViewType)}
-            className={`w-full h-11 px-4 flex items-center gap-3 rounded-[8px] transition-all border-none bg-transparent cursor-pointer group relative ${
-              activeView === item.label ? 'bg-[#111218] text-[#f8fafc]' : 'text-[#64748b] hover:text-[#94a3b8]'
+            className={`w-full h-10 px-3.5 flex items-center gap-3 rounded-[8px] transition-all border-none cursor-pointer group text-[13px] font-medium ${
+              activeView === item.label
+                ? 'text-white'
+                : 'bg-transparent text-[#64748b] hover:bg-[#111218] hover:text-[#94a3b8]'
             }`}
+            style={activeView === item.label ? { background: 'rgba(99,102,241,0.12)' } : {}}
           >
-            {activeView === item.label && (
-              <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#6366f1]" />
-            )}
-            <item.icon size={16} className={activeView === item.label ? 'text-[#f8fafc]' : 'text-[#64748b] group-hover:text-[#94a3b8]'} />
-            <span className="text-[13px] font-medium">{item.label}</span>
+            <item.icon
+              size={15}
+              className={activeView === item.label ? 'text-[#818cf8]' : 'text-[#64748b] group-hover:text-[#94a3b8]'}
+            />
+            {item.label}
           </button>
         ))}
 
@@ -282,36 +294,57 @@ function NetworkRow({ label, status, dotColor }: { label: string; status: string
 
 // --- Top Bar ---
 
+const MARKET_TICKERS = [
+  { symbol: 'ETH',   price: '$3,218.40', change: '+2.4%',  up: true  },
+  { symbol: 'BTC',   price: '$65,842',   change: '+1.8%',  up: true  },
+  { symbol: 'SOL',   price: '$142.30',   change: '-0.4%',  up: false },
+  { symbol: 'UNI',   price: '$8.12',     change: '+3.1%',  up: true  },
+  { symbol: 'MATIC', price: '$0.82',     change: '+1.6%',  up: true  },
+  { symbol: 'AAVE',  price: '$91.40',    change: '-0.9%',  up: false },
+];
+
 function TopBar({ activeView }: { activeView: ViewType }) {
-  const [greeting, setGreeting] = useState('');
-
-  useEffect(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) setGreeting('Good morning');
-    else if (hour < 18) setGreeting('Good afternoon');
-    else setGreeting('Good evening');
-  }, []);
-
   return (
-    <header className="absolute top-0 left-0 right-0 h-[52px] bg-[#0d0e14] border-b border-[#1e2030] px-8 flex items-center justify-between z-40">
-      <div className="flex flex-col">
-        <h1 className="text-[16px] font-bold text-[#f8fafc]">{activeView}</h1>
-        {activeView === 'Dashboard' && <p className="text-[11px] text-[#64748b] font-medium">{greeting}. Here is your Web3 overview.</p>}
+    <header className="absolute top-0 left-0 right-0 h-[52px] bg-[#0a0b11]/95 backdrop-blur-sm border-b border-[#1e2030] z-40 flex flex-col">
+      {/* Market ticker strip */}
+      <div
+        className="h-[24px] border-b overflow-hidden flex items-center"
+        style={{ borderColor: 'rgba(30,32,48,0.8)' }}
+      >
+        <motion.div
+          animate={{ x: ['0%', '-50%'] }}
+          transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+          className="flex gap-8 whitespace-nowrap px-4"
+          style={{ width: 'max-content' }}
+        >
+          {[...MARKET_TICKERS, ...MARKET_TICKERS].map((t, i) => (
+            <span key={i} className="flex items-center gap-1.5 text-[10px] font-bold tracking-[0.06em]">
+              <span style={{ color: 'rgba(148,163,184,0.5)' }}>{t.symbol}</span>
+              <span style={{ color: 'rgba(248,250,252,0.7)' }}>{t.price}</span>
+              <span style={{ color: t.up ? 'rgba(34,197,94,0.8)' : 'rgba(239,68,68,0.8)' }}>{t.change}</span>
+              <span style={{ color: 'rgba(30,32,48,1)', fontSize: 8 }}>|</span>
+            </span>
+          ))}
+        </motion.div>
       </div>
 
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-2 text-[12px] text-[#64748b] font-medium">
-          <span>1,247,832 sites loaded</span>
-          <div className="w-px h-3 bg-[#1e2030]" />
-          <span>48M trackers blocked</span>
-        </div>
-
-        <button className="text-[#64748b] hover:text-[#f8fafc] transition-colors bg-transparent border-none cursor-pointer">
-          <Bell size={18} />
-        </button>
-
-        <div className="w-8 h-8 rounded-full bg-[#6366f1] flex items-center justify-center text-[13px] font-bold text-white uppercase">
-          O
+      {/* Page title row */}
+      <div className="flex-1 px-8 flex items-center justify-between">
+        <h1 className="text-[14px] font-bold text-[#f8fafc] tracking-[0.04em] uppercase">{activeView}</h1>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1.5 text-[11px] text-[#475569] font-medium">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
+            <span>48M trackers blocked</span>
+          </div>
+          <button className="text-[#475569] hover:text-[#f8fafc] transition-colors bg-transparent border-none cursor-pointer">
+            <Bell size={15} />
+          </button>
+          <div
+            className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold text-white uppercase"
+            style={{ background: 'linear-gradient(135deg, #6366f1, #4338ca)' }}
+          >
+            O
+          </div>
         </div>
       </div>
     </header>
@@ -332,106 +365,153 @@ function DashboardPage({ onOpenBrowser, onToast, onBackup }: any) {
     }));
   }, []);
 
+  const ease = [0.22, 1, 0.36, 1] as const;
+
   return (
     <div className="space-y-6">
+
+      {/* ── Editorial hero ── */}
+      <div className="border-b border-[#1e2030] pb-8 mb-2">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, ease }}
+        >
+          <div className="text-[10px] text-[#475569] font-bold tracking-[0.2em] uppercase mb-3">
+            Total Portfolio Value
+          </div>
+
+          <div className="overflow-hidden mb-3">
+            <motion.div
+              initial={{ y: 60 }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.65, ease }}
+            >
+              <div
+                className="font-black tracking-[-0.04em] leading-none tabular-nums"
+                style={{
+                  fontSize: 'clamp(44px, 5.5vw, 80px)',
+                  background: 'linear-gradient(100deg, #f8fafc 30%, #a5b4fc 80%, #818cf8 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
+                $12,847.63
+              </div>
+            </motion.div>
+          </div>
+
+          <div className="flex items-center gap-4 mb-6">
+            <div className="flex items-center gap-2">
+              <span
+                className="text-[13px] font-bold tabular-nums"
+                style={{ color: '#22c55e' }}
+              >
+                ↑ +$306.82
+              </span>
+              <span
+                className="text-[11px] font-bold px-2 py-0.5 rounded-[5px]"
+                style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.2)' }}
+              >
+                +2.4%
+              </span>
+            </div>
+            <div className="w-px h-3.5 bg-[#1e2030]" />
+            <span className="text-[12px] text-[#475569] font-medium">Past 24 hours</span>
+            <div className="w-px h-3.5 bg-[#1e2030]" />
+            <span className="text-[12px] text-[#475569] font-medium">3 assets · 2 wallets</span>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            {[
+              { icon: ShoppingCart, label: 'Buy' },
+              { icon: Send, label: 'Send' },
+              { icon: Download, label: 'Receive' },
+              { icon: ArrowLeftRight, label: 'Swap' },
+            ].map(({ icon: Icon, label }) => (
+              <motion.button
+                key={label}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={() => (window as any).requestSecurityCheck?.(() => {})}
+                className="flex items-center gap-2 h-9 px-4 rounded-full text-[12px] font-bold cursor-pointer border-none transition-colors"
+                style={{
+                  background: 'rgba(99,102,241,0.1)',
+                  color: '#a5b4fc',
+                  border: '1px solid rgba(99,102,241,0.2)',
+                }}
+              >
+                <Icon size={13} />
+                {label}
+              </motion.button>
+            ))}
+            <button
+              className="flex items-center gap-2 h-9 px-3 rounded-full text-[12px] font-bold cursor-pointer border-none"
+              style={{ background: 'rgba(30,32,48,0.8)', color: '#64748b', border: '1px solid #1e2030' }}
+            >
+              <MoreHorizontal size={13} />
+            </button>
+          </div>
+        </motion.div>
+      </div>
+
       <div className="grid grid-cols-10 gap-5">
-        {/* Wallet Section (Left 6/10) */}
+        {/* Left 6/10 */}
         <div className="col-span-6 space-y-5">
-          <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-8 relative overflow-hidden group">
-            <div className="flex justify-between items-start mb-6">
-              <h2 className="text-[20px] font-semibold text-[#f8fafc]">Portfolio</h2>
-              <button className="w-8 h-8 rounded-full bg-[#161720] border border-[#1e2030] flex items-center justify-center text-[#94a3b8] hover:text-[#f8fafc] hover:border-[#6366f1] transition-all cursor-pointer">
-                <Plus size={18} />
-              </button>
+
+          {/* Portfolio chart card */}
+          <div className="bg-[#111218] border border-[#1e2030] rounded-[14px] p-6">
+            <div className="flex justify-end gap-1.5 mb-1">
+              {['1H', '24H', '7D', '1M', '1Y'].map(t => (
+                <button
+                  key={t}
+                  className={`px-2.5 py-1 rounded-[6px] text-[11px] font-bold transition-all border-none cursor-pointer ${
+                    t === '24H' ? 'bg-[#6366f1] text-white' : 'bg-transparent text-[#475569] hover:text-[#94a3b8]'
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
             </div>
+            <PortfolioChart data={chartData} />
+          </div>
 
-            <div className="flex items-end justify-between">
-              <div>
-                <div className="text-[44px] font-bold text-[#f8fafc] tracking-[-0.03em] tabular-nums leading-tight">
-                  $12,847.63
-                </div>
-                <div className="flex gap-2 mt-2">
-                  <Badge className="bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/20">+$306.82</Badge>
-                  <Badge className="bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/20">+2.4%</Badge>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <CircleAction 
-                  icon={ShoppingCart} 
-                  label="Buy" 
-                  onClick={() => (window as any).requestSecurityCheck(() => console.log('Buy'))} 
-                />
-                <CircleAction 
-                  icon={Send} 
-                  label="Send" 
-                  onClick={() => (window as any).requestSecurityCheck(() => console.log('Send'))} 
-                />
-                <CircleAction 
-                  icon={Download} 
-                  label="Receive" 
-                  onClick={() => (window as any).requestSecurityCheck(() => console.log('Receive'))} 
-                />
-                <CircleAction 
-                  icon={ArrowLeftRight} 
-                  label="Swap" 
-                  onClick={() => (window as any).requestSecurityCheck(() => console.log('Swap'))} 
-                />
-                <CircleAction icon={MoreHorizontal} label="More" />
-              </div>
+          {/* Asset list */}
+          <div className="bg-[#111218] border border-[#1e2030] rounded-[14px] overflow-hidden">
+            <div className="flex gap-6 px-6 pt-5 pb-4 border-b border-[#1e2030]">
+              {['Assets', 'NFTs', 'Activity'].map(tab => (
+                <button
+                  key={tab}
+                  className={`text-[12px] font-bold uppercase tracking-[0.08em] bg-transparent border-none cursor-pointer pb-1 relative ${
+                    tab === 'Assets' ? 'text-[#f8fafc]' : 'text-[#475569] hover:text-[#94a3b8]'
+                  }`}
+                >
+                  {tab}
+                  {tab === 'Assets' && (
+                    <div className="absolute bottom-0 left-0 right-0 h-[2px] rounded-full bg-[#6366f1]" />
+                  )}
+                </button>
+              ))}
             </div>
-
-            {/* Chart Area */}
-            <div className="mt-8">
-              <div className="flex justify-end gap-2 mb-2">
-                {['1H', '24H', '7D', '1M', '1Y'].map(t => (
-                  <button
-                    key={t}
-                    className={`px-3 py-1 rounded-[6px] text-[12px] font-semibold transition-all border-none cursor-pointer ${
-                      t === '24H' ? 'bg-[#6366f1] text-white' : 'bg-transparent text-[#64748b] hover:text-[#94a3b8]'
-                    }`}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
-              <PortfolioChart data={chartData} />
-            </div>
-
-            {/* Asset Tabs */}
-            <div className="border-t border-[#1e2030] mt-8 pt-8">
-              <div className="flex gap-8 mb-6">
-                {['Assets', 'NFTs', 'Activity'].map(tab => (
-                  <button
-                    key={tab}
-                    className={`text-[13px] font-bold uppercase tracking-wider bg-transparent border-none cursor-pointer pb-2 relative ${
-                      tab === 'Assets' ? 'text-[#f8fafc]' : 'text-[#64748b] hover:text-[#94a3b8]'
-                    }`}
-                  >
-                    {tab}
-                    {tab === 'Assets' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#6366f1]" />}
-                  </button>
-                ))}
-              </div>
-              <div className="space-y-1">
-                <AssetRow symbol="ETH" name="Ethereum" amount="3.4821" val="$11,203.42" change="+2.4%" color="#627EEA" />
-                <AssetRow symbol="USDC" name="USD Coin" amount="1,250.00" val="$1,250.00" change="+0.01%" color="#2775CA" />
-                <AssetRow symbol="UNI" name="Uniswap" amount="48.5" val="$394.21" change="-1.2%" color="#FF007A" />
-              </div>
+            <div className="px-4 py-2">
+              <AssetRow symbol="ETH"  name="Ethereum" amount="3.4821"   val="$11,203.42" change="+2.4%"  color="#627EEA" />
+              <AssetRow symbol="USDC" name="USD Coin" amount="1,250.00" val="$1,250.00"  change="+0.01%" color="#2775CA" />
+              <AssetRow symbol="UNI"  name="Uniswap"  amount="48.5"     val="$394.21"   change="-1.2%"  color="#FF007A" />
             </div>
           </div>
-          
+
           <NodesCard onToast={onToast} />
         </div>
 
-        {/* Right Section (4/10) */}
+        {/* Right 4/10 */}
         <div className="col-span-4 space-y-5">
           <FeaturedAppsCard onOpen={onOpenBrowser} />
           <Web3ActivityFeed />
           <NetworkStatusDetailsCard />
         </div>
       </div>
-      
+
       <MarketingCard />
     </div>
   );
@@ -452,91 +532,155 @@ function CircleAction({ icon: Icon, label, onClick }: { icon: any; label: string
 
 function WalletPage({ onBackup, onImport }: any) {
   const { accounts, activeAccountId, switchAccount } = useWalletStore();
-  
+  const [assetTab, setAssetTab] = useState('Assets');
   const totalBalance = accounts.reduce((sum, acc) => sum + (acc.balance_usd || 0), 0);
+  const ease = [0.22, 1, 0.36, 1] as const;
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="text-[20px] font-semibold text-[#f8fafc]">Wallet</h2>
-        <p className="text-[13px] text-[#64748b] mt-1">Manage your Web3 identity</p>
-      </div>
-
-      <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar">
-        {accounts.map(acc => (
-          <button
-            key={acc.id}
-            onClick={() => switchAccount(acc.id)}
-            className={`min-w-[220px] bg-[#111218] border rounded-[12px] p-5 text-left transition-all cursor-pointer ${
-              acc.id === activeAccountId ? 'border-[#6366f1]' : 'border-[#1e2030] hover:border-[#2d2e45]'
-            }`}
+      {/* Editorial header */}
+      <div className="border-b border-[#1e2030] pb-8">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }}>
+          <div className="text-[10px] text-[#475569] font-bold tracking-[0.2em] uppercase mb-3">All Wallets</div>
+          <div
+            className="font-black tracking-[-0.04em] leading-none tabular-nums mb-3"
+            style={{
+              fontSize: 'clamp(40px, 5vw, 64px)',
+              background: 'linear-gradient(100deg, #f8fafc 30%, #a5b4fc 80%, #818cf8 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
           >
-            <div className="flex justify-between items-start mb-4">
-              <div className={`w-9 h-9 rounded-full flex items-center justify-center text-[13px] font-bold text-white ${acc.id === 'wallet-demo-2' ? 'bg-[#0891b2]' : 'bg-[#6366f1]'}`}>
-                {acc.name.charAt(0)}
-              </div>
-              {acc.id === activeAccountId && (
-                <div className="flex items-center gap-1.5 bg-[#22c55e]/10 px-2 py-0.5 rounded-[6px]">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
-                  <span className="text-[10px] font-bold text-[#22c55e] uppercase">Active</span>
-                </div>
-              )}
-            </div>
-            <div className="text-[13px] font-bold text-[#f8fafc] mb-0.5">{acc.name}</div>
-            <div className="text-[11px] text-[#64748b] font-mono mb-4">{acc.addresses.eth.slice(0, 6)}...{acc.addresses.eth.slice(-4)}</div>
-            <div className="text-[18px] font-bold text-[#f8fafc] tabular-nums mb-1">${acc.balance_usd.toLocaleString()}</div>
-            <div className="text-[12px] text-[#94a3b8]">{acc.balance_eth} ETH</div>
-            <div className="mt-4 flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
-              <span className="text-[11px] text-[#64748b] font-medium">Ethereum Mainnet</span>
-            </div>
-          </button>
-        ))}
-        <button 
-          onClick={onImport}
-          className="min-w-[220px] border border-dashed border-[#2d2e45] rounded-[12px] p-5 flex flex-col items-center justify-center gap-3 bg-transparent text-[#64748b] hover:border-[#6366f1] hover:text-[#818cf8] transition-all cursor-pointer"
-        >
-          <Plus size={24} />
-          <span className="text-[13px] font-semibold">Add Wallet</span>
-        </button>
+            ${totalBalance.toLocaleString()}
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[13px] text-[#22c55e] font-bold">+$712.44 (3.2%)</span>
+            <div className="w-px h-3.5 bg-[#1e2030]" />
+            <span className="text-[12px] text-[#475569]">{accounts.length} wallets · 5 assets</span>
+          </div>
+        </motion.div>
       </div>
 
-      <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <h3 className="text-[16px] font-semibold text-[#f8fafc]">All Assets</h3>
-          <span className="text-[14px] text-[#94a3b8]">Total: ${totalBalance.toLocaleString()}</span>
+      {/* Wallet cards */}
+      <div>
+        <div className="text-[10px] text-[#475569] font-bold tracking-[0.18em] uppercase mb-4">Accounts</div>
+        <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar">
+          {accounts.map((acc, idx) => (
+            <motion.button
+              key={acc.id}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.07, duration: 0.4, ease }}
+              onClick={() => switchAccount(acc.id)}
+              className="min-w-[196px] text-left cursor-pointer shrink-0 rounded-[14px] p-5 transition-all"
+              style={{
+                background: acc.id === activeAccountId
+                  ? 'linear-gradient(135deg, rgba(99,102,241,0.14) 0%, rgba(67,56,202,0.07) 100%)'
+                  : '#111218',
+                border: `1px solid ${acc.id === activeAccountId ? 'rgba(99,102,241,0.38)' : '#1e2030'}`,
+              }}
+            >
+              <div className="flex items-start justify-between mb-5">
+                <div
+                  className="w-8 h-8 rounded-[8px] flex items-center justify-center text-[12px] font-black text-white"
+                  style={{ background: acc.id === 'wallet-demo-2' ? '#0891b2' : 'linear-gradient(135deg,#6366f1,#4338ca)' }}
+                >
+                  {acc.name.charAt(0)}
+                </div>
+                {acc.id === activeAccountId && <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e] mt-1" />}
+              </div>
+              <div className="text-[12px] font-bold text-[#f8fafc] mb-0.5">{acc.name}</div>
+              <div className="text-[10px] text-[#475569] font-mono mb-4">{acc.addresses.eth.slice(0, 6)}...{acc.addresses.eth.slice(-4)}</div>
+              <div
+                className="font-black tracking-[-0.03em] leading-none tabular-nums"
+                style={{
+                  fontSize: 20,
+                  color: acc.id === activeAccountId ? '#f8fafc' : '#94a3b8',
+                }}
+              >
+                ${(acc.balance_usd || 0).toLocaleString()}
+              </div>
+              <div className="text-[11px] text-[#475569] mt-1">{acc.balance_eth} ETH</div>
+            </motion.button>
+          ))}
+          <button
+            onClick={onImport}
+            className="min-w-[196px] rounded-[14px] p-5 flex flex-col items-center justify-center gap-2.5 cursor-pointer transition-all shrink-0 bg-transparent"
+            style={{ border: '1px dashed rgba(99,102,241,0.22)' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(99,102,241,0.45)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(99,102,241,0.22)'; }}
+          >
+            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'rgba(99,102,241,0.1)' }}>
+              <Plus size={16} className="text-[#6366f1]" />
+            </div>
+            <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#475569]">Add Wallet</span>
+          </button>
         </div>
-        <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] overflow-hidden">
+      </div>
+
+      {/* Asset table */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex gap-5 border-b border-[#1e2030] -mb-px">
+            {['Assets', 'Activity'].map(tab => (
+              <button
+                key={tab}
+                onClick={() => setAssetTab(tab)}
+                className={`pb-3 text-[12px] font-bold uppercase tracking-[0.08em] bg-transparent border-none cursor-pointer relative transition-colors ${
+                  assetTab === tab ? 'text-[#f8fafc]' : 'text-[#475569] hover:text-[#94a3b8]'
+                }`}
+              >
+                {tab}
+                {assetTab === tab && <div className="absolute bottom-0 left-0 right-0 h-[2px] rounded-full bg-[#6366f1]" />}
+              </button>
+            ))}
+          </div>
+          <span className="text-[11px] text-[#475569] font-bold tabular-nums">${totalBalance.toLocaleString()} total</span>
+        </div>
+        <div className="rounded-[14px] overflow-hidden" style={{ border: '1px solid #1e2030' }}>
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-[#1e2030] h-10">
-                <th className="pl-6 text-[11px] font-bold text-[#475569] uppercase tracking-wider">Asset</th>
-                <th className="text-[11px] font-bold text-[#475569] uppercase tracking-wider">Wallet</th>
-                <th className="text-[11px] font-bold text-[#475569] uppercase tracking-wider">Amount</th>
-                <th className="text-[11px] font-bold text-[#475569] uppercase tracking-wider">Value</th>
-                <th className="pr-6 text-[11px] font-bold text-[#475569] uppercase tracking-wider text-right">24H</th>
+              <tr className="h-10 border-b border-[#1e2030]" style={{ background: '#0a0b11' }}>
+                <th className="pl-5 text-[10px] font-bold text-[#475569] uppercase tracking-[0.12em]">Asset</th>
+                <th className="text-[10px] font-bold text-[#475569] uppercase tracking-[0.12em]">Wallet</th>
+                <th className="text-[10px] font-bold text-[#475569] uppercase tracking-[0.12em]">Amount</th>
+                <th className="text-[10px] font-bold text-[#475569] uppercase tracking-[0.12em]">Value</th>
+                <th className="pr-5 text-[10px] font-bold text-[#475569] uppercase tracking-[0.12em] text-right">24H</th>
               </tr>
             </thead>
             <tbody>
-              <AssetTableRow iconColor="#627EEA" symbol="ETH" name="Ethereum" network="Ethereum Mainnet" wallet="Orivon Wallet 1" amount="3.4821 ETH" value="$11,203.42" change="+2.4%" />
-              <AssetTableRow iconColor="#627EEA" symbol="ETH" name="Ethereum" network="Ethereum Mainnet" wallet="Trading Wallet" amount="1.2450 ETH" value="$4,002.18" change="+2.4%" />
-              <AssetTableRow iconColor="#2775CA" symbol="USDC" name="USD Coin" network="Ethereum Mainnet" wallet="Orivon Wallet 1" amount="1,250 USDC" value="$1,250.00" change="+0.01%" />
-              <AssetTableRow iconColor="#FF007A" symbol="UNI" name="Uniswap" network="Ethereum Mainnet" wallet="Orivon Wallet 1" amount="48.5 UNI" value="$394.21" change="-1.2%" isNegative />
-              <AssetTableRow iconColor="#F7931A" symbol="WBTC" name="Wrapped Bitcoin" network="Ethereum Mainnet" wallet="Trading Wallet" amount="0.0412 WBTC" value="$889.02" change="+1.8%" />
+              <AssetTableRow iconColor="#627EEA" symbol="ETH"  name="Ethereum"       network="Mainnet" wallet="Orivon Wallet 1" amount="3.4821 ETH"  value="$11,203.42" change="+2.4%" />
+              <AssetTableRow iconColor="#627EEA" symbol="ETH"  name="Ethereum"       network="Mainnet" wallet="Trading Wallet"  amount="1.2450 ETH"  value="$4,002.18"  change="+2.4%" />
+              <AssetTableRow iconColor="#2775CA" symbol="USDC" name="USD Coin"       network="Mainnet" wallet="Orivon Wallet 1" amount="1,250 USDC"   value="$1,250.00"  change="+0.01%" />
+              <AssetTableRow iconColor="#FF007A" symbol="UNI"  name="Uniswap"        network="Mainnet" wallet="Orivon Wallet 1" amount="48.5 UNI"     value="$394.21"    change="-1.2%" isNegative />
+              <AssetTableRow iconColor="#F7931A" symbol="WBTC" name="Wrapped Bitcoin" network="Mainnet" wallet="Trading Wallet" amount="0.0412 WBTC"  value="$889.02"    change="+1.8%" />
             </tbody>
           </table>
-          <div className="h-[52px] px-6 flex items-center justify-between bg-[#0d0e14]/30">
-            <span className="text-[13px] text-[#94a3b8] font-medium">Total Portfolio</span>
-            <span className="text-[14px] text-[#f8fafc] font-bold tabular-nums">$17,738.83</span>
+          <div className="h-12 px-5 flex items-center justify-between" style={{ background: '#0a0b11', borderTop: '1px solid #1e2030' }}>
+            <span className="text-[11px] text-[#475569] font-bold uppercase tracking-[0.1em]">Total Portfolio</span>
+            <span
+              className="font-black tabular-nums tracking-[-0.02em]"
+              style={{
+                fontSize: 17,
+                background: 'linear-gradient(90deg,#f8fafc,#a5b4fc)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
+              $17,738.83
+            </span>
           </div>
         </div>
       </div>
 
-      <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-6 space-y-6">
-        <h3 className="text-[14px] font-semibold text-[#f8fafc]">Security</h3>
-        <div className="space-y-4">
-          <SecurityRow name="Orivon Wallet 1" status="Backed Up" isSecure onAction={onBackup} />
-          <SecurityRow name="Trading Wallet" status="Backup Recommended" type="Imported" onAction={onBackup} />
+      {/* Security */}
+      <div>
+        <div className="text-[10px] text-[#475569] font-bold tracking-[0.18em] uppercase mb-4">Security</div>
+        <div className="space-y-3">
+          <SecurityRow name="Orivon Wallet 1" isSecure onAction={onBackup} />
+          <SecurityRow name="Trading Wallet" isImported onAction={onBackup} />
         </div>
       </div>
     </div>
@@ -545,54 +689,73 @@ function WalletPage({ onBackup, onImport }: any) {
 
 function AssetTableRow({ iconColor, symbol, name, network, wallet, amount, value, change, isNegative }: any) {
   return (
-    <tr className="h-[52px] border-b border-[#1e2030] hover:bg-[#161720] transition-colors group">
-      <td className="pl-6">
+    <tr className="h-[52px] border-b border-[#1e2030] hover:bg-[#161720] transition-colors">
+      <td className="pl-5">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0" style={{ backgroundColor: iconColor }}>{symbol}</div>
-          <div className="flex flex-col">
-            <span className="text-[13px] font-semibold text-[#f8fafc]">{name}</span>
-            <span className="text-[11px] text-[#64748b] font-medium">{symbol} on {network}</span>
+          <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-black text-white shrink-0" style={{ backgroundColor: iconColor }}>{symbol}</div>
+          <div>
+            <div className="text-[13px] font-bold text-[#f8fafc]">{name}</div>
+            <div className="text-[10px] text-[#475569] font-medium">{symbol} · {network}</div>
           </div>
         </div>
       </td>
-      <td><span className="text-[12px] text-[#94a3b8] font-medium">{wallet}</span></td>
-      <td><span className="text-[13px] text-[#f8fafc] font-medium tabular-nums">{amount}</span></td>
+      <td><span className="text-[12px] text-[#64748b] font-medium">{wallet}</span></td>
+      <td><span className="text-[12px] text-[#94a3b8] tabular-nums font-medium">{amount}</span></td>
       <td><span className="text-[13px] text-[#f8fafc] font-bold tabular-nums">{value}</span></td>
-      <td className="pr-6 text-right">
+      <td className="pr-5 text-right">
         <span className={`text-[12px] font-bold tabular-nums ${isNegative ? 'text-[#ef4444]' : 'text-[#22c55e]'}`}>{change}</span>
       </td>
     </tr>
   );
 }
 
-function SecurityRow({ name, status, isSecure, type, onAction }: any) {
+function SecurityRow({ name, isSecure, isImported, onAction }: any) {
   return (
-    <div className="flex items-center justify-between">
+    <div
+      className="flex items-center justify-between px-5 py-4 rounded-[12px]"
+      style={{
+        background: '#111218',
+        border: `1px solid ${isSecure ? 'rgba(34,197,94,0.15)' : '#1e2030'}`,
+        borderLeft: `3px solid ${isSecure ? '#22c55e' : '#f59e0b'}`,
+      }}
+    >
       <div className="flex items-center gap-4">
-        <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${isSecure ? 'bg-[#22c55e]/10 text-[#22c55e]' : 'bg-[#f59e0b]/10 text-[#f59e0b]'}`}>
-          <Key size={18} />
+        <div className={`w-8 h-8 rounded-[8px] flex items-center justify-center ${isSecure ? 'bg-[#22c55e]/10 text-[#22c55e]' : 'bg-[#f59e0b]/10 text-[#f59e0b]'}`}>
+          <Key size={15} />
         </div>
-        <div className="flex flex-col">
+        <div>
           <div className="flex items-center gap-2">
-            <span className="text-[13px] font-semibold text-[#f8fafc]">{name}</span>
-            {type && <Badge className="bg-[#6366f1]/10 text-[#6366f1] text-[10px] uppercase">Imported</Badge>}
+            <span className="text-[13px] font-bold text-[#f8fafc]">{name}</span>
+            {isImported && (
+              <span className="text-[9px] font-bold uppercase tracking-[0.1em] px-1.5 py-0.5 rounded-[4px]" style={{ background: 'rgba(99,102,241,0.1)', color: '#818cf8' }}>Imported</span>
+            )}
           </div>
-          <span className="text-[12px] text-[#64748b]">{isSecure ? 'Wallet seed phrase is securely backed up' : 'Backup your seed phrase to secure your funds'}</span>
+          <div className="text-[12px] text-[#64748b] mt-0.5">
+            {isSecure ? 'Seed phrase securely backed up' : 'Backup your seed phrase to protect funds'}
+          </div>
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        {isSecure && (
-          <Badge className="bg-[#22c55e]/10 text-[#22c55e] px-3 py-1 uppercase text-[10px]">Backed Up</Badge>
-        )}
-        <button 
-          onClick={onAction}
-          className={`h-8 px-4 rounded-[6px] border text-[12px] font-bold transition-all cursor-pointer bg-transparent ${
-            isSecure ? 'border-[#1e2030] text-[#64748b] hover:border-[#6366f1] hover:text-[#f8fafc]' : 'border-[#f59e0b] text-[#f59e0b] hover:bg-[#f59e0b] hover:text-white'
-          }`}
-        >
-          {isSecure ? 'View Seed Phrase' : 'Backup Seed Phrase'}
-        </button>
-      </div>
+      <button
+        onClick={onAction}
+        className="h-8 px-4 rounded-full text-[11px] font-bold uppercase tracking-[0.08em] transition-all cursor-pointer bg-transparent"
+        style={{
+          border: `1px solid ${isSecure ? '#1e2030' : 'rgba(245,158,11,0.4)'}`,
+          color: isSecure ? '#64748b' : '#f59e0b',
+        }}
+        onMouseEnter={e => {
+          const el = e.currentTarget as HTMLElement;
+          if (isSecure) { el.style.borderColor = 'rgba(99,102,241,0.4)'; el.style.color = '#a5b4fc'; }
+          else { el.style.background = '#f59e0b'; el.style.color = 'white'; }
+        }}
+        onMouseLeave={e => {
+          const el = e.currentTarget as HTMLElement;
+          el.style.background = 'transparent';
+          if (isSecure) { el.style.borderColor = '#1e2030'; el.style.color = '#64748b'; }
+          else { el.style.borderColor = 'rgba(245,158,11,0.4)'; el.style.color = '#f59e0b'; }
+        }}
+      >
+        {isSecure ? 'View Seed Phrase' : 'Backup Now'}
+      </button>
     </div>
   );
 }
@@ -601,119 +764,168 @@ function SecurityRow({ name, status, isSecure, type, onAction }: any) {
 
 function BrowseWeb3Page({ onOpen }: any) {
   const [activeCategory, setActiveCategory] = useState('All');
-  const categories = ['All', 'DeFi', 'Social', 'Storage', 'Nodes', 'NFTs', 'Gaming', 'Tools'];
+  const [query, setQuery] = useState('');
+  const categories = ['All', 'DeFi', 'Social', 'Storage', 'Nodes', 'NFTs', 'Tools'];
+  const ease = [0.22, 1, 0.36, 1] as const;
 
   const dapps = [
-    { n: 'Uniswap', d: 'uniswap.eth', c: 'DeFi', i: '#ff007a', s: 97, desc: 'Decentralized exchange' },
-    { n: 'Mastodon', d: 'mastodon.eth', c: 'Social', i: '#2b90d9', s: 94, desc: 'Decentralized social network' },
-    { n: 'Aave', d: 'aave.eth', c: 'DeFi', i: '#2ebac6', s: 92, desc: 'Liquidity protocol' },
-    { n: 'ENS', d: 'ens.eth', c: 'Tools', i: '#5298ff', s: 99, desc: 'Ethereum Name Service' },
-    { n: 'OpenSea', d: 'opensea.eth', c: 'NFTs', i: '#2081e2', s: 85, desc: 'NFT marketplace' },
-    { n: 'Gitcoin', d: 'gitcoin.eth', c: 'Tools', i: '#00cc85', s: 96, desc: 'Funding public goods' },
-    { n: 'MakerDAO', d: 'makerdao.eth', c: 'DeFi', i: '#1aab9b', s: 98, desc: 'Stablecoin system' },
-    { n: 'IPFS', d: 'ipfs.eth', c: 'Storage', i: '#06b6d4', s: 99, desc: 'Peer-to-peer file system' },
-    { n: 'Compound', d: 'compound.eth', c: 'DeFi', i: '#00d395', s: 95, desc: 'Money markets' },
-    { n: 'Arweave', d: 'arweave.eth', c: 'Storage', i: '#000000', s: 99, desc: 'Permanent data storage' },
-    { n: 'Synthetix', d: 'synthetix.eth', c: 'DeFi', i: '#00d1ff', s: 91, desc: 'Derivatives liquidity' },
-    { n: 'Lido', d: 'lido.eth', c: 'DeFi', i: '#00a3ff', s: 94, desc: 'Liquid staking' },
+    { n: 'Uniswap',  d: 'uniswap.eth',   c: 'DeFi',    i: '#ff007a', trust: true,  desc: 'Decentralized exchange protocol' },
+    { n: 'Mastodon', d: 'mastodon.eth',   c: 'Social',  i: '#2b90d9', trust: true,  desc: 'Open-source social network' },
+    { n: 'Aave',     d: 'aave.eth',       c: 'DeFi',    i: '#2ebac6', trust: true,  desc: 'Liquidity protocol' },
+    { n: 'ENS',      d: 'ens.eth',        c: 'Tools',   i: '#5298ff', trust: true,  desc: 'Ethereum Name Service' },
+    { n: 'OpenSea',  d: 'opensea.eth',    c: 'NFTs',    i: '#2081e2', trust: false, desc: 'NFT marketplace' },
+    { n: 'Gitcoin',  d: 'gitcoin.eth',    c: 'Tools',   i: '#00cc85', trust: true,  desc: 'Funding public goods' },
+    { n: 'MakerDAO', d: 'makerdao.eth',   c: 'DeFi',    i: '#1aab9b', trust: true,  desc: 'Stablecoin system' },
+    { n: 'IPFS',     d: 'ipfs.eth',       c: 'Storage', i: '#06b6d4', trust: true,  desc: 'Peer-to-peer file system' },
+    { n: 'Compound', d: 'compound.eth',   c: 'DeFi',    i: '#00d395', trust: true,  desc: 'Money markets protocol' },
+    { n: 'Arweave',  d: 'arweave.eth',    c: 'Storage', i: '#6366f1', trust: true,  desc: 'Permanent data storage' },
+    { n: 'Synthetix',d: 'synthetix.eth',  c: 'DeFi',    i: '#00d1ff', trust: true,  desc: 'Derivatives liquidity' },
+    { n: 'Lido',     d: 'lido.eth',       c: 'DeFi',    i: '#00a3ff', trust: true,  desc: 'Liquid staking' },
   ];
+
+  const filtered = dapps.filter(a =>
+    (activeCategory === 'All' || a.c === activeCategory) &&
+    (!query || a.n.toLowerCase().includes(query.toLowerCase()) || a.d.includes(query.toLowerCase()))
+  );
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="text-[20px] font-semibold text-[#f8fafc]">Browse Web3</h2>
-        <p className="text-[13px] text-[#64748b] mt-1">Discover the decentralized web</p>
+      {/* Editorial header */}
+      <div className="border-b border-[#1e2030] pb-6">
+        <div className="text-[10px] text-[#475569] font-bold tracking-[0.2em] uppercase mb-2">Decentralized Web</div>
+        <h2
+          className="font-black tracking-[-0.03em] text-white"
+          style={{ fontSize: 'clamp(28px, 3vw, 44px)' }}
+        >
+          Browse Web3
+        </h2>
       </div>
 
+      {/* Search */}
       <div className="relative">
-        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#475569]" />
-        <input 
-          placeholder="Search .eth domains, DApps, and Web3 sites"
-          className="w-full h-11 bg-[#111218] border border-[#1e2030] rounded-[10px] pl-12 pr-4 text-[#f8fafc] font-medium outline-none focus:border-[#6366f1] transition-all placeholder:text-[#475569]"
+        <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#475569]" />
+        <input
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          placeholder="Search .eth domains and dApps..."
+          className="w-full h-11 bg-[#111218] border border-[#1e2030] rounded-[10px] pl-11 pr-4 text-[#f8fafc] text-[13px] font-medium outline-none focus:border-[#6366f1] transition-all placeholder:text-[#475569]"
         />
       </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+      {/* Categories */}
+      <div className="flex gap-2 flex-wrap">
         {categories.map(cat => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-4 py-1.5 rounded-[6px] text-[12px] font-semibold transition-all border cursor-pointer ${
-              activeCategory === cat ? 'bg-[#6366f1] border-[#6366f1] text-white' : 'bg-[#111218] border-[#1e2030] text-[#64748b] hover:border-[#2d2e45] hover:text-[#94a3b8]'
-            }`}
+            className="px-3.5 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-[0.08em] transition-all cursor-pointer border"
+            style={activeCategory === cat ? {
+              background: 'rgba(99,102,241,0.14)',
+              borderColor: 'rgba(99,102,241,0.38)',
+              color: '#a5b4fc',
+            } : {
+              background: 'transparent',
+              borderColor: '#1e2030',
+              color: '#475569',
+            }}
           >
             {cat}
           </button>
         ))}
       </div>
 
-      <div className="space-y-4">
-        <h3 className="text-[14px] font-semibold text-[#f8fafc]">Featured</h3>
-        <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar">
-          {dapps.slice(0, 3).map(app => (
-            <div key={app.n} className="min-w-[280px] bg-[#111218] border border-[#1e2030] rounded-[12px] p-6 group cursor-pointer hover:border-[#6366f1] transition-all relative">
-              <div className="w-12 h-12 rounded-[12px] flex items-center justify-center text-[20px] font-bold text-white mb-4" style={{ backgroundColor: app.i }}>{app.n.charAt(0)}</div>
-              <h4 className="text-[16px] font-bold text-[#f8fafc]">{app.n}</h4>
-              <p className="text-[13px] text-[#64748b] mt-1">{app.desc}</p>
-              <div className="absolute bottom-6 right-6 flex items-center gap-1.5 bg-[#22c55e]/10 px-2 py-0.5 rounded-[6px]">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
-                <span className="text-[10px] font-bold text-[#22c55e] uppercase">{app.s}</span>
+      {/* Featured */}
+      <div>
+        <div className="text-[10px] text-[#475569] font-bold tracking-[0.18em] uppercase mb-4">Featured</div>
+        <div className="grid grid-cols-3 gap-4">
+          {filtered.slice(0, 3).map((app, idx) => (
+            <motion.div
+              key={app.n}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.06, duration: 0.4, ease }}
+              onClick={() => onOpen?.(app.d)}
+              className="rounded-[14px] p-5 cursor-pointer transition-all"
+              style={{ background: '#111218', border: '1px solid #1e2030' }}
+              onMouseEnter={e => (e.currentTarget as HTMLElement).style.borderColor = 'rgba(99,102,241,0.35)'}
+              onMouseLeave={e => (e.currentTarget as HTMLElement).style.borderColor = '#1e2030'}
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-11 h-11 rounded-[10px] flex items-center justify-center text-[16px] font-black text-white" style={{ backgroundColor: app.i }}>
+                  {app.n.charAt(0)}
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className={`w-1.5 h-1.5 rounded-full ${app.trust ? 'bg-[#22c55e]' : 'bg-[#f59e0b]'}`} />
+                  <span className={`text-[10px] font-bold uppercase tracking-[0.08em] ${app.trust ? 'text-[#22c55e]' : 'text-[#f59e0b]'}`}>
+                    {app.trust ? 'Trustless' : 'Partial'}
+                  </span>
+                </div>
               </div>
-              <button 
-                onClick={() => onOpen?.(app.d)}
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 flex items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-[12px] transition-all"
-              >
-                <div className="bg-[#6366f1] text-white px-6 py-2 rounded-[8px] font-bold text-[13px]">Open</div>
-              </button>
-            </div>
+              <div className="font-bold text-[#f8fafc] text-[15px] mb-0.5">{app.n}</div>
+              <div className="text-[11px] font-medium mb-2" style={{ color: '#6366f1' }}>{app.d}</div>
+              <p className="text-[12px] text-[#64748b]">{app.desc}</p>
+            </motion.div>
           ))}
         </div>
       </div>
 
-      <div className="space-y-4">
-        <div className="flex items-center gap-2">
-          <h3 className="text-[14px] font-semibold text-[#f8fafc]">All Apps</h3>
-          <span className="text-[12px] text-[#475569] font-bold bg-[#161720] px-2 py-0.5 rounded">24</span>
+      {/* All dApps */}
+      <div>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="text-[10px] text-[#475569] font-bold tracking-[0.18em] uppercase">All dApps</div>
+          <div className="px-2 py-0.5 rounded-[4px] text-[10px] font-bold text-[#475569]" style={{ background: '#161720' }}>{filtered.length}</div>
         </div>
-        <div className="grid grid-cols-3 gap-3">
-          {dapps.map(app => (
-            <div key={app.n} className="flex items-center gap-3 p-3 rounded-[10px] bg-[#111218] border border-[#1e2030] hover:bg-[#161720] hover:border-[#6366f1] transition-all group cursor-pointer">
-              <div className="relative shrink-0">
-                <div className="w-9 h-9 rounded-[8px] flex items-center justify-center text-[14px] font-bold text-white" style={{ backgroundColor: app.i }}>{app.n.charAt(0)}</div>
-                <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full border border-[#111218] bg-[#22c55e]" />
+        <div className="grid grid-cols-3 gap-2">
+          {filtered.map((app, i) => (
+            <motion.div
+              key={app.n}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: i * 0.025 }}
+              onClick={() => onOpen?.(app.d)}
+              className="flex items-center gap-3 p-3 rounded-[10px] cursor-pointer transition-all"
+              style={{ background: '#111218', border: '1px solid #1e2030' }}
+              onMouseEnter={e => (e.currentTarget as HTMLElement).style.borderColor = 'rgba(99,102,241,0.3)'}
+              onMouseLeave={e => (e.currentTarget as HTMLElement).style.borderColor = '#1e2030'}
+            >
+              <div className="w-8 h-8 rounded-[7px] flex items-center justify-center text-[12px] font-black text-white shrink-0" style={{ backgroundColor: app.i }}>
+                {app.n.charAt(0)}
               </div>
               <div className="flex-1 min-w-0">
-                <span className="text-[13px] font-semibold text-[#f8fafc] truncate block">{app.n}</span>
-                <span className="text-[11px] text-[#6366f1] font-medium truncate block">{app.d}</span>
+                <div className="text-[12px] font-bold text-[#f8fafc] truncate">{app.n}</div>
+                <div className="text-[10px] font-medium truncate" style={{ color: '#6366f1' }}>{app.d}</div>
               </div>
-              <button 
-                onClick={(e) => { e.stopPropagation(); onOpen?.(app.d); }}
-                className="opacity-0 group-hover:opacity-100 text-[12px] font-bold text-[#6366f1] bg-transparent border-none cursor-pointer"
+              <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${app.trust ? 'bg-[#22c55e]' : 'bg-[#f59e0b]'}`} />
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* Recently visited */}
+      <div>
+        <div className="text-[10px] text-[#475569] font-bold tracking-[0.18em] uppercase mb-4">Recently Visited</div>
+        <div className="rounded-[14px] overflow-hidden" style={{ border: '1px solid #1e2030' }}>
+          {dapps.slice(0, 5).map((app, i) => (
+            <div
+              key={app.d}
+              className="h-12 flex items-center justify-between px-4 group cursor-pointer transition-colors"
+              style={{ borderBottom: i < 4 ? '1px solid #1e2030' : 'none' }}
+              onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = '#161720'}
+              onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'transparent'}
+            >
+              <div className="flex items-center gap-3">
+                <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${app.trust ? 'bg-[#22c55e]' : 'bg-[#f59e0b]'}`} />
+                <span className="text-[13px] font-medium text-[#f8fafc] font-mono">{app.d}</span>
+                <span className="text-[11px] text-[#475569]">{['2 min ago','1 hr ago','2 hrs ago','3 hrs ago','4 hrs ago'][i]}</span>
+              </div>
+              <button
+                onClick={() => onOpen?.(app.d)}
+                className="opacity-0 group-hover:opacity-100 h-7 px-3 rounded-full text-[11px] font-bold uppercase tracking-[0.08em] transition-all cursor-pointer bg-transparent"
+                style={{ border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8' }}
               >
                 Open
               </button>
             </div>
-          ))}
-        </div>
-      </div>
-      
-      <div className="space-y-4">
-        <h3 className="text-[14px] font-semibold text-[#f8fafc]">Recently Visited</h3>
-        <div className="space-y-1">
-          {dapps.slice(0, 5).map(app => (
-             <div key={app.d} className="h-12 flex items-center justify-between px-3 rounded-[8px] hover:bg-[#161720] transition-all group">
-                <div className="flex items-center gap-4">
-                   <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
-                   <span className="text-[13px] font-medium text-[#f8fafc] font-mono">{app.d}</span>
-                   <span className="text-[11px] text-[#475569] font-medium">Visited 2 hours ago</span>
-                </div>
-                <button 
-                   onClick={() => onOpen?.(app.d)}
-                   className="opacity-0 group-hover:opacity-100 h-7 px-4 rounded-[6px] border border-[#1e2030] text-[#64748b] text-[11px] font-bold uppercase tracking-wider hover:border-[#6366f1] hover:text-[#f8fafc] transition-all cursor-pointer bg-transparent"
-                >
-                   Visit Again
-                </button>
-             </div>
           ))}
         </div>
       </div>
@@ -794,63 +1006,71 @@ function NodeManagerPage({ onToast }: any) {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="text-[20px] font-semibold text-[#f8fafc]">Node Manager</h2>
-        <p className="text-[13px] text-[#64748b] mt-1">Run Web3 infrastructure directly in your browser</p>
+      {/* Editorial header */}
+      <div className="border-b border-[#1e2030] pb-8">
+        <div className="text-[10px] font-bold tracking-[0.18em] uppercase text-[#6366f1] mb-3">Infrastructure</div>
+        <h2
+          className="font-black tracking-[-0.04em] leading-none text-[#e2e8f0] uppercase"
+          style={{ fontSize: 'clamp(32px, 4vw, 56px)' }}
+        >
+          Node Manager
+        </h2>
+        <p className="text-[13px] text-[#475569] mt-3 font-medium">Run decentralized infrastructure directly in your browser</p>
       </div>
 
-      <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-6 flex justify-between items-center">
-        <div className="flex-1 flex flex-col items-center">
-          <span className="text-[18px] font-bold text-[#f8fafc]">{Object.values(nodes).filter(v => v === 'Online').length} Running</span>
-          <span className="text-[12px] text-[#64748b] mt-1">Nodes Active</span>
-        </div>
-        <div className="w-px h-10 bg-[#1e2030]" />
-        <div className="flex-1 flex flex-col items-center">
-          <span className="text-[18px] font-bold text-[#f8fafc]">24</span>
-          <span className="text-[12px] text-[#64748b] mt-1">IPFS Peers</span>
-        </div>
-        <div className="w-px h-10 bg-[#1e2030]" />
-        <div className="flex-1 flex flex-col items-center">
-          <motion.span 
-             key={btcHeight}
-             initial={{ scale: 1.1, color: '#f8fafc' }}
-             animate={{ scale: 1, color: '#f8fafc' }}
-             className="text-[18px] font-bold tabular-nums"
+      {/* Stats row */}
+      <div className="grid grid-cols-3 gap-0 border border-[#1e2030] rounded-[16px] overflow-hidden">
+        {[
+          { label: 'Nodes Active', value: `${Object.values(nodes).filter(v => v === 'Online').length}`, sub: 'of 3 running', accent: '#22c55e' },
+          { label: 'IPFS Peers', value: '24', sub: 'connected now', accent: '#6366f1' },
+          { label: 'BTC Block', value: btcHeight.toLocaleString(), sub: 'latest height', accent: '#f97316', animated: true },
+        ].map((stat, i) => (
+          <div
+            key={stat.label}
+            className="flex flex-col justify-between p-6"
+            style={{ borderLeft: i > 0 ? '1px solid #1e2030' : 'none' }}
           >
-            {btcHeight.toLocaleString()}
-          </motion.span>
-          <span className="text-[12px] text-[#64748b] mt-1">BTC Block Height</span>
-        </div>
+            <div className="text-[10px] font-bold tracking-[0.14em] uppercase text-[#475569] mb-4">{stat.label}</div>
+            {stat.animated ? (
+              <motion.div
+                key={btcHeight}
+                initial={{ opacity: 0.6, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="font-black tabular-nums leading-none tracking-[-0.04em]"
+                style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', color: '#f8fafc' }}
+              >
+                {stat.value}
+              </motion.div>
+            ) : (
+              <div
+                className="font-black leading-none tracking-[-0.04em] tabular-nums"
+                style={{ fontSize: 'clamp(28px, 3.5vw, 44px)', color: '#f8fafc' }}
+              >
+                {stat.value}
+              </div>
+            )}
+            <div className="text-[11px] font-medium mt-2" style={{ color: stat.accent }}>{stat.sub}</div>
+          </div>
+        ))}
       </div>
 
-      <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-6 flex justify-between items-center">
-        <div className="flex-1 flex flex-col gap-2">
-           <div className="flex justify-between items-center pr-8">
-              <span className="text-[11px] text-[#64748b] font-bold uppercase tracking-widest">CPU</span>
-              <span className="text-[12px] text-[#f8fafc] font-bold">12%</span>
-           </div>
-           <div className="w-[180px] h-1.5 bg-[#1e2030] rounded-full overflow-hidden">
-              <div className="h-full bg-[#6366f1] w-[12%]" />
-           </div>
-        </div>
-        <div className="flex-1 flex flex-col gap-2">
-           <div className="flex justify-between items-center pr-8">
-              <span className="text-[11px] text-[#64748b] font-bold uppercase tracking-widest">Memory</span>
-              <span className="text-[12px] text-[#f8fafc] font-bold">847 MB / 16 GB</span>
-           </div>
-           <div className="w-[180px] h-1.5 bg-[#1e2030] rounded-full overflow-hidden">
-              <div className="h-full bg-[#22c55e] w-[5%]" />
-           </div>
-        </div>
-        <div className="flex-1 flex flex-col gap-2">
-           <div className="flex justify-between items-center pr-8">
-              <span className="text-[11px] text-[#64748b] font-bold uppercase tracking-widest">Network</span>
-              <div className="flex items-center gap-1.5 text-[12px] text-[#f8fafc] font-bold">
-                 <ArrowUpDown size={12} /> 2.4 MB/s
+      {/* Resource metrics */}
+      <div className="grid grid-cols-3 gap-4">
+        {[
+          { label: 'CPU Usage', value: '12%', fill: '12%', color: '#6366f1' },
+          { label: 'Memory', value: '847 MB', fill: '5%', color: '#22c55e' },
+          { label: 'Network I/O', value: '2.4 MB/s', fill: null, color: '#f59e0b' },
+        ].map(metric => (
+          <div key={metric.label} className="p-5 rounded-[14px]" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid #1e2030' }}>
+            <div className="text-[10px] font-bold tracking-[0.14em] uppercase text-[#475569] mb-3">{metric.label}</div>
+            <div className="text-[22px] font-black tabular-nums text-[#f8fafc] leading-none mb-3">{metric.value}</div>
+            {metric.fill && (
+              <div className="h-1 bg-[#1e2030] rounded-full overflow-hidden">
+                <div className="h-full rounded-full transition-all duration-500" style={{ width: metric.fill, backgroundColor: metric.color }} />
               </div>
-           </div>
-           <div className="h-1.5" />
-        </div>
+            )}
+          </div>
+        ))}
       </div>
 
       <div className="space-y-4">
@@ -885,11 +1105,11 @@ function NodeManagerPage({ onToast }: any) {
                    </div>
                    <div className="space-y-1">
                       {[
-                        { id: 'QmZk...', loc: '🇺🇸 USA', lat: '24ms', v: '1.8.0' },
-                        { id: 'QmRa...', loc: '🇩🇪 Germany', lat: '48ms', v: '1.7.2' },
-                        { id: 'QmXy...', loc: '🇯🇵 Japan', lat: '152ms', v: '1.8.0' },
-                        { id: 'QmBa...', loc: '🇬🇧 UK', lat: '32ms', v: '1.8.1' },
-                        { id: 'Qm9z...', loc: '🇨🇦 Canada', lat: '12ms', v: '1.8.0' }
+                        { id: 'QmZk...', loc: 'USA', lat: '24ms', v: '1.8.0' },
+                        { id: 'QmRa...', loc: 'Germany', lat: '48ms', v: '1.7.2' },
+                        { id: 'QmXy...', loc: 'Japan', lat: '152ms', v: '1.8.0' },
+                        { id: 'QmBa...', loc: 'UK', lat: '32ms', v: '1.8.1' },
+                        { id: 'Qm9z...', loc: 'Canada', lat: '12ms', v: '1.8.0' }
                       ].map((peer, i) => (
                         <PeerRow key={peer.id} {...peer} index={i} />
                       ))}
@@ -1025,8 +1245,15 @@ function HistoryPage({ onOpen }: any) {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="text-[20px] font-semibold text-[#f8fafc]">History</h2>
+      {/* Editorial header */}
+      <div className="border-b border-[#1e2030] pb-8">
+        <div className="text-[10px] font-bold tracking-[0.18em] uppercase text-[#6366f1] mb-3">Activity</div>
+        <h2
+          className="font-black tracking-[-0.04em] leading-none text-[#e2e8f0] uppercase"
+          style={{ fontSize: 'clamp(32px, 4vw, 56px)' }}
+        >
+          History
+        </h2>
       </div>
 
       <div className="flex gap-8 border-b border-[#1e2030]">
@@ -1057,19 +1284,19 @@ function HistoryPage({ onOpen }: any) {
           </div>
 
           <HistorySection title="Today" items={[
-            { d: 'uniswap.eth', t: 'Uniswap - Swap Tokens', time: '2 min ago', s: '🟢' },
-            { d: 'mastodon.eth', t: 'Mastodon - Home Feed', time: '1 hr ago', s: '🟢' },
-            { d: 'opensea.eth', t: 'OpenSea - NFT Marketplace', time: '2 hrs ago', s: '🟡' },
-            { d: 'btcnode.eth', t: 'Bitcoin Node Dashboard', time: '3 hrs ago', s: '🟢' },
-            { d: 'apps.orivon.eth', t: 'Orivon App Store', time: '4 hrs ago', s: '🟢' },
-            { d: 'google.com', t: 'Google Search', time: '5 hrs ago', s: '🔴' },
-            { d: 'gitcoin.eth', t: 'Gitcoin - Public Goods', time: '6 hrs ago', s: '🟢' },
+            { d: 'uniswap.eth', t: 'Uniswap - Swap Tokens', time: '2 min ago', s: 'web3' },
+            { d: 'mastodon.eth', t: 'Mastodon - Home Feed', time: '1 hr ago', s: 'web3' },
+            { d: 'opensea.eth', t: 'OpenSea - NFT Marketplace', time: '2 hrs ago', s: 'partial' },
+            { d: 'btcnode.eth', t: 'Bitcoin Node Dashboard', time: '3 hrs ago', s: 'web3' },
+            { d: 'apps.orivon.eth', t: 'Orivon App Store', time: '4 hrs ago', s: 'web3' },
+            { d: 'google.com', t: 'Google Search', time: '5 hrs ago', s: 'centralized' },
+            { d: 'gitcoin.eth', t: 'Gitcoin - Public Goods', time: '6 hrs ago', s: 'web3' },
           ]} onOpen={onOpen} />
 
           <HistorySection title="Yesterday" items={[
-            { d: 'uniswap.eth', t: 'Uniswap - Pool Positions', time: '1 day ago', s: '🟢' },
-            { d: 'mastodon.eth', t: 'Mastodon - Explore', time: '1 day ago', s: '🟢' },
-            { d: 'twitter.com', t: 'Twitter / X', time: '1 day ago', s: '🔴' },
+            { d: 'uniswap.eth', t: 'Uniswap - Pool Positions', time: '1 day ago', s: 'web3' },
+            { d: 'mastodon.eth', t: 'Mastodon - Explore', time: '1 day ago', s: 'web3' },
+            { d: 'twitter.com', t: 'Twitter / X', time: '1 day ago', s: 'centralized' },
           ]} onOpen={onOpen} />
         </div>
       ) : (
@@ -1102,36 +1329,69 @@ function HistoryPage({ onOpen }: any) {
 }
 
 function HistorySection({ title, items, onOpen }: any) {
+  const dotColor = (s: string) =>
+    s === 'web3' ? '#22c55e' : s === 'partial' ? '#f59e0b' : '#ef4444';
+  const dotLabel = (s: string) =>
+    s === 'web3' ? 'Web3' : s === 'partial' ? 'Partial' : 'Centralized';
+
   return (
-    <div className="space-y-4">
-       <div className="text-[11px] font-bold text-[#475569] uppercase tracking-[0.06em]">{title}</div>
-       <div className="space-y-1">
-          {items.map((item: any, i: number) => (
-             <motion.div 
-                key={item.d + i}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="h-12 flex items-center justify-between px-3 rounded-[8px] hover:bg-[#111218] group cursor-pointer"
-             >
-                <div className="flex items-center gap-4">
-                   <span className="text-[10px] shrink-0">{item.s}</span>
-                   <div className="w-5 h-5 rounded-md bg-[#161720] flex items-center justify-center font-bold text-[10px] text-[#64748b]">{item.d.charAt(0).toUpperCase()}</div>
-                   <div className="flex flex-col">
-                      <span className="text-[13px] font-medium text-[#f8fafc]">{item.d}</span>
-                      <span className="text-[12px] text-[#64748b]">{item.t}</span>
-                   </div>
-                </div>
-                <div className="flex items-center gap-4">
-                   <span className="text-[11px] text-[#475569] font-medium">{item.time}</span>
-                   <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button onClick={(e) => { e.stopPropagation(); onOpen?.(item.d); }} className="p-1.5 rounded-md hover:bg-[#1e2030] text-[#64748b] hover:text-[#f8fafc] bg-transparent border-none cursor-pointer"><ExternalLink size={14} /></button>
-                      <button className="p-1.5 rounded-md hover:bg-[#1e2030] text-[#64748b] hover:text-[#ef4444] bg-transparent border-none cursor-pointer"><X size={14} /></button>
-                   </div>
-                </div>
-             </motion.div>
-          ))}
-       </div>
+    <div className="space-y-3">
+      <div className="text-[10px] font-bold text-[#475569] uppercase tracking-[0.12em] px-1">{title}</div>
+      <div
+        className="rounded-[14px] overflow-hidden"
+        style={{ border: '1px solid #1e2030', background: 'rgba(255,255,255,0.02)' }}
+      >
+        {items.map((item: any, i: number) => (
+          <motion.div
+            key={item.d + i}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.04 }}
+            className="flex items-center justify-between px-5 group cursor-pointer transition-colors hover:bg-[#111218]"
+            style={{
+              height: 52,
+              borderTop: i > 0 ? '1px solid #1e2030' : 'none',
+            }}
+          >
+            <div className="flex items-center gap-4">
+              <div
+                className="w-1.5 h-1.5 rounded-full shrink-0"
+                style={{ backgroundColor: dotColor(item.s) }}
+              />
+              <div
+                className="w-7 h-7 rounded-[8px] flex items-center justify-center font-black text-[11px] shrink-0"
+                style={{ background: 'rgba(99,102,241,0.1)', color: '#818cf8' }}
+              >
+                {item.d.charAt(0).toUpperCase()}
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[13px] font-semibold text-[#f8fafc]">{item.d}</span>
+                <span className="text-[11px] text-[#475569] font-medium">{item.t}</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-5">
+              <span
+                className="text-[10px] font-bold uppercase tracking-wider hidden sm:block"
+                style={{ color: dotColor(item.s) }}
+              >
+                {dotLabel(item.s)}
+              </span>
+              <span className="text-[11px] text-[#475569] font-medium tabular-nums">{item.time}</span>
+              <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  onClick={(e: React.MouseEvent) => { e.stopPropagation(); onOpen?.(item.d); }}
+                  className="p-1.5 rounded-[6px] hover:bg-[#1e2030] text-[#64748b] hover:text-[#f8fafc] bg-transparent border-none cursor-pointer transition-colors"
+                >
+                  <ExternalLink size={13} />
+                </button>
+                <button className="p-1.5 rounded-[6px] hover:bg-[#1e2030] text-[#64748b] hover:text-[#ef4444] bg-transparent border-none cursor-pointer transition-colors">
+                  <X size={13} />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -1178,65 +1438,119 @@ function SettingsPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="text-[20px] font-semibold text-[#f8fafc]">Settings</h2>
+      {/* Editorial header */}
+      <div className="border-b border-[#1e2030] pb-8">
+        <div className="text-[10px] font-bold tracking-[0.18em] uppercase text-[#6366f1] mb-3">Configuration</div>
+        <h2
+          className="font-black tracking-[-0.04em] leading-none text-[#e2e8f0] uppercase"
+          style={{ fontSize: 'clamp(32px, 4vw, 56px)' }}
+        >
+          Settings
+        </h2>
       </div>
 
       <div className="flex gap-10 items-start">
-         <div className="w-48 flex flex-col gap-1 shrink-0">
-            {cats.map(cat => (
-               <button
-                  key={cat}
-                  onClick={() => setActiveCat(cat)}
-                  className={`h-9 px-4 rounded-[8px] text-left text-[13px] font-bold transition-all border-none bg-transparent cursor-pointer ${
-                    activeCat === cat ? 'bg-[#111218] text-[#f8fafc]' : 'text-[#64748b] hover:text-[#94a3b8]'
-                  }`}
-               >
-                  {cat}
-               </button>
-            ))}
-         </div>
+        <div className="w-44 flex flex-col gap-0.5 shrink-0 sticky top-24">
+          <div className="text-[10px] font-bold text-[#475569] uppercase tracking-[0.14em] mb-3 px-3">Categories</div>
+          {cats.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setActiveCat(cat)}
+              className="h-9 px-3 rounded-[10px] text-left text-[13px] font-bold transition-all border-none cursor-pointer flex items-center justify-between"
+              style={
+                activeCat === cat
+                  ? { background: 'rgba(99,102,241,0.12)', color: '#f8fafc' }
+                  : { background: 'transparent', color: '#64748b' }
+              }
+            >
+              <span>{cat}</span>
+              {activeCat === cat && <div className="w-1 h-1 rounded-full bg-[#6366f1]" />}
+            </button>
+          ))}
+        </div>
 
-         <div className="flex-1 max-w-[600px] space-y-8">
-            {activeCat === 'General' && (
-               <div className="space-y-6">
-                  <SettingsSection title="Preferences">
-                     <SettingsRow label="Language" control={<select className="bg-[#111218] border border-[#1e2030] text-[#f8fafc] rounded-[6px] h-8 px-2 text-[12px] outline-none"><option>English (US)</option></select>} />
-                     <SettingsRow label="Startup Behavior" control={<select className="bg-[#111218] border border-[#1e2030] text-[#f8fafc] rounded-[6px] h-8 px-2 text-[12px] outline-none"><option>Open Dashboard</option><option>Continue where I left off</option></select>} />
-                     <SettingsRow label="Theme" control={<div className="flex items-center gap-4"><Toggle active /><span className="text-[12px] text-[#475569] font-bold uppercase italic">Light coming soon</span></div>} />
-                  </SettingsSection>
-               </div>
-            )}
-            {activeCat === 'Privacy' && (
-               <div className="space-y-6">
-                  <SettingsSection title="Protection">
-                     <SettingsRow label="Tracker Blocking" sub="48,291,047 trackers blocked to date" control={<Toggle active />} />
-                     <SettingsRow label="Fingerprint Protection" control={<Toggle active />} />
-                     <SettingsRow label="Clear Browsing Data" control={<button className="h-8 px-4 rounded-[6px] border border-[#ef4444] text-[#ef4444] text-[11px] font-bold uppercase hover:bg-[#ef4444] hover:text-white transition-all bg-transparent cursor-pointer">Clear Now</button>} />
-                  </SettingsSection>
-               </div>
-            )}
-            {activeCat === 'About' && (
-               <div className="space-y-6">
-                  <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-8 flex flex-col items-center text-center">
-                     <div className="text-[15px] text-white font-bold tracking-[0.1em] mb-1">ORIVON</div>
-                     <div className="text-[11px] text-[#6366f1] font-bold tracking-[0.06em] uppercase mb-6">v0.1.0 MVP</div>
-                     <p className="text-[13px] text-[#64748b] max-w-[320px] mb-8">A native Web3 desktop browser built for privacy, decentralization, and the future of the internet.</p>
-                     <div className="flex gap-4">
-                        <button className="h-8 px-4 rounded-[6px] bg-[#161720] border border-[#1e2030] text-[#94a3b8] text-[11px] font-bold uppercase tracking-widest hover:text-[#f8fafc] transition-all cursor-pointer">GitHub</button>
-                        <button className="h-8 px-4 rounded-[6px] bg-[#161720] border border-[#1e2030] text-[#94a3b8] text-[11px] font-bold uppercase tracking-widest hover:text-[#f8fafc] transition-all cursor-pointer">Discord</button>
-                     </div>
-                     <div className="mt-12 text-[11px] text-[#475569] font-bold italic">Built with love for the decentralized web.</div>
-                  </div>
-               </div>
-            )}
-            {(!['General', 'Privacy', 'About'].includes(activeCat)) && (
-               <div className="py-20 flex flex-col items-center justify-center text-center">
-                  <Settings size={40} className="text-[#2d2e45] mb-4" />
-                  <span className="text-[14px] text-[#64748b] font-medium">{activeCat} settings coming soon</span>
-               </div>
-            )}
-         </div>
+        <div className="flex-1 max-w-[600px] space-y-8">
+          {activeCat === 'General' && (
+            <div className="space-y-6">
+              <SettingsSection title="Preferences">
+                <SettingsRow label="Language" control={<select className="bg-[#111218] border border-[#1e2030] text-[#f8fafc] rounded-[8px] h-9 px-3 text-[12px] outline-none focus:border-[#6366f1] transition-colors cursor-pointer"><option>English (US)</option></select>} />
+                <SettingsRow label="Startup Behavior" control={<select className="bg-[#111218] border border-[#1e2030] text-[#f8fafc] rounded-[8px] h-9 px-3 text-[12px] outline-none focus:border-[#6366f1] transition-colors cursor-pointer"><option>Open Dashboard</option><option>Continue where I left off</option></select>} />
+                <SettingsRow label="Theme" control={<div className="flex items-center gap-3"><Toggle active /><span className="text-[11px] text-[#475569] font-bold uppercase tracking-wider">Light mode coming soon</span></div>} />
+              </SettingsSection>
+            </div>
+          )}
+          {activeCat === 'Privacy' && (
+            <div className="space-y-6">
+              <SettingsSection title="Protection">
+                <SettingsRow label="Tracker Blocking" sub="48,291,047 trackers blocked to date" control={<Toggle active />} />
+                <SettingsRow label="Fingerprint Protection" control={<Toggle active />} />
+                <SettingsRow
+                  label="Clear Browsing Data"
+                  control={
+                    <button className="h-8 px-4 rounded-[8px] border border-[#ef4444]/50 text-[#ef4444] text-[11px] font-bold uppercase tracking-wider hover:bg-[#ef4444] hover:text-white transition-all bg-transparent cursor-pointer">
+                      Clear Now
+                    </button>
+                  }
+                />
+              </SettingsSection>
+            </div>
+          )}
+          {activeCat === 'About' && (
+            <div className="space-y-6">
+              <div
+                className="rounded-[20px] p-10 flex flex-col items-center text-center relative overflow-hidden"
+                style={{
+                  background: 'linear-gradient(135deg, #0d0f1a 0%, #111218 60%, #0d0e14 100%)',
+                  border: '1px solid rgba(99,102,241,0.15)',
+                }}
+              >
+                <div
+                  className="absolute top-0 left-0 right-0 h-[200px] pointer-events-none"
+                  style={{ background: 'radial-gradient(ellipse at top center, rgba(99,102,241,0.1) 0%, transparent 70%)' }}
+                />
+                <img
+                  src={logo}
+                  alt="Orivon"
+                  className="w-16 h-16 rounded-[18px] mb-6 relative z-10"
+                  style={{ boxShadow: '0 8px 32px rgba(99,102,241,0.4)' }}
+                />
+                <div
+                  className="font-black tracking-[-0.02em] leading-none uppercase relative z-10 mb-1"
+                  style={{ fontSize: 'clamp(28px, 3vw, 40px)', color: '#f8fafc' }}
+                >
+                  Orivon
+                </div>
+                <div className="text-[11px] text-[#6366f1] font-bold tracking-[0.1em] uppercase mt-2 mb-6 relative z-10">v0.1.0 MVP</div>
+                <p className="text-[13px] text-[#64748b] max-w-[340px] leading-[1.7] mb-8 relative z-10">
+                  A native Web3 desktop browser built for privacy, decentralization, and the future of the internet.
+                </p>
+                <div className="flex gap-3 relative z-10">
+                  <button className="h-9 px-5 rounded-[10px] border border-[#1e2030] text-[#94a3b8] text-[11px] font-bold uppercase tracking-widest hover:border-[#6366f1] hover:text-[#f8fafc] transition-all bg-transparent cursor-pointer">
+                    GitHub
+                  </button>
+                  <button className="h-9 px-5 rounded-[10px] border border-[#1e2030] text-[#94a3b8] text-[11px] font-bold uppercase tracking-widest hover:border-[#6366f1] hover:text-[#f8fafc] transition-all bg-transparent cursor-pointer">
+                    Discord
+                  </button>
+                </div>
+                <div className="mt-10 text-[11px] text-[#2d2e45] font-bold uppercase tracking-[0.1em] relative z-10">
+                  Built for the decentralized web
+                </div>
+              </div>
+            </div>
+          )}
+          {(!['General', 'Privacy', 'About'].includes(activeCat)) && (
+            <div className="py-20 flex flex-col items-center justify-center text-center">
+              <div
+                className="w-12 h-12 rounded-[14px] flex items-center justify-center mb-5"
+                style={{ background: 'rgba(99,102,241,0.08)', color: '#6366f1' }}
+              >
+                <Settings size={22} />
+              </div>
+              <span className="text-[15px] font-bold text-[#64748b]">{activeCat}</span>
+              <span className="text-[13px] text-[#475569] mt-1">Settings coming soon</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -1370,17 +1684,87 @@ function NetworkStatusDetailsCard() {
 }
 
 function MarketingCard() {
-  return (
-    <div className="bg-[#111218] border border-[#1e2030] rounded-[12px] p-[28px_32px] flex items-center justify-between">
-      <div className="w-[55%] space-y-4"><div className="text-[10px] text-[#6366f1] font-bold tracking-[0.08em] uppercase">The Web3 Browser</div><h2 className="text-[22px] font-bold text-[#f8fafc] tracking-[-0.02em]">Built for the internet that's coming.</h2><p className="text-[14px] text-[#94a3b8] leading-[1.6] max-w-[480px]">Orivon is the first browser where Web3 is native, not bolted on. No extensions, no setup, no compromises. Just the web as it was meant to be.</p><div className="space-y-2 pt-2">{['Open any .eth domain natively', 'Run Bitcoin and IPFS nodes in one click', 'Know exactly how trustless every site is'].map(f => ( <div key={f} className="flex items-center gap-3 text-[13px] text-[#94a3b8] font-medium"><Check size={14} className="text-[#6366f1]" strokeWidth={3} /> {f}</div> ))}</div></div>
-      <div className="w-[45%] flex flex-col gap-6 text-right"><StatItem val="2B" label="People coming to Web3" /><StatItem val="1 Browser" label="Built for all of them" /><StatItem val="0" label="Compromises on decentralization" /></div>
-    </div>
-  );
-}
+  const stats = [
+    { val: '2B',   label: 'People coming to Web3'         },
+    { val: '1',    label: 'Browser built for all of them' },
+    { val: '0',    label: 'Compromises on decentralization' },
+  ];
 
-function StatItem({ val, label }: { val: string; label: string }) {
   return (
-    <div className="flex flex-col"><span className="text-[32px] font-bold text-[#f8fafc] tracking-[-0.03em] leading-none">{val}</span><span className="text-[12px] text-[#94a3b8] font-semibold mt-1.5">{label}</span><span className="text-[10px] text-[#64748b] font-bold uppercase tracking-wider mt-0.5">Built for all of them</span></div>
+    <div
+      className="rounded-[16px] p-8 overflow-hidden relative"
+      style={{
+        background: 'linear-gradient(135deg, #0d0f1a 0%, #111218 60%, #0d0e14 100%)',
+        border: '1px solid rgba(99,102,241,0.15)',
+      }}
+    >
+      {/* Subtle glow */}
+      <div
+        className="absolute top-0 right-0 w-[400px] h-[200px] pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse at top right, rgba(99,102,241,0.08) 0%, transparent 70%)' }}
+      />
+
+      <div className="flex items-center justify-between relative z-10">
+        {/* Left */}
+        <div className="w-[52%] space-y-4">
+          <div className="text-[10px] text-[#6366f1] font-bold tracking-[0.15em] uppercase">
+            The Web3 Browser
+          </div>
+          <div className="overflow-hidden">
+            <h2
+              className="font-black tracking-[-0.03em] leading-[1.1] text-white"
+              style={{ fontSize: 'clamp(22px, 2.5vw, 34px)' }}
+            >
+              Built for the internet<br />
+              <span
+                style={{
+                  background: 'linear-gradient(90deg, #818cf8, #a5b4fc)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
+                that's coming.
+              </span>
+            </h2>
+          </div>
+          <p className="text-[13px] text-[#64748b] leading-[1.65] max-w-[400px]">
+            Orivon is the first browser where Web3 is native, not bolted on. No extensions, no setup, no compromises.
+          </p>
+          <div className="space-y-2 pt-1">
+            {['Open any .eth domain natively', 'Run Bitcoin and IPFS nodes in one click', 'Know exactly how trustless every site is'].map(f => (
+              <div key={f} className="flex items-center gap-2.5 text-[12px] text-[#94a3b8] font-medium">
+                <Check size={12} className="text-[#6366f1] shrink-0" strokeWidth={3} />
+                {f}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right — editorial stats */}
+        <div className="w-[44%] flex flex-col gap-5 pl-8 border-l border-[#1e2030]">
+          {stats.map(({ val, label }) => (
+            <div key={label}>
+              <div
+                className="font-black tracking-[-0.04em] leading-none tabular-nums"
+                style={{
+                  fontSize: 'clamp(32px, 3.5vw, 52px)',
+                  background: 'linear-gradient(90deg, #f8fafc 20%, #a5b4fc 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
+                {val}
+              </div>
+              <div className="text-[11px] text-[#475569] font-semibold mt-1 uppercase tracking-[0.06em]">
+                {label}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 

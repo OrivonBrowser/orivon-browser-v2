@@ -1,8 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { 
-  Search, Star, Download, Check, Shield, 
-  Globe, Filter, Store, MoreHorizontal, Loader2,
-  ChevronRight, LayoutGrid, Package, ArrowRight
+import {
+  Search, Check, Shield, Filter, Loader2, ArrowRight, X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useSessionStore } from '../store/session';
@@ -17,7 +15,6 @@ interface AppData {
   rating: number;
   downloads: string;
   iconBg: string;
-  topBg?: string;
   version: string;
   lastUpdated: string;
   developer: string;
@@ -72,18 +69,18 @@ export default function AppStore({ onOpen, onToast, isDemo = false }: { onOpen?:
     } else if (activeCategory !== 'All Apps') {
       list = list.filter(a => a.category.toLowerCase().includes(activeCategory.toLowerCase()));
     }
-
     if (searchQuery) {
-      list = list.filter(a => a.name.toLowerCase().includes(searchQuery.toLowerCase()) || a.desc.toLowerCase().includes(searchQuery.toLowerCase()));
+      list = list.filter(a =>
+        a.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        a.desc.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     }
-
     return list;
   }, [activeCategory, searchQuery, installedApps]);
 
   const handleInstall = (app: AppData, e: React.MouseEvent) => {
     e.stopPropagation();
     if (installedApps[app.name] || installing) return;
-    
     setInstalling(app.name);
     setTimeout(() => {
       installApp(app.name);
@@ -103,107 +100,188 @@ export default function AppStore({ onOpen, onToast, isDemo = false }: { onOpen?:
   return (
     <div className="flex gap-10 items-start">
       {/* Category Sidebar */}
-      <div className="w-48 flex flex-col gap-1 shrink-0 sticky top-24">
-        <div className="text-[11px] font-bold text-[#475569] uppercase tracking-widest mb-3 px-4">Categories</div>
+      <div className="w-44 flex flex-col gap-0.5 shrink-0 sticky top-24">
+        <div className="text-[10px] font-bold text-[#475569] uppercase tracking-[0.14em] mb-3 px-3">Categories</div>
         {CATEGORIES.map(cat => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`h-10 px-4 rounded-[10px] text-left text-[13px] font-bold transition-all border-none bg-transparent cursor-pointer flex items-center justify-between group ${
-              activeCategory === cat ? 'bg-[#111218] text-[#f8fafc]' : 'text-[#64748b] hover:text-[#94a3b8]'
-            }`}
+            className="h-9 px-3 rounded-[10px] text-left text-[13px] font-bold transition-all border-none cursor-pointer flex items-center justify-between"
+            style={
+              activeCategory === cat
+                ? { background: 'rgba(99,102,241,0.12)', color: '#f8fafc' }
+                : { background: 'transparent', color: '#64748b' }
+            }
           >
-            {cat}
+            <span>{cat}</span>
             {activeCategory === cat && <div className="w-1 h-1 rounded-full bg-[#6366f1]" />}
           </button>
         ))}
-        
-        <div className="mt-8 px-4 py-6 bg-[#111218] border border-[#1e2030] rounded-xl">
-           <div className="text-[11px] font-bold text-[#6366f1] uppercase tracking-widest mb-2">Orivon Verified</div>
-           <p className="text-[11px] text-[#475569] leading-relaxed">All modules are sandboxed and verified for privacy.</p>
+
+        <div
+          className="mt-8 px-4 py-5 rounded-[14px]"
+          style={{ background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.12)' }}
+        >
+          <div className="flex items-center gap-2 mb-2">
+            <Shield size={12} className="text-[#6366f1]" />
+            <div className="text-[10px] font-bold text-[#6366f1] uppercase tracking-[0.1em]">Verified</div>
+          </div>
+          <p className="text-[11px] text-[#475569] leading-relaxed">All modules are sandboxed and audited for privacy.</p>
         </div>
       </div>
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <div className="flex-1 space-y-8">
-        <div className="flex items-center justify-between gap-4">
+        {/* Search + filter row */}
+        <div className="flex items-center gap-3">
           <div className="relative flex-1">
-            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#475569]" />
-            <input 
+            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#475569]" />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-[#475569] hover:text-[#f8fafc] transition-colors bg-transparent border-none cursor-pointer p-0"
+              >
+                <X size={14} />
+              </button>
+            )}
+            <input
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search 1,200+ decentralized modules..."
-              className="w-full h-12 bg-[#111218] border border-[#1e2030] rounded-xl pl-12 pr-4 text-[#f8fafc] font-medium outline-none focus:border-[#6366f1] transition-all placeholder:text-[#475569]"
+              placeholder="Search decentralized modules..."
+              className="w-full h-11 rounded-[12px] pl-11 pr-10 text-[13px] font-medium outline-none transition-all placeholder:text-[#475569]"
+              style={{
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid #1e2030',
+                color: '#f8fafc',
+              }}
+              onFocus={(e: React.FocusEvent<HTMLInputElement>) => (e.currentTarget.style.borderColor = '#6366f1')}
+              onBlur={(e: React.FocusEvent<HTMLInputElement>) => (e.currentTarget.style.borderColor = '#1e2030')}
             />
           </div>
-          <button className="h-12 px-6 bg-[#111218] border border-[#1e2030] rounded-xl text-[#64748b] hover:text-[#f8fafc] transition-all flex items-center gap-2 text-[13px] font-bold uppercase tracking-wider cursor-pointer">
-            <Filter size={16} /> Filter
+          <button
+            className="h-11 px-5 rounded-[12px] text-[#64748b] hover:text-[#f8fafc] transition-all flex items-center gap-2 text-[12px] font-bold uppercase tracking-wider cursor-pointer border-none"
+            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid #1e2030' }}
+          >
+            <Filter size={14} /> Filter
           </button>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-          {filteredApps.map((app, idx) => (
-            <motion.div 
-              key={app.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.02 }}
-              onClick={() => app.url && onOpen?.(app.url)}
-              className="group bg-[#111218] border border-[#1e2030] rounded-xl p-5 flex items-center gap-5 hover:border-[#6366f1]/50 transition-all cursor-pointer relative overflow-hidden"
-            >
-              <div className="w-14 h-14 rounded-xl flex items-center justify-center text-white font-bold text-[22px] shrink-0 shadow-lg group-hover:scale-105 transition-transform" style={{ backgroundColor: app.iconBg }}>
-                {app.name.charAt(0)}
-              </div>
-              
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[15px] font-bold text-[#f8fafc] group-hover:text-[#6366f1] transition-colors">{app.name}</span>
-                  <div className={`w-1.5 h-1.5 rounded-full ${app.score === 'Trustless' ? 'bg-[#22c55e]' : 'bg-[#f59e0b]'}`} />
-                </div>
-                <p className="text-[13px] text-[#64748b] font-medium truncate leading-relaxed">{app.desc}</p>
-                <div className="flex items-center gap-4 mt-2">
-                   <div className="flex items-center gap-1 text-[#f59e0b] text-[11px] font-bold tabular">
-                      <Star size={10} fill="currentColor" /> {app.rating}
-                   </div>
-                   <span className="text-[10px] font-bold text-[#475569] uppercase tracking-widest">{app.downloads} downloads</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                 <button 
-                   onClick={(e) => handleInstall(app, e)}
-                   disabled={installedApps[app.name] || !!installing}
-                   className={`h-9 px-5 rounded-lg font-bold text-[11px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${
-                    installedApps[app.name] 
-                    ? 'bg-transparent border border-[#1e2030] text-[#475569]' 
-                    : 'bg-[#6366f1] text-white hover:bg-[#4f46e5] shadow-lg shadow-[#6366f1]/20 active:scale-95 border-none cursor-pointer'
-                   }`}
-                 >
-                    {installing === app.name ? (
-                       <Loader2 size={12} className="animate-spin" />
-                    ) : installedApps[app.name] ? (
-                       <><Check size={12} strokeWidth={4} /> Installed</>
-                    ) : (
-                       <><Download size={12} /> Install</>
-                    )}
-                 </button>
-              </div>
-              
-              <div className="absolute top-0 right-0 p-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                 <div className="w-6 h-6 rounded-bl-lg bg-[#6366f1]/10 flex items-center justify-center text-[#6366f1]">
-                    <ArrowRight size={12} />
-                 </div>
-              </div>
-            </motion.div>
-          ))}
+        {/* Section label */}
+        <div className="flex items-baseline justify-between">
+          <div>
+            <div className="text-[10px] font-bold tracking-[0.14em] uppercase text-[#6366f1] mb-1">
+              {activeCategory === 'All Apps' ? 'All Modules' : activeCategory}
+            </div>
+            <div className="text-[13px] font-medium text-[#475569]">
+              {filteredApps.length} module{filteredApps.length !== 1 ? 's' : ''} available
+            </div>
+          </div>
         </div>
 
+        <AnimatePresence mode="popLayout">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+            {filteredApps.map((app, idx) => {
+              const installed = !!installedApps[app.name];
+              const isInstalling = installing === app.name;
+              return (
+                <motion.div
+                  key={app.id}
+                  layout
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.97 }}
+                  transition={{ delay: idx * 0.015 }}
+                  onClick={() => app.url && onOpen?.(app.url)}
+                  className="group relative flex items-center gap-4 p-4 rounded-[16px] cursor-pointer transition-all"
+                  style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid #1e2030' }}
+                  onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                    (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(99,102,241,0.35)';
+                    (e.currentTarget as HTMLDivElement).style.background = 'rgba(99,102,241,0.04)';
+                  }}
+                  onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+                    (e.currentTarget as HTMLDivElement).style.borderColor = '#1e2030';
+                    (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.02)';
+                  }}
+                >
+                  {/* Left accent */}
+                  <div
+                    className="absolute left-0 top-4 bottom-4 w-[3px] rounded-full transition-opacity duration-200 opacity-0 group-hover:opacity-100"
+                    style={{ backgroundColor: app.score === 'Trustless' ? '#6366f1' : '#f59e0b' }}
+                  />
+
+                  {/* Icon */}
+                  <div
+                    className="w-12 h-12 rounded-[12px] flex items-center justify-center text-white font-black text-[18px] shrink-0 transition-transform group-hover:scale-105"
+                    style={{ backgroundColor: app.iconBg }}
+                  >
+                    {app.name.charAt(0)}
+                  </div>
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="text-[14px] font-bold text-[#f8fafc] truncate">{app.name}</span>
+                      <div
+                        className="w-1.5 h-1.5 rounded-full shrink-0"
+                        style={{ backgroundColor: app.score === 'Trustless' ? '#22c55e' : '#f59e0b' }}
+                      />
+                    </div>
+                    <p className="text-[12px] text-[#64748b] font-medium truncate leading-relaxed">{app.desc}</p>
+                    <div className="flex items-center gap-3 mt-1.5">
+                      <span
+                        className="text-[10px] font-bold uppercase tracking-wider"
+                        style={{ color: app.score === 'Trustless' ? '#22c55e' : '#f59e0b' }}
+                      >
+                        {app.score}
+                      </span>
+                      <span className="text-[10px] font-bold text-[#2d2e45] uppercase tracking-wider">·</span>
+                      <span className="text-[10px] font-bold text-[#475569] uppercase tracking-wider">{app.downloads} dl</span>
+                    </div>
+                  </div>
+
+                  {/* Install button */}
+                  <button
+                    onClick={(e: React.MouseEvent) => handleInstall(app, e)}
+                    disabled={installed || !!installing}
+                    className="h-8 px-4 rounded-[8px] font-bold text-[11px] uppercase tracking-widest transition-all flex items-center justify-center gap-1.5 shrink-0 border-none cursor-pointer"
+                    style={
+                      installed
+                        ? { background: 'transparent', border: '1px solid #1e2030', color: '#475569' }
+                        : { background: '#6366f1', color: 'white', boxShadow: '0 4px 16px rgba(99,102,241,0.3)' }
+                    }
+                  >
+                    {isInstalling ? (
+                      <Loader2 size={11} className="animate-spin" />
+                    ) : installed ? (
+                      <><Check size={11} strokeWidth={3} /> Done</>
+                    ) : (
+                      <>Get</>
+                    )}
+                  </button>
+
+                  {app.url && (
+                    <ArrowRight
+                      size={14}
+                      className="text-[#2d2e45] group-hover:text-[#6366f1] transition-colors shrink-0"
+                    />
+                  )}
+                </motion.div>
+              );
+            })}
+          </div>
+        </AnimatePresence>
+
         {filteredApps.length === 0 && (
-           <div className="py-20 flex flex-col items-center justify-center text-center">
-              <Package size={48} className="text-[#1e2030] mb-4" />
-              <h3 className="text-[16px] font-bold text-[#64748b]">No modules found</h3>
-              <p className="text-[13px] text-[#475569] mt-1">Try adjusting your search or category filter</p>
-           </div>
+          <div className="py-24 flex flex-col items-center justify-center text-center">
+            <div
+              className="w-14 h-14 rounded-[16px] flex items-center justify-center mb-5"
+              style={{ background: 'rgba(99,102,241,0.08)', color: '#6366f1' }}
+            >
+              <Search size={24} />
+            </div>
+            <div className="text-[15px] font-bold text-[#64748b] mb-1">No modules found</div>
+            <p className="text-[13px] text-[#475569]">Try adjusting your search or category filter</p>
+          </div>
         )}
       </div>
     </div>
