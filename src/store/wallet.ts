@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
 import { ethers } from 'ethers';
 import { DEMO_WALLET } from '../constants';
 
